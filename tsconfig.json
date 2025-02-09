@@ -22,13 +22,17 @@
         "name": "next"
       }
     ],
+    "baseUrl": ".",
     "paths": {
       "@/*": [
         "./*"
       ],
+      "@icons": [
+        "./src/components/Icons/index.tsx"
+      ],
       "@assets/*": [
         "./src/assets/*"
-      ],
+      ]
     }
   },
   "include": [
