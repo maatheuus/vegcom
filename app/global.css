@@ -1,5 +1,9 @@
-@import url("https://fonts.googleapis.com/css2?family=Libre+Franklin:ital,wght@0,100..900;1,100..900&family=Lusitana:wght@400;700&family=Taviraj:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap");
+/* @import url("https://fonts.googleapis.com/css2?family=Libre+Franklin:ital,wght@0,100..900;1,100..900&family=Lusitana:wght@400;700&family=Taviraj:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"); */
+@import url("https://fonts.googleapis.com/css2?family=Allan:wght@400;700&family=Frank+Ruhl+Libre:wght@300..900&family=Rancho&display=swap");
+
 @import "tailwindcss";
+@plugin 'tailwindcss-motion';
+@plugin "tailwindcss-animate";
 
 @config "../tailwind.config.ts";
 
@@ -8,12 +12,10 @@
     --background: #ffffff;
     --foreground: #171717;
 
-    /*green*/
-    --green-50: #fffdf4;
-    --green-100: #ecf9dd;
-    --green-200: #276b37;
-    --green-500: #1b4e30;
-    --green-600: #3b6860;
+    /* fonts */
+    --font-frank: "Frank Ruhl Libre", serif;
+    --font-allan: "Allan", serif;
+    --font-rancho: "Rancho", serif;
 
     --background: 0 0% 100%;
     --foreground: 222.2 47.4% 11.2%;
@@ -74,6 +76,34 @@
     --sidebar-border: 240 3.7% 15.9%;
     --sidebar-ring: 217.2 91.2% 59.8%;
   }
+}
+
+@theme {
+  /* shadow */
+  --shadow-card: 0 0 8px rgba(0, 0, 0, 0.25);
+
+  /*green*/
+  --color-green-50: #fffdf4;
+  --color-green-100: #ecf9dd;
+  --color-green-200: #276b37;
+  --color-green-500: #1b4e30;
+  --color-green-600: #3b6860;
+}
+
+.animate-fade-icon svg {
+  @apply duration-500 transition-all translate-x-[0%];
+}
+
+.animate-fade-icon:hover svg {
+  @apply transition-all duration-300 translate-x-[20%];
+}
+
+.animate-rotate-icon svg {
+  @apply duration-500 transition-all rotate-0;
+}
+
+.animate-rotate-icon:hover svg {
+  @apply transition-all duration-300 -rotate-45;
 }
 
 @layer base {

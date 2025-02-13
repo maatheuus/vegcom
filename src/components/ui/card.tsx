@@ -1,19 +1,14 @@
 import * as React from "react";
 
 import { cn } from "@/lib/utils";
+import Col from "./Layout/Helpers/Col";
+import Text, { type TextProps } from "./Text";
 
 const Card = React.forwardRef<
   HTMLDivElement,
   React.HTMLAttributes<HTMLDivElement>
 >(({ className, ...props }, ref) => (
-  <div
-    ref={ref}
-    className={cn(
-      "rounded-xl border bg-card text-card-foreground shadow",
-      className
-    )}
-    {...props}
-  />
+  <Col ref={ref} className={cn("bg-green-50", className)} {...props} />
 ));
 Card.displayName = "Card";
 
@@ -29,35 +24,54 @@ const CardHeader = React.forwardRef<
 ));
 CardHeader.displayName = "CardHeader";
 
-const CardTitle = React.forwardRef<
-  HTMLDivElement,
-  React.HTMLAttributes<HTMLDivElement>
->(({ className, ...props }, ref) => (
-  <div
-    ref={ref}
-    className={cn("font-semibold leading-none tracking-tight", className)}
-    {...props}
-  />
-));
+interface CardTitleProps extends React.HTMLAttributes<HTMLHeadingElement> {
+  as?: React.ElementType;
+  type?: TextProps["type"];
+  weight?: TextProps["weight"];
+  children: React.ReactNode;
+}
+const CardTitle = React.forwardRef<HTMLDivElement, CardTitleProps>(
+  ({ as = "p", type, weight, children, className, ...props }, ref) => (
+    <div
+      ref={ref}
+      className={cn("font-semibold leading-none tracking-tight", className)}
+      {...props}
+    >
+      <Text as={as} type={type} weight={weight}>
+        {children}
+      </Text>
+    </div>
+  )
+);
 CardTitle.displayName = "CardTitle";
 
-const CardDescription = React.forwardRef<
-  HTMLDivElement,
-  React.HTMLAttributes<HTMLDivElement>
->(({ className, ...props }, ref) => (
-  <div
-    ref={ref}
-    className={cn("text-sm text-muted-foreground", className)}
-    {...props}
-  />
-));
+interface CardDescriptionProps extends React.HTMLAttributes<HTMLDivElement> {
+  as?: React.ElementType;
+  type?: TextProps["type"];
+  weight?: TextProps["weight"];
+  children: React.ReactNode;
+}
+
+const CardDescription = React.forwardRef<HTMLDivElement, CardDescriptionProps>(
+  ({ as = "p", type, weight, children, className, ...props }, ref) => (
+    <div
+      ref={ref}
+      className={cn("text-sm text-muted-foreground", className)}
+      {...props}
+    >
+      <Text as={as} type={type} weight={weight}>
+        {children}
+      </Text>
+    </div>
+  )
+);
 CardDescription.displayName = "CardDescription";
 
 const CardContent = React.forwardRef<
   HTMLDivElement,
   React.HTMLAttributes<HTMLDivElement>
 >(({ className, ...props }, ref) => (
-  <div ref={ref} className={cn("p-6 pt-0", className)} {...props} />
+  <div ref={ref} className={cn(className)} {...props} />
 ));
 CardContent.displayName = "CardContent";
 
@@ -65,11 +79,7 @@ const CardFooter = React.forwardRef<
   HTMLDivElement,
   React.HTMLAttributes<HTMLDivElement>
 >(({ className, ...props }, ref) => (
-  <div
-    ref={ref}
-    className={cn("flex items-center p-6 pt-0", className)}
-    {...props}
-  />
+  <div ref={ref} className={cn("flex items-center", className)} {...props} />
 ));
 CardFooter.displayName = "CardFooter";
 
