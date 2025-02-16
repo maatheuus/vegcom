@@ -1,8 +1,12 @@
 import Logo from "@/components//ui/Logo";
 
-export default function AuthHeader() {
+interface Props extends React.ComponentProps<"div"> {
+  size?: React.SVGAttributes<SVGSVGElement>;
+}
+
+export default function AuthHeader({ className, ...props }: Props) {
   return (
-    <div role="banner">
+    <div role="banner" className={className} {...props}>
       <Logo />
     </div>
   );

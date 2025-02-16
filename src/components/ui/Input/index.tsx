@@ -1,7 +1,7 @@
 import * as React from "react";
 
 import { cn } from "@/lib/utils";
-import Row from "./Layout/Helpers/Row";
+import Row from "../Layout/Helpers/Row";
 
 type InputIconProps = {
   icon: React.JSX.Element;

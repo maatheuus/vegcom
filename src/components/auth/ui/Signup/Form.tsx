@@ -14,25 +14,32 @@ import {
 } from "@/components/ui/form";
 import { InputIcon } from "@/components/ui/Input";
 
-import Text from "@/components//ui/Text";
 import {
   ArrowCircleRightOutlinedIcon,
   AtOutlinedIcon,
   ClosedEyeOutlinedIcon,
-  GoogleOutlinedIcon,
   OpenEyesOutlinedIcon,
+  UserDashedFilledIcon,
 } from "@/components/icons";
 import Col from "@/components/ui/Layout/Helpers/Col";
-import Link from "next/link";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, type FC } from "react";
 
 const formSchema = z.object({
   username: z.string().min(2, {
     message: "Username must be at least 2 characters.",
   }),
+  email: z.string().email({
+    message: "Invalid email address.",
+  }),
+  password: z
+    .string()
+    .min(8, { message: "Password must be at least 8 characters." }),
 });
 
-export default function LoginForm() {
+const SignupForm: FC<React.ComponentProps<"form">> = ({
+  className,
+  ...props
+}) => {
   const closedEyeRef = useRef<SVGSVGElement | null>(null);
   const [showingPassword, setShowingPassword] = useState<boolean>(false);
 
@@ -40,6 +47,8 @@ export default function LoginForm() {
     resolver: zodResolver(formSchema),
     defaultValues: {
       username: "",
+      email: "",
+      password: "",
     },
   });
 
@@ -53,21 +62,48 @@ export default function LoginForm() {
 
   return (
     <Form {...form}>
-      <form className="">
-        <Col className="gap-5 px-5 pt-4 pb-6">
+      <form className={className} {...props}>
+        <Col className="gap-3 px-5 pt-4 pb-6 items-center">
+          <FormField
+            // control={form.control}
+            name="username"
+            render={({ field }) => (
+              <FormItem className="w-full max-w-[404px]">
+                <FormControl>
+                  <InputIcon
+                    className="w-full text-green-500"
+                    type="text"
+                    placeholder="Seu nome completo"
+                    autoComplete="name"
+                    {...field}
+                    icon={
+                      <UserDashedFilledIcon
+                        className="text-green-500"
+                        size={18}
+                      />
+                    }
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
           <FormField
             // control={form.control}
             name="email"
             render={({ field }) => (
-              <FormItem>
+              <FormItem className="w-full max-w-[404px]">
                 <FormControl>
                   <InputIcon
+                    className="w-full text-green-500"
                     type="email"
                     placeholder="Seu Email"
                     autoComplete="email"
                     defaultValue="qP8pL@example.com"
                     {...field}
-                    icon={<AtOutlinedIcon size={18} />}
+                    icon={
+                      <AtOutlinedIcon className="text-green-500" size={18} />
+                    }
                   />
                 </FormControl>
                 <FormMessage />
@@ -78,9 +114,10 @@ export default function LoginForm() {
             // control={form.control}
             name="password"
             render={({ field }) => (
-              <FormItem>
+              <FormItem className="w-full max-w-[404px]">
                 <FormControl>
                   <InputIcon
+                    className="w-full "
                     type={showingPassword ? "text" : "password"}
                     placeholder="Sua senha"
                     defaultValue="qP8pL@example.com"
@@ -91,13 +128,13 @@ export default function LoginForm() {
                         <OpenEyesOutlinedIcon
                           size={18}
                           ref={closedEyeRef}
-                          className="cursor-pointer"
+                          className="cursor-pointer text-green-500"
                         />
                       ) : (
                         <ClosedEyeOutlinedIcon
                           size={18}
                           ref={closedEyeRef}
-                          className="cursor-pointer"
+                          className="cursor-pointer text-green-500"
                         />
                       )
                     }
@@ -107,38 +144,26 @@ export default function LoginForm() {
               </FormItem>
             )}
           />
-          <div className="w-full text-right">
-            <Link
-              href="/login"
-              className="text-sm text-green-200 hover:text-green-500"
-            >
-              Esqueceu sua senha?
-            </Link>
-          </div>
         </Col>
         <Col className="items-center gap-2 px-5 py-4">
           <Button.Icon
             type="submit"
-            leftIcon={<ArrowCircleRightOutlinedIcon size={24} />}
-            text="Login"
-            className="w-full sm:max-w-3xs animate-rotate-icon"
+            rightIcon={<ArrowCircleRightOutlinedIcon size={24} />}
+            text="Seguinte"
+            className="font-semibold w-full sm:max-w-80 hover:[&_svg]:translate-x-1.5 hover:[&_svg]:transition-all hover:[&_svg]:duration-300"
           />
-          <Text
-            as="span"
-            className="text-green-500 text-xs"
-            weight={Text.Weight.SemiBold}
-          >
-            ou
-          </Text>
-          <Button.Icon
+
+          <Button
             type="button"
             variant="text"
-            leftIcon={<GoogleOutlinedIcon size={24} />}
-            text="Continue com Google"
-            className="w-full sm:max-w-3xs hover:text-green-700"
-          />
+            className="text-base font-semibold w-full sm:max-w-80 cursor-pointer hover:text-green-700 hover:bg-transparent"
+          >
+            Continue com Google
+          </Button>
         </Col>
       </form>
     </Form>
   );
-}
+};
+
+export default SignupForm;

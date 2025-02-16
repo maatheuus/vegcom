@@ -1,14 +1,21 @@
+import { LogoOutlinedIcon } from "@/components/icons";
 import { cn } from "@/lib/utils";
-import { LogoOutlinedIcon } from "@icons";
 
-export default function Logo({ className, ...props }: { className?: string }) {
+export default function Logo({
+  className,
+  size = 48,
+  ...props
+}: {
+  className?: string;
+  size?: number;
+}) {
   return (
     <div
       aria-label="Logo"
       className={cn("flex items-center justify-start pl-5 pt-5", className)}
       {...props}
     >
-      <LogoOutlinedIcon size={48} />
+      <LogoOutlinedIcon size={size} />
     </div>
   );
 }
