@@ -58,10 +58,9 @@ const typeToAsMap = {
   [Type.BodyFive]: "p",
   [Type.BodySix]: "p",
 };
-// className='text-4xl'
+// className='text-3'
 const typeToClassNameMap = {
-  [Type.HeadingOne]:
-    "text-3.5xl sm:text-[2.5rem]/tight sm:tracking-px lg:text-5xl/tight",
+  [Type.HeadingOne]: "text-3xl sm:text-[2.5rem]/tight sm:tracking-px",
   [Type.HeadingTwo]: "text-[1.75rem]/9 sm:text-4xl/tight",
   [Type.HeadingThree]: "text-2xl sm:text-[1.75rem]/none",
   [Type.HeadingFour]: "text-xl sm:text-2xl/tight",

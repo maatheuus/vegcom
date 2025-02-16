@@ -1,7 +1,6 @@
 "use client";
 
 import { brazucaStanding } from "@/assets";
-import { useGSAP } from "@gsap/react";
 import {
   Arrow1CustomIcon,
   BoxArrowCustomIcon,
@@ -13,7 +12,8 @@ import {
   Scribble3CustomIcon,
   Scribble4CustomIcon,
   SprinkleCustomIcon,
-} from "@icons";
+} from "@/components/icons";
+import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
 import Image from "next/image";
 import { useEffect, useState } from "react";

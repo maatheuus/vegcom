@@ -25,6 +25,7 @@ export { default as PaperclipOutlinedIcon } from "./outlined/Paperclip";
 export { default as PaperPlaneOutlinedIcon } from "./outlined/PaperPlane";
 export { default as PlantOutlinedIcon } from "./outlined/Plant";
 export { default as PlusOutlinedIcon } from "./outlined/Plus";
+export { default as ProgressLineOutlinedIcon } from "./outlined/ProgressLine";
 export { default as QuestionMarkOutlinedIcon } from "./outlined/QuestionMark";
 export { default as ScrollOutlinedIcon } from "./outlined/Scroll";
 export { default as SmileyFaceOutlinedIcon } from "./outlined/SmileyFace";
