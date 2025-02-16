@@ -11,7 +11,7 @@ import {
   FormField,
   FormItem,
   FormMessage,
-} from "@/components/ui/form";
+} from "@/components/ui/Form";
 import { InputIcon } from "@/components/ui/Input";
 
 import Text from "@/components//ui/Text";

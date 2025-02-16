@@ -11,10 +11,10 @@ import {
   FormField,
   FormItem,
   FormMessage,
-} from "@/components/ui/form";
+} from "@/components/ui/Form";
 
 import { ArrowCircleRightOutlinedIcon } from "@/components/icons";
-import { Checkbox } from "@/components/ui/checkbox";
+import { Checkbox } from "@/components/ui/Checkbox";
 import Col from "@/components/ui/Layout/Helpers/Col";
 import Row from "@/components/ui/Layout/Helpers/Row";
 import Text from "@/components/ui/Text";
