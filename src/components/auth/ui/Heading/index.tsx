@@ -30,14 +30,16 @@ export default function Heading({
       >
         {title}
       </CardTitle>
-      <CardDescription
-        as={asSubtitle}
-        weight={Text.Weight.Normal}
-        type={Text.Type.HeadingTwo}
-        className="text-green-500"
-      >
-        {subTitle}
-      </CardDescription>
+      {subTitle && (
+        <CardDescription
+          as={asSubtitle}
+          weight={Text.Weight.Normal}
+          type={Text.Type.HeadingTwo}
+          className="text-green-500"
+        >
+          {subTitle}
+        </CardDescription>
+      )}
     </CardHeader>
   );
 }

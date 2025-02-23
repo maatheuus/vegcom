@@ -1,4 +1,4 @@
-import "../../../src/assets/background.css";
+import "@/assets/css/signup.css";
 
 export default function RootLayout({
   children,

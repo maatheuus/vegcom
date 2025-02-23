@@ -1,0 +1,20 @@
+@reference "../../../app/global.css";
+
+.signup {
+  @apply absolute;
+}
+
+.signup.signup-arrow {
+  @apply left-[45rem] right-[-8rem] top-26;
+  transform: matrix(-0.74, -0.67, 0.81, -0.59, 0, 0);
+  rotate: 52deg;
+}
+.signup.signup-scribble-3 {
+  @apply left-[78.32%] top-[86.44%];
+}
+.signup.signup-sprinkle {
+  @apply left-[38rem] top-[12.11%];
+}
+.signup.signup-sprinkle-2 {
+  @apply left-[9.21%] right-[86.28%] top-[89.78%] bottom-[7.56%];
+}
