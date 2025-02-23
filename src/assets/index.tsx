@@ -10,6 +10,7 @@ import bgCommunity from "./images/others/bg-community.png";
 import bgPortrait from "./images/others/bg-portrait.png";
 import sideImage from "./images/others/side-image.png";
 import bgHome from "./images/people/bg-home.png";
+import intersect from "./images/people/intersect.png";
 import jorgeTest from "./images/people/jorge.jpg";
 
 export {
@@ -22,6 +23,7 @@ export {
   brazucaStanding1,
   check,
   food,
+  intersect,
   jorgeTest,
   okay,
   sideImage,
