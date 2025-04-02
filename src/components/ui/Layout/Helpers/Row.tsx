@@ -5,7 +5,7 @@ interface Props extends React.ComponentProps<"div"> {
   as?: React.ElementType;
 }
 
-export default function Row({
+function Row({
   className,
   asButton,
   as = "div",
@@ -15,5 +15,18 @@ export default function Row({
 
   return <Comp className={cn("flex flex-row", className)} {...props} />;
 }
-
 Row.displayName = "Row";
+
+export function Center({
+  className,
+  ...props
+}: Props) {
+
+  return <Row className={cn("justify-center items-center", className)} {...props} />;
+}
+
+Center.displayName = "Center";
+
+Row.Center = Center;
+
+export default Row;

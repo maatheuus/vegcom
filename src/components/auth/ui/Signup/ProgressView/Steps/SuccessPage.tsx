@@ -1,10 +1,15 @@
+'use client'
+
 import { check } from "@/assets";
 import { ArrowCircleRightOutlinedIcon } from "@/components/icons";
 import Button from "@/components/ui/Button";
 import Col from "@/components/ui/Layout/Helpers/Col";
+import { useStepStore } from "@/hooks/auth/signupFlow/setLocalData";
 import SignupLayout from "../layout";
 
 export default function SuccessPage() {
+    const { nextStep, setStep } = useStepStore();
+  
   return (
     <SignupLayout
       left={{
@@ -18,6 +23,10 @@ export default function SuccessPage() {
               rightIcon={<ArrowCircleRightOutlinedIcon size={24} />}
               text="Seguinte"
               className="font-semibold w-full sm:max-w-80 hover:[&_svg]:translate-x-1.5 hover:[&_svg]:transition-all hover:[&_svg]:duration-300"
+              onClick={() => {
+                setStep("success");
+                nextStep();
+              }}
             />
           </Col>
         ),

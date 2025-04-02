@@ -19,7 +19,7 @@ export default function LoginCard() {
       <CardFooter className="flex justify-center">
         <Text>
           Não tem uma conta?{" "}
-          <Link href="/register" className="text-green-500 font-semibold">
+          <Link href="/signup" className="text-green-500 font-semibold">
             Registre-se agora
           </Link>
         </Text>

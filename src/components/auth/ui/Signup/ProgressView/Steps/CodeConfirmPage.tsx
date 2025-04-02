@@ -3,6 +3,7 @@ import CodeConfirm from "../../CodeConfirm";
 import SignupLayout from "../layout";
 
 export default function CodeConfirmPage() {
+
   return (
     <SignupLayout
       left={{

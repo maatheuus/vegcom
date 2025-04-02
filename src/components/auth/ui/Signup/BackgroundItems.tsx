@@ -8,7 +8,6 @@ import { useEffect, useState } from "react";
 export default function BackgroundItems() {
   const [isMounted, setIsMounted] = useState(false);
   const [shouldLoad, setShouldLoad] = useState(false);
-  const tl = gsap.timeline({ defaults: { ease: "power2.inOut" } });
   const mm = gsap.matchMedia();
 
   useEffect(() => {

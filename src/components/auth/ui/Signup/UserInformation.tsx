@@ -19,6 +19,7 @@ import Col from "@/components/ui/Layout/Helpers/Col";
 import Row from "@/components/ui/Layout/Helpers/Row";
 import Text from "@/components/ui/Text";
 import { Textarea } from "@/components/ui/TextArea";
+import { useStepStore } from "@/hooks/auth/signupFlow/setLocalData";
 import { useEffect, useRef, useState, type FC } from "react";
 
 const formSchema = z.object({
@@ -39,6 +40,7 @@ const UserInformation: FC<React.ComponentProps<"form">> = ({
 }) => {
   const closedEyeRef = useRef<SVGSVGElement | null>(null);
   const [showingPassword, setShowingPassword] = useState<boolean>(false);
+  const { nextStep, setStep } = useStepStore();
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -133,6 +135,10 @@ const UserInformation: FC<React.ComponentProps<"form">> = ({
             rightIcon={<ArrowCircleRightOutlinedIcon size={24} />}
             text="Seguinte"
             className="font-semibold w-full sm:max-w-80 hover:[&_svg]:translate-x-1.5 hover:[&_svg]:transition-all hover:[&_svg]:duration-300"
+            onClick={() => {
+              setStep("userInformation");
+              nextStep();
+            }}
           />
         </Col>
       </form>

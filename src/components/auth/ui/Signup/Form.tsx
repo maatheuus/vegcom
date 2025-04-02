@@ -18,11 +18,23 @@ import {
   ArrowCircleRightOutlinedIcon,
   AtOutlinedIcon,
   ClosedEyeOutlinedIcon,
+  LoadingOutlinedIcon,
   OpenEyesOutlinedIcon,
   UserDashedFilledIcon,
 } from "@/components/icons";
 import Col from "@/components/ui/Layout/Helpers/Col";
-import { useEffect, useRef, useState, type FC } from "react";
+import useSignupData from "@/hooks/auth/mutations/useSignup";
+import { toast } from "@/hooks/use-toast";
+
+// import { loginWithGoogle } from "@/lib/supabase/authFunctions";
+import { useStepStore } from "@/hooks/auth/signupFlow/setLocalData";
+import {
+  useEffect,
+  useRef,
+  useState,
+  type ComponentProps,
+  type FC,
+} from "react";
 
 const formSchema = z.object({
   username: z.string().min(2, {
@@ -36,12 +48,16 @@ const formSchema = z.object({
     .min(8, { message: "Password must be at least 8 characters." }),
 });
 
-const SignupForm: FC<React.ComponentProps<"form">> = ({
-  className,
-  ...props
-}) => {
+const SignupForm: FC<ComponentProps<"form">> = ({ className, ...props }) => {
   const closedEyeRef = useRef<SVGSVGElement | null>(null);
   const [showingPassword, setShowingPassword] = useState<boolean>(false);
+  const { nextStep, setStep } = useStepStore();
+
+  const {
+    mutate: signup,
+    error: signupError,
+    isPending: isLoading,
+  } = useSignupData();
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -60,12 +76,60 @@ const SignupForm: FC<React.ComponentProps<"form">> = ({
     }
   }, [showingPassword]);
 
+  async function onSubmit(data: z.infer<typeof formSchema>) {
+    if (signupError) {
+      toast({
+        title: "Erro ao fazer login",
+        description:
+          signupError?.message ||
+          "Verifique suas credenciais e tente novamente.",
+        variant: "destructive",
+        duration: 8000,
+      });
+    }
+
+    toast({
+      title: "Sucesso!",
+      variant: "success",
+      duration: 5000,
+    });
+
+    // signup({ ...data });
+    setStep("signupForm");
+    nextStep();
+    return data;
+  }
+
+  // async function handleLoginWithGoogle() {
+  //   const { error } = await loginWithGoogle();
+
+  //   if (error) {
+  //     toast({
+  //       title: "Erro ao fazer login",
+  //       description:
+  //         error.message || "Verifique suas credenciais e tente novamente.",
+  //       variant: "destructive",
+  //       duration: 8000,
+  //     });
+  //   } else {
+  //     toast({
+  //       title: "Sucesso!",
+  //       description: " Vocé foi logado com sucesso.",
+  //       variant: "success",
+  //     });
+  //   }
+  // }
+
   return (
     <Form {...form}>
-      <form className={className} {...props}>
+      <form
+        className={className}
+        onSubmit={form.handleSubmit(onSubmit)}
+        {...props}
+      >
         <Col className="gap-3 px-5 pt-4 pb-6 items-center">
           <FormField
-            // control={form.control}
+            control={form.control}
             name="username"
             render={({ field }) => (
               <FormItem className="w-full max-w-[404px]">
@@ -89,7 +153,7 @@ const SignupForm: FC<React.ComponentProps<"form">> = ({
             )}
           />
           <FormField
-            // control={form.control}
+            control={form.control}
             name="email"
             render={({ field }) => (
               <FormItem className="w-full max-w-[404px]">
@@ -99,7 +163,6 @@ const SignupForm: FC<React.ComponentProps<"form">> = ({
                     type="email"
                     placeholder="Seu Email"
                     autoComplete="email"
-                    defaultValue="qP8pL@example.com"
                     {...field}
                     icon={
                       <AtOutlinedIcon className="text-green-500" size={18} />
@@ -111,16 +174,15 @@ const SignupForm: FC<React.ComponentProps<"form">> = ({
             )}
           />
           <FormField
-            // control={form.control}
+            control={form.control}
             name="password"
             render={({ field }) => (
               <FormItem className="w-full max-w-[404px]">
                 <FormControl>
                   <InputIcon
-                    className="w-full "
+                    className="w-full"
                     type={showingPassword ? "text" : "password"}
                     placeholder="Sua senha"
-                    defaultValue="qP8pL@example.com"
                     autoComplete="new-password"
                     {...field}
                     icon={
@@ -148,18 +210,27 @@ const SignupForm: FC<React.ComponentProps<"form">> = ({
         <Col className="items-center gap-2 px-5 py-4">
           <Button.Icon
             type="submit"
-            rightIcon={<ArrowCircleRightOutlinedIcon size={24} />}
+            rightIcon={
+              isLoading ? (
+                <LoadingOutlinedIcon size={24} />
+              ) : (
+                <ArrowCircleRightOutlinedIcon size={24} />
+              )
+            }
             text="Seguinte"
             className="font-semibold w-full sm:max-w-80 hover:[&_svg]:translate-x-1.5 hover:[&_svg]:transition-all hover:[&_svg]:duration-300"
+            disabled={isLoading}
           />
 
-          <Button
+          {/* <Button
             type="button"
             variant="text"
             className="text-base font-semibold w-full sm:max-w-80 cursor-pointer hover:text-green-700 hover:bg-transparent"
+            disabled={isLoading}
+            onClick={handleLoginWithGoogle}
           >
             Continue com Google
-          </Button>
+          </Button> */}
         </Col>
       </form>
     </Form>

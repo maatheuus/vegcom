@@ -1,6 +1,6 @@
 "use client";
 
-import { brazucaStanding } from "@/assets";
+import { brazucaSitting, brazucaStanding, brazucaStanding1 } from "@/assets";
 import {
   Arrow1CustomIcon,
   BoxArrowCustomIcon,
@@ -13,6 +13,7 @@ import {
   Scribble4CustomIcon,
   SprinkleCustomIcon,
 } from "@/components/icons";
+import { cn } from "@/lib/utils";
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
 import Image from "next/image";
@@ -23,6 +24,9 @@ export default function BackgroundItems() {
   const [shouldLoad, setShouldLoad] = useState(false);
   const tl = gsap.timeline({ defaults: { ease: "power2.inOut" } });
   const mm = gsap.matchMedia();
+  const randomIndexImage = Math.floor(Math.random() * 3);
+  const randomImagesArray = [brazucaSitting, brazucaStanding, brazucaStanding1];
+  const randomImage = randomImagesArray[randomIndexImage];
 
   useGSAP(() => {
     tl.fromTo(
@@ -114,8 +118,8 @@ export default function BackgroundItems() {
     <div className="overflow-hidden">
       {isMounted && shouldLoad && (
         <>
-          <div className="brazuka pointer-events-none hidden md:block">
-            <Image src={brazucaStanding} alt="brazuca standing" unoptimized />
+          <div className={cn("brazuka pointer-events-none hidden md:block", randomImage.src.includes("sitting") && "brazuca-sitting" )}>
+            <Image src={randomImage} alt="brazuca standing" unoptimized />
           </div>
 
           <div className="line-bottom">
