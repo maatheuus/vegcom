@@ -1,3 +1,5 @@
+import QueryClientWrapper from "@/components/tanstack/QueryClientWrapper";
+import { Toaster } from "@/components/ui/toaster";
 import type { Metadata } from "next";
 import "./global.css";
 
@@ -14,7 +16,12 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="pt" suppressHydrationWarning>
-      <body className="bg-green-100 font-frank">{children}</body>
+      <body className="bg-green-100 font-frank">
+        <QueryClientWrapper>
+          {children}
+          <Toaster />
+        </QueryClientWrapper>
+      </body>
     </html>
   );
 }

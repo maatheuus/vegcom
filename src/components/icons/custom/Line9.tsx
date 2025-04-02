@@ -4,11 +4,11 @@ interface Props extends React.SVGProps<SVGSVGElement> {
   width?: number;
   height?: number;
 }
-export default function Line9({ width, height, ...props }: Props) {
+export default function Line9({ width = 301, height = 77, ...props }: Props) {
   return (
     <svg
-      width="301"
-      height="77"
+      width={width}
+      height={height}
       viewBox="0 0 301 77"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"

@@ -9,9 +9,12 @@ import {
   REGEXP_ONLY_DIGITS_AND_CHARS,
 } from "@/components/ui/Input/Otp";
 import Col from "@/components/ui/Layout/Helpers/Col";
+import { useStepStore } from "@/hooks/auth/signupFlow/setLocalData";
 import Link from "next/link";
 
 export default function CodeConfirm() {
+    const { nextStep, setStep } = useStepStore();
+  
   return (
     <Col className="mx-auto h-fit gap-24 justify-around">
       <InputOTP maxLength={6} pattern={REGEXP_ONLY_DIGITS_AND_CHARS}>
@@ -31,6 +34,10 @@ export default function CodeConfirm() {
           rightIcon={<ArrowCircleRightOutlinedIcon size={24} />}
           text="Seguinte"
           className="font-semibold w-full sm:max-w-80 hover:[&_svg]:translate-x-1.5 hover:[&_svg]:transition-all hover:[&_svg]:duration-300"
+          onClick={() => {
+            setStep("codeConfirm");
+            nextStep();
+          }}
         />
 
         <Button

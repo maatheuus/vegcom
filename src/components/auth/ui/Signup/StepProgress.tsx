@@ -1,11 +1,15 @@
 "use client";
+
 import {
   CheckOutlinedIcon,
   ProgressLineOutlinedIcon,
 } from "@/components/icons";
-import { useGSAP } from "@gsap/react";
+import Col from "@/components/ui/Layout/Helpers/Col";
+import Row from "@/components/ui/Layout/Helpers/Row";
+import { useStepStore, type Step } from "@/hooks/auth/signupFlow/setLocalData";
+import { cn } from "@/lib/utils";
 import { gsap } from "gsap/gsap-core";
-import { useState } from "react";
+import { Fragment, useEffect, useRef } from "react";
 
 interface Props extends React.ComponentProps<"div"> {
   label?: string;
@@ -13,69 +17,114 @@ interface Props extends React.ComponentProps<"div"> {
   isDisabled?: boolean;
 }
 
-export default function StepProgress() {
-  const tl = gsap.timeline({ defaults: { ease: "power2.inOut" } });
-  const [isProgressCompleted, setIsProgressCompleted] =
-    useState<boolean>(false);
+const stepsOrder: Step[] = [
+  "signupForm",
+  // "codeConfirm",
+  // "verification",
+  "userInformation",
+  "success",
+];
 
-  useGSAP(() => {
-    if (true) {
-      tl.to(".progress-line", {
-        width: "100%",
-        duration: 1.5,
-        onComplete: () => {
-          setIsProgressCompleted(true);
-        },
-      });
-    }
-  }, [isProgressCompleted]);
+export default function StepProgress({}: Props) {
+  const { currentStep } = useStepStore();
+  const currentIndex = stepsOrder.indexOf(currentStep);
+  const gapRefs = useRef<(HTMLDivElement | null)[]>([]);
+  const animatedGaps = useRef<boolean[]>(
+    new Array(stepsOrder.length - 1).fill(false)
+  );
+
+  useEffect(() => {
+    gapRefs.current.forEach((el, index) => {
+      if (el && index < currentIndex && !animatedGaps.current[index]) {
+        gsap.set(el, { width: "100%" });
+        animatedGaps.current[index] = true;
+      }
+    });
+  }, [currentIndex]);
+
+  useEffect(() => {
+    gapRefs.current.forEach((el, index) => {
+      if (!el) return;
+
+      if (index < currentIndex) {
+        if (!animatedGaps.current[index]) {
+          gsap.to(el, {
+            width: "100%",
+            duration: 1.5,
+            ease: "power2.inOut",
+            onComplete: () => {
+              animatedGaps.current[index] = true;
+            },
+          });
+        } else {
+          gsap.set(el, { width: "100%" });
+        }
+      } else {
+        gsap.to(el, {
+          width: "0%",
+          duration: 0.5,
+          ease: "power2.inOut",
+        });
+      }
+    });
+  }, [currentIndex]);
 
   return (
-    <div className="flex justify-center items-center w-full relative mx-auto">
-      <div className="flex items-center justify-center p-5 gap-2">
-        <div className="flex gap-1.5 items-center relative">
-          <div className="size-5 relative rounded-full flex items-center justify-center border-2 border-green-500">
-            <CheckOutlinedIcon
-              size={24}
-              className="text-green-500 absolute -top-1.5 -right-2"
-            />
-          </div>
-          <span className="text-green-500">01</span>
-        </div>
-        <div className="relative flex-grow">
-          <ProgressLineOutlinedIcon className="text-gray-300" />
-          <div className="progress-line w-0 absolute top-0 left-0 h-full bg-green-500"></div>
-        </div>
+    <Row.Center className="w-full relative mx-auto">
+      <Row.Center className="p-5 gap-2 w-full">
+        {stepsOrder.map((step, index) => {
+          const isCompleted = index < currentIndex;
+          const isCurrent = index === currentIndex;
 
-        <div className="flex gap-1.5 items-center relative">
-          <div className="size-5 relative rounded-full flex items-center justify-center border-2 border-green-500">
-            {isProgressCompleted && (
-              <CheckOutlinedIcon
-                size={24}
-                className="text-green-500 absolute -top-1.5 -right-2"
-              />
-            )}
-          </div>
-          <span className="text-green-500">02</span>
-        </div>
-        <ProgressLineOutlinedIcon />
-
-        <div className="flex gap-1.5 items-center relative">
-          <div className="size-5 relative rounded-full flex items-center justify-center border-2 border-green-500">
-            <CheckOutlinedIcon
-              size={24}
-              className="text-green-500 absolute -top-1.5 -right-2"
-            />
-          </div>
-          <span className="text-green-500">03</span>
-        </div>
-        <ProgressLineOutlinedIcon />
-
-        <div className="flex gap-1.5 items-center relative">
-          <div className="size-5 rounded-full flex items-center justify-center border-2 border-green-500"></div>
-          <span className="text-green-500">04</span>
-        </div>
-      </div>
-    </div>
+          return (
+            <Fragment key={step}>
+              <Col className="items-center">
+                {isCompleted ? (
+                  <Row className="gap-1.5 items-center relative">
+                    <Row.Center className="size-5 relative rounded-full border-2 border-green-500">
+                      <CheckOutlinedIcon
+                        size={24}
+                        className="text-green-500 absolute -top-1.5 -right-2"
+                      />
+                    </Row.Center>
+                    <span className="text-green-500">
+                      {index + 1 < 10 ? `0${index + 1}` : index + 1}
+                    </span>
+                  </Row>
+                ) : (
+                  <Row className="gap-1.5 items-center relative">
+                    <Row.Center
+                      className={cn(
+                        "size-5 relative rounded-full border-2",
+                        isCurrent ? "border-green-500" : "border-gray-300"
+                      )}
+                    ></Row.Center>
+                    <span
+                      className={isCurrent ? "text-green-500" : "text-gray-300"}
+                    >
+                      {index + 1 < 10 ? `0${index + 1}` : index + 1}
+                    </span>
+                  </Row>
+                )}
+              </Col>
+              {index < stepsOrder.length - 1 && (
+                <div className="relative flex-grow w-full">
+                  <ProgressLineOutlinedIcon className="text-gray-300" />
+                  <div
+                    ref={(el) => {
+                      gapRefs.current[index] = el;
+                    }}
+                    className={cn(
+                      "progress-line w-full absolute top-0 left-0 h-full",
+                      isCompleted ? "bg-green-500" : "bg-gray-300"
+                    )}
+                  ></div>
+                </div>
+              )}
+            </Fragment>
+          );
+        })}
+      </Row.Center>
+    </Row.Center>
   );
 }

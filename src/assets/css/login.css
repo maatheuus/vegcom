@@ -23,6 +23,10 @@
   transform: matrix(-1, 0, 0, 1, 0, 0);
 }
 
+.brazuca-sitting {
+  transform: none !important;
+}
+
 .brazuka {
   @apply w-[21.5625rem] h-[23.25rem] scale-x-100 right-12 bottom-20;
 }

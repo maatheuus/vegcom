@@ -2,8 +2,14 @@ import AuthHeader from "@/components//auth/ui/Header";
 import LoginCard from "@/components//auth/ui/Login/Card";
 import AuthFooter from "@/components/auth/ui/Footer";
 import Col from "@/components/ui/Layout/Helpers/Col";
+import { createClient } from "@/lib/supabase/server";
 
-export default function Page() {
+export default async function Page() {
+  const supabase = await createClient();
+  const { data: instruments } = await supabase.from("instruments").select();
+
+  console.log(instruments);
+
   return (
     <>
       <AuthHeader />

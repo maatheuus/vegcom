@@ -1,9 +1,11 @@
 "use client";
 
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
-import { z } from "zod";
-
+import {
+  ArrowCircleRightOutlinedIcon,
+  AtOutlinedIcon,
+  ClosedEyeOutlinedIcon,
+  OpenEyesOutlinedIcon
+} from "@/components/icons";
 import Button from "@/components/ui/Button";
 import {
   Form,
@@ -13,50 +15,82 @@ import {
   FormMessage,
 } from "@/components/ui/Form";
 import { InputIcon } from "@/components/ui/Input";
-
-import Text from "@/components//ui/Text";
-import {
-  ArrowCircleRightOutlinedIcon,
-  AtOutlinedIcon,
-  ClosedEyeOutlinedIcon,
-  GoogleOutlinedIcon,
-  OpenEyesOutlinedIcon,
-} from "@/components/icons";
 import Col from "@/components/ui/Layout/Helpers/Col";
+import { toast } from "@/hooks/use-toast";
+import { login } from "@/lib/supabase/authFunctions";
+import { zodResolver } from "@hookform/resolvers/zod";
 import Link from "next/link";
-import { useEffect, useRef, useState } from "react";
+import { useState } from "react";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
 
 const formSchema = z.object({
-  username: z.string().min(2, {
-    message: "Username must be at least 2 characters.",
-  }),
+  email: z.string().email({ message: "Endereço de email inválido." }),
+  password: z
+    .string()
+    .min(6, { message: "A senha deve ter pelo menos 6 caracteres." }),
 });
 
 export default function LoginForm() {
-  const closedEyeRef = useRef<SVGSVGElement | null>(null);
   const [showingPassword, setShowingPassword] = useState<boolean>(false);
-
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      username: "",
+      email: "",
+      password: "",
     },
   });
 
-  useEffect(() => {
-    if (closedEyeRef.current) {
-      closedEyeRef.current.addEventListener("click", () => {
-        setShowingPassword(!showingPassword);
+  function togglePasswordVisibility() {
+    setShowingPassword((prev) => !prev);
+  }
+
+  async function handleLogin(data: z.infer<typeof formSchema>) {
+    const { error } = await login(data.email, data.password);
+
+    if (error) {
+      toast({
+        title: "Erro ao fazer login",
+        description:
+          error.message || "Verifique suas credenciais e tente novamente.",
+        variant: "destructive",
+        duration: 8000,
+      });
+    } else {
+      toast({
+        title: "Sucesso!",
+        description: "Você foi logado com sucesso.",
+        variant: "success",
       });
     }
-  }, [showingPassword]);
+  }
+
+  // async function handleLoginWithGoogle() {
+  //   const { error } = await loginWithGoogle();
+
+  //   if (error) {
+  //     toast({
+  //       title: "Erro ao fazer login",
+  //       description:
+  //         error.message || "Verifique suas credenciais e tente novamente.",
+  //       variant: "destructive",
+  //       duration: 8000,
+  //     });
+  //   } else {
+  //     toast({
+  //       title: "Sucesso!",
+  //       description: " Vocé foi logado com sucesso.",
+  //       variant: "success",
+  //     });
+  //   }
+  // }
 
   return (
     <Form {...form}>
-      <form className="">
+      <form onSubmit={form.handleSubmit(handleLogin)}>
         <Col className="gap-5 px-5 pt-4 pb-6">
           <FormField
-            // control={form.control}
+            control={form.control}
             name="email"
             render={({ field }) => (
               <FormItem>
@@ -65,17 +99,18 @@ export default function LoginForm() {
                     type="email"
                     placeholder="Seu Email"
                     autoComplete="email"
-                    defaultValue="qP8pL@example.com"
                     {...field}
                     icon={<AtOutlinedIcon size={18} />}
                   />
                 </FormControl>
-                <FormMessage />
+                <FormMessage>
+                  {form.formState.errors.email?.message}
+                </FormMessage>
               </FormItem>
             )}
           />
           <FormField
-            // control={form.control}
+            control={form.control}
             name="password"
             render={({ field }) => (
               <FormItem>
@@ -83,33 +118,34 @@ export default function LoginForm() {
                   <InputIcon
                     type={showingPassword ? "text" : "password"}
                     placeholder="Sua senha"
-                    defaultValue="qP8pL@example.com"
                     autoComplete="new-password"
                     {...field}
                     icon={
                       showingPassword ? (
                         <OpenEyesOutlinedIcon
                           size={18}
-                          ref={closedEyeRef}
+                          onClick={togglePasswordVisibility}
                           className="cursor-pointer"
                         />
                       ) : (
                         <ClosedEyeOutlinedIcon
                           size={18}
-                          ref={closedEyeRef}
+                          onClick={togglePasswordVisibility}
                           className="cursor-pointer"
                         />
                       )
                     }
                   />
                 </FormControl>
-                <FormMessage />
+                <FormMessage>
+                  {form.formState.errors.password?.message}
+                </FormMessage>
               </FormItem>
             )}
           />
           <div className="w-full text-right">
             <Link
-              href="/login"
+              href="/forgot-password"
               className="text-sm text-green-200 hover:text-green-500"
             >
               Esqueceu sua senha?
@@ -123,7 +159,7 @@ export default function LoginForm() {
             text="Login"
             className="w-full sm:max-w-3xs animate-rotate-icon"
           />
-          <Text
+          {/* <Text
             as="span"
             className="text-green-500 text-xs"
             weight={Text.Weight.SemiBold}
@@ -132,11 +168,12 @@ export default function LoginForm() {
           </Text>
           <Button.Icon
             type="button"
+            onClick={handleLoginWithGoogle}
             variant="text"
             leftIcon={<GoogleOutlinedIcon size={24} />}
             text="Continue com Google"
             className="w-full sm:max-w-3xs hover:text-green-700"
-          />
+          /> */}
         </Col>
       </form>
     </Form>

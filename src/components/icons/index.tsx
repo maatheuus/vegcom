@@ -16,6 +16,7 @@ export { default as GoogleOutlinedIcon } from "./outlined/Google";
 export { default as HeartOutlinedIcon } from "./outlined/Heart";
 export { default as ImageOutlinedIcon } from "./outlined/Image";
 export { default as LightBulbOutlinedIcon } from "./outlined/LightBulb";
+export { default as LoadingOutlinedIcon } from "./outlined/Loading";
 export { default as LogoOutlinedIcon } from "./outlined/Logo";
 export { default as MegaphoneOutlinedIcon } from "./outlined/Megaphone";
 export { default as NormalLineOutlinedIcon } from "./outlined/NormalLine";
@@ -43,3 +44,4 @@ export { default as Scribble3CustomIcon } from "./custom/Scribble3";
 export { default as Scribble4CustomIcon } from "./custom/Scribble4";
 export { default as SeatCircleCustomIcon } from "./custom/SeatCircle";
 export { default as SprinkleCustomIcon } from "./custom/Sprinkle";
+
