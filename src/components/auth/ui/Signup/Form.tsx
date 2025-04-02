@@ -94,7 +94,7 @@ const SignupForm: FC<ComponentProps<"form">> = ({ className, ...props }) => {
       duration: 5000,
     });
 
-    // signup({ ...data });
+    signup({ ...data });
     setStep("signupForm");
     nextStep();
     return data;
