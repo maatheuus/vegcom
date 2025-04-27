@@ -10,7 +10,6 @@ import Col from "@/components/ui/Layout/Helpers/Col";
 import Row from "@/components/ui/Layout/Helpers/Row";
 import Text from "@/components/ui/Text";
 import { cn } from "@/lib/utils";
-import gsap from "gsap";
 import Link from "next/link";
 
 type Props = {
@@ -34,50 +33,7 @@ export default function PathLinks({
   className,
   ...props
 }: React.ComponentProps<"div">) {
-  const handleMouseEnter = (index: number) => {
-    gsap.fromTo(
-      `.path-link-${index} .path-links`,
-      {
-        duration: 0.8,
-        width: "0%",
-        opacity: 0,
-        ease: "power2.inOut",
-      },
-      {
-        duration: 0.8,
-        width: "100%",
-        opacity: 1,
-        ease: "power2.inOut",
-      }
-    );
-  };
-
-  const handleMouseLeave = (index: number) => {
-    gsap.fromTo(
-      `.path-link-${index} .path-links`,
-      {
-        duration: 0.8,
-        x: 0,
-        width: "100%",
-        ease: "power2.inOut",
-      },
-      {
-        duration: 0.5,
-        x: "100%",
-        width: "100%",
-        ease: "power2.inOut",
-        onComplete: () => {
-          gsap.to(`.path-link-${index} .path-links`, {
-            duration: 0.001,
-            x: 0,
-            width: 0,
-            opacity: 0,
-          });
-        },
-      }
-    );
-  };
-
+  
   return (
     <Col
       className={cn("w-full max-w-[212px] overflow-hidden", className)}
@@ -87,9 +43,7 @@ export default function PathLinks({
         <Link
           href={link.path}
           key={link.path}
-          className={`flex relative justify-between items-center w-full path-link-${index}`}
-          onMouseEnter={() => handleMouseEnter(index)}
-          onMouseLeave={() => handleMouseLeave(index)}
+          className={`flex relative justify-between items-center w-full path-link-${index} relative flex overflow-hidden after:absolute after:bottom-0 after:left-0 after:h-0.5 after:w-full after:origin-right after:scale-x-0 after:bg-green-500 after:transition-transform after:duration-700 after:ease-in-out after:content-[''] hover:after:origin-left hover:after:scale-x-100`}
         >
           <Row className="gap-x-2.5 py-3">
             <Text as="span" className="text-green-500 font-rancho !text-[16px]">
@@ -109,3 +63,33 @@ export default function PathLinks({
     </Col>
   );
 }
+//   href,
+//   className,
+//   children,
+//   ...props
+// }) => {
+//   if (!href) {
+//     return (
+//       <Text
+//         as="span"
+//         className={`relative flex overflow-hidden text-base !font-bold uppercase !leading-6 tracking-[0.03125rem] text-black-500 after:absolute after:bottom-0 after:left-0 after:h-0.5 after:w-full after:origin-right after:scale-x-0 after:bg-gold-500 after:transition-transform after:duration-500 after:ease-fast after:content-[''] hover:after:origin-left hover:after:scale-x-100${
+//           className ? ` ${className}` : ""
+//         }`}
+//       >
+//         {children}
+//       </Text>
+//     );
+//   }
+
+//   return (
+//     <Link
+//       href={href}
+//       className={`relative flex overflow-hidden text-base font-bold uppercase !leading-6 tracking-[0.03125rem] text-black-500 after:absolute after:bottom-0 after:left-0 after:h-0.5 after:w-full after:origin-right after:scale-x-0 after:bg-gold-500 after:transition-transform after:duration-500 after:ease-fast after:content-[''] hover:after:origin-left hover:after:scale-x-100${
+//         className ? ` ${className}` : ""
+//       }`}
+//       {...props}
+//     >
+//       {children}
+//     </Link>
+//   );
+// };

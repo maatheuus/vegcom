@@ -141,7 +141,27 @@
   * {
     @apply border-border;
   }
+
   body {
     @apply bg-background text-foreground;
+  }
+}
+
+@layer components {
+  .sidebar__icons div {
+    @apply cursor-pointer text-green-200 p-2 hover:text-green-100 hover:bg-green-500 transition-all duration-300;
+    border-radius: 8px 8px 0 8px;
+    
+    & a {
+      @apply text-current text-2xl font-rancho;
+    }
+  }
+
+  .sidebar__icons-selected div {
+    @apply bg-green-200 text-green-100 rounded-full;
+
+    & a {
+      @apply text-green-100;
+    }
   }
 }
