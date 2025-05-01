@@ -1,6 +1,3 @@
-import gsap from "gsap";
-import Link from "next/link";
-import { useEffect, useRef } from "react";
 import {
   ChefHatOutlinedIcon,
   CommunityOutlinedIcon,
@@ -9,9 +6,12 @@ import {
   PlantOutlinedIcon,
   QuestionMarkOutlinedIcon,
   UserDashedFilledIcon,
-} from "../icons";
-import Col from "../ui/Layout/Helpers/Col";
-import Row from "../ui/Layout/Helpers/Row";
+} from "@/components/icons";
+import Col from "@/components/ui/Layout/Helpers/Col";
+import Row from "@/components/ui/Layout/Helpers/Row";
+import gsap from "gsap";
+import Link from "next/link";
+import { useEffect, useRef } from "react";
 
 const sidebarLinks = {
   headerLink: {
@@ -90,17 +90,17 @@ export default function Sidebar() {
   return (
     <div
       ref={sidebarRef}
-      className="h-full w-[64px] overflow-hidden bg-green-50 absolute top-0 left-0 z-50"
+      className="h-full w-[54px] overflow-hidden bg-green-50 absolute top-0 left-0 z-[9999]"
     >
-      <Col className="group justify-between items-start h-full px-4 pb-4">
+      <Col className="group justify-between items-start h-full px-1.5">
         <div
           className="mt-6 relative w-full flex pb-3 after:bg-green-200 after:absolute after:bottom-0
           after:left-0 after:h-0.5 after:w-full after:scale-x-100
           after:transition-transform after:duration-700 after:ease-in-out
           after:content-[''] group-hover:after:origin-left group-hover:after:scale-x-100"
         >
-          <Row className="cursor-pointer items-center gap-x-3 w-fit text-green-200 relative">
-            <LogoOutlinedIcon size={40} />
+          <Row className="cursor-pointer items-center w-fit text-green-200 relative">
+            <LogoOutlinedIcon size={40} className="ml-2" />
             <Link
               href={sidebarLinks.headerLink.href}
               className="text-current text-2xl font-rancho absolute translate-x-12"

@@ -1,5 +1,5 @@
 // Ícones filled
-export { default as HalfFilledIcon } from "./filled/HalfStar";
+export { default as HalfStarFilledIcon } from "./filled/HalfStar";
 export { default as HeartFilledIcon } from "./filled/Heart";
 export { default as StarFilledIcon } from "./filled/Star";
 export { default as UserDashedFilledIcon } from "./filled/UserDashed";

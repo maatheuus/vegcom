@@ -28,7 +28,6 @@ export const buttonVariants = cva(
     },
   }
 );
-// className='rounded-xl'
 export const iconButtonVariants = cva(
   "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-xl text-base font-semibold ring-offset-white transition-colors focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-green-200 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:rounded-full [&_svg]:shrink-0 transition-all duration-300 cursor-pointer ",
   {
@@ -37,15 +36,15 @@ export const iconButtonVariants = cva(
         filled:
           "bg-green-200 text-green-50 hover:bg-green-500 active:bg-green-900",
         "filled-white":
-          "bg-green-50 text-green-500 hover:bg-green-600 active:bg-green-50",
+          "bg-green-50 text-green-500 active:bg-green-50",
         text: "bg-transparent text-green-500 hover:bg-green-50 active:bg-green-100",
         outline:
           "bg-none border border-green-100 text-green-500 hover:border-black-400 active:border-black-600 active:text-black-600",
       },
       size: {
         default: "py-3 px-3",
-        lg: "px-4 py-2 [&_svg]:size-4",
-        md: "p-2 [&_svg]:size-4",
+        lg: "p-4 [&_svg]:size-5",
+        md: "p-2.5 [&_svg]:size-4",
       },
     },
     defaultVariants: {

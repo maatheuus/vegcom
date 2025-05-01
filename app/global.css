@@ -164,4 +164,8 @@
       @apply text-green-100;
     }
   }
+  
+  .hidden-scrollbar::-webkit-scrollbar {
+    width: 0px;
+  }
 }

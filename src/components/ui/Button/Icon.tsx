@@ -11,6 +11,7 @@ export interface ButtonProps
   asChild?: boolean;
   leftIcon?: React.JSX.Element;
   rightIcon?: React.JSX.Element;
+  icon?: React.JSX.Element;
   children?: React.ReactNode;
   text?: string;
 }
@@ -22,6 +23,7 @@ const Icon = React.forwardRef<HTMLButtonElement, ButtonProps>(
       variant,
       leftIcon,
       rightIcon,
+      icon,
       size,
       asChild = false,
       text,
@@ -42,6 +44,9 @@ const Icon = React.forwardRef<HTMLButtonElement, ButtonProps>(
             {leftIcon} {text || children}
           </>
         )}
+
+        {!leftIcon && !rightIcon && (icon)}
+
         {rightIcon && (
           <>
             {text || children} {rightIcon}
