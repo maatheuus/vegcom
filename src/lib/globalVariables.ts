@@ -1,0 +1,1 @@
+export const MAX_LENGTH_FOR_TEXTAREA = 500;

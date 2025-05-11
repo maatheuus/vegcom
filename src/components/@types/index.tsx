@@ -11,3 +11,39 @@ export interface DataRecipeCard {
   };
   views?: number;
 }
+
+export interface Comment {
+  user: {
+    name: string;
+    urlImage: string;
+  };
+  commentContent: string;
+  commentDate: string;
+}
+
+export interface PostCardDataProps {
+  user: {
+    name: string;
+    urlImage: string;
+  };
+  postTitle: string;
+  postContent: {
+    postResources?: {
+      images?: {
+        src: string;
+        alt: string;
+        title: string;
+      }[];
+      links?: string[];
+      content: string;
+    };
+  };
+  comments: {
+    haveComments?: boolean;
+    commentsNumber?: number;
+    comments?: Comment[];
+  };
+  postViews?: number;
+  postDate: string;
+  postTags?: string[];
+}

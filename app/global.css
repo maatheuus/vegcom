@@ -45,6 +45,19 @@
     --sidebar-accent-foreground: 240 5.9% 10%;
     --sidebar-border: 220 13% 91%;
     --sidebar-ring: 217.2 91.2% 59.8%;
+
+    /* emoji picker styles */
+    --background-rgb: 236, 249, 221;
+    --border-radius: 16px;
+    --category-icon-size: 24px;
+    --color-border-over: rgba(27, 78, 48, 0.2);
+    --color-border: rgba(27, 78, 48, 0.1);
+    --font-size: 18px;
+    --rgb-accent: 39, 107, 55;
+    --rgb-background: 255, 253, 244;
+    --rgb-color: 27, 78, 48;
+    --rgb-input: 255, 253, 244;
+    --shadow: 4px 4px 12px -6px rgba(27, 78, 48, 0.3);
   }
 
   .dark {
@@ -151,7 +164,7 @@
   .sidebar__icons div {
     @apply cursor-pointer text-green-200 p-2 hover:text-green-100 hover:bg-green-500 transition-all duration-300;
     border-radius: 8px 8px 0 8px;
-    
+
     & a {
       @apply text-current text-2xl font-rancho;
     }
@@ -164,8 +177,9 @@
       @apply text-green-100;
     }
   }
-  
-  .hidden-scrollbar::-webkit-scrollbar {
+
+  .hidden-scrollbar::-webkit-scrollbar,
+  .hidden-scrollbar div::-webkit-scrollbar {
     width: 0px;
   }
 }
