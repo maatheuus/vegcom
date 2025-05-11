@@ -18,7 +18,7 @@ import { Checkbox } from "@/components/ui/Checkbox";
 import Col from "@/components/ui/Layout/Helpers/Col";
 import Row from "@/components/ui/Layout/Helpers/Row";
 import Text from "@/components/ui/Text";
-import { Textarea } from "@/components/ui/TextArea";
+import Textarea from "@/components/ui/TextArea";
 import { useStepStore } from "@/hooks/auth/signupFlow/setLocalData";
 import { useEffect, useRef, useState, type FC } from "react";
 
