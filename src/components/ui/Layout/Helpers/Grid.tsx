@@ -2,9 +2,9 @@ import { cn } from "@/lib/utils";
 
 interface Props extends React.ComponentProps<"div"> {
   as?: React.ElementType;
-  columns?: number;
-  gap?: number;
-  rows?: number;
+  columns?: string;
+  gap?: string;
+  rows?: string;
 }
 
 export default function Grid({
@@ -19,9 +19,9 @@ export default function Grid({
     <Comp
       className={cn(
         "grid",
-        `grid-cols-${columns}`,
-        `grid-rows-${rows}`,
-        `gap-${gap}`,
+        `${columns ? `grid-cols-${columns}` : ""}`,
+        `${rows ? `grid-rows-${rows}` : ""}`,
+        `${gap ? `gap-${gap}` : ""}`,
         className
       )}
       {...props}
