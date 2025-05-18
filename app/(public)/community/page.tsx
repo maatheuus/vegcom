@@ -1,19 +1,13 @@
-"use client";
 // import AsideCards from "@/components/community/AsideContent";
 import Background from "@/components/community/Background";
-import Layout from "@/components/community/Layout";
-import Sidebar from "@/components/community/Sidebar";
-import Grid from "@/components/ui/Layout/Helpers/Grid";
+import CommunityLayout from "@/components/community/Layout";
+import Layout from "@/components/ui/Layout/";
 
 export default function Page() {
   return (
-    <div className="size-full bg-green-50">
-      <Sidebar />
-      <Background />
-      <Grid columns="16" className="h-dvh ml-20 mr-6">
-        <Layout className="col-start-1 col-end-16" />
-        {/* <AsideCards className="col-start-13" /> */}
-      </Grid>
-    </div>
+    <Layout.Default extraChildren={<Background />}>
+      <CommunityLayout className="col-start-1 col-end-16" />
+      {/* <AsideCards className="col-start-13" /> */}
+    </Layout.Default>
   );
 }

@@ -6,7 +6,7 @@ const publicRoutes = [
   { path: "/login", whenAuthenticated: "redirect" },
   { path: "/signup", whenAuthenticated: "redirect" },
   { path: "/community", whenAuthenticated: "next" },
-  // { path: "/recipes", whenAuthenticated: "next" },
+  { path: "/recipes", whenAuthenticated: "next" },
   // { path: "/curiosity", whenAuthenticated: "redirect" },
   // { path: "/ask-your-questions", whenAuthenticated: "redirect" },
 ] as const;

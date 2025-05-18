@@ -20,7 +20,7 @@ type Props = {
 
 const pathLinksHome: Props[] = [
   { path: "/community", text: "Comunidade", icon: CommunityOutlinedIcon },
-  { path: "/receipts", text: "Receitas", icon: ChefHatOutlinedIcon },
+  { path: "/recipes", text: "Receitas", icon: ChefHatOutlinedIcon },
   { path: "/curiosities", text: "Curiosidades", icon: LightBulbOutlinedIcon },
   {
     path: "/questions",
@@ -63,33 +63,3 @@ export default function PathLinks({
     </Col>
   );
 }
-//   href,
-//   className,
-//   children,
-//   ...props
-// }) => {
-//   if (!href) {
-//     return (
-//       <Text
-//         as="span"
-//         className={`relative flex overflow-hidden text-base !font-bold uppercase !leading-6 tracking-[0.03125rem] text-black-500 after:absolute after:bottom-0 after:left-0 after:h-0.5 after:w-full after:origin-right after:scale-x-0 after:bg-gold-500 after:transition-transform after:duration-500 after:ease-fast after:content-[''] hover:after:origin-left hover:after:scale-x-100${
-//           className ? ` ${className}` : ""
-//         }`}
-//       >
-//         {children}
-//       </Text>
-//     );
-//   }
-
-//   return (
-//     <Link
-//       href={href}
-//       className={`relative flex overflow-hidden text-base font-bold uppercase !leading-6 tracking-[0.03125rem] text-black-500 after:absolute after:bottom-0 after:left-0 after:h-0.5 after:w-full after:origin-right after:scale-x-0 after:bg-gold-500 after:transition-transform after:duration-500 after:ease-fast after:content-[''] hover:after:origin-left hover:after:scale-x-100${
-//         className ? ` ${className}` : ""
-//       }`}
-//       {...props}
-//     >
-//       {children}
-//     </Link>
-//   );
-// };
