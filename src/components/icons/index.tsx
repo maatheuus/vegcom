@@ -10,6 +10,8 @@ export { default as ArrowCircleUpRightOutlinedIcon } from "./outlined/ArrowCircl
 export { default as AtOutlinedIcon } from "./outlined/At";
 export { default as CheckOutlinedIcon } from "./outlined/Check";
 export { default as ChefHatOutlinedIcon } from "./outlined/ChefHat";
+export { default as ChevronDownOutlinedIcon } from "./outlined/ChevronDown";
+export { default as ClockOutlinedIcon } from "./outlined/Clock";
 export { default as ClosedEyeOutlinedIcon } from "./outlined/ClosedEye";
 export { default as CommunityOutlinedIcon } from "./outlined/Community";
 export { default as GoogleOutlinedIcon } from "./outlined/Google";
@@ -29,8 +31,10 @@ export { default as PlusOutlinedIcon } from "./outlined/Plus";
 export { default as ProgressLineOutlinedIcon } from "./outlined/ProgressLine";
 export { default as QuestionMarkOutlinedIcon } from "./outlined/QuestionMark";
 export { default as ScrollOutlinedIcon } from "./outlined/Scroll";
+export { default as SearchOutlinedIcon } from "./outlined/Search";
 export { default as SmileyFaceOutlinedIcon } from "./outlined/SmileyFace";
 export { default as StarOutlinedIcon } from "./outlined/Star";
+export { default as UsersOutlinedIcon } from "./outlined/Users";
 
 // Ícones custom
 export { default as Arrow1CustomIcon } from "./custom/Arrow1";

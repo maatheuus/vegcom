@@ -182,4 +182,16 @@
   .hidden-scrollbar div::-webkit-scrollbar {
     width: 0px;
   }
+
+  .style-scrollbar::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  .style-scrollbar::-webkit-scrollbar-track {
+    @apply bg-green-50;
+  }
+
+  .style-scrollbar::-webkit-scrollbar-thumb {
+    @apply bg-green-200 rounded-md;
+  }
 }
