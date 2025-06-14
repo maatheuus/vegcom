@@ -6,16 +6,7 @@ import Button from "../ui/Button";
 import { Popover, PopoverContent } from "../ui/popover";
 import Text from "../ui/Text";
 import { SelectCategoryItem } from "./SelectCategoryItem";
-
-const categories = {
-  "Tipo de Refeição": ["Café da manhã", "Almoço", "Jantar", "Sobremesas"],
-  "Tempo de Preparo": ["Rápidas (≤ 30min)", "Elaboradas"],
-  "Destaques da Comunidade": [
-    "Mais populares",
-    "Melhor avaliadas",
-    "Novidades",
-  ],
-};
+import { categories } from "./utils";
 
 export function Categories({ className }: React.ComponentProps<"div">) {
   return (
