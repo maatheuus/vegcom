@@ -11,8 +11,8 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 
 import clsx from "clsx";
 import type { HTMLAttributes } from "react";
+import type { Comment } from "../../types";
 import CommentCard from "../ContentRecipe/CommentCard";
-import type { Comment } from "../ContentRecipe/CommentsSection";
 
 interface PostCommentsDialogProps extends HTMLAttributes<HTMLDialogElement> {
   open?: boolean;
