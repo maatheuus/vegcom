@@ -10,7 +10,7 @@ export default function Heart({ size = 24, ...props }: Props) {
       xmlns="http://www.w3.org/2000/svg"
       width={size}
       height={size}
-      fill="#000000"
+      fill="currentColor"
       viewBox="0 0 256 256"
       {...props}
     >

@@ -30,7 +30,7 @@ export default function Page() {
 
   return (
     <Layout.Default className="overflow-y-auto style-scrollbar">
-      <main className="container mx-auto px-4 py-8 space-y-12">
+      <section className="container mx-auto px-4 py-8 space-y-12">
         <Row className="items-center justify-between">
           <Text
             as="h1"
@@ -92,7 +92,7 @@ export default function Page() {
           </Text>
           <RecipeGrid />
         </Col>
-      </main>
+      </section>
     </Layout.Default>
   );
 }

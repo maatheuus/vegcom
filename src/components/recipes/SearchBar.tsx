@@ -1,17 +1,28 @@
 "use client";
 import { SearchOutlinedIcon } from "@/components/icons";
 import clsx from "clsx";
-import { useState } from "react";
+import { useSearchBar } from "./hooks/useSearchBar";
 
 export function SearchBar({ className }: React.ComponentProps<"div">) {
-  const [isFocused, setIsFocused] = useState(false);
-  const [isHovered, setIsHovered] = useState(false);
+  const {
+    isFocused,
+    isHovered,
+    handleFocus,
+    handleBlur,
+    handleMouseEnter,
+    handleMouseLeave,
+  } = useSearchBar();
 
   return (
-    <div className={clsx("relative", className)}>
+    <div 
+      className={clsx("relative", className)}
+      role="search"
+      aria-label="Buscar receitas"
+    >
       <input
         type="text"
         placeholder="Ingredientes..."
+        aria-label="Buscar por ingredientes"
         className={clsx(
           "px-4 py-2 rounded-full border-none font-medium outline-none w-full transition-all duration-300 ease-in-out",
           isFocused ? "pl-10 pr-4 max-w-[25rem] shadow-md" : "max-w-[18.75rem]",
@@ -22,10 +33,10 @@ export function SearchBar({ className }: React.ComponentProps<"div">) {
           "sm:max-w-[18.75rem] sm:focus:max-w-[25rem]",
           "max-w-full"
         )}
-        onFocus={() => setIsFocused(true)}
-        onBlur={() => setIsFocused(false)}
-        onMouseEnter={() => setIsHovered(true)}
-        onMouseLeave={() => setIsHovered(false)}
+        onFocus={handleFocus}
+        onBlur={handleBlur}
+        onMouseEnter={handleMouseEnter}
+        onMouseLeave={handleMouseLeave}
       />
 
       <SearchOutlinedIcon
@@ -36,6 +47,7 @@ export function SearchBar({ className }: React.ComponentProps<"div">) {
             : "left-10 opacity-0 scale-0",
           isHovered || isFocused ? "text-green-50" : "text-green-500"
         )}
+        aria-hidden="true"
       />
     </div>
   );

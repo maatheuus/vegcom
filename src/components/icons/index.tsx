@@ -1,13 +1,16 @@
 // Ícones filled
+export { default as CheckFilledIcon } from "./filled/Check";
 export { default as HalfStarFilledIcon } from "./filled/HalfStar";
 export { default as HeartFilledIcon } from "./filled/Heart";
 export { default as StarFilledIcon } from "./filled/Star";
 export { default as UserDashedFilledIcon } from "./filled/UserDashed";
+export { default as UsersFilledIcon } from "./filled/Users";
 
 // Ícones outlined
 export { default as ArrowCircleRightOutlinedIcon } from "./outlined/ArrowCircleRight";
 export { default as ArrowCircleUpRightOutlinedIcon } from "./outlined/ArrowCircleUpRight";
 export { default as AtOutlinedIcon } from "./outlined/At";
+export { default as CalendarOutlinedIcon } from "./outlined/Calendar";
 export { default as CheckOutlinedIcon } from "./outlined/Check";
 export { default as ChefHatOutlinedIcon } from "./outlined/ChefHat";
 export { default as ChevronDownOutlinedIcon } from "./outlined/ChevronDown";
@@ -32,9 +35,13 @@ export { default as ProgressLineOutlinedIcon } from "./outlined/ProgressLine";
 export { default as QuestionMarkOutlinedIcon } from "./outlined/QuestionMark";
 export { default as ScrollOutlinedIcon } from "./outlined/Scroll";
 export { default as SearchOutlinedIcon } from "./outlined/Search";
+export { default as ShareOutlinedIcon } from "./outlined/Share";
 export { default as SmileyFaceOutlinedIcon } from "./outlined/SmileyFace";
 export { default as StarOutlinedIcon } from "./outlined/Star";
+export { default as TargetOutlinedIcon } from "./outlined/Target";
+export { default as UserOutlinedIcon } from "./outlined/User";
 export { default as UsersOutlinedIcon } from "./outlined/Users";
+export { default as UtensilsOutlinedIcon } from "./outlined/Utensils";
 
 // Ícones custom
 export { default as Arrow1CustomIcon } from "./custom/Arrow1";

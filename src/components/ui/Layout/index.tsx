@@ -35,13 +35,13 @@ interface DefaultProps extends React.ComponentProps<"div"> {
 
 export function Default({ children, extraChildren, className }: DefaultProps) {
   return (
-    <div className={clsx("size-full bg-green-50", className)}>
+    <main className={clsx("size-full bg-green-50", className)}>
       <Sidebar />
       {extraChildren}
       <Grid columns="16" className="h-dvh ml-20 mr-6">
         {children}
       </Grid>
-    </div>
+    </main>
   );
 }
 
