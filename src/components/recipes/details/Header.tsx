@@ -16,14 +16,15 @@ import ShareDropdown from "./ShareDropdown";
 
 interface Props extends React.ComponentProps<"div"> {
   size?: "default" | "max" | "min";
-  savedCount: number;
-  isSaved: boolean;
-  title: string;
-  authorName: string;
-  timeAgo: string;
-  commentsCount: number;
-  rating: number;
+  savedCount?: number;
+  isSaved?: boolean;
+  title?: string;
+  authorName?: string;
+  timeAgo?: string;
+  commentsCount?: number;
+  rating?: number;
   totalReviews?: number;
+  isRecipePage?: boolean;
 }
 
 const Header = memo(function Header({
@@ -36,6 +37,7 @@ const Header = memo(function Header({
   commentsCount,
   rating,
   totalReviews = 5,
+  isRecipePage,
   ...props
 }: Props) {
   const FIRST_ROW_DATA = [
@@ -83,35 +85,45 @@ const Header = memo(function Header({
           {title}
         </Text>
       </div>
-      <Row className="w-full justify-between">
-        <Row className="gap-x-3" role="list" aria-label="Informações da receita">
-          {FIRST_ROW_DATA.map((item, index) => {
-            const Icon = item.icon.type;
-            return (
-              <Row 
-                key={index} 
-                className="gap-x-2"
-                role="listitem"
-                aria-label={item.ariaLabel}
-              >
-                <Icon className="text-green-500" size={18} aria-hidden="true" />
-                <Text
-                  as="span"
-                  type={Text.Type.BodyFive}
-                  weight={Text.Weight.Medium}
-                  className="text-green-500"
+      {isRecipePage && (
+        <Row className="w-full justify-between">
+          <Row
+            className="gap-x-3"
+            role="list"
+            aria-label="Informações da receita"
+          >
+            {FIRST_ROW_DATA.map((item, index) => {
+              const Icon = item.icon.type;
+              return (
+                <Row
+                  key={index}
+                  className="gap-x-2"
+                  role="listitem"
+                  aria-label={item.ariaLabel}
                 >
-                  {item.label}
-                </Text>
-              </Row>
-            );
-          })}
+                  <Icon
+                    className="text-green-500"
+                    size={18}
+                    aria-hidden="true"
+                  />
+                  <Text
+                    as="span"
+                    type={Text.Type.BodyFive}
+                    weight={Text.Weight.Medium}
+                    className="text-green-500"
+                  >
+                    {item.label}
+                  </Text>
+                </Row>
+              );
+            })}
+          </Row>
+          <Row className="gap-x-3" role="group" aria-label="Ações da receita">
+            <SaveRecipeButton initialSaved={isSaved!} />
+            <ShareDropdown />
+          </Row>
         </Row>
-        <Row className="gap-x-3" role="group" aria-label="Ações da receita">
-          <SaveRecipeButton initialSaved={isSaved} />
-          <ShareDropdown />
-        </Row>
-      </Row>
+      )}
     </Col>
   );
 });
