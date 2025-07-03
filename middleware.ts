@@ -18,6 +18,7 @@ const publicRoutes = [
   { pattern: /^\/community$/, whenAuthenticated: "next" },
   { pattern: /^\/recipes$/, whenAuthenticated: "next" },
   { pattern: /^\/recipes\/[^\/]+$/, whenAuthenticated: "next" },
+  { pattern: /^\/new-recipe$/, whenAuthenticated: "next" },
 ] as const;
 
 

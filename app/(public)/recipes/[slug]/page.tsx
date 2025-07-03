@@ -5,8 +5,9 @@ import Layout from "@/components/ui/Layout";
 export default async function page() {
   return (
     <Layout.Default className="overflow-y-auto style-scrollbar">
-      <div className="max-w-[75rem] mx-auto px-4 py-8 space-y-8">
+      <div className="mx-auto px-4 py-8 space-y-8">
         <Header
+          isRecipePage
           savedCount={2}
           isSaved={false}
           authorName="Jorge"
