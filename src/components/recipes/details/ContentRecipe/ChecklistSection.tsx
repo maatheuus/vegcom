@@ -1,6 +1,7 @@
 "use client";
 
 import { CheckOutlinedIcon } from "@/components/icons";
+import type { RecipeType } from "@/components/new-recipe/GroupFields";
 import Button from "@/components/ui/Button";
 import Col from "@/components/ui/Layout/Helpers/Col";
 import Row from "@/components/ui/Layout/Helpers/Row";
@@ -16,7 +17,7 @@ interface ChecklistItem {
 
 interface ChecklistProps extends React.HTMLAttributes<HTMLDivElement> {
   title: string;
-  type: "ingredients" | "instructions" | "cooking-note";
+  type: RecipeType;
   items: ChecklistItem[];
   storageKey?: string;
 }

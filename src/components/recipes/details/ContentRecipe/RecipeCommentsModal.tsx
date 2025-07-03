@@ -4,7 +4,7 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "@/components/ui/dialog";
+} from "@/components/ui/Dialog";
 
 import Col from "@/components/ui/Layout/Helpers/Col";
 import { ScrollArea } from "@/components/ui/scroll-area";

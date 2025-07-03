@@ -13,6 +13,7 @@ export function usePostComposerEditor() {
       }),
     ],
     content: "",
+    immediatelyRender: false,
     editorProps: {
       attributes() {
         return {

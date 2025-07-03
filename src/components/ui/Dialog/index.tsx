@@ -5,7 +5,7 @@ import { X } from "lucide-react";
 import * as React from "react";
 
 import { cn } from "@/lib/utils";
-import Col from "./Layout/Helpers/Col";
+import Col from "../Layout/Helpers/Col";
 
 const Dialog = DialogPrimitive.Root;
 
@@ -45,7 +45,7 @@ const DialogContent = React.forwardRef<
       {...props}
     >
       {children}
-      <DialogPrimitive.Close className="absolute right-4 top-4 rounded-sm opacity-70 cursor-pointer ring-offset-green-200 transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-green-50 focus:ring-offset-2 disabled:pointer-events-none data-[state=open]:bg-accent data-[state=open]:text-green-500">
+      <DialogPrimitive.Close className="absolute right-4 top-4 rounded-sm opacity-70 cursor-pointer ring-offset-green-200 transition-opacity hover:opacity-100 focus:outline-none focus:ring-0 disabled:pointer-events-none data-[state=open]:bg-accent data-[state=open]:text-green-500">
         <X className="size-5" />
         <span className="sr-only">Close</span>
       </DialogPrimitive.Close>
@@ -116,5 +116,6 @@ export {
   DialogOverlay,
   DialogPortal,
   DialogTitle,
-  DialogTrigger,
+  DialogTrigger
 };
+

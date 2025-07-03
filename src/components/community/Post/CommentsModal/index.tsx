@@ -7,7 +7,7 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "@/components/ui/dialog";
+} from "@/components/ui/Dialog";
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/Avatar";
 import Col from "@/components/ui/Layout/Helpers/Col";

@@ -14,6 +14,7 @@ import {
 
 import { Label } from "@/components/ui/Label";
 import { cn } from "@/lib/utils";
+import clsx from "clsx";
 
 const Form = FormProvider;
 
@@ -158,7 +159,7 @@ const FormMessage = React.forwardRef<
     <p
       ref={ref}
       id={formMessageId}
-      className={cn("text-[0.8rem] font-medium text-destructive", className)}
+      className={clsx("text-[0.8rem] font-medium text-red-600 mt-2 mb-4", className)}
       {...props}
     >
       {body}
@@ -175,5 +176,6 @@ export {
   FormItem,
   FormLabel,
   FormMessage,
-  useFormField,
+  useFormField
 };
+
