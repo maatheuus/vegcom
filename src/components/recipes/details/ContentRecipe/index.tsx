@@ -44,9 +44,10 @@ export default function ContentRecipe() {
           storageKey="checklist-instructions"
           items={mockInstructions}
         />
+        
         <ChecklistSection
           title="Cooking Notes"
-          type="cooking-note"
+          type="cookingNotes"
           items={mockCookingNotes}
         />
       </Grid>

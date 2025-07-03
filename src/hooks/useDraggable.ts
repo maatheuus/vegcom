@@ -16,7 +16,7 @@ interface MenuPosition {
 
 const useDraggable = () => {
   const [position, setPosition] = useState<Position>({
-    x: window.innerWidth - 80,
+    x: typeof window !== 'undefined' ? window.innerWidth - 80 : 0,
     y: 36,
   });
 
@@ -38,6 +38,14 @@ const useDraggable = () => {
     const menuWidth = 250;
     const menuHeight = 200;
     const padding = 10;
+
+    if (typeof window === 'undefined') {
+      return {
+        right: "26%",
+        top: "0px",
+        transformOrigin: "top right",
+      };
+    }
 
     const viewportWidth = window.innerWidth;
     const viewportHeight = window.innerHeight;
@@ -106,8 +114,8 @@ const useDraggable = () => {
       const newX = e.clientX - dragOffset.current.x;
       const newY = e.clientY - dragOffset.current.y;
 
-      const maxX = window.innerWidth - 50;
-      const maxY = window.innerHeight - 50;
+      const maxX = typeof window !== 'undefined' ? window.innerWidth - 50 : 0;
+      const maxY = typeof window !== 'undefined' ? window.innerHeight - 50 : 0;
 
       setPosition({
         x: Math.max(0, Math.min(newX, maxX)),
@@ -180,8 +188,8 @@ const useDraggable = () => {
     const newX = touch.clientX - dragOffset.current.x;
     const newY = touch.clientY - dragOffset.current.y;
 
-    const maxX = window.innerWidth - 50;
-    const maxY = window.innerHeight - 50;
+    const maxX = typeof window !== 'undefined' ? window.innerWidth - 50 : 0;
+    const maxY = typeof window !== 'undefined' ? window.innerHeight - 50 : 0;
 
     setPosition({
       x: Math.max(0, Math.min(newX, maxX)),
@@ -222,13 +230,25 @@ const useDraggable = () => {
   }, [isMenuOpen]);
 
   useEffect(() => {
-    const handleResize = () => {
+    // Set initial position once component mounts on client
+    if (typeof window !== 'undefined' && position.x === 0) {
       setPosition({ x: window.innerWidth - 80, y: 36 });
+    }
+  }, [position.x]);
+
+  useEffect(() => {
+    const handleResize = () => {
+      if (typeof window !== 'undefined') {
+        setPosition({ x: window.innerWidth - 80, y: 36 });
+      }
     };
-    window.addEventListener("resize", handleResize);
-    return () => {
-      window.removeEventListener("resize", handleResize);
-    };
+    
+    if (typeof window !== 'undefined') {
+      window.addEventListener("resize", handleResize);
+      return () => {
+        window.removeEventListener("resize", handleResize);
+      };
+    }
   }, []);
 
   const containerStyle: React.CSSProperties = {

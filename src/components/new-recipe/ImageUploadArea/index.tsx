@@ -16,7 +16,7 @@ import type { ComponentProps } from "react";
 import { useCallback, useMemo, useState } from "react";
 import type { UseFormReturn } from "react-hook-form";
 import type { z } from "zod";
-import type { formSchema } from "../NewRecipeForm";
+import { type newRecipeFormSchema } from "../../recipes/utils";
 import ImageGallery from "./ImageGallery";
 
 interface UploadingImage {
@@ -28,7 +28,7 @@ interface UploadingImage {
 }
 
 export interface Props extends ComponentProps<"div"> {
-  form: UseFormReturn<z.infer<typeof formSchema>>;
+  form: UseFormReturn<z.infer<typeof newRecipeFormSchema>>;
 }
 
 const MAX_IMAGES = 8;

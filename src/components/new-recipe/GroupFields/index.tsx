@@ -20,7 +20,11 @@ import type { Props } from "../ImageUploadArea";
 import RenderCheckList from "./RenderCheckList";
 
 export type RecipeType = "ingredients" | "instructions" | "cookingNotes";
-
+type Item = {
+  id: string;
+  label: string;
+  value: string;
+}
 export default function GroupFields({ form }: Props) {
   const currentIngredients = useWatch({
     control: form.control,
@@ -57,8 +61,8 @@ export default function GroupFields({ form }: Props) {
 
     if (over && active.id !== over.id) {
       const list = current[type];
-      const oldIndex = list.findIndex((item) => item.id === active.id);
-      const newIndex = list.findIndex((item) => item.id === over.id);
+      const oldIndex = list.findIndex((item: Item) => item.id === active.id);
+      const newIndex = list.findIndex((item: Item) => item.id === over.id);
 
       if (oldIndex === -1 || newIndex === -1) return;
 
@@ -129,19 +133,19 @@ export default function GroupFields({ form }: Props) {
         case "ingredients":
           form.setValue(
             "recipe_ingredients",
-            currentIngredients.filter((item) => item.id !== id)
+            currentIngredients.filter((item: Item) => item.id !== id)
           );
           break;
         case "instructions":
           form.setValue(
             "recipe_instructions",
-            currentInstructions.filter((item) => item.id !== id)
+            currentInstructions.filter((item: Item) => item.id !== id)
           );
           break;
         case "cookingNotes":
           form.setValue(
             "recipe_cookingNotes",
-            currentCookingNotes.filter((item) => item.id !== id)
+            currentCookingNotes.filter((item: Item) => item.id !== id)
           );
           break;
         default:
@@ -218,7 +222,7 @@ export default function GroupFields({ form }: Props) {
               onDragEnd={(e) => handleDragEnd(e, type)}
             >
               <SortableContext
-                items={current[type].map((i) => i.id)}
+                items={current[type].map((i: Item) => i.id)}
                 strategy={verticalListSortingStrategy}
               >
                 <RenderCheckList
