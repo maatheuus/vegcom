@@ -195,3 +195,9 @@
     @apply bg-green-200 rounded-md;
   }
 }
+
+@layer utilities {
+  .hover-link {
+    @apply after:absolute after:bottom-0 after:left-0 after:h-0.5 after:w-full after:origin-right after:scale-x-0 after:bg-green-500 after:transition-transform after:duration-700 after:ease-in-out after:content-[''] hover:after:origin-left hover:after:scale-x-100;
+  }
+}

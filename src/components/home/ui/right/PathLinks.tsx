@@ -43,7 +43,7 @@ export default function PathLinks({
         <Link
           href={link.path}
           key={link.path}
-          className={`flex relative justify-between items-center w-full path-link-${index} relative flex overflow-hidden after:absolute after:bottom-0 after:left-0 after:h-0.5 after:w-full after:origin-right after:scale-x-0 after:bg-green-500 after:transition-transform after:duration-700 after:ease-in-out after:content-[''] hover:after:origin-left hover:after:scale-x-100`}
+          className={`flex relative justify-between items-center w-full path-link-${index} relative flex overflow-hidden hover-link h-fit`}
         >
           <Row className="gap-x-2.5 py-3">
             <Text as="span" className="text-green-500 font-rancho !text-[16px]">

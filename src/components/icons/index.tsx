@@ -9,6 +9,7 @@ export { default as UsersFilledIcon } from "./filled/Users";
 // Ícones outlined
 export { default as ArrowCircleRightOutlinedIcon } from "./outlined/ArrowCircleRight";
 export { default as ArrowCircleUpRightOutlinedIcon } from "./outlined/ArrowCircleUpRight";
+export { default as ArrowRightOutlinedIcon } from "./outlined/ArrowRight";
 export { default as AtOutlinedIcon } from "./outlined/At";
 export { default as CalendarOutlinedIcon } from "./outlined/Calendar";
 export { default as CheckOutlinedIcon } from "./outlined/Check";
