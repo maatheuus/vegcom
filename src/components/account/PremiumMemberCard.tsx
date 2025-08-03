@@ -1,8 +1,7 @@
 import clsx from "clsx";
 import Link from "next/link";
 import type { ComponentProps } from "react";
-import { ArrowRightOutlinedIcon, PlantOutlinedIcon } from "../icons";
-import Col from "../ui/Layout/Helpers/Col";
+import { PlantOutlinedIcon } from "../icons";
 import Text from "../ui/Text";
 import {
   Tooltip,
@@ -14,32 +13,30 @@ import {
 export default function PremiumMemberCard({
   className,
   ...props
-}: ComponentProps<"div">) {
+}: ComponentProps<"a">) {
   return (
-    <Col
+    <Link
+      href="/upgrade"
       className={clsx(
-        "bg-green-100 gap-y-3 size-fit p-2 my-auto items-center rounded-full",
+        "bg-green-100 size-auto p-2 my-auto flex items-center rounded-full hover:bg-green-500 transition-colors duration-300 group cursor-pointer",
         className
       )}
       {...props}
     >
-      <TooltipProvider>
+      <TooltipProvider delayDuration={100}>
         <Tooltip>
-          <TooltipTrigger className="cursor-pointer">
-            <Link href="/upgrade" className="contents">
-              <PlantOutlinedIcon size={24} className="text-green-500" />
-            </Link>
+          <TooltipTrigger>
+            <PlantOutlinedIcon
+              size={24}
+              className="text-green-500 group-hover:text-green-50 cursor-pointer"
+            />
           </TooltipTrigger>
 
-          <TooltipContent className="flex mr-4 mb-4 items-start">
+          <TooltipContent className="flex mr-2 mb-4 items-start">
             <Text type={Text.Type.BodyFour}>Desbloqueie um sabor extra</Text>
-            <ArrowRightOutlinedIcon
-              size={16}
-              className="text-green-50 -rotate-45"
-            />
           </TooltipContent>
         </Tooltip>
       </TooltipProvider>
-    </Col>
+    </Link>
   );
 }

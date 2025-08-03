@@ -8,7 +8,7 @@ import {
   PlantOutlinedIcon,
   PlusOutlinedIcon,
   QuestionMarkOutlinedIcon,
-  UserDashedFilledIcon,
+  UserGearOutlinedIcon
 } from "@/components/icons";
 import Col from "@/components/ui/Layout/Helpers/Col";
 import Row from "@/components/ui/Layout/Helpers/Row";
@@ -42,7 +42,7 @@ const sidebarLinks = {
   ],
   bottomLinks: [
     { label: "Upgrade", href: "/upgrade", icon: PlantOutlinedIcon },
-    { label: "teste@teste.com", href: "/account", icon: UserDashedFilledIcon },
+    { label: "teste@teste.com", href: "/account", icon: UserGearOutlinedIcon },
   ],
 };
 
@@ -64,7 +64,7 @@ export default function Sidebar() {
               <TooltipContent
                 side="right"
                 align="center"
-                className="bg-green-500 text-white"
+                className="bg-green-500 text-white text-base"
               >
                 Vegcom
               </TooltipContent>
@@ -87,7 +87,7 @@ export default function Sidebar() {
                 <TooltipContent
                   side="right"
                   align="center"
-                  className="bg-green-500 text-white"
+                  className="bg-green-500 text-white text-base"
                 >
                   {label}
                 </TooltipContent>
@@ -111,7 +111,7 @@ export default function Sidebar() {
                 <TooltipContent
                   side="right"
                   align="center"
-                  className="bg-green-500 text-white"
+                  className="bg-green-500 text-white text-base"
                 >
                   {label}
                 </TooltipContent>
