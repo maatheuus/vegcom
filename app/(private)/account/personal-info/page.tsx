@@ -1,11 +1,11 @@
 "use client";
 
-import DisplayInformation from "@/components/account/DisplayInformation";
-import FormInformation from "@/components/account/FormInformation";
+import DisplayInformation from "@/components/account/(personal-info)/DisplayInformation";
+import FormInformation from "@/components/account/(personal-info)/FormInformation";
 import LayoutAccount from "@/components/account/LayoutAccount";
 import {
   maxLengthForBio,
-  personalInfoFormSchema
+  personalInfoFormSchema,
 } from "@/components/account/utils";
 import {
   EditPencilOutlinedIcon,
@@ -70,7 +70,11 @@ export default function Page() {
 
   return (
     <>
-      <LayoutAccount title={`Sobre ${fullName}`} isEditing={isEditing} />
+      <LayoutAccount
+        pathName="personal-info"
+        title={`Sobre ${fullName}`}
+        isEditing={isEditing}
+      />
 
       <Col className="gap-y-4 relative mb-10">
         <Row className="w-fit items-center absolute -bottom-16 right-0">

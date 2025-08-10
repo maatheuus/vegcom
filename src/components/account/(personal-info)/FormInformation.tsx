@@ -26,7 +26,7 @@ import {
   dietOptions,
   maxLengthForBio,
   monthlyGoalOptions,
-} from "./utils";
+} from "../utils";
 
 interface Props extends React.HTMLAttributes<HTMLFormElement> {
   form: UseFormReturn<

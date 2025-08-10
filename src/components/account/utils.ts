@@ -10,53 +10,87 @@ export const defaultInfoItems = [
   {
     title: "Quem é você?",
     desc: "Atualize seus dados pessoais",
-    link: "/account/personal-info",
+    link: "personal-info",
     icon: PersonOutlinedIcon,
+    requiresPremium: false,
   },
   {
     title: "Planos & Assinaturas",
     desc: "Configure sua assinatura",
-    link: "/account/subscription",
+    link: "subscription",
     icon: ArrowsClockwiseOutlinedIcon,
+    requiresPremium: true,
   },
   {
     title: "Masterchef em Ação",
     desc: "Aqui ficam as receitas que te transformam em chef!",
-    link: "/account/recipes",
+    link: "recipes",
     icon: ChefHatOutlinedIcon,
+    requiresPremium: false,
   },
   {
     title: "Favoritas do Coração",
     desc: "Aqui estão as receitas que te fazem salivar só de pensar.",
-    link: "/account/favorites",
+    link: "favorites",
     icon: HeartOutlinedIcon,
+    requiresPremium: false,
   },
 ];
 
 export const messagesToDisplayForPremium = [
   {
-    text: "Você é demais",
+    text: "Agora você joga no modo turbo!",
   },
   {
-    text: "Você é incrível",
+    text: "Você desbloqueou o clube secreto dos legais!",
   },
   {
-    text: "Obrigado por se inscrever",
+    text: "Premium é pouco, você é VIP!",
   },
   {
-    text: "O café hoje é por minha conta",
+    text: "Sua presença melhora até a conexão Wi-Fi!",
   },
   {
-    text: "Você é Premium",
+    text: "O mundo ficou 10% melhor com sua assinatura!",
   },
   {
-    text: "Parte do time",
+    text: "Você é a definição de bom gosto!",
   },
   {
-    text: "A melhor de todas as pessoas",
+    text: "Com você, tudo faz mais sentido!",
   },
   {
-    text: "Obrigado por pagar meu café hoje",
+    text: "Premium de corpo, alma e coração!",
+  },
+  {
+    text: "O universo agradece sua escolha!",
+  },
+  {
+    text: "Você deixou tudo mais bonito por aqui!",
+  },
+  {
+    text: "A galera do Premium te manda um high five!",
+  },
+  {
+    text: "Upgrade completo: agora você brilha mais!",
+  },
+  {
+    text: "Dizem que quem assina Premium tem mais sorte!",
+  },
+  {
+    text: "Se fosse um superpoder, seria o mais legal!",
+  },
+  {
+    text: "Assinatura confirmada, carisma ativado!",
+  },
+  {
+    text: "Avisa que é você: Premium e sensacional!",
+  },
+  {
+    text: "Você entrou pro hall da fama dos incríveis!",
+  },
+  {
+    text: "Premium com orgulho e estilo!",
   },
 ];
 

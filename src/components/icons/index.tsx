@@ -12,6 +12,7 @@ export { default as ArrowCircleUpRightOutlinedIcon } from "./outlined/ArrowCircl
 export { default as ArrowRightOutlinedIcon } from "./outlined/ArrowRight";
 export { default as ArrowsClockwiseOutlinedIcon } from "./outlined/ArrowsClockwise";
 export { default as AtOutlinedIcon } from "./outlined/At";
+export { default as BroomOutlinedIcon } from "./outlined/Broom";
 export { default as CalendarOutlinedIcon } from "./outlined/Calendar";
 export { default as CheckOutlinedIcon } from "./outlined/Check";
 export { default as ChefHatOutlinedIcon } from "./outlined/ChefHat";
@@ -20,6 +21,7 @@ export { default as ClockOutlinedIcon } from "./outlined/Clock";
 export { default as ClosedEyeOutlinedIcon } from "./outlined/ClosedEye";
 export { default as CloudArrowUpOutlinedIcon } from "./outlined/CloudArrowUp";
 export { default as CommunityOutlinedIcon } from "./outlined/Community";
+export { default as CookingPotOutlinedIcon } from "./outlined/CookingPot";
 export { default as EditPencilOutlinedIcon } from "./outlined/EditPencil";
 export { default as FloppyDiskOutlinedIcon } from "./outlined/FloppyDisk";
 export { default as FlyingSaucerOutlinedIcon } from "./outlined/FlyingSaucer";
@@ -66,4 +68,3 @@ export { default as Scribble3CustomIcon } from "./custom/Scribble3";
 export { default as Scribble4CustomIcon } from "./custom/Scribble4";
 export { default as SeatCircleCustomIcon } from "./custom/SeatCircle";
 export { default as SprinkleCustomIcon } from "./custom/Sprinkle";
-

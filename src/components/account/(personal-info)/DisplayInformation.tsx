@@ -1,7 +1,11 @@
 import type { UseFormReturn } from "react-hook-form";
-import Col from "../ui/Layout/Helpers/Col";
-import Text from "../ui/Text";
-import { culinaryLevelOptions, dietOptions, monthlyGoalOptions } from "./utils";
+import Col from "../../ui/Layout/Helpers/Col";
+import Text from "../../ui/Text";
+import {
+  culinaryLevelOptions,
+  dietOptions,
+  monthlyGoalOptions,
+} from "../utils";
 
 interface Props {
   form: UseFormReturn<

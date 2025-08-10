@@ -1,10 +1,9 @@
-import Headline from "@/components/account/Headline";
+import LayoutAccount from "@/components/account/LayoutAccount";
 
-export default function page () {
-
-return (
-  <div>
-    <Headline title="Subscrição" />
-  </div>
-);
+export default function page() {
+  return (
+    <>
+      <LayoutAccount pathName="subscription" title="Assinatura" />
+    </>
+  );
 }

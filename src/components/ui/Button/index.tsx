@@ -4,6 +4,7 @@ import * as React from "react";
 
 import { cn } from "@/lib/utils";
 import Icon from "./Icon";
+import Link from "./Link";
 import { buttonVariants } from "./variants";
 
 export interface ButtonProps
@@ -15,6 +16,7 @@ export interface ButtonProps
 
 const Button: React.FC<ButtonProps> & {
   Icon: typeof Icon;
+  Link: typeof Link;
 } = ({ asChild, variant, size, className, ...props }) => {
   const Comp = asChild ? Slot : "button";
   return (
@@ -26,5 +28,6 @@ const Button: React.FC<ButtonProps> & {
 };
 Button.displayName = "Button";
 Button.Icon = Icon;
+Button.Link = Link;
 
 export default Button;

@@ -3,7 +3,17 @@ import { SearchOutlinedIcon } from "@/components/icons";
 import clsx from "clsx";
 import { useSearchBar } from "./hooks/useSearchBar";
 
-export function SearchBar({ className }: React.ComponentProps<"div">) {
+interface Props extends React.ComponentProps<"input"> {
+  inputClassName?: string;
+  placeholder?: string;
+}
+
+export function SearchBar({
+  className,
+  placeholder = "Ingredientes...",
+  inputClassName,
+  ...props
+}: Props) {
   const {
     isFocused,
     isHovered,
@@ -14,14 +24,14 @@ export function SearchBar({ className }: React.ComponentProps<"div">) {
   } = useSearchBar();
 
   return (
-    <div 
+    <div
       className={clsx("relative", className)}
       role="search"
       aria-label="Buscar receitas"
     >
       <input
         type="text"
-        placeholder="Ingredientes..."
+        placeholder={placeholder}
         aria-label="Buscar por ingredientes"
         className={clsx(
           "px-4 py-2 rounded-full border-none font-medium outline-none w-full transition-all duration-300 ease-in-out",
@@ -31,12 +41,14 @@ export function SearchBar({ className }: React.ComponentProps<"div">) {
             : "bg-green-50 text-green-500 placeholder:text-green-500",
           "focus:outline-none focus:ring-0",
           "sm:max-w-[18.75rem] sm:focus:max-w-[25rem]",
-          "max-w-full"
+          "max-w-full",
+          inputClassName
         )}
         onFocus={handleFocus}
         onBlur={handleBlur}
         onMouseEnter={handleMouseEnter}
         onMouseLeave={handleMouseLeave}
+        {...props}
       />
 
       <SearchOutlinedIcon

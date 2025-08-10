@@ -172,3 +172,5 @@ export default function RecipeCard({
     </Link>
   );
 }
+
+RecipeCard.displayName = "RecipesRecipeCard";
