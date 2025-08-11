@@ -15,7 +15,6 @@ import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useCallback, useEffect, useState } from "react";
 
 export type SortValues = "recent" | "old" | "views" | "rating";
-interface Props {}
 
 const sortByOptions = [
   { value: "recent", label: "Mais recentes" },
@@ -24,7 +23,7 @@ const sortByOptions = [
   { value: "rating", label: "Mais avaliadas" },
 ];
 
-export default function RecipeFilter({}: Props) {
+export default function RecipeFilter() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const pathname = usePathname();
@@ -35,19 +34,13 @@ export default function RecipeFilter({}: Props) {
   );
   const debouncedSearchParam = useDebounce(searchTerm, 200);
 
-  const handleSearch = useCallback(
-    (e: React.ChangeEvent<HTMLInputElement>) => {
-      setSearchTerm(e.target.value);
-    },
-    [searchParams]
-  );
+  const handleSearch = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchTerm(e.target.value);
+  }, []);
 
-  const handleSort = useCallback(
-    (value: string) => {
-      setSortBy(value);
-    },
-    [searchParams]
-  );
+  const handleSort = useCallback((value: string) => {
+    setSortBy(value);
+  }, []);
 
   useEffect(() => {
     const params = new URLSearchParams(searchParams.toString());

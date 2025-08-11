@@ -15,9 +15,10 @@ import Text from "@/components/ui/Text";
 import gsap from "gsap";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
+import type { DataRecipeCardAccount } from "../../../../app/(private)/account/recipes/page";
 
 interface Props {
-  filteredData: any[];
+  filteredData: DataRecipeCardAccount[];
   searchQuery?: string;
   isFavorites?: boolean;
 }
@@ -207,7 +208,7 @@ export default function RecipeEmptyState({
             type={Text.Type.BodyFour}
             className="text-green-500 text-sm max-w-md leading-relaxed"
           >
-            <span className="font-medium">"{searchQuery}"</span>
+            <span className="font-medium">&quot;{searchQuery}&quot;</span>
             {isFavorites
               ? "? Hmmm… Parece que essa receita ainda não foi descoberta!"
               : "não está na despensa. Será que vale improvisar?"}

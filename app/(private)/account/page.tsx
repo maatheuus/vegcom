@@ -1,7 +1,6 @@
 import LayoutAccount from "@/components/account/LayoutAccount";
 import { LightBulbOutlinedIcon } from "@/components/icons";
 import Text from "@/components/ui/Text";
-import type { ComponentProps } from "react";
 
 const tips = [
   {
@@ -36,16 +35,13 @@ const tips = [
   },
 ];
 
-export default function page({ className, ...props }: ComponentProps<"div">) {
+export default function Page() {
   return (
     <>
       <LayoutAccount title="Configurações" />
 
       <div className="w-full h-fit relative">
-        <div
-          className={`flex flex-col gap-y-4 w-full ${className || ""}`}
-          {...props}
-        >
+        <div className="flex flex-col gap-y-4 w-full">
           <div className="flex items-center gap-x-2">
             <LightBulbOutlinedIcon size={22} className="text-green-500" />
             <Text
