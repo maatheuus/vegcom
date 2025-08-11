@@ -120,3 +120,5 @@ export default function RecipeCard({ className, data, ...props }: Props) {
     </Col>
   );
 }
+
+RecipeCard.displayName = "AsideRecipeCard";
