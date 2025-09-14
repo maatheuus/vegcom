@@ -1,14 +1,14 @@
 "use client";
 
 import {
+  ChatCircleOutlinedIcon,
   ChefHatOutlinedIcon,
   CommunityOutlinedIcon,
-  LightBulbOutlinedIcon,
   LogoOutlinedIcon,
   PlantOutlinedIcon,
   PlusOutlinedIcon,
   QuestionMarkOutlinedIcon,
-  UserGearOutlinedIcon
+  UserGearOutlinedIcon,
 } from "@/components/icons";
 import Col from "@/components/ui/Layout/Helpers/Col";
 import Row from "@/components/ui/Layout/Helpers/Row";
@@ -28,7 +28,11 @@ const sidebarLinks = {
   topLinks: [
     { label: "Comunidade", href: "/community", icon: CommunityOutlinedIcon },
     { label: "Receitas", href: "/recipes", icon: ChefHatOutlinedIcon },
-    { label: "Curiosidades", href: "/curiosity", icon: LightBulbOutlinedIcon },
+    {
+      label: "Chat",
+      href: "/curiosity?tab=chat",
+      icon: ChatCircleOutlinedIcon,
+    },
     {
       label: "Dúvidas",
       href: "/ask-your-questions",
