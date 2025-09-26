@@ -1,5 +1,6 @@
 import QueryClientWrapper from "@/components/tanstack/QueryClientWrapper";
 import { Toaster } from "@/components/ui/toaster";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 import type { Metadata } from "next";
 import "./global.css";
 
@@ -21,6 +22,7 @@ export default function RootLayout({
           {children}
           <Toaster />
         </QueryClientWrapper>
+        <SpeedInsights />
       </body>
     </html>
   );
