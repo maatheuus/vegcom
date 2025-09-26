@@ -132,8 +132,8 @@ const ChatProvider: React.FC<{ children: React.ReactNode }> = ({
             return chat;
           })
         );
-      } catch (error: any) {
-        if (error.message !== "Aborted") {
+      } catch (error: unknown) {
+        if (error instanceof Error && error.message !== "Aborted") {
           console.error("Error sending message:", error);
           const errorMessage: Message = {
             id: (Date.now() + 1).toString(),

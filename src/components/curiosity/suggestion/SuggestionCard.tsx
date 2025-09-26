@@ -37,7 +37,7 @@ const SuggestionCard: React.FC<{
             type={Text.Type.BodyFive}
             className="text-green-500 opacity-80 italic truncate"
           >
-            "{suggestion.prompt.substring(0, 50)}..."
+            &quot{suggestion.prompt.substring(0, 50)}...&quot
           </Text>
         </div>
       </div>
