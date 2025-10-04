@@ -13,15 +13,15 @@ const InputIcon = React.forwardRef<HTMLInputElement, InputIconProps>(
     return (
       <Row
         className={cn(
-          "w-full items-center justify-between relative",
-          containerClassName
+          "relative w-full items-center justify-between",
+          containerClassName,
         )}
       >
         <input
           type={type}
           className={cn(
             "font-frank flex w-full rounded-xl border border-green-500 bg-transparent px-3.5 py-3 text-base transition-colors placeholder:text-green-200 focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50",
-            className
+            className,
           )}
           ref={ref}
           {...props}
@@ -29,7 +29,7 @@ const InputIcon = React.forwardRef<HTMLInputElement, InputIconProps>(
         <div className="absolute right-3.5 z-20">{Icon}</div>
       </Row>
     );
-  }
+  },
 );
 
 InputIcon.displayName = "InputIcon";
@@ -40,14 +40,14 @@ const Input = React.forwardRef<HTMLInputElement, React.ComponentProps<"input">>(
       <input
         type={type}
         className={cn(
-          "font-frank text-green-500 flex w-full rounded-xs border border-green-500 bg-transparent px-3.5 py-3 text-base transition-colors placeholder:text-green-200 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-green-500 disabled:cursor-not-allowed disabled:opacity-50 md:text-sm",
-          className
+          "font-maitree flex w-full rounded-xs border border-green-500 bg-transparent px-3.5 py-3 text-base text-green-500 transition-colors placeholder:text-green-200 focus-visible:ring-1 focus-visible:ring-green-500 focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm",
+          className,
         )}
         ref={ref}
         {...props}
       />
     );
-  }
+  },
 );
 Input.displayName = "Input";
 

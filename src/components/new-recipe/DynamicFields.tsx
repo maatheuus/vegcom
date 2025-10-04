@@ -18,7 +18,7 @@ export default function DynamicFields({
         as="h2"
         type={Text.Type.HeadingThree}
         weight={Text.Weight.Medium}
-        className="text-green-500"
+        className="font-lora text-green-500"
       >
         {title}
       </Text>

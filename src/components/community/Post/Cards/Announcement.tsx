@@ -10,8 +10,13 @@ interface Props {
 export default function PostCardAnnouncement({ data }: Props) {
   return (
     <PostCardRoot data={data} variant="announcement">
-      <Col className="w-full h-fit font-frank text-green-500 gap-y-1">
-        <Text as="p" type={Text.Type.BodyFour} weight={Text.Weight.Medium}>
+      <Col className="w-full h-fit text-green-500 gap-y-1">
+        <Text
+          as="p"
+          type={Text.Type.BodyFour}
+          weight={Text.Weight.Medium}
+          className=""
+        >
           {data.postContent.postResources?.content}
         </Text>
       </Col>

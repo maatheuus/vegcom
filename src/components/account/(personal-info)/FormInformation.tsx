@@ -25,7 +25,6 @@ import {
   culinaryLevelOptions,
   dietOptions,
   maxLengthForBio,
-  monthlyGoalOptions,
 } from "../utils";
 
 interface Props extends React.HTMLAttributes<HTMLFormElement> {
@@ -38,7 +37,6 @@ interface Props extends React.HTMLAttributes<HTMLFormElement> {
       publicProfile: boolean;
       dietType: string;
       culinaryLevel: string;
-      monthlyGoal: string;
       password?: string | undefined;
       newPassword?: string | undefined;
       confirmPassword?: string | undefined;
@@ -58,19 +56,21 @@ export default function FormInformation({
 }: Props) {
   const [bioErrorMessage, setBioErrorMessage] = useState<string | null>(null);
   const [bioErrorType, setBioErrorType] = useState<"short" | "long" | null>(
-    null
+    null,
   );
 
   return (
     <form className={`space-y-6 ${className || ""}`}>
-      <div className="w-full flex items-start gap-x-4 flex-col md:flex-row">
+      <div className="flex w-full flex-col items-start gap-x-4 md:flex-row">
         <div className="w-full">
           <FormField
             control={form.control}
             name="fullName"
             render={({ field }) => (
               <FormItem>
-                <FormLabel className="text-green-500">Nome completo</FormLabel>
+                <FormLabel className="font-maitree text-base font-semibold text-green-500">
+                  Nome completo
+                </FormLabel>
                 <FormControl className="rounded-lg">
                   <Input placeholder="Digite seu nome completo" {...field} />
                 </FormControl>
@@ -86,7 +86,9 @@ export default function FormInformation({
             name="email"
             render={({ field }) => (
               <FormItem>
-                <FormLabel className="text-green-500">Email</FormLabel>
+                <FormLabel className="font-maitree text-base font-semibold text-green-500">
+                  Email
+                </FormLabel>
                 <FormControl className="rounded-lg">
                   <Input
                     type="email"
@@ -101,36 +103,76 @@ export default function FormInformation({
         </div>
       </div>
 
-      <FormField
-        control={form.control}
-        name="location"
-        render={({ field }) => (
-          <FormItem>
-            <FormLabel className="text-green-500">Localização</FormLabel>
-            <FormControl className="rounded-lg">
-              <Input placeholder="Ex: São Paulo, SP" {...field} />
-            </FormControl>
-            <FormMessage />
-          </FormItem>
-        )}
-      />
+      <div className="flex w-full flex-col items-start gap-x-4 md:flex-row">
+        <div className="w-full">
+          <FormField
+            control={form.control}
+            name="location"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel className="font-maitree text-base font-semibold text-green-500">
+                  Localização
+                </FormLabel>
+                <FormControl className="rounded-lg">
+                  <Input placeholder="Ex: São Paulo, SP" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        </div>
 
-      <div className="w-full flex items-start gap-x-4 flex-col md:flex-row">
+        <div className="w-full">
+          <FormField
+            control={form.control}
+            name="publicProfile"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel className="font-maitree text-base font-semibold text-green-500">
+                  Perfil público
+                </FormLabel>
+                <div className="flex h-full flex-row items-center justify-between rounded-lg border border-green-200 p-3">
+                  <Text
+                    type={Text.Type.BodyFour}
+                    className="font-maitree text-base text-green-500"
+                  >
+                    Permitir que outros vejam suas receitas
+                  </Text>
+                  <FormControl>
+                    <Switch
+                      checked={field.value}
+                      onCheckedChange={field.onChange}
+                    />
+                  </FormControl>
+                </div>
+              </FormItem>
+            )}
+          />
+        </div>
+      </div>
+
+      <div className="flex w-full flex-col items-start gap-x-4 md:flex-row">
         <div className="w-full">
           <FormField
             control={form.control}
             name="dietType"
             render={({ field }) => (
               <FormItem>
-                <FormLabel className="text-green-500">Tipo de dieta</FormLabel>
+                <FormLabel className="font-maitree text-base font-semibold text-green-500">
+                  Tipo de dieta
+                </FormLabel>
                 <FormControl>
                   <Select value={field.value} onValueChange={field.onChange}>
-                    <SelectTrigger className="rounded-lg">
+                    <SelectTrigger className="font-lora rounded-lg">
                       <SelectValue placeholder="Selecione seu tipo de dieta" />
                     </SelectTrigger>
                     <SelectContent>
                       {dietOptions.map((option) => (
-                        <SelectItem key={option.value} value={option.value}>
+                        <SelectItem
+                          key={option.value}
+                          value={option.value}
+                          className="font-maitree"
+                        >
                           {option.label}
                         </SelectItem>
                       ))}
@@ -149,17 +191,21 @@ export default function FormInformation({
             name="culinaryLevel"
             render={({ field }) => (
               <FormItem>
-                <FormLabel className="text-green-500">
+                <FormLabel className="font-maitree text-base font-semibold text-green-500">
                   Nível culinário
                 </FormLabel>
                 <FormControl>
                   <Select value={field.value} onValueChange={field.onChange}>
-                    <SelectTrigger className="rounded-lg">
+                    <SelectTrigger className="font-lora rounded-lg">
                       <SelectValue placeholder="Qual seu nível culinário?" />
                     </SelectTrigger>
                     <SelectContent>
                       {culinaryLevelOptions.map((option) => (
-                        <SelectItem key={option.value} value={option.value}>
+                        <SelectItem
+                          key={option.value}
+                          value={option.value}
+                          className="font-maitree"
+                        >
                           {option.label}
                         </SelectItem>
                       ))}
@@ -167,58 +213,6 @@ export default function FormInformation({
                   </Select>
                 </FormControl>
                 <FormMessage />
-              </FormItem>
-            )}
-          />
-        </div>
-      </div>
-
-      <div className="w-full flex items-start gap-x-4 flex-col md:flex-row">
-        <div className="w-full">
-          <FormField
-            control={form.control}
-            name="monthlyGoal"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel className="text-green-500">Meta mensal</FormLabel>
-                <FormControl>
-                  <Select value={field.value} onValueChange={field.onChange}>
-                    <SelectTrigger className="rounded-lg">
-                      <SelectValue placeholder="Quantas receitas por mês?" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {monthlyGoalOptions.map((option) => (
-                        <SelectItem key={option.value} value={option.value}>
-                          {option.label}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-        </div>
-
-        <div className="w-full">
-          <FormField
-            control={form.control}
-            name="publicProfile"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel className="text-green-500">Perfil público</FormLabel>
-                <div className="flex flex-row items-center justify-between rounded-lg border border-green-200 px-3 py-2">
-                  <Text type={Text.Type.BodyFour} className="text-green-500">
-                    Permitir que outros vejam suas receitas
-                  </Text>
-                  <FormControl>
-                    <Switch
-                      checked={field.value}
-                      onCheckedChange={field.onChange}
-                    />
-                  </FormControl>
-                </div>
               </FormItem>
             )}
           />
@@ -230,9 +224,11 @@ export default function FormInformation({
         name="bio"
         render={({ field }) => (
           <FormItem className="relative">
-            <FormLabel className="text-green-500">Sobre você</FormLabel>
+            <FormLabel className="font-maitree text-base font-semibold text-green-500">
+              Sobre você
+            </FormLabel>
             <div className="relative">
-              <FormControl className="pb-4 pr-6 rounded-lg">
+              <FormControl className="rounded-lg pr-6 pb-4">
                 <Textarea
                   placeholder="Ex: Gosto de criar receitas veganas rápidas."
                   {...field}
@@ -267,7 +263,7 @@ export default function FormInformation({
                   }}
                 />
               </FormControl>
-              <div className="absolute bottom-0 right-2">
+              <div className="absolute right-2 bottom-0">
                 <Text
                   as="span"
                   type={Text.Type.BodyFour}
@@ -287,7 +283,7 @@ export default function FormInformation({
               </div>
             </div>
             {bioErrorMessage && (
-              <div className="w-full flex justify-end">
+              <div className="flex w-full justify-end">
                 <Text type={Text.Type.BodyFour} className="text-red-600">
                   {bioErrorMessage}
                 </Text>
@@ -302,7 +298,9 @@ export default function FormInformation({
         name="password"
         render={({ field }) => (
           <FormItem>
-            <FormLabel className="text-green-500">Senha atual</FormLabel>
+            <FormLabel className="font-maitree text-base font-semibold text-green-500">
+              Senha atual
+            </FormLabel>
             <FormControl className="rounded-lg">
               <Input
                 type="password"
@@ -315,14 +313,16 @@ export default function FormInformation({
         )}
       />
 
-      <div className="w-full flex gap-x-4 items-start justify-center">
+      <div className="flex w-full items-start justify-center gap-x-4">
         <div className="w-full">
           <FormField
             control={form.control}
             name="newPassword"
             render={({ field }) => (
               <FormItem>
-                <FormLabel className="text-green-500">Nova senha</FormLabel>
+                <FormLabel className="font-maitree text-base font-semibold text-green-500">
+                  Nova senha
+                </FormLabel>
                 <FormControl className="rounded-lg">
                   <Input
                     type="password"
@@ -341,7 +341,7 @@ export default function FormInformation({
             name="confirmPassword"
             render={({ field }) => (
               <FormItem>
-                <FormLabel className="text-green-500">
+                <FormLabel className="font-maitree text-base font-semibold text-green-500">
                   Confirmar nova senha
                 </FormLabel>
                 <FormControl className="rounded-lg">

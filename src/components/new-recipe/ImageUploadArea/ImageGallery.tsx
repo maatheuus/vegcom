@@ -20,7 +20,7 @@ export default function ImageGallery({ images, onRemove, onDragEnd }: Props) {
         as="h3"
         weight={Text.Weight.Medium}
         type={Text.Type.BodyFour}
-        className="text-green-500"
+        className="font-maitree text-green-500"
       >
         Imagens da Receita
       </Text>

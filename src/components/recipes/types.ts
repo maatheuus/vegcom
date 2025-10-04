@@ -13,9 +13,7 @@ export interface Recipe {
 
 export interface RecipeGridProps {
   recipes?: Recipe[];
-  onRecipeClick?: (recipe: Recipe) => void;
 }
-
 
 export interface Comment {
   id: number;

@@ -1,7 +1,8 @@
 "use client";
 
+import clsx from "clsx";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import Tabs from "../../community/Tabs";
 import {
   ChatCircleOutlinedIcon,
@@ -54,32 +55,73 @@ export default function TabsLayout({
 
   const paramTab = searchParams?.get("tab") ?? "chat";
   const [selectedTab, setSelectedTab] = useState<string>(paramTab);
+  const [isTransitioning, setIsTransitioning] = useState(false);
+  const [displayedTab, setDisplayedTab] = useState<string>(paramTab);
+
+  const debounceTimerRef = useRef<NodeJS.Timeout | null>(null);
+  const transitionTimerRef = useRef<NodeJS.Timeout | null>(null);
 
   useEffect(() => {
-    if (paramTab !== selectedTab) setSelectedTab(paramTab);
-  }, [paramTab, selectedTab]);
+    return () => {
+      if (debounceTimerRef.current) clearTimeout(debounceTimerRef.current);
+      if (transitionTimerRef.current) clearTimeout(transitionTimerRef.current);
+    };
+  }, []);
 
-  const pushTabToUrl = (tabKey: string) => {
-    if (tabKey === selectedTab) return;
-    const params = new URLSearchParams(searchParams?.toString() || "");
-    params.set("tab", tabKey);
-    router.push(pathname + "?" + params.toString());
-    setSelectedTab(tabKey);
-  };
+  useEffect(() => {
+    if (paramTab !== selectedTab) {
+      setSelectedTab(paramTab);
+      setDisplayedTab(paramTab);
+    }
+  }, [paramTab]);
+
+  const pushTabToUrl = useCallback(
+    (tabKey: string) => {
+      if (tabKey === selectedTab || isTransitioning) return;
+
+      if (debounceTimerRef.current) {
+        clearTimeout(debounceTimerRef.current);
+      }
+
+      setIsTransitioning(true);
+      setSelectedTab(tabKey);
+
+      debounceTimerRef.current = setTimeout(() => {
+        const params = new URLSearchParams(searchParams?.toString() || "");
+        params.set("tab", tabKey);
+
+        router.replace(pathname + "?" + params.toString(), { scroll: false });
+
+        transitionTimerRef.current = setTimeout(() => {
+          setDisplayedTab(tabKey);
+          setIsTransitioning(false);
+        }, 100);
+      }, 150);
+    },
+    [selectedTab, isTransitioning, searchParams, pathname, router],
+  );
 
   const activeComponent = useMemo(() => {
+    const component = tabs.find((t) => t.key === displayedTab)?.component;
+
     return (
-      <ChatProvider>
-        {tabs.find((t) => t.key === selectedTab)?.component}
-      </ChatProvider>
+      <div
+        key={displayedTab}
+        className={clsx(
+          "h-full w-full transition-opacity duration-200",
+          isTransitioning ? "opacity-0" : "opacity-100",
+        )}
+      >
+        <ChatProvider>{component}</ChatProvider>
+      </div>
     );
-  }, [selectedTab]);
+  }, [displayedTab, isTransitioning]);
 
   return (
-    <div className="rounded-lg w-full h-full border border-green-500 py-5 px-4 overflow-hidden">
-      <Col className="w-full h-full gap-y-4">
-        <div className="flex justify-center items-center w-full">
-          <div className="bg-green-500 rounded-full flex justify-center items-center w-fit">
+    <div className="h-full w-full overflow-hidden rounded-lg border border-green-500 px-4 py-5">
+      <Col className="h-full w-full gap-y-4">
+        <div className="flex w-full items-center justify-center">
+          <div className="flex w-fit items-center justify-center rounded-full bg-green-500">
             <Tabs
               tabs={tabs}
               selectedTab={selectedTab}
@@ -87,6 +129,7 @@ export default function TabsLayout({
               className="w-fit border-none px-1 py-1 [&_div]:gap-x-1"
               hasLink={false}
               isChatLayout
+              isTransitioning={isTransitioning}
             />
           </div>
         </div>

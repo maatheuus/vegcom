@@ -34,7 +34,7 @@ export function SearchBar({
         placeholder={placeholder}
         aria-label="Buscar por ingredientes"
         className={clsx(
-          "px-4 py-2 rounded-full border-none font-medium outline-none w-full transition-all duration-300 ease-in-out",
+          "px-4 py-2 rounded-full border-none font-lora font-medium outline-none w-full transition-all duration-300 ease-in-out",
           isFocused ? "pl-10 pr-4 max-w-[25rem] shadow-md" : "max-w-[18.75rem]",
           isHovered || isFocused
             ? "bg-green-500 text-green-50 placeholder:text-green-50"

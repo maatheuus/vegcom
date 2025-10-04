@@ -28,54 +28,52 @@ export default function RecipeCard({
   data,
 }: Props) {
   const rating = data.rating ?? 0;
-
   const [isRecipeFavorite, setIsRecipeFavorite] = useState(true);
 
   const handleFavorite = (e: React.MouseEvent) => {
     e.preventDefault();
     setIsRecipeFavorite(!isRecipeFavorite);
   };
+
   return (
     <Link
-      className={`flex flex-col w-full h-full overflow-hidden rounded-lg shadow-sm hover:shadow-lg transition-shadow duration-300 ${
-        className || ""
-      }`}
+      className={`flex h-full w-full flex-col overflow-hidden rounded-lg border border-gray-200/60 shadow-sm transition-shadow duration-300 hover:shadow-lg ${className || ""}`}
       href={isEditing ? `/new-recipe/${data.title}` : `/recipe/${data.title}`}
     >
-      <div className="w-full h-full max-h-[173px] relative overflow-hidden">
+      <div className="relative aspect-[16/9] w-full overflow-hidden">
         <Image
-          width={296}
-          height={173}
+          fill
           src={data.recipeImageUrl}
           alt={data.title}
-          className="object-cover size-full"
+          className="object-cover transition-transform duration-300 group-hover:scale-105"
         />
-
-        <div
-          className="p-2 bg-green-500 rounded-full absolute top-2 right-2 text-green-500 flex items-center justify-center"
-          aria-label={isFavorites ? "favoritas do chef" : "receitas do chef"}
+        <button
+          className="absolute top-2 right-2 flex items-center justify-center rounded-full bg-green-500/80 p-2 backdrop-blur-sm transition-colors hover:bg-green-500"
+          aria-label={
+            isFavorites ? "Desfavoritar receita" : "Favoritar receita"
+          }
           onClick={handleFavorite}
         >
           {isFavorites ? (
             isRecipeFavorite ? (
-              <HeartFilledIcon className="text-green-50 size-6" />
+              <HeartFilledIcon className="size-6 text-green-50" />
             ) : (
-              <HeartOutlinedIcon className="text-green-50 size-6" />
+              <HeartOutlinedIcon className="size-6 text-green-50" />
             )
           ) : (
-            <ChefHatOutlinedIcon className="text-green-50 size-6" />
+            <ChefHatOutlinedIcon className="size-6 text-green-50" />
           )}
-        </div>
+        </button>
       </div>
 
-      <Col className="w-full px-3 py-3 gap-y-5">
+      <Col className="flex flex-1 flex-col p-4">
         <div className="space-y-2">
-          <Row className="justify-between items-center">
+          <Row className="items-start justify-between">
             <Text
               as="h3"
-              type={Text.Type.BodyFour}
-              weight={Text.Weight.Medium}
-              className="text-green-500 font-frank"
+              type={Text.Type.BodyThree}
+              weight={Text.Weight.SemiBold}
+              className="font-lora line-clamp-2 text-green-500"
             >
               {data.title}
             </Text>
@@ -83,32 +81,35 @@ export default function RecipeCard({
           </Row>
           <Text
             as="p"
-            type={Text.Type.BodyFive}
-            weight={Text.Weight.Medium}
-            className="text-green-500 font-frank line-clamp-2"
+            type={Text.Type.BodyFour}
+            weight={Text.Weight.SemiBold}
+            className="font-maitree line-clamp-2 text-green-500/90"
           >
             {data.description}
           </Text>
         </div>
-        <Row className="justify-between">
-          <Text
-            as="span"
-            type={Text.Type.BodyFive}
-            weight={Text.Weight.Medium}
-            className="text-green-500 font-frank"
-          >
-            {data.recipeType}
-          </Text>
-          <Row className="items-center">
-            <OpenEyeOutlinedIcon size={16} className="text-green-500" />
-            <span className="size-0.5 rounded-full bg-green-500 mx-1"></span>
+
+        <Row className="mt-auto items-center justify-between pt-4">
+          <div className="flex h-6 items-center justify-center rounded-full bg-green-500 px-3">
             <Text
               as="span"
               type={Text.Type.BodyFive}
-              weight={Text.Weight.Medium}
-              className="text-green-500 font-frank"
+              weight={Text.Weight.SemiBold}
+              className="font-maitree rounded-full text-green-50"
             >
-              {data.views} visualizações
+              {data.recipeType}
+            </Text>
+          </div>
+          <Row className="items-center">
+            <OpenEyeOutlinedIcon size={16} className="text-green-500" />
+            <span className="mx-1 size-0.5 rounded-full bg-green-500"></span>
+            <Text
+              as="span"
+              type={Text.Type.BodyFive}
+              weight={Text.Weight.SemiBold}
+              className="font-maitree text-green-500"
+            >
+              {data.views}
             </Text>
           </Row>
         </Row>

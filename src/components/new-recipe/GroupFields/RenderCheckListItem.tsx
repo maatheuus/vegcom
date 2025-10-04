@@ -41,23 +41,25 @@ export default function RenderCheckListItem({
           <span
             {...listeners}
             className={clsx(
-              "flex items-center justify-center size-6 text-sm rounded-full font-medium cursor-pointer",
+              "font-lora flex h-6 min-h-6 w-6 min-w-6 cursor-pointer items-center justify-center rounded-full text-sm font-medium",
               type === "ingredients" &&
-                " border border-green-500 text-green-500",
+                "border border-green-500 text-green-500",
               type === "instructions" && "bg-green-200 text-green-50",
               type === "cookingNotes" &&
-                "border border-green-500 text-green-500 "
+                "border border-green-500 text-green-500",
             )}
           >
             {idx + 1}
           </span>
-          <span className="text-base text-green-500">{item.label}</span>
+          <span className="font-lora line-clamp-2 text-sm text-green-500">
+            {item.label}
+          </span>
         </Row>
         <Button.Icon
           onClick={() => onDeleteItem?.(item.id)}
           variant="text"
           type="button"
-          className="p-0 gap-x-1 text-green-500 cursor-pointer hover:text-green-500/70 transition-colors"
+          className="cursor-pointer gap-x-1 p-0 text-green-500 transition-colors hover:text-green-500/70"
           leftIcon={<MinusCircleOutlinedIcon size={20} />}
         />
       </Row>

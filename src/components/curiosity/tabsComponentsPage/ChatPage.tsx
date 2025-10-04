@@ -31,6 +31,7 @@ export default function ChatPage() {
   const [showScrollButton, setShowScrollButton] = useState(false);
   const [hasNewMessages, setHasNewMessages] = useState(false);
   const [messageCopied, setMessageCopied] = useState<boolean>(false);
+  const [isCancelling, setIsCancelling] = useState(false);
 
   const messagesEndRef = useRef<HTMLDivElement | null>(null);
   const scrollContainerRef = useRef<HTMLDivElement | null>(null);
@@ -59,6 +60,12 @@ export default function ChatPage() {
   }
 
   useEffect(() => {
+    if (!isLoading) {
+      setIsCancelling(false);
+    }
+  }, [isLoading]);
+
+  useEffect(() => {
     const promptParam = searchParams.get("prompt");
     if (promptParam && !hasProcessedPrompt.current) {
       setMessageInput(decodeURIComponent(promptParam));
@@ -72,7 +79,10 @@ export default function ChatPage() {
         }
       }, 100);
 
-      const newUrl = window.location.pathname;
+      const newUrl =
+        window.location.pathname +
+        "?" +
+        searchParams.toString().replace(/prompt=[^&]+&?/, "");
       window.history.replaceState({}, "", newUrl);
     }
   }, [searchParams]);
@@ -120,7 +130,7 @@ export default function ChatPage() {
         root: containerEl || null,
         threshold: 0.1,
         rootMargin: "0px",
-      }
+      },
     );
 
     observer.observe(end);
@@ -165,27 +175,42 @@ export default function ChatPage() {
     }
   };
 
+  const handleCancelRequest = async () => {
+    setIsCancelling(true);
+    try {
+      await cancelRequest();
+    } catch (error) {
+      console.error("Erro ao cancelar:", error);
+    }
+  };
+
+  const isButtonDisabled = !messageInput.trim() || isCancelling;
+  const showStopButton = isLoading && !isCancelling;
+
   if (!currentChat) {
     return (
-      <div className="flex-1 flex items-center justify-center">
-        <LoadingOutlinedIcon size={48} />
+      <div className="flex flex-1 items-center justify-center">
+        <LoadingOutlinedIcon
+          size={48}
+          className="animate-spin text-green-500"
+        />
       </div>
     );
   }
 
   return (
-    <Col className="h-full justify-end w-full overflow-hidden">
+    <Col className="h-full w-full justify-end overflow-hidden">
       <ChatProvider>
-        <div className="h-full flex overflow-hidden">
-          <Col className="flex-1 relative min-h-0">
+        <div className="flex h-full overflow-hidden">
+          <Col className="relative min-h-0 flex-1">
             <div
               ref={containerRefCallback}
-              className="flex-1 overflow-y-auto p-4 scroll-smooth min-h-0"
+              className="min-h-0 flex-1 overflow-y-auto scroll-smooth p-4"
             >
-              <div className="max-w-4xl mx-auto space-y-4">
+              <div className="mx-auto max-w-4xl space-y-4">
                 {currentChat.messages.length === 0 ? (
-                  <Col className="text-center items-center justify-center mt-16 gap-y-2">
-                    <div className="bg-green-500 rounded-full p-2 w-fit">
+                  <Col className="mt-16 items-center justify-center gap-y-2 text-center">
+                    <div className="w-fit rounded-full bg-green-500 p-2">
                       <AlienOutlinedIcon
                         size={32}
                         className="text-green-50 opacity-90"
@@ -196,13 +221,13 @@ export default function ChatPage() {
                         as="h2"
                         type={Text.Type.BodyTwo}
                         weight={Text.Weight.SemiBold}
-                        className="text-green-500"
+                        className="font-maitree font-semibold text-green-500"
                       >
                         Como posso ajudar você hoje?
                       </Text>
                       <Text
                         type={Text.Type.BodyFour}
-                        className="text-sm text-green-500/90"
+                        className="font-maitree text-sm font-medium text-green-500/90"
                       >
                         Digite sua mensagem abaixo para começar
                       </Text>
@@ -225,7 +250,8 @@ export default function ChatPage() {
                         messageCopied={messageCopied}
                         showActions={
                           index === currentChat.messages.length - 1 &&
-                          msg.role === "assistant"
+                          msg.role === "assistant" &&
+                          !isLoading
                         }
                       />
                     ))}
@@ -233,13 +259,13 @@ export default function ChatPage() {
                 )}
 
                 {isLoading && (
-                  <div className="flex gap-3 animate-pulse">
-                    <div className="size-8 rounded-full bg-green-200 shrink-0" />
+                  <div className="flex animate-pulse gap-3">
+                    <div className="size-8 shrink-0 rounded-full bg-green-200" />
                     <div className="px-2 py-3">
                       <div className="flex gap-1">
-                        <span className="w-2 h-2 bg-green-500 rounded-full animate-bounce" />
-                        <span className="w-2 h-2 bg-green-500 rounded-full animate-bounce [animation-delay:100ms]" />
-                        <span className="w-2 h-2 bg-green-500 rounded-full animate-bounce [animation-delay:200ms]" />
+                        <span className="h-2 w-2 animate-bounce rounded-full bg-green-500" />
+                        <span className="h-2 w-2 animate-bounce rounded-full bg-green-500 [animation-delay:100ms]" />
+                        <span className="h-2 w-2 animate-bounce rounded-full bg-green-500 [animation-delay:200ms]" />
                       </div>
                     </div>
                   </div>
@@ -250,58 +276,81 @@ export default function ChatPage() {
             </div>
 
             {showScrollButton && (
-              <div className="absolute bottom-24 right-[50%] translate-x-[-50%] group">
+              <div className="group absolute right-[50%] bottom-24 translate-x-[50%]">
                 <button
                   onClick={scrollToBottom}
-                  className="p-2.5 cursor-pointer bg-green-50 border border-green-500 rounded-full shadow-lg hover:shadow-xl transition-all hover:scale-105 animate-slideUp"
+                  className="animate-slideUp cursor-pointer rounded-full border border-green-500 bg-green-50 p-2.5 shadow-lg transition-all hover:scale-105 hover:shadow-xl"
                   aria-label="Ir para mensagens recentes"
                 >
                   <ArrowRightOutlinedIcon className="size-4 rotate-90 text-green-500" />
                   {hasNewMessages && (
-                    <div className="absolute -top-1 right-0.5 flex h-3 w-3">
-                      <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-200 opacity-75"></span>
-                      <span className="relative inline-flex rounded-full h-3 w-3 bg-green-200"></span>
+                    <div className="absolute -top-1 -right-1 flex h-3 w-3">
+                      <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-red-400 opacity-75"></span>
+                      <span className="relative inline-flex h-3 w-3 rounded-full bg-red-500"></span>
                     </div>
                   )}
                 </button>
               </div>
             )}
 
-            {/* Input */}
-            <div className="w-full max-w-4xl mx-auto mb-2">
-              <div className="flex gap-2 items-end">
-                <div className="flex-1 px-4 py-1 rounded-xl h-fit overflow-y-auto border border-green-500 bg-transparent focus-visible:outline-none focus-visible:ring-0">
-                  <textarea
-                    ref={textareaRef}
-                    value={messageInput}
-                    onChange={(e) => setMessageInput(e.target.value)}
-                    onKeyDown={(e) => {
-                      if (e.key === "Enter" && !e.shiftKey) {
-                        e.preventDefault();
-                        handleSubmit();
-                      }
-                    }}
-                    placeholder="Digite sua mensagem..."
-                    disabled={isLoading}
-                    className="w-full style-scrollbar resize-none overflow-y-auto bg-transparent md:text-base max-h-[400px] text-sm text-green-500 placeholder:text-green-200 focus-visible:outline-none focus-visible:ring-0 disabled:cursor-not-allowed"
-                    name="messageTextarea"
-                  />
-                </div>
+            <div className="mx-auto mb-2 w-full max-w-4xl">
+              <div className="flex w-full items-end gap-2 rounded-2xl border border-green-500 bg-transparent p-2 transition-all focus-within:border-green-600 focus-within:shadow-md">
+                <textarea
+                  ref={textareaRef}
+                  value={messageInput}
+                  onChange={(e) => setMessageInput(e.target.value)}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter" && !e.shiftKey) {
+                      e.preventDefault();
+                      handleSubmit();
+                    }
+                  }}
+                  placeholder="Digite sua mensagem..."
+                  disabled={isCancelling}
+                  className="style-scrollbar font-maitree max-h-[400px] w-full flex-1 resize-none overflow-y-auto bg-transparent px-2 py-1.5 text-sm text-green-500 placeholder:text-green-200 focus:ring-0 focus:outline-none disabled:cursor-not-allowed disabled:opacity-50 md:text-base"
+                  name="messageTextarea"
+                  rows={1}
+                />
+
                 <Button.Icon
-                  onClick={isLoading ? cancelRequest : handleSubmit}
-                  disabled={!isLoading && !messageInput.trim()}
-                  className="items-end"
+                  onClick={showStopButton ? handleCancelRequest : handleSubmit}
+                  disabled={showStopButton ? false : isButtonDisabled}
+                  className="group relative flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-green-500 text-green-50 transition-all duration-300 hover:bg-green-600 disabled:cursor-not-allowed disabled:bg-green-200 disabled:opacity-50"
+                  aria-label={
+                    showStopButton
+                      ? "Parar geração"
+                      : isCancelling
+                        ? "Cancelando..."
+                        : "Enviar mensagem"
+                  }
                   icon={
-                    isLoading ? (
-                      <SquareFilledIcon className="fill-green-50" />
-                    ) : messageInput !== "" ? (
-                      <PaperPlaneOutlinedIcon className="-rotate-45 transition-all duration-300" />
+                    showStopButton ? (
+                      <div className="relative">
+                        <SquareFilledIcon className="size-4 animate-pulse fill-green-50" />
+                        <span className="absolute inset-0 animate-ping rounded-sm bg-green-50/20" />
+                      </div>
+                    ) : isCancelling ? (
+                      <LoadingOutlinedIcon className="size-5 animate-spin" />
+                    ) : messageInput.trim() !== "" ? (
+                      <PaperPlaneOutlinedIcon className="-rotate-45 transition-all duration-300 group-hover:scale-110" />
                     ) : (
-                      <PaperPlaneOutlinedIcon className="rotate-0 transition-all duration-300" />
+                      <PaperPlaneOutlinedIcon className="rotate-0 opacity-50 transition-all duration-300" />
                     )
                   }
                 />
               </div>
+
+              {showStopButton && (
+                <div className="mt-2 flex items-center justify-center gap-2 text-xs text-green-600">
+                  <span className="flex h-2 w-2">
+                    <span className="absolute inline-flex h-2 w-2 animate-ping rounded-full bg-green-400 opacity-75"></span>
+                    <span className="relative inline-flex h-2 w-2 rounded-full bg-green-500"></span>
+                  </span>
+                  <span className="font-maitree font-medium">
+                    Gerando resposta... Clique para parar
+                  </span>
+                </div>
+              )}
             </div>
           </Col>
         </div>

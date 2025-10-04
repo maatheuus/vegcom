@@ -36,7 +36,9 @@ export default function RenameChatModal({
     <Dialog open={isRenameModalOpen} onOpenChange={onCloseRenameModal}>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Novo nome</DialogTitle>
+          <DialogTitle className="font-lora font-normal italic">
+            Novo nome
+          </DialogTitle>
         </DialogHeader>
 
         <DialogDescription>
@@ -46,7 +48,7 @@ export default function RenameChatModal({
               setRenameText(e.target.value);
             }}
             placeholder="Seja criativo"
-            className="px-3 py-2 rounded-md border border-green-500 placeholder:text-green-500/90 text-green-500 text-sm focus:ring-0 focus:outline-none"
+            className="font-maitree rounded-md border border-green-500 px-3 py-2 text-sm text-green-500 placeholder:text-green-500/90 focus:ring-0 focus:outline-none"
           />
         </DialogDescription>
 
@@ -54,7 +56,7 @@ export default function RenameChatModal({
           <DialogTrigger asChild>
             <Button
               onClick={onRenameChat}
-              className="cursor-pointer disabled:cursor-not-allowed"
+              className="font-maitree cursor-pointer disabled:cursor-not-allowed"
               disabled={!renameText}
               type="submit"
             >

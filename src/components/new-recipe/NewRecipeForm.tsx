@@ -47,7 +47,7 @@ export default function NewRecipeForm({}: Props) {
     console.log("Submit:", formattedData);
     console.log(
       "Imagens incluídas:",
-      formattedData.recipe_images.map((img) => img.name)
+      formattedData.recipe_images.map((img) => img.name),
     );
   }
 
@@ -56,11 +56,11 @@ export default function NewRecipeForm({}: Props) {
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="block w-full">
           <Col className="gap-y-14">
-            <div className="flex flex-col lg:flex-row gap-x-8">
-              <Col className="gap-y-4 flex-1">
+            <div className="flex flex-col gap-x-8 gap-y-4 lg:flex-row">
+              <Col className="flex-1 gap-y-4">
                 <DynamicFields
                   title="Título & Descrição"
-                  className="flex-1 w-full"
+                  className="w-full flex-1"
                 >
                   <FormField
                     control={form.control}
@@ -98,16 +98,16 @@ export default function NewRecipeForm({}: Props) {
                 <PreparationFields form={form} className="mt-5" />
               </Col>
               <DynamicFields title="Adicione Imagens" className="flex-1">
-                <ImageUploadArea form={form} className="h-full flex" />
+                <ImageUploadArea form={form} className="flex h-full" />
               </DynamicFields>
             </div>
-            <div className="flex flex-col lg:flex-row gap-8 w-full">
+            <div className="flex w-full flex-col gap-8 lg:flex-row">
               <GroupFields form={form} />
             </div>
           </Col>
-          <div className="w-full flex justify-end mt-16">
-            <Button type="submit" className="cursor-pointer">
-              Criar Receita
+          <div className="mt-16 flex w-full justify-end">
+            <Button type="submit" className="font-lora cursor-pointer">
+              Publicar Receita
             </Button>
           </div>
         </form>

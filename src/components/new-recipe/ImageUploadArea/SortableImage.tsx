@@ -26,7 +26,11 @@ interface SortableImageProps {
   onRemove: (id: string) => void;
 }
 
-export default function SortableImage({ image, onRemove, isOneImage }: SortableImageProps) {
+export default function SortableImage({
+  image,
+  onRemove,
+  isOneImage,
+}: SortableImageProps) {
   const [isOpen, setIsOpen] = useState(false);
   const {
     attributes,
@@ -57,24 +61,23 @@ export default function SortableImage({ image, onRemove, isOneImage }: SortableI
           ref={setNodeRef}
           style={style}
           {...attributes}
-          className={`relative group cursor-pointer rounded-md overflow-hidden z-50  min-h-24 max-w-36 lg:max-w-full lg:min-h-32 lg:max-h-32 ${
+          className={`group relative z-50 min-h-24 max-w-36 cursor-pointer overflow-hidden rounded-md lg:max-h-32 lg:min-h-32 lg:max-w-full ${
             isDragging ? "scale-105" : ""
           } `}
         >
-          {!image.loading &&
-            !isOneImage && (
-              <div
-                {...listeners}
-                className="absolute top-0 left-0 z-20 bg-white/80 rounded-r p-1 cursor-grab hover:bg-green-50 transition-colors"
-              >
-                <GripVerticalOutlinedIcon
-                  size={18}
-                  className="size-fit fill-green-500"
-                />
-              </div>
-            )}
+          {!image.loading && !isOneImage && (
+            <div
+              {...listeners}
+              className="absolute top-0 left-0 z-20 cursor-grab rounded-r bg-white/80 p-1 transition-colors hover:bg-green-50"
+            >
+              <GripVerticalOutlinedIcon
+                size={18}
+                className="size-fit fill-green-500"
+              />
+            </div>
+          )}
 
-          <div className="absolute right-0 top-0 opacity-0 invisible bg-white/80 rounded-l group-hover:opacity-100 group-hover:visible transition-all duration-200 overflow-hidden z-20">
+          <div className="invisible absolute top-0 right-0 z-20 overflow-hidden rounded-l bg-white/80 opacity-0 transition-all duration-200 group-hover:visible group-hover:opacity-100">
             <Button.Icon
               variant="outline"
               size="md"
@@ -87,7 +90,7 @@ export default function SortableImage({ image, onRemove, isOneImage }: SortableI
           </div>
 
           <div
-            className="absolute inset-0 size-full z-10"
+            className="absolute inset-0 z-10 size-full"
             onClick={() => setIsOpen(true)}
           ></div>
 
@@ -96,13 +99,13 @@ export default function SortableImage({ image, onRemove, isOneImage }: SortableI
             alt={image.name}
             width={200}
             height={128}
-            className="w-full h-full min-h-24 max-w-36 lg:max-w-full lg:min-h-32 lg:max-h-32 object-cover pointer-events-none aspect-square"
+            className="pointer-events-none aspect-square h-full min-h-24 w-full max-w-36 object-cover lg:max-h-32 lg:min-h-32 lg:max-w-full"
             draggable={false}
           />
 
           {image.loading && (
-            <Row.Center className="absolute inset-0 bg-black justify-center pointer-events-none z-20">
-              <span className="animate-spin rounded-full h-6 w-6 border-b-2 border-green-50"></span>
+            <Row.Center className="pointer-events-none absolute inset-0 z-20 justify-center bg-black">
+              <span className="h-6 w-6 animate-spin rounded-full border-b-2 border-green-50"></span>
             </Row.Center>
           )}
         </div>
@@ -114,7 +117,7 @@ export default function SortableImage({ image, onRemove, isOneImage }: SortableI
         <TooltipContent
           side="bottom"
           align="center"
-          className="bg-green-500 text-white"
+          className="font-maitree bg-green-500 text-white"
         >
           {image.name}
         </TooltipContent>

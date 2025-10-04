@@ -6,7 +6,7 @@ export default function BackgroundItems() {
       <div className="home-s">
         <Text
           weight={Text.Weight.Bold}
-          className="text-green-200/80 font-allan !text-[318px] uppercase"
+          className="text-green-200/80 font-rancho !text-[318px] uppercase"
         >
           S
         </Text>
@@ -14,7 +14,7 @@ export default function BackgroundItems() {
       <div className="home-a">
         <Text
           weight={Text.Weight.Bold}
-          className="text-green-200/80 font-allan !text-[318px] uppercase"
+          className="text-green-200/80 font-rancho !text-[318px] uppercase"
         >
           A
         </Text>
@@ -22,7 +22,7 @@ export default function BackgroundItems() {
       <div className="home-u">
         <Text
           weight={Text.Weight.Bold}
-          className="text-green-200/80 font-allan !text-[318px] uppercase"
+          className="text-green-200/80 font-rancho !text-[318px] uppercase"
         >
           U
         </Text>
@@ -30,7 +30,7 @@ export default function BackgroundItems() {
       <div className="home-d">
         <Text
           weight={Text.Weight.Bold}
-          className="text-green-200/80 font-allan !text-[318px] uppercase"
+          className="text-green-200/80 font-rancho !text-[318px] uppercase"
         >
           D
         </Text>
@@ -38,7 +38,7 @@ export default function BackgroundItems() {
       <div className="home-e">
         <Text
           weight={Text.Weight.Bold}
-          className="text-green-200/80 font-allan !text-[318px] uppercase"
+          className="text-green-200/80 font-rancho !text-[318px] uppercase"
         >
           E
         </Text>
