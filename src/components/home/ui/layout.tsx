@@ -1,5 +1,4 @@
 import Col from "@/components/ui/Layout/Helpers/Col";
-import Row from "@/components/ui/Layout/Helpers/Row";
 import { cn } from "@/lib/utils";
 import type { StaticImport } from "next/dist/shared/lib/get-img-props";
 import Image from "next/image";
@@ -12,10 +11,10 @@ interface Props {
 
 function HomeLayout({ left, right }: Props) {
   return (
-    <Row className="justify-between overflow-hidden">
+    <div className="flex flex-col lg:flex-row lg:justify-between overflow-hidden h-full">
       <Left {...left} />
       <Right {...right} />
-    </Row>
+    </div>
   );
 }
 
@@ -34,7 +33,7 @@ function Left(props: ViewLeftProps) {
     props;
 
   return (
-    <div className="overflow-hidden content-center relative h-dvh w-dvw max-w-[645px]">
+    <div className="overflow-hidden hidden lg:block content-center relative h-dvh w-dvw max-w-[645px]">
       <div
         className={cn("size-auto pointer-events-none", className)}
         // {...props}

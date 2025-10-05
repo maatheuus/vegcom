@@ -15,7 +15,10 @@ import Row from "@/components/ui/Layout/Helpers/Row";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import Textarea from "@/components/ui/TextArea";
 
-import { OpenEyeOutlinedIcon } from "@/components/icons";
+import {
+  ChatCircleTextOutlinedIcon,
+  OpenEyeOutlinedIcon,
+} from "@/components/icons";
 import Text from "@/components/ui/Text";
 import clsx from "clsx";
 import Image from "next/image";
@@ -48,21 +51,20 @@ export default function CommentsModal({
             as="span"
             type={Text.Type.BodyFour}
             weight={Text.Weight.Medium}
-            className="text-green-500 font-rancho"
+            className="text-green-500 font-lora italic font-bold flex items-center gap-x-1"
           >
-            {`${data.comments.commentsNumber} ${
-              data.comments.commentsNumber! <= 1 ? "comentário" : "comentários"
-            }`}
+            <ChatCircleTextOutlinedIcon size={16} />
+            {data.comments.commentsNumber}
           </Text>
         </Button>
       </DialogTrigger>
 
       <DialogContent
-        className={clsx("max-w-2xl font-frank text-green-500 p-0", className)}
+        className={clsx("max-w-2xl gap-0 text-green-500 p-0", className)}
       >
         <Col className="gap-y-4 bg-green-100/60 px-6 pt-6 pb-3">
           <DialogHeader>
-            <DialogTitle className="text-green-500 font-rancho">
+            <DialogTitle className="text-green-500 font-lora italic">
               {data.postTitle}
             </DialogTitle>
           </DialogHeader>
@@ -73,7 +75,7 @@ export default function CommentsModal({
                 <Text
                   type={Text.Type.BodyFour}
                   weight={Text.Weight.Medium}
-                  className="font-frank text-green-200"
+                  className="font-maitree text-green-200"
                 >
                   {data.postContent.postResources?.content}
                 </Text>
@@ -99,7 +101,7 @@ export default function CommentsModal({
             <Text
               type={Text.Type.BodyFour}
               weight={Text.Weight.Medium}
-              className="font-frank text-green-200"
+              className="font-maitree text-green-200"
             >
               {mockPostContent}
             </Text>
@@ -109,17 +111,18 @@ export default function CommentsModal({
             <Text
               type={Text.Type.BodyFour}
               weight={Text.Weight.Medium}
-              className="font-frank text-green-200"
+              className="font-maitree text-green-200"
             >
               {mockPostContent}
             </Text>
           )}
 
-          <Row className="items-center gap-x-3 text-green-200 font-frank">
+          <Row className="items-center gap-x-3 text-green-200">
             <Text
               as="span"
               type={Text.Type.BodyFive}
               weight={Text.Weight.Medium}
+              className="!font-bold font-lora italic"
             >
               {`${data.comments.commentsNumber} ${
                 data.comments.commentsNumber! <= 1
@@ -133,6 +136,7 @@ export default function CommentsModal({
                 as="span"
                 type={Text.Type.BodyFive}
                 weight={Text.Weight.Medium}
+                className="!font-bold font-lora italic"
               >
                 {`${data.postViews} ${
                   data.postViews! <= 1 ? "visualização" : "visualizações"
@@ -152,19 +156,22 @@ export default function CommentsModal({
                       {comment.user.name.slice(0, 2)}
                     </AvatarFallback>
                   </Avatar>
-                  <Col className="gap-y-1 font-frank">
+                  <Col className="gap-y-1 font-lora">
                     <Text
                       weight={Text.Weight.Medium}
-                      className="text-base text-green-500"
+                      className="text-base text-green-500 italic"
                     >
                       {comment.user.name}
                     </Text>
-                    <Text type={Text.Type.BodyFour} className="text-green-500">
+                    <Text
+                      type={Text.Type.BodyFour}
+                      className="text-green-500 font-maitree"
+                    >
                       {comment.content}
                     </Text>
                     <Text
                       type={Text.Type.BodyFive}
-                      className="text-green-200 text-xs"
+                      className="text-green-200 text-xs !font-bold"
                     >
                       {comment.date}
                     </Text>
@@ -177,13 +184,13 @@ export default function CommentsModal({
           <Row className="gap-x-4 items-end">
             <Textarea
               placeholder="Escreva sua resposta..."
-              className="min-h-10 w-full max-w-[27.75rem]"
+              className="min-h-10 w-full max-w-[27.75rem] !text-base border-t-0 border-x-0 focus-visible:ring-0 font-lora"
             />
             <DialogFooter>
               <Button
                 variant="default"
                 size="lg"
-                className="bg-green-500 cursor-pointer hover:bg-green-600"
+                className="font-lora bg-green-500 cursor-pointer hover:bg-green-600"
               >
                 Enviar resposta
               </Button>

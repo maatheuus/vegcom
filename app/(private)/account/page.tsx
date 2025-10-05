@@ -1,5 +1,4 @@
 import LayoutAccount from "@/components/account/LayoutAccount";
-import { LightBulbOutlinedIcon } from "@/components/icons";
 import Text from "@/components/ui/Text";
 
 const tips = [
@@ -40,33 +39,35 @@ export default function Page() {
     <>
       <LayoutAccount title="Configurações" />
 
-      <div className="w-full h-fit relative">
-        <div className="flex flex-col gap-y-4 w-full">
-          <div className="flex items-center gap-x-2">
-            <LightBulbOutlinedIcon size={22} className="text-green-500" />
-            <Text
-              type={Text.Type.BodyOne}
-              weight={Text.Weight.Bold}
-              className="text-green-500 pl-4"
-            >
-              Dicas da semana
-            </Text>
-          </div>
-          <div className="grid gap-4 items-start justify-center grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
+      <div className="relative h-fit w-full">
+        <div className="flex w-full flex-col gap-y-4">
+          <Text
+            type={Text.Type.BodyOne}
+            weight={Text.Weight.Bold}
+            className="font-lora text-green-500"
+          >
+            Dicas da semana
+          </Text>
+
+          <div className="grid grid-cols-1 items-start justify-center gap-4 md:grid-cols-2 lg:grid-cols-3">
             {tips.map((tip, idx) => (
               <div
                 key={idx}
-                className="w-full p-3 space-y-1 h-full bg-green-50 rounded-lg border border-green-500 cursor-pointer transition-all duration-300 hover:scale-[1.03] hover:shadow-lg animate-fade-in-slide-up"
+                className="animate-fade-in-slide-up h-full w-full cursor-text space-y-1 rounded-lg border border-green-500 bg-green-50 p-3 transition-all duration-300 hover:scale-[1.03] hover:shadow-lg"
                 style={{ animationDelay: `${idx * 0.1}s` }}
               >
                 <Text
                   type={Text.Type.BodyThree}
-                  weight={Text.Weight.Medium}
-                  className="text-green-500"
+                  weight={Text.Weight.SemiBold}
+                  className="font-lora text-green-500"
                 >
                   {tip.title}
                 </Text>
-                <Text type={Text.Type.BodyFour} className="text-green-200">
+                <Text
+                  type={Text.Type.BodyFour}
+                  weight={Text.Weight.Medium}
+                  className="font-maitree text-green-200"
+                >
                   {tip.description}
                 </Text>
               </div>

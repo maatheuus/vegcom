@@ -62,7 +62,7 @@ export default function PostComposer({
             ref={postTitleRef}
             type="text"
             placeholder="Título do post"
-            className="border-none focus:!ring-0 !text-xl sm:!text-2xl/tight text-green-500 placeholder:text-green-500/80 font-frank font-medium leading-none tracking-tight px-0"
+            className="border-none focus:!ring-0 !text-xl sm:!text-2xl/tight text-green-500 placeholder:text-green-500/80 font-lora italic font-medium leading-none tracking-tight px-0"
             maxLength={50}
           />
 

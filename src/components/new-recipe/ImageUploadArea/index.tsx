@@ -63,7 +63,7 @@ export default function ImageUploadArea({ form, className }: Props) {
         duration: DURATION_TOAST_IN_SEG,
       });
     },
-    [toast]
+    [toast],
   );
 
   const processImageUpload = useCallback(
@@ -82,7 +82,7 @@ export default function ImageUploadArea({ form, className }: Props) {
         },
       ]);
     },
-    [form]
+    [form],
   );
 
   const handleFileChange = useCallback(
@@ -116,7 +116,7 @@ export default function ImageUploadArea({ form, className }: Props) {
       setUploadingImages((prev) => [...prev, ...uploading]);
 
       await Promise.all(
-        uploading.map((img, index) => processImageUpload(img, index))
+        uploading.map((img, index) => processImageUpload(img, index)),
       );
 
       toast({
@@ -131,7 +131,7 @@ export default function ImageUploadArea({ form, className }: Props) {
       showLimitToast,
       processImageUpload,
       toast,
-    ]
+    ],
   );
 
   const handleRemoveImage = useCallback(
@@ -153,7 +153,7 @@ export default function ImageUploadArea({ form, className }: Props) {
         duration: DURATION_TOAST_IN_SEG,
       });
     },
-    [form, uploadingImages, toast]
+    [form, uploadingImages, toast],
   );
 
   const handleDragEnd = useCallback(
@@ -182,12 +182,12 @@ export default function ImageUploadArea({ form, className }: Props) {
         shouldDirty: true,
       });
     },
-    [form]
+    [form],
   );
 
   const triggerFileInput = useCallback(() => {
     const fileInput = document.querySelector(
-      'input[type="file"]'
+      'input[type="file"]',
     ) as HTMLInputElement;
     fileInput?.click();
   }, []);
@@ -199,29 +199,35 @@ export default function ImageUploadArea({ form, className }: Props) {
           type="file"
           accept="image/*"
           multiple
-          className="absolute inset-0 opacity-0 cursor-pointer z-10"
+          className="absolute inset-0 z-10 cursor-pointer opacity-0"
           onChange={handleFileChange}
         />
-        <Col className="gap-y-2 items-center justify-center size-full min-h-[12rem]">
+        <Col className="size-full min-h-[12rem] items-center justify-center gap-y-2">
           <CloudArrowUpOutlinedIcon className="text-green-500" size={48} />
-          <Text className="text-green-500 text-center">
+          <Text className="font-maitree text-center text-green-500">
             Arraste e solte ou{" "}
-            <strong className="text-green-500 cursor-pointer">
+            <strong className="cursor-pointer text-green-500">
               selecione suas imagens
             </strong>
           </Text>
         </Col>
       </>
     ),
-    [handleFileChange]
+    [handleFileChange],
   );
 
   const FilledArea = useMemo(
     () => (
       <div className="space-y-4">
         <Row.Center className="justify-between">
-          <Text weight={Text.Weight.Medium} className="!text-sm text-green-500">
-            Imagens ({allImages.length}/{MAX_IMAGES})
+          <Text
+            weight={Text.Weight.Medium}
+            className="font-maitree !text-sm text-green-500"
+          >
+            Imagens{" "}
+            <strong>
+              ({allImages.length}/{MAX_IMAGES})
+            </strong>
           </Text>
           {hasAvailableSlots && (
             <>
@@ -229,7 +235,7 @@ export default function ImageUploadArea({ form, className }: Props) {
                 type="file"
                 accept="image/*"
                 multiple
-                className="absolute opacity-0 cursor-pointer z-10 w-20 h-8"
+                className="absolute z-10 h-8 w-20 cursor-pointer opacity-0"
                 onChange={handleFileChange}
               />
               <div
@@ -256,7 +262,7 @@ export default function ImageUploadArea({ form, className }: Props) {
       triggerFileInput,
       handleRemoveImage,
       handleDragEnd,
-    ]
+    ],
   );
 
   return (
@@ -265,9 +271,9 @@ export default function ImageUploadArea({ form, className }: Props) {
       name="recipe_images"
       render={() => (
         <Col className="h-full">
-          <FormItem className={`h-full flex ${className || ""}`}>
+          <FormItem className={`flex h-full ${className || ""}`}>
             <FormControl>
-              <div className="relative rounded-sm border w-full min-h-[9.3rem] border-dashed border-green-200 p-4">
+              <div className="relative min-h-[9.3rem] w-full rounded-sm border border-dashed border-green-200 p-4">
                 {allImages.length === 0 ? EmptyArea : FilledArea}
               </div>
             </FormControl>

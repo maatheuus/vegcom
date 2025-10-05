@@ -1,6 +1,9 @@
 // components/PostCard/PostCardRoot.tsx
 import type { PostCardDataProps } from "@/components/@types";
-import { OpenEyeOutlinedIcon } from "@/components/icons";
+import {
+  ChatCircleTextOutlinedIcon,
+  OpenEyeOutlinedIcon,
+} from "@/components/icons";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/Avatar";
 import Col from "@/components/ui/Layout/Helpers/Col";
 import Row from "@/components/ui/Layout/Helpers/Row";
@@ -38,7 +41,7 @@ export default function PostCardRoot({
       )}
       {...props}
     >
-      <Col className="gap-y-4">
+      <Col>
         <Row className="py-3 w-full justify-between">
           <Row className="items-center gap-x-1">
             <Avatar>
@@ -49,7 +52,7 @@ export default function PostCardRoot({
               as="span"
               type={Text.Type.BodyFive}
               weight={Text.Weight.Medium}
-              className="text-green-500 font-frank"
+              className="text-green-500 font-lora italic font-semibold"
             >
               {data.user.name}
             </Text>
@@ -59,7 +62,7 @@ export default function PostCardRoot({
               as="span"
               type={Text.Type.BodyFive}
               weight={Text.Weight.Medium}
-              className="text-green-500 font-frank"
+              className="text-green-500 font-lora italic font-semibold"
             >
               {formattedPostDate}
             </Text>
@@ -81,19 +84,22 @@ export default function PostCardRoot({
             as="span"
             type={Text.Type.BodyFour}
             weight={Text.Weight.Medium}
-            className="text-green-500 font-rancho"
+            className="text-green-500 font-lora italic font-bold flex items-center gap-x-1"
           >
-            0 comentários
+            <ChatCircleTextOutlinedIcon size={16} />0
           </Text>
         )}
 
         <span className="size-0.5 rounded-full bg-green-500"></span>
-        <Row className="items-center gap-x-1 text-green-500/75 font-rancho">
+        <Row className="items-center gap-x-1 text-green-500/80">
           <OpenEyeOutlinedIcon size={16} />
-          <Text as="span" type={Text.Type.BodyFour} weight={Text.Weight.Medium}>
-            {`${data.postViews} ${
-              data.postViews! <= 1 ? "visualização" : "visualizações"
-            }`}
+          <Text
+            as="span"
+            type={Text.Type.BodyFour}
+            weight={Text.Weight.Medium}
+            className="!font-bold font-lora italic"
+          >
+            {data.postViews}
           </Text>
         </Row>
       </Row>

@@ -11,8 +11,8 @@ import {
   SelectValue,
 } from "@/components/ui/Select";
 import useDebounce from "@/hooks/useDebounce";
-import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import { useCallback, useEffect, useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
+import { useCallback, useEffect, useRef, useState } from "react";
 
 export type SortValues = "recent" | "old" | "views" | "rating";
 
@@ -26,13 +26,15 @@ const sortByOptions = [
 export default function RecipeFilter() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const pathname = usePathname();
 
   const [searchTerm, setSearchTerm] = useState(searchParams.get("q") || "");
   const [sortBy, setSortBy] = useState<string>(
-    searchParams.get("sort") as SortValues
+    (searchParams.get("sort") as SortValues) || "",
   );
+
   const debouncedSearchParam = useDebounce(searchTerm, 200);
+  const isFirstRender = useRef(true);
+  const isClearing = useRef(false);
 
   const handleSearch = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchTerm(e.target.value);
@@ -43,7 +45,17 @@ export default function RecipeFilter() {
   }, []);
 
   useEffect(() => {
+    if (isFirstRender.current) {
+      isFirstRender.current = false;
+      return;
+    }
+
+    if (isClearing.current) {
+      return;
+    }
+
     const params = new URLSearchParams(searchParams.toString());
+
     if (debouncedSearchParam) {
       params.set("q", debouncedSearchParam);
     } else {
@@ -56,15 +68,27 @@ export default function RecipeFilter() {
       params.delete("sort");
     }
 
-    router.push(`?${params}`, { scroll: false });
-  }, [debouncedSearchParam, pathname, searchParams, sortBy]);
+    params.delete("clear_search");
+
+    const newUrl = params.toString()
+      ? `?${params.toString()}`
+      : window.location.pathname;
+    router.push(newUrl, { scroll: false });
+  }, [debouncedSearchParam, sortBy]);
 
   useEffect(() => {
-    const cleanAllIsSet = searchParams.get("clean_all");
+    const clearSearch = searchParams.get("clear_search");
+    const currentQ = searchParams.get("q");
 
-    if (cleanAllIsSet === "true") {
+    if (clearSearch === "true") {
+      isClearing.current = true;
       setSearchTerm("");
-      setSortBy("");
+
+      setTimeout(() => {
+        isClearing.current = false;
+      }, 100);
+    } else if (!currentQ && searchTerm && !isClearing.current) {
+      setSearchTerm("");
     }
   }, [searchParams]);
 
@@ -74,12 +98,12 @@ export default function RecipeFilter() {
         placeholder="Buscar receitas..."
         value={searchTerm}
         onChange={handleSearch}
-        className="border border-green-500 rounded-full w-full max-w-lg"
+        className="w-full max-w-lg rounded-full border border-green-500"
         inputClassName="!max-w-full w-full"
       />
 
       <div className="max-w-fit">
-        <Select onValueChange={handleSort} defaultValue={sortBy || ""}>
+        <Select onValueChange={handleSort} value={sortBy || ""}>
           <SelectTrigger>
             <SelectValue placeholder="Ordenar por" data-slot="select-value" />
           </SelectTrigger>

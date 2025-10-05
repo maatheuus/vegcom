@@ -1,9 +1,11 @@
-import Button from "@/components/ui/Button";
+import { LightBulbOutlinedIcon } from "@/components/icons";
 import Text from "@/components/ui/Text";
+import { useGSAP } from "@gsap/react";
 import clsx from "clsx";
-import { Lightbulb, Smile } from "lucide-react";
+import gsap from "gsap";
+import { Smile } from "lucide-react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import SuggestionCard from "../suggestion/SuggestionCard";
 
 export interface Suggestion {
@@ -72,32 +74,41 @@ const suggestions: Suggestion[] = [
 export default function SuggestionsPage() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const [selectedKey, setSelectedKey] = useState<string>("all");
+  const [selectedKey, setSelectedKey] = useState<string>(() => {
+    return searchParams.get("category") || "all";
+  });
   const [isLoading, setIsLoading] = useState(false);
 
-  const categories = [
-    { key: "all", label: "Todas" },
-    ...Array.from(
-      new Map(suggestions.map((s) => [s.key, s.category])).entries()
-    ).map(([key, label]) => ({ key, label })),
-    { key: "carnivore", label: "Carnívoro" },
-  ];
+  const containerRef = useRef<HTMLDivElement>(null);
+  const pillRef = useRef<HTMLDivElement>(null);
+  const buttonsRef = useRef<(HTMLButtonElement | null)[]>([]);
+
+  const categories = useMemo(
+    () => [
+      { key: "all", label: "Todas" },
+      ...Array.from(
+        new Map(suggestions.map((s) => [s.key, s.category])).entries(),
+      ).map(([key, label]) => ({ key, label })),
+      { key: "carnivore", label: "Carnívoro" },
+    ],
+    [],
+  );
 
   useEffect(() => {
-    if (!selectedKey) return;
-
     const currentParam = searchParams.get("category") || "all";
-    if (selectedKey.toLowerCase() === currentParam.toLowerCase()) return;
+    if (selectedKey === currentParam) return;
 
     const params = new URLSearchParams(searchParams.toString());
-    params.set("category", selectedKey.toLowerCase());
+    params.set("category", selectedKey);
 
-    router.push(`?${params.toString()}`);
-  }, [searchParams, selectedKey]);
+    router.replace(`?${params.toString()}`, { scroll: false });
+  }, [selectedKey, router]);
 
   useEffect(() => {
     const category = searchParams.get("category") || "all";
-    if (category !== selectedKey) setSelectedKey(category);
+    if (category !== selectedKey) {
+      setSelectedKey(category);
+    }
   }, [searchParams]);
 
   const filteredSuggestions =
@@ -108,71 +119,122 @@ export default function SuggestionsPage() {
   const handleSuggestionClick = (suggestion: Suggestion) => {
     setIsLoading(true);
     router.push(
-      `/curiosity?tab=chat&prompt=${encodeURIComponent(suggestion.prompt)}`
+      `/curiosity?tab=chat&prompt=${encodeURIComponent(suggestion.prompt)}`,
     );
   };
 
+  useGSAP(
+    () => {
+      if (buttonsRef.current.length !== categories.length) return;
+
+      const activeIndex = categories.findIndex((c) => c.key === selectedKey);
+      const activeButton = buttonsRef.current[activeIndex];
+
+      if (!activeButton || !pillRef.current) return;
+
+      activeButton.scrollIntoView({
+        behavior: "smooth",
+        block: "nearest",
+        inline: "center",
+      });
+
+      const animation = gsap.to(pillRef.current, {
+        x: activeButton.offsetLeft,
+        width: activeButton.offsetWidth,
+        height: activeButton.offsetHeight,
+        duration: 0.6,
+        ease: "back.out(1.4)",
+        overwrite: true,
+      });
+
+      return () => {
+        animation.kill();
+      };
+    },
+    { scope: containerRef, dependencies: [selectedKey, categories] },
+  );
+
   return (
     <div className="min-h-screen">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-6">
-        <div className="flex items-center gap-x-4 overflow-x-auto pb-2 scrollbar-hide">
-          {categories.map(({ key, label }) => (
-            <Button
+      <div className="mx-auto mt-6 max-w-7xl px-4 sm:px-6 lg:px-8">
+        <div
+          ref={containerRef}
+          className="scrollbar-hide relative flex items-center gap-x-2 overflow-x-auto rounded-full bg-green-50 p-1.5"
+        >
+          <div
+            ref={pillRef}
+            className="absolute top-0 left-0 my-1.5 h-[calc(100%-0.75rem)] rounded-full bg-green-500 shadow-md will-change-[transform,width,height]"
+          />
+
+          {categories.map(({ key, label }, index) => (
+            <button
               key={key}
+              ref={(el) => {
+                buttonsRef.current[index] = el;
+              }}
               onClick={() => setSelectedKey(key)}
-              variant="text"
               className={clsx(
-                "p-2 rounded-full text-green-50 bg-green-500 hover:bg-green-50 hover:text-green-500 transition-colors duration-300 relative cursor-pointer border border-green-500",
-                selectedKey === key && "bg-green-50 text-green-500"
+                "font-lora relative z-10 block cursor-pointer rounded-full px-4 py-2 text-sm whitespace-nowrap italic transition-colors duration-300 md:text-base",
+                selectedKey === key
+                  ? "font-semibold text-green-50"
+                  : "text-green-500/70 hover:text-green-500",
               )}
             >
               {label}
-            </Button>
+            </button>
           ))}
         </div>
       </div>
 
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div className="text-center mb-8">
-          <Text className="text-green-500">
+      <main className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
+        <div className="mb-8 text-center">
+          <Text className="font-maitree font-semibold text-green-500">
             Selecione um tópico para iniciar uma conversa.
           </Text>
         </div>
 
         {isLoading ? (
           <div className="flex items-center justify-center py-20">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500" />
+            <div className="h-12 w-12 animate-spin rounded-full border-b-2 border-green-500" />
           </div>
         ) : selectedKey === "carnivore" ? (
-          <div className="text-center py-20">
-            <Smile size={48} className="mx-auto text-red-400 mb-4" />
-            <p className="text-xl font-semibold text-red-500">
+          <div className="py-20 text-center">
+            <Smile size={48} className="mx-auto mb-4 text-red-400" />
+            <Text
+              as="p"
+              className="font-lora !text-xl font-semibold text-red-500"
+            >
               🥩 Opa! Pegamos você no flagra...
-            </p>
-            <p className="text-gray-600 mt-2 max-w-md mx-auto">
-              Essa aba é só uma brincadeira! Aqui somos 100% plantas 🌱. Mas tá
+            </Text>
+            <Text
+              as="p"
+              className="font-maitree mx-auto mt-2 max-w-md text-gray-600"
+            >
+              Essa aba é só uma brincadeira! Aqui somos 100% plantas. Mas tá
               tudo bem, a gente também já foi carnívoro um dia 😉
-            </p>
+            </Text>
           </div>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {filteredSuggestions.slice(0, 9).map((suggestion, index) => (
+          <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
+            {filteredSuggestions.slice(0, 9).map((suggestion) => (
               <SuggestionCard
                 key={suggestion.id}
                 suggestion={suggestion}
                 onClick={() => handleSuggestionClick(suggestion)}
-                index={index}
               />
             ))}
           </div>
         )}
 
         {selectedKey !== "carnivore" && filteredSuggestions.length === 0 && (
-          <div className="text-center py-20">
-            <Lightbulb size={48} className="mx-auto text-gray-300 mb-4" />
-            <p className="text-gray-500">
+          <div className="py-20 text-center">
+            <LightBulbOutlinedIcon
+              size={48}
+              className="mx-auto mb-2 text-green-200/30"
+            />
+            <Text as="p" className="font-maitree text-gray-500">
               Nenhuma sugestão encontrada nesta categoria
-            </p>
+            </Text>
           </div>
         )}
       </main>

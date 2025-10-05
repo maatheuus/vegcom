@@ -104,11 +104,11 @@ export const personalInfoFormSchema = z
       .string()
       .min(
         50,
-        "Não precisa nos revelar que você é o Batman, apenas um resumo pequeno sobre você."
+        "Não precisa nos revelar que você é o Batman, apenas um resumo pequeno sobre você.",
       )
       .max(
         maxLengthForBio,
-        "Vamos com calma, essa não é pra ser sua biografia não!"
+        "Vamos com calma, essa não é pra ser sua biografia não!",
       ),
     password: z.string().optional(),
     newPassword: z
@@ -120,7 +120,6 @@ export const personalInfoFormSchema = z
     culinaryLevel: z.string().min(1, "Qual seu nível culinário?"),
     location: z.string().min(2, "Nos conte onde você está"),
     publicProfile: z.boolean(),
-    monthlyGoal: z.string().min(1, "Defina uma meta mensal"),
   })
   .refine(
     (data) => {
@@ -132,14 +131,14 @@ export const personalInfoFormSchema = z
     {
       message: "Senha atual é obrigatória para alterar a senha",
       path: ["password"],
-    }
+    },
   )
   .refine(
     (data) => !data.newPassword || data.newPassword === data.confirmPassword,
     {
       message: "As senhas não coincidem",
       path: ["confirmPassword"],
-    }
+    },
   );
 
 export const dietOptions = [
@@ -152,13 +151,6 @@ export const culinaryLevelOptions = [
   { value: "beginner", label: "Iniciante" },
   { value: "intermediate", label: "Intermediário" },
   { value: "advanced", label: "Avançado" },
-];
-
-export const monthlyGoalOptions = [
-  { value: "1-2", label: "1-2 receitas" },
-  { value: "3-5", label: "3-5 receitas" },
-  { value: "6-10", label: "6-10 receitas" },
-  { value: "10+", label: "Mais de 10 receitas" },
 ];
 
 export const bioTooShortMessages = [

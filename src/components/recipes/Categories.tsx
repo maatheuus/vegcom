@@ -13,9 +13,9 @@ export function Categories({ className }: React.ComponentProps<"div">) {
     <Popover>
       <PopoverTrigger asChild>
         <Button.Icon
-          rightIcon={<ChevronDownOutlinedIcon className="" />}
+          rightIcon={<ChevronDownOutlinedIcon size={16} />}
           className={clsx(
-            "flex items-center justify-center gap-2 w-full sm:w-auto px-4 py-2 rounded-full bg-green-50 text-green-500 hover:bg-green-500 hover:text-green-50 transition-colors",
+            "flex items-center font-lora justify-center gap-2 w-full sm:w-auto px-4 py-2 rounded-full bg-green-50 text-green-500 hover:bg-green-500 hover:text-green-50 transition-colors",
             className
           )}
         >
@@ -38,11 +38,11 @@ export function Categories({ className }: React.ComponentProps<"div">) {
                 <Text
                   as="h3"
                   type={Text.Type.BodyThree}
-                  className="font-semibold text-green-500 mb-2"
+                  className="font-semibold font-lora text-green-500 mb-2"
                 >
                   {category}
                 </Text>
-                <div className="space-y-2">
+                <div className="space-y-2 font-maitree">
                   {items.map((item) => (
                     <SelectCategoryItem key={item} item={item} />
                   ))}

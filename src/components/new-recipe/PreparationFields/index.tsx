@@ -33,9 +33,9 @@ const simpleDifficulty = [
 export default function PreparationFields({ form, className }: Props) {
   return (
     <Fragment>
-      <Row className={`flex-col xl:flex-row gap-4 ${className || ""}`}>
-        <DynamicFields title="Tempo de Preparo" className="flex-1 w-full">
-          <Row className="flex-col md:flex-row gap-4">
+      <Row className={`flex-col gap-4 xl:flex-row ${className || ""}`}>
+        <DynamicFields title="Tempo de Preparo" className="w-full flex-1">
+          <Row className="flex-col gap-4 md:flex-row">
             <FormField
               control={form.control}
               name="recipe_preparationHours"
@@ -66,7 +66,7 @@ export default function PreparationFields({ form, className }: Props) {
             />
           </Row>
         </DynamicFields>
-        <DynamicFields title="Quantidade" className="flex-1 w-full">
+        <DynamicFields title="Quantidade" className="w-full flex-1">
           <FormField
             control={form.control}
             name="recipe_servings"
@@ -83,8 +83,8 @@ export default function PreparationFields({ form, className }: Props) {
           />
         </DynamicFields>
       </Row>
-      <Row className="flex-col md:flex-row gap-4">
-        <DynamicFields title="Categoria" className="flex-1 w-full">
+      <Row className="flex-col gap-4 md:flex-row">
+        <DynamicFields title="Categoria" className="w-full flex-1">
           <FormField
             control={form.control}
             name="recipe_category"
@@ -95,13 +95,17 @@ export default function PreparationFields({ form, className }: Props) {
                   defaultValue={field.value}
                 >
                   <FormControl>
-                    <SelectTrigger className="!rounded-xs focus-within:ring-1">
+                    <SelectTrigger className="font-lora !rounded-xs focus-within:ring-1">
                       <SelectValue placeholder="Categoria" />
                     </SelectTrigger>
                   </FormControl>
                   <SelectContent>
                     {simpleCategories.map((category) => (
-                      <SelectItem key={category.value} value={category.value}>
+                      <SelectItem
+                        key={category.value}
+                        value={category.value}
+                        className="font-maitree"
+                      >
                         {category.label}
                       </SelectItem>
                     ))}
@@ -112,7 +116,7 @@ export default function PreparationFields({ form, className }: Props) {
             )}
           />
         </DynamicFields>
-        <DynamicFields title="Dificuldade" className="flex-1 w-full">
+        <DynamicFields title="Dificuldade" className="w-full flex-1">
           <FormField
             control={form.control}
             name="recipe_difficulty"
@@ -123,7 +127,7 @@ export default function PreparationFields({ form, className }: Props) {
                   defaultValue={field.value}
                 >
                   <FormControl>
-                    <SelectTrigger className="!rounded-xs focus-within:ring-1">
+                    <SelectTrigger className="font-lora !rounded-xs focus-within:ring-1">
                       <SelectValue
                         className="text-red-500"
                         placeholder="Dificuldade"
@@ -132,7 +136,11 @@ export default function PreparationFields({ form, className }: Props) {
                   </FormControl>
                   <SelectContent>
                     {simpleDifficulty.map((diff) => (
-                      <SelectItem key={diff.value} value={diff.value}>
+                      <SelectItem
+                        key={diff.value}
+                        value={diff.value}
+                        className="font-maitree"
+                      >
                         {diff.label}
                       </SelectItem>
                     ))}

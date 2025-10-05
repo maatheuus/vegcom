@@ -15,8 +15,13 @@ export default function PostCardImage({ data }: Props) {
   if (!images.length) return null;
   return (
     <PostCardRoot data={data} variant="image">
-      <Col className="w-full h-fit font-frank text-green-500 gap-y-1">
-        <Text as="h2" type={Text.Type.BodyTwo} weight={Text.Weight.Medium}>
+      <Col className="w-full h-fit text-green-500 gap-y-1">
+        <Text
+          as="h2"
+          type={Text.Type.BodyTwo}
+          weight={Text.Weight.Medium}
+          className="font-lora italic font-semibold"
+        >
           {data.postTitle}
         </Text>
 
@@ -24,7 +29,7 @@ export default function PostCardImage({ data }: Props) {
           as="p"
           type={Text.Type.BodyFour}
           weight={Text.Weight.Normal}
-          className="text-base line-clamp-3"
+          className="text-base line-clamp-3 font-maitree"
         >
           {data.postContent.postResources?.content}
         </Text>

@@ -102,9 +102,7 @@ export default function PostComposerActions({
         className="rounded-full"
         title="Send message"
         onClick={handleSendMessage}
-      >
-        Publicar
-      </Button.Icon>
+      />
     </Row>
   );
 }

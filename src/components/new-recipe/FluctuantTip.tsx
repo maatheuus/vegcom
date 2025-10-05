@@ -39,7 +39,7 @@ const FluctuantTip = memo(function FluctuantTip() {
   return (
     <div
       ref={dragRef}
-      className="w-full m-0 right-0 -top-1"
+      className="-top-1 right-0 m-0 w-full"
       style={containerStyle}
     >
       <TooltipProvider delayDuration={1000}>
@@ -54,7 +54,7 @@ const FluctuantTip = memo(function FluctuantTip() {
               <Button.Icon
                 variant="filled"
                 size="md"
-                className={clsx("group rounded-full relative z-10 touch-auto", {
+                className={clsx("group relative z-10 touch-auto rounded-full", {
                   "bg-green-50 hover:bg-green-200": isMenuOpen,
                   "bg-green-200": !isMenuOpen,
                 })}
@@ -72,28 +72,34 @@ const FluctuantTip = memo(function FluctuantTip() {
           </TooltipTrigger>
           {!isDragging && !isMenuOpen && (
             <TooltipContent className="bg-green-200 text-green-50">
-              <span className="text-sm font-medium">Dicas rápidas</span>
+              <span className="font-lora text-sm font-medium">
+                Dicas rápidas
+              </span>
             </TooltipContent>
           )}
         </Tooltip>
         <div
           ref={menuRef}
           className={clsx(
-            "bg-green-200 rounded-lg transition-all duration-200 ease-in-out absolute z-0 min-w-[250px] max-w-[300px] h-fit overflow-hidden",
+            "absolute z-0 h-fit max-w-[300px] min-w-[250px] overflow-hidden rounded-lg bg-green-200 transition-all duration-200 ease-in-out",
             isMenuOpen ? "scale-100" : "scale-0",
-            isMenuOpen ? "opacity-100" : "opacity-0"
+            isMenuOpen ? "opacity-100" : "opacity-0",
           )}
           style={menuStyle}
         >
           <div
             ref={contentRef}
-            className="p-3 pt-10 w-full h-full text-green-50 space-y-4"
+            className="h-full w-full space-y-4 p-3 text-green-50"
           >
-            <Text type={Text.Type.BodyThree} weight={Text.Weight.Medium}>
+            <Text
+              type={Text.Type.BodyThree}
+              weight={Text.Weight.Medium}
+              className="font-lora"
+            >
               Dicas rápidas para você turbinar sua receita.
             </Text>
 
-            <ul className="list-inside list-decimal font-normal font-frank">
+            <ul className="font-maitree list-inside list-decimal font-normal">
               {tipList.map((tip, idx) => (
                 <li key={idx}>
                   <Text as="span" type={Text.Type.BodyFour}>

@@ -1,3 +1,7 @@
+import {
+  ArrowRightOutlinedIcon,
+  LightBulbOutlinedIcon,
+} from "@/components/icons";
 import Text from "@/components/ui/Text";
 import React from "react";
 import type { Suggestion } from "../tabsComponentsPage/SuggestionsPage";
@@ -5,40 +9,45 @@ import type { Suggestion } from "../tabsComponentsPage/SuggestionsPage";
 const SuggestionCard: React.FC<{
   suggestion: Suggestion;
   onClick: () => void;
-  index: number;
-}> = ({ suggestion, onClick, index }) => {
+}> = ({ suggestion, onClick }) => {
   return (
     <button
       onClick={onClick}
-      className="group cursor-pointer relative bg-green-50 border border-green-200/80 rounded-xl p-4 shadow-sm hover:shadow-lg transition-all duration-300 hover:scale-[1.02] text-left w-full animate-fadeIn"
-      style={{ animationDelay: `${index * 50}ms` }}
+      className="group animate-fadeIn relative w-full cursor-pointer overflow-hidden rounded-xl border border-green-200/80 bg-green-50 p-4 text-left shadow-sm transition-all duration-300 hover:border-green-500 hover:shadow-lg"
     >
-      <div className="relative h-full grid">
-        <div className="flex mb-3">
+      <LightBulbOutlinedIcon className="absolute top-2 right-2 text-8xl text-green-200/30 transition-transform duration-300 group-hover:scale-110 group-hover:-rotate-12" />
+
+      <div className="relative flex h-full flex-col">
+        <div className="mb-2">
           <Text
             as="span"
             type={Text.Type.BodyFive}
             weight={Text.Weight.Medium}
-            className="text-green-50 bg-green-500 rounded-full px-2 py-0.5 text-center"
+            className="font-lora inline-flex h-6 items-center justify-center rounded-full bg-green-500 px-3 text-center text-sm text-green-50"
           >
             {suggestion.category}
           </Text>
         </div>
 
-        <Text as="h3" weight={Text.Weight.Medium} className="text-green-500">
+        <Text
+          as="h3"
+          weight={Text.Weight.Medium}
+          className="font-maitree text-lg text-green-500"
+        >
           {suggestion.title}
         </Text>
-        <Text type={Text.Type.BodyFour} className="text-green-200 mb-3">
-          {suggestion.description}
-        </Text>
 
-        <div className="flex items-center justify-between mt-auto">
+        <div className="font-maitree mt-auto flex items-center justify-between pt-4">
           <Text
             type={Text.Type.BodyFive}
-            className="text-green-500 opacity-80 italic truncate"
+            className="text-green-500 italic opacity-80"
           >
-            &quot{suggestion.prompt.substring(0, 50)}...&quot
+            &quot;{suggestion.prompt.substring(0, 35)}...&quot;
           </Text>
+
+          <div className="transform text-green-500 opacity-0 transition-all duration-300 group-hover:translate-x-0 group-hover:opacity-100 md:translate-x-[-10px]">
+            <ArrowRightOutlinedIcon className="h-5 w-5" />
+          </div>
         </div>
       </div>
     </button>

@@ -1,5 +1,3 @@
-"use client";
-
 import {
   ChefHatOutlinedIcon,
   CommunityOutlinedIcon,
@@ -33,10 +31,9 @@ export default function PathLinks({
   className,
   ...props
 }: React.ComponentProps<"div">) {
-  
   return (
     <Col
-      className={cn("w-full max-w-[212px] overflow-hidden", className)}
+      className={cn("w-full lg:max-w-[212px] overflow-hidden", className)}
       {...props}
     >
       {pathLinksHome.map((link, index) => (
@@ -46,12 +43,15 @@ export default function PathLinks({
           className={`flex relative justify-between items-center w-full path-link-${index} relative flex overflow-hidden hover-link h-fit`}
         >
           <Row className="gap-x-2.5 py-3">
-            <Text as="span" className="text-green-500 font-rancho !text-[16px]">
+            <Text
+              as="span"
+              className="text-green-500 font-lora font-medium italic !text-[12px]"
+            >
               (0{index + 1})
             </Text>
             <Text
               as="span"
-              className="text-green-500 font-rancho !text-[24px]/[32px]"
+              className="text-green-500 font-lora font-medium italic !text-[18px]"
             >
               {link.text}
             </Text>

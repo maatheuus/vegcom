@@ -27,10 +27,12 @@ export default function DeleteChatModal({
     <Dialog open={isDeleteModalOpen} onOpenChange={onCloseDeleteModal}>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Essa ação não pode ser desfeita.</DialogTitle>
+          <DialogTitle className="font-lora font-normal italic">
+            Essa ação não pode ser desfeita.
+          </DialogTitle>
         </DialogHeader>
 
-        <DialogDescription>
+        <DialogDescription className="font-maitree">
           Você tem certeza que deseja deletar esta conversa?
         </DialogDescription>
 
@@ -38,7 +40,7 @@ export default function DeleteChatModal({
           <DialogTrigger asChild>
             <Button
               onClick={() => onCloseDeleteModal(false)}
-              className="cursor-pointer"
+              className="font-maitree cursor-pointer"
               type="submit"
               variant="secondary"
             >
@@ -48,7 +50,7 @@ export default function DeleteChatModal({
           <DialogTrigger asChild>
             <Button
               onClick={() => deleteChat(String(chatIdToDelete))}
-              className="cursor-pointer border border-transparent hover:border-green-500 transition-colors duration-200"
+              className="font-maitree cursor-pointer border border-transparent transition-colors duration-200 hover:border-green-500"
               type="submit"
               variant="text"
             >

@@ -18,7 +18,7 @@ export function usePostComposerEditor() {
       attributes() {
         return {
           class:
-            "relative focus:outline-none min-h-[64px] [&[data-placeholder]]:before:text-muted-foreground [&[data-placeholder]]:before:content-[attr(data-placeholder)] [&[data-placeholder]]:before:pointer-events-none [&[data-placeholder]]:before:absolute [&[data-placeholder]]:before:text-sm",
+            "relative font-maitree focus:outline-none min-h-[64px] [&[data-placeholder]]:before:text-muted-foreground [&[data-placeholder]]:before:content-[attr(data-placeholder)] [&[data-placeholder]]:before:pointer-events-none [&[data-placeholder]]:before:absolute [&[data-placeholder]]:before:text-sm",
         };
       },
       handleDrop(view, event) {

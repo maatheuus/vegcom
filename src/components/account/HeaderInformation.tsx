@@ -40,7 +40,7 @@ export default function HeaderInformation({
 }: Props) {
   const [selectedImage, setSelectedImage] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState<string>(
-    "https://github.com/shadcn.png"
+    "https://github.com/shadcn.png",
   );
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [isDialogShowImageOpen, setIsDialogShowImageOpen] = useState(false);
@@ -115,7 +115,7 @@ export default function HeaderInformation({
         }
       }}
     >
-      <Row className="justify-between w-full relative">
+      <Row className="relative w-full justify-between">
         <Row className="gap-x-4">
           <div className="relative">
             <DialogTrigger asChild>
@@ -126,7 +126,7 @@ export default function HeaderInformation({
             </DialogTrigger>
             <DialogTrigger asChild>
               {isEditing && (
-                <button className="absolute right-0 top-1.5 z-20 size-7 bg-green-500 rounded-full border-2 border-green-50 cursor-pointer flex items-center justify-center hover:bg-green-600 transition-colors">
+                <button className="absolute top-1.5 right-0 z-20 flex size-7 cursor-pointer items-center justify-center rounded-full border-2 border-green-50 bg-green-500 transition-colors hover:bg-green-600">
                   <EditPencilOutlinedIcon size={14} className="text-green-50" />
                 </button>
               )}
@@ -153,7 +153,7 @@ export default function HeaderInformation({
                     </Text>
                   </TooltipTrigger>
 
-                  <TooltipContent className="flex mr-4 mb-4 items-start">
+                  <TooltipContent className="mr-4 mb-4 flex items-start">
                     <Text type={Text.Type.BodyThree} className="text-green-50">
                       {randomMessage.text}
                     </Text>
@@ -168,14 +168,14 @@ export default function HeaderInformation({
 
       {!isEditing ? (
         <DialogContent className="max-w-md">
-          <DialogTitle className="text-green-500 text-center mt-4">
+          <DialogTitle className="font-lora mt-4 text-center text-green-500">
             Olhe a obra de arte que voce escolheu
           </DialogTitle>
-          <DialogDescription className="text-green-200 text-center sr-only">
+          <DialogDescription className="sr-only text-center text-green-200">
             foto de perfil do usuário
           </DialogDescription>
 
-          <div className="w-full rounded-2xl overflow-hidden">
+          <div className="w-full overflow-hidden rounded-2xl">
             <Image
               src={imagePreview}
               alt="Preview photo"
@@ -185,16 +185,16 @@ export default function HeaderInformation({
               loading="lazy"
               unoptimized
               quality={100}
-              className="w-full h-full object-contain"
+              className="h-full w-full object-contain"
             />
           </div>
         </DialogContent>
       ) : (
         <DialogContent className="max-w-md">
-          <DialogTitle className="text-green-500 text-center">
+          <DialogTitle className="font-lora text-center text-green-500">
             Alterar foto de perfil
           </DialogTitle>
-          <DialogDescription className="text-green-200 text-center">
+          <DialogDescription className="font-maitree text-center text-green-200">
             Escolha sua mais nova obra de arte
           </DialogDescription>
 
@@ -207,7 +207,7 @@ export default function HeaderInformation({
             </div>
 
             <div
-              className={`border-2 border-dashed rounded-lg p-6 text-center transition-colors ${
+              className={`rounded-lg border-2 border-dashed p-6 text-center transition-colors ${
                 isDragging
                   ? "border-green-500 bg-green-50"
                   : "border-green-600 hover:border-green-200"
@@ -217,15 +217,18 @@ export default function HeaderInformation({
               onDrop={handleDrop}
             >
               <FloppyDiskOutlinedIcon
-                size={32}
-                className="mx-auto text-green-500 mb-2"
+                size={28}
+                className="mx-auto mb-2 text-green-500"
               />
-              <Text type={Text.Type.BodyTwo} className="text-green-500 mb-2">
+              <Text
+                type={Text.Type.BodyThree}
+                className="font-lora mb-2 text-green-500"
+              >
                 Arraste uma imagem aqui ou
               </Text>
               <button
                 onClick={() => fileInputRef.current?.click()}
-                className="text-green-500 font-medium hover:text-green-600 underline cursor-pointer"
+                className="font-lora cursor-pointer font-semibold text-green-500 underline hover:text-green-600"
               >
                 clique para selecionar
               </button>
@@ -236,30 +239,34 @@ export default function HeaderInformation({
                 onChange={handleFileInputChange}
                 className="hidden"
               />
-              <Text type={Text.Type.BodyFour} className="text-green-200 mt-2">
+              <Text
+                type={Text.Type.BodyFive}
+                className="font-maitree mt-2 text-green-200"
+              >
                 PNG, JPG ou JPEG até 5MB
               </Text>
             </div>
 
-            {/* Botões de ação */}
             <div className="flex gap-2">
               {selectedImage && (
                 <Button
                   variant="text"
                   onClick={handleImageRemove}
-                  className="flex-1 text-red-500 hover:text-red-600 cursor-pointer"
+                  className="font-maitree flex-1 cursor-pointer text-red-500 hover:text-red-600"
                 >
-                  <TrashOutlinedIcon size={16} className="mr-2" />
+                  <TrashOutlinedIcon size={16} />
                   Remover
                 </Button>
               )}
-              <Button
+
+              <button
+                className="relative flex h-fit flex-1 cursor-pointer items-center justify-center gap-2 rounded-full bg-green-500 px-4 py-1.5 font-medium text-green-100 transition-colors duration-300 hover:bg-green-100 hover:text-green-500 disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:bg-green-500 disabled:hover:text-green-100"
                 onClick={handleImageSave}
                 disabled={!selectedImage}
-                className="flex-1 bg-green-500 text-white hover:bg-green-600 disabled:opacity-50  cursor-pointer"
               >
-                Salvar foto
-              </Button>
+                <FloppyDiskOutlinedIcon size={18} />
+                Salvar
+              </button>
             </div>
           </div>
         </DialogContent>

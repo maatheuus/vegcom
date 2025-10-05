@@ -9,6 +9,9 @@ module.exports = {
         frank: ["var(--font-frank)"],
         rancho: ["var(--font-rancho)"],
         allan: ["var(--font-allan)"],
+        lora: ["var(--font-lora)"],
+        maitree: ["var(--font-maitree)"],
+        montserrat: ["var(--font-montserrat)"],
       },
       colors: {
         border: "hsl(var(--border))",

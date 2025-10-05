@@ -37,13 +37,12 @@ export default function Page() {
       culinaryLevel: "intermediate",
       location: "São Paulo, SP",
       publicProfile: true,
-      monthlyGoal: "3-5",
     },
   });
   const { fullName } = form.getValues();
 
   const [bioLength, setBioLength] = useState<number>(
-    form.getValues().bio.length
+    form.getValues().bio.length,
   );
 
   const formErros =
@@ -53,7 +52,6 @@ export default function Page() {
     form.formState.errors.dietType ||
     form.formState.errors.culinaryLevel ||
     form.formState.errors.location ||
-    form.formState.errors.monthlyGoal ||
     bioLength > maxLengthForBio;
 
   const onSubmit = (values: z.infer<typeof personalInfoFormSchema>) => {
@@ -76,11 +74,11 @@ export default function Page() {
         isEditing={isEditing}
       />
 
-      <Col className="gap-y-4 relative mb-10">
-        <Row className="w-fit items-center absolute -bottom-16 right-0">
+      <Col className="relative mb-20 gap-y-4">
+        <Row className="absolute right-0 -bottom-16 w-fit items-center">
           {!isEditing ? (
             <div
-              className="h-fit flex items-center gap-2 font-medium relative bg-green-100 text-green-500 rounded-full px-3 py-1.5 hover:bg-green-500 hover:text-green-100 transition-colors duration-300 cursor-pointer"
+              className="relative flex h-fit cursor-pointer items-center gap-2 rounded-full bg-green-100 px-3 py-1.5 font-medium text-green-500 transition-colors duration-300 hover:bg-green-500 hover:text-green-100"
               role="button"
               onClick={() => setIsEditing(true)}
             >
@@ -97,7 +95,7 @@ export default function Page() {
                 Cancelar
               </Button>
               <button
-                className="h-fit flex items-center gap-2 font-medium relative bg-green-500 text-green-100 rounded-full px-4 py-1.5 hover:bg-green-100  hover:text-green-500 transition-colors duration-300 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-green-500 disabled:hover:text-green-100"
+                className="relative flex h-fit cursor-pointer items-center gap-2 rounded-full bg-green-500 px-4 py-1.5 font-medium text-green-100 transition-colors duration-300 hover:bg-green-100 hover:text-green-500 disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:bg-green-500 disabled:hover:text-green-100"
                 disabled={Boolean(formErros)}
                 onClick={form.handleSubmit(onSubmit)}
               >

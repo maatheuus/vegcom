@@ -20,7 +20,7 @@ export default function PostComposerTextArea({
   return (
     <Col
       className={clsx(
-        "py-3 px-4 w-full h-[250px] font-frank text-green-500",
+        "py-3 px-4 w-full h-[250px] font-maitree text-green-500",
         className
       )}
       {...props}
@@ -29,7 +29,7 @@ export default function PostComposerTextArea({
         {children}
 
         {editor && (
-          <div className="absolute bottom-2 right-2 text-sm text-green-200 font-rancho">
+          <div className="absolute bottom-2 right-2 text-xs text-green-200 font-lora italic">
             {characters}/{MAX_LENGTH_FOR_TEXTAREA}
           </div>
         )}

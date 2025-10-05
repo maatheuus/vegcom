@@ -22,7 +22,7 @@ export default async function Page({ searchParams }: Props) {
         <Button.Link
           href="/recipes"
           size="md"
-          className="py-1.5"
+          className="font-lora py-1.5"
           leftIcon={<HeartOutlinedIcon className="!size-5" />}
         >
           Explorar receitas

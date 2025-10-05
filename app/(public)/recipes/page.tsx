@@ -2,6 +2,7 @@
 
 import { SearchOutlinedIcon } from "@/components/icons";
 import { Categories } from "@/components/recipes/Categories";
+import Header from "@/components/recipes/details/Header";
 import { RecipeGrid } from "@/components/recipes/RecipeGrid";
 import { RecipeHero } from "@/components/recipes/RecipeHero";
 import { SearchBar } from "@/components/recipes/SearchBar";
@@ -29,46 +30,39 @@ export default function Page() {
   }, []);
 
   return (
-    <Layout.Default className="overflow-y-auto style-scrollbar">
-      <section className="container mx-auto px-4 py-8 space-y-12">
+    <Layout.Default className="style-scrollbar overflow-y-auto">
+      <section className="container mx-auto space-y-12 px-4 py-8">
         <Row className="items-center justify-between">
-          <Text
-            as="h1"
-            type={Text.Type.HeadingTwo}
-            weight={Text.Weight.Medium}
-            className="text-green-500"
-          >
-            Receitas
-          </Text>
-          
-          <Row className="hidden md:flex gap-4">
+          <Header title="Receitas" className="border-0 p-0" />
+
+          <Row className="hidden gap-4 md:flex">
             <SearchBar />
             <Categories />
           </Row>
 
-          <div className="md:hidden relative" ref={menuRef}>
+          <div className="relative md:hidden" ref={menuRef}>
             <Button
               onClick={() => setIsSearchOpen(!isSearchOpen)}
               variant="outline"
               size="icon"
               className={clsx(
-                "rounded-full transition-all duration-300 shadow-none",
+                "rounded-full shadow-none transition-all duration-300",
 
-                isSearchOpen 
-                  ? "bg-green-500 text-green-50 rotate-90" 
-                  : "bg-green-50 text-green-500 hover:bg-green-500 hover:text-green-50"
+                isSearchOpen
+                  ? "rotate-90 bg-green-500 text-green-50"
+                  : "bg-green-50 text-green-500 hover:bg-green-500 hover:text-green-50",
               )}
             >
-              <SearchOutlinedIcon className="w-5 h-5" />
+              <SearchOutlinedIcon className="h-5 w-5" />
             </Button>
 
             <div
               className={clsx(
-                "absolute right-0 top-12 w-[280px] bg-green-50 rounded-md shadow-md p-4 z-50",
+                "absolute top-12 right-0 z-50 w-[280px] rounded-md bg-green-50 p-4 shadow-md",
                 "transition-all duration-300 ease-in-out",
                 isSearchOpen
-                  ? "opacity-100 translate-y-0 visible"
-                  : "opacity-0 -translate-y-2 invisible"
+                  ? "visible translate-y-0 opacity-100"
+                  : "invisible -translate-y-2 opacity-0",
               )}
             >
               <Col className="gap-3">
@@ -86,7 +80,7 @@ export default function Page() {
             as="h2"
             type={Text.Type.HeadingFour}
             weight={Text.Weight.Bold}
-            className="text-green-500"
+            className="font-lora font-semibold text-green-500"
           >
             Mais Bem Avaliadas
           </Text>

@@ -29,7 +29,7 @@ export default async function Page({ searchParams }: Props) {
         <Button.Link
           leftIcon={<PlusOutlinedIcon className="!size-5" />}
           size="md"
-          className="py-1.5"
+          className="font-lora py-1.5"
           href="/new-recipe"
         >
           Nova receita

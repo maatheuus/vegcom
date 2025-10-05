@@ -98,7 +98,7 @@ const ChatProvider: React.FC<{ children: React.ReactNode }> = ({
             return updatedChat;
           }
           return chat;
-        })
+        }),
       );
 
       setIsLoading(true);
@@ -130,7 +130,7 @@ const ChatProvider: React.FC<{ children: React.ReactNode }> = ({
               };
             }
             return chat;
-          })
+          }),
         );
       } catch (error: unknown) {
         if (error instanceof Error && error.message !== "Aborted") {
@@ -153,7 +153,7 @@ const ChatProvider: React.FC<{ children: React.ReactNode }> = ({
                 };
               }
               return chat;
-            })
+            }),
           );
         }
       } finally {
@@ -161,14 +161,14 @@ const ChatProvider: React.FC<{ children: React.ReactNode }> = ({
         abortControllerRef.current = null;
       }
     },
-    [currentChatId, isLoading, cancelRequest]
+    [currentChatId, isLoading, cancelRequest],
   );
 
   const regenerateLastMessage = useCallback(async () => {
     if (!currentChat || isLoading) return;
 
     const lastUserMsgIndex = currentChat.messages.findLastIndex(
-      (m) => m.role === "user"
+      (m) => m.role === "user",
     );
     if (lastUserMsgIndex === -1) return;
 
@@ -183,7 +183,7 @@ const ChatProvider: React.FC<{ children: React.ReactNode }> = ({
           };
         }
         return chat;
-      })
+      }),
     );
 
     setTimeout(() => {

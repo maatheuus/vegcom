@@ -79,8 +79,8 @@ const Header = memo(function Header({
         <Text
           as="h1"
           type={Text.Type.HeadingTwo}
-          weight={Text.Weight.Bold}
-          className="text-green-500"
+          weight={Text.Weight.Medium}
+          className="font-lora font-semibold text-green-500"
         >
           {title}
         </Text>

@@ -4,8 +4,8 @@ import {
 } from "@/components/icons";
 import Button from "@/components/ui/Button";
 import Text from "@/components/ui/Text";
-import React, { useEffect, useState } from "react";
-import { defaultCuriosities } from "../curiosites/utils";
+import { useEffect, useState } from "react";
+import { defaultCuriosities, didYouKnowPhrases } from "../curiosites/utils";
 
 export interface Curiosity {
   id: string;
@@ -19,17 +19,18 @@ export interface Curiosity {
   title: string;
   description: string;
   year?: string;
-  icon: React.ElementType;
   highlight?: string;
   source?: string;
 }
 
 export default function CuriositiesPage() {
   const [currentCuriosity, setCurrentCuriosity] = useState<Curiosity | null>(
-    null
+    null,
   );
   const [usedIds, setUsedIds] = useState<Set<string>>(new Set());
   const [isAnimating, setIsAnimating] = useState(false);
+  const [currentPhraseIndex, setCurrentPhraseIndex] = useState(0);
+  const [phraseKey, setPhraseKey] = useState(0);
 
   const generateCuriosity = () => {
     setIsAnimating(true);
@@ -39,17 +40,21 @@ export default function CuriositiesPage() {
     }
 
     const availableCuriosities = defaultCuriosities.filter(
-      (c) => !usedIds.has(c.id)
+      (c) => !usedIds.has(c.id),
     );
 
     const randomIndex = Math.floor(Math.random() * availableCuriosities.length);
     const selected = availableCuriosities[randomIndex];
 
+    const nextPhraseIndex = (currentPhraseIndex + 1) % didYouKnowPhrases.length;
+
     setTimeout(() => {
       setCurrentCuriosity(selected);
       setUsedIds((prev) => new Set(prev).add(selected.id));
+      setCurrentPhraseIndex(nextPhraseIndex);
+      setPhraseKey((prev) => prev + 1);
       setIsAnimating(false);
-    }, 300);
+    }, 400);
   };
 
   useEffect(() => {
@@ -58,46 +63,56 @@ export default function CuriositiesPage() {
 
   return (
     <div className="h-full overflow-auto">
-      <main className="flex-1 h-full my-auto flex items-center justify-center">
-        <div className="max-w-3xl w-full">
+      <main className="my-auto flex h-full flex-1 items-center justify-center">
+        <div className="w-full max-w-3xl space-y-6">
           {currentCuriosity && (
             <div
-              className={`border border-green-50 px-8 pb-4 space-y-8 overflow-hidden transition-all duration-500 ${
-                isAnimating ? "scale-95 opacity-0" : "scale-100 opacity-100"
+              className={`space-y-8 overflow-hidden px-8 pt-8 pb-6 transition-all duration-500 ${
+                isAnimating
+                  ? "scale-95 opacity-0 blur-sm"
+                  : "blur-0 scale-100 opacity-100"
               }`}
             >
-              <div>
+              <div className="flex justify-center">
+                <span className="inline-flex items-center rounded-full bg-green-500 px-4 py-1.5 text-xs font-semibold tracking-wider text-white uppercase shadow-sm">
+                  {currentCuriosity.category}
+                </span>
+              </div>
+
+              <div className="space-y-6">
                 <Text
                   as="h2"
                   type={Text.Type.HeadingFour}
                   weight={Text.Weight.Bold}
-                  className="mb-4 text-green-500 bg-green-50 text-center"
+                  className="font-lora text-center text-2xl leading-tight text-green-600 md:text-3xl"
                 >
                   {currentCuriosity.title}
                 </Text>
 
                 <Text
                   type={Text.Type.BodyThree}
-                  className="text-green-500 !leading-relaxed text-center"
+                  className="font-maitree text-center text-lg !leading-relaxed text-gray-700"
                 >
                   {currentCuriosity.description}
                 </Text>
 
                 {currentCuriosity.source && (
-                  <p className="text-sm text-green-500 mt-6 pt-6 border-t border-gray-100 italic">
-                    Fonte:{" "}
-                    <strong className="text-green-500">
-                      {currentCuriosity.source}
-                    </strong>
-                  </p>
+                  <div className="mt-6 border-t border-green-200/30 p-4">
+                    <p className="font-lora text-sm text-green-200 italic">
+                      Fonte:{" "}
+                      <strong className="font-semibold text-green-500">
+                        {currentCuriosity.source}
+                      </strong>
+                    </p>
+                  </div>
                 )}
               </div>
 
-              <div className="w-full flex justify-between">
+              <div className="flex w-full flex-col items-center justify-between gap-4 pt-4 sm:flex-row">
                 {currentCuriosity.highlight && (
-                  <div className="inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-[#1B4E30] to-[#5C8068] rounded-full border border-[#BECBBC]">
-                    <SparklesOutlinedIcon size={16} className="text-green-50" />
-                    <span className="text-sm font-semibold text-green-50">
+                  <div className="pointer-events-none inline-flex items-center gap-2 rounded-full border-2 border-green-200 bg-gradient-to-r from-green-600 to-green-500 px-5 py-2.5 shadow-md">
+                    <SparklesOutlinedIcon size={18} className="text-green-50" />
+                    <span className="font-lora text-sm font-semibold text-green-50 italic">
                       {currentCuriosity.highlight}
                     </span>
                   </div>
@@ -106,14 +121,14 @@ export default function CuriositiesPage() {
                 <Button
                   onClick={generateCuriosity}
                   disabled={isAnimating}
-                  className="w-fit flex items-center ml-auto justify-center gap-3 px-6 py-4 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer group"
+                  className="group font-lora flex w-full cursor-pointer items-center justify-center gap-3 rounded-full bg-green-500 px-6 py-3.5 font-semibold text-green-50 shadow-md disabled:cursor-not-allowed disabled:opacity-50 sm:ml-auto sm:w-auto"
                 >
                   <ArrowsClockwiseOutlinedIcon
                     size={20}
                     className={
                       isAnimating
                         ? "animate-spin"
-                        : "group-hover:rotate-180 transition-transform duration-300"
+                        : "transition-transform duration-700 group-hover:rotate-[360deg]"
                     }
                   />
                   {usedIds.size >= defaultCuriosities.length
@@ -124,14 +139,15 @@ export default function CuriositiesPage() {
             </div>
           )}
 
-          <div className="p-4 text-center">
+          <div key={phraseKey} className="animate-fade-in p-6">
             <Text
               as="p"
               type={Text.Type.BodyFour}
-              className=" text-sm text-green-500"
+              weight={Text.Weight.Medium}
+              className="font-maitree text-center text-sm leading-relaxed text-green-500"
             >
-              <strong>Você sabia?</strong> O veganismo negro é um movimento de
-              resistência que conecta justiça social, saúde e espiritualidade.
+              <strong className="text-green-500">Você sabia?</strong>{" "}
+              {didYouKnowPhrases[currentPhraseIndex]}
             </Text>
           </div>
         </div>
