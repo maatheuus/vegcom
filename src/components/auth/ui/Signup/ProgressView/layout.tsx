@@ -16,7 +16,6 @@ interface Props {
 function SignupLayout({ left, right }: Props) {
   return (
     <>
-      <AuthHeader className="absolute top-0 left-0" />
       <Row className="justify-between">
         <Left {...left} />
         <Right {...right} />
@@ -31,6 +30,7 @@ interface ViewLeftProps extends React.ComponentProps<"div"> {
   children?: React.ReactNode;
   className?: string;
   contentClassName?: string;
+  hasBackArrow?: boolean;
 }
 
 function Left({
@@ -39,14 +39,17 @@ function Left({
   children,
   className,
   contentClassName,
+  hasBackArrow,
   ...props
 }: ViewLeftProps) {
   return (
     <Col
-      className={cn("w-screen relative items-center flex-auto", className)}
+      className={cn("relative w-screen flex-auto items-center", className)}
       {...props}
     >
-      <Col className={cn("w-full ", contentClassName)}>
+      <AuthHeader shouldGoBack className="w-full" />
+
+      <Col className={cn("w-full", contentClassName)}>
         <Heading title={title} subTitle={subTitle} />
         {children}
       </Col>
@@ -74,8 +77,8 @@ function Right(props: ViewRightProps) {
   return (
     <div
       className={cn(
-        "h-dvh w-dvw max-w-[785px] shadow-2xl overflow-hidden pointer-events-none",
-        className
+        "pointer-events-none h-dvh w-dvw max-w-[785px] flex-auto overflow-hidden shadow-2xl",
+        className,
       )}
       {...props}
     >
@@ -88,8 +91,8 @@ function Right(props: ViewRightProps) {
         width={width}
         height={height}
         className={cn(
-          "-scale-x-100 size-full object-cover shadow-2xl rounded-tr-[50px] rounded-br-[50px]",
-          classImage
+          "size-full -scale-x-100 rounded-tr-[50px] rounded-br-[50px] object-cover shadow-2xl",
+          classImage,
         )}
       />
     </div>

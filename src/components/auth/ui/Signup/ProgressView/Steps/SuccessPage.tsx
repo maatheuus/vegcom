@@ -1,15 +1,49 @@
-'use client'
+"use client";
 
 import { check } from "@/assets";
-import { ArrowCircleRightOutlinedIcon } from "@/components/icons";
-import Button from "@/components/ui/Button";
 import Col from "@/components/ui/Layout/Helpers/Col";
-import { useStepStore } from "@/hooks/auth/signupFlow/setLocalData";
+
+import { LoadingOutlinedIcon } from "@/components/icons";
+import { useSignupFormState } from "@/hooks/auth/queryes/useSignupFormState";
+import { toast } from "@/hooks/use-toast";
+import { useRouter } from "next/navigation";
+import SubmitButton from "../../../SubmitButton/SubmitButton";
 import SignupLayout from "../layout";
 
 export default function SuccessPage() {
-    const { nextStep, setStep } = useStepStore();
-  
+  const { formData, submitForm } = useSignupFormState();
+  const {
+    mutate: submitFormMutate,
+    data,
+    isPending,
+    isSuccess,
+    isError,
+  } = submitForm;
+  const router = useRouter();
+
+  if (isSuccess) {
+    toast({
+      title: "Sucesso!",
+      description: data.message,
+      variant: "success",
+      duration: 1500,
+    });
+    setTimeout(() => {
+      router.push(data.redirect);
+    }, 2000);
+  }
+
+  if (isError) {
+    toast({
+      title: "Erro ao cadastrar",
+      description: "Algo deu errado, tente novamente mais tarde.",
+      variant: "destructive",
+      duration: 2500,
+    });
+    setTimeout(() => {
+      router.push("/login");
+    }, 2000);
+  }
   return (
     <SignupLayout
       left={{
@@ -18,16 +52,16 @@ export default function SuccessPage() {
           "Tudo certo por aqui! Você pode aproveitar o quanto você quiser, divirta-se!",
         children: (
           <Col className="items-center gap-2 px-5">
-            <Button.Icon
-              type="submit"
-              rightIcon={<ArrowCircleRightOutlinedIcon size={24} />}
-              text="Seguinte"
-              className="font-semibold w-full sm:max-w-80 hover:[&_svg]:translate-x-1.5 hover:[&_svg]:transition-all hover:[&_svg]:duration-300"
+            <SubmitButton
+              text="Finalizar"
+              isLoading={isPending}
+              disabled={isPending}
               onClick={() => {
-                setStep("success");
-                nextStep();
+                submitFormMutate(formData);
               }}
-            />
+            >
+              <LoadingOutlinedIcon className="!h-6 !w-6 animate-spin" />
+            </SubmitButton>
           </Col>
         ),
       }}

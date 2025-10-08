@@ -4,7 +4,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
-import Button from "@/components/ui/Button";
+import { LoadingOutlinedIcon } from "@/components/icons";
 import {
   Form,
   FormControl,
@@ -12,60 +12,58 @@ import {
   FormItem,
   FormMessage,
 } from "@/components/ui/Form";
-
-import { ArrowCircleRightOutlinedIcon } from "@/components/icons";
-import { Checkbox } from "@/components/ui/Checkbox";
+import { Label } from "@/components/ui/Label";
 import Col from "@/components/ui/Layout/Helpers/Col";
-import Row from "@/components/ui/Layout/Helpers/Row";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/RadioGroup";
 import Text from "@/components/ui/Text";
 import Textarea from "@/components/ui/TextArea";
-import { useStepStore } from "@/hooks/auth/signupFlow/setLocalData";
-import { useEffect, useRef, useState, type FC } from "react";
+import { useSignupFormState } from "@/hooks/auth/queryes/useSignupFormState";
+import { type FC } from "react";
+import SubmitButton from "../SubmitButton/SubmitButton";
 
 const formSchema = z.object({
-  about: z.string().min(2, {
-    message: "about must be at least 2 characters.",
+  userInfo: z.string().min(2, { message: "Deve ter pelo menos 2 caracteres." }),
+  meetUsInfo: z.string().optional(),
+  preference: z.enum(["vegan", "vegetarian", ""], {
+    required_error: "Selecione uma opção",
   }),
-  email: z.string().email({
-    message: "Invalid email address.",
-  }),
-  password: z
-    .string()
-    .min(8, { message: "Password must be at least 8 characters." }),
 });
 
 const UserInformation: FC<React.ComponentProps<"form">> = ({
   className,
   ...props
 }) => {
-  const closedEyeRef = useRef<SVGSVGElement | null>(null);
-  const [showingPassword, setShowingPassword] = useState<boolean>(false);
-  const { nextStep, setStep } = useStepStore();
+  const { formData, nextStep, updateFormData, isSubmitting } =
+    useSignupFormState();
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      about: "",
-      email: "",
-      password: "",
+      userInfo: formData.userInfo || "",
+      meetUsInfo: formData.meetUsInfo || "",
+      preference: formData.preference || "",
     },
   });
 
-  useEffect(() => {
-    if (closedEyeRef.current) {
-      closedEyeRef.current.addEventListener("click", () => {
-        setShowingPassword(!showingPassword);
-      });
-    }
-  }, [showingPassword]);
+  function onSubmit(data: z.infer<typeof formSchema>) {
+    const finalData = { ...formData, ...data };
+    const { currentStep, ...payload } = finalData;
+
+    updateFormData(payload);
+    nextStep();
+  }
 
   return (
     <Form {...form}>
-      <form className={className} {...props}>
-        <Col className="gap-4 px-5 pt-4 pb-5 items-center">
+      <form
+        className={className}
+        onSubmit={form.handleSubmit(onSubmit)}
+        {...props}
+      >
+        <Col className="items-center gap-4 px-5 pt-4 pb-5">
           <FormField
-            // control={form.control}
-            name="about"
+            control={form.control}
+            name="userInfo"
             render={({ field }) => (
               <FormItem className="w-full">
                 <FormControl>
@@ -81,30 +79,40 @@ const UserInformation: FC<React.ComponentProps<"form">> = ({
             )}
           />
           <FormField
-            // control={form.control}
+            control={form.control}
             name="preference"
             render={({ field }) => (
               <FormItem className="w-full">
                 <FormControl>
                   <Col className="gap-3">
-                    <Text as="label" className="text-green-500">
+                    <Text className="font-maitree font-semibold text-green-500">
                       Eu sou:
                     </Text>
 
-                    <Row className="gap-8">
-                      <Row className="gap-x-1.5">
-                        <Checkbox className="text-green-500" {...field} />
-                        <Text as="label" className="text-green-500">
-                          Vegetariano (a)
-                        </Text>
-                      </Row>
-                      <Row className="gap-x-1.5">
-                        <Checkbox className="text-green-500" {...field} />
-                        <Text as="label" className="text-green-500">
-                          Vegano (a)
-                        </Text>
-                      </Row>
-                    </Row>
+                    <RadioGroup
+                      onValueChange={field.onChange}
+                      defaultValue={field.value}
+                      className="flex items-center gap-8"
+                    >
+                      <div className="flex items-center space-x-2">
+                        <RadioGroupItem value="vegetarian" id="vegetarian" />
+                        <Label
+                          htmlFor="vegetarian"
+                          className="font-maitree font-bold text-green-500"
+                        >
+                          Vegetariano(a)
+                        </Label>
+                      </div>
+                      <div className="flex items-center space-x-2">
+                        <RadioGroupItem value="vegan" id="vegan" />
+                        <Label
+                          htmlFor="vegan"
+                          className="font-maitree font-bold text-green-500"
+                        >
+                          Vegano(a)
+                        </Label>
+                      </div>
+                    </RadioGroup>
                   </Col>
                 </FormControl>
                 <FormMessage />
@@ -112,13 +120,13 @@ const UserInformation: FC<React.ComponentProps<"form">> = ({
             )}
           />
           <FormField
-            // control={form.control}
-            name="about"
+            control={form.control}
+            name="meetUsInfo"
             render={({ field }) => (
               <FormItem className="w-full">
                 <FormControl>
                   <Textarea
-                    className="w-full text-green-500 min-h-[97px]"
+                    className="min-h-[97px] w-full text-green-500"
                     placeholder="Como você nos conheceu? (opcional)"
                     maxLength={154}
                     {...field}
@@ -130,16 +138,13 @@ const UserInformation: FC<React.ComponentProps<"form">> = ({
           />
         </Col>
         <Col className="items-center gap-2 px-5">
-          <Button.Icon
-            type="submit"
-            rightIcon={<ArrowCircleRightOutlinedIcon size={24} />}
+          <SubmitButton
             text="Seguinte"
-            className="font-semibold w-full sm:max-w-80 hover:[&_svg]:translate-x-1.5 hover:[&_svg]:transition-all hover:[&_svg]:duration-300"
-            onClick={() => {
-              setStep("userInformation");
-              nextStep();
-            }}
-          />
+            disabled={isSubmitting}
+            isLoading={isSubmitting}
+          >
+            <LoadingOutlinedIcon className="!h-6 !w-6 animate-spin" />
+          </SubmitButton>
         </Col>
       </form>
     </Form>

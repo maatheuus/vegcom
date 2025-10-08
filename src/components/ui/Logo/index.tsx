@@ -12,7 +12,7 @@ export default function Logo({
   return (
     <div
       aria-label="Logo"
-      className={cn("flex items-center justify-start pl-5 pt-5", className)}
+      className={cn("flex items-center justify-center", className)}
       {...props}
     >
       <LogoOutlinedIcon size={size} />

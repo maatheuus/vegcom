@@ -1,12 +1,10 @@
 "use client";
 
 import {
-  ArrowCircleRightOutlinedIcon,
   AtOutlinedIcon,
   ClosedEyeOutlinedIcon,
-  OpenEyesOutlinedIcon
+  OpenEyesOutlinedIcon,
 } from "@/components/icons";
-import Button from "@/components/ui/Button";
 import {
   Form,
   FormControl,
@@ -23,6 +21,7 @@ import Link from "next/link";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
+import SubmitButton from "../SubmitButton/SubmitButton";
 
 const formSchema = z.object({
   email: z.string().email({ message: "Endereço de email inválido." }),
@@ -97,13 +96,13 @@ export default function LoginForm() {
                 <FormControl>
                   <InputIcon
                     type="email"
-                    placeholder="Seu Email"
+                    placeholder="Email"
                     autoComplete="email"
                     {...field}
                     icon={<AtOutlinedIcon size={18} />}
                   />
                 </FormControl>
-                <FormMessage>
+                <FormMessage className="!mb-0">
                   {form.formState.errors.email?.message}
                 </FormMessage>
               </FormItem>
@@ -117,8 +116,8 @@ export default function LoginForm() {
                 <FormControl>
                   <InputIcon
                     type={showingPassword ? "text" : "password"}
-                    placeholder="Sua senha"
-                    autoComplete="new-password"
+                    placeholder="Senha"
+                    autoComplete="current-password"
                     {...field}
                     icon={
                       showingPassword ? (
@@ -137,7 +136,7 @@ export default function LoginForm() {
                     }
                   />
                 </FormControl>
-                <FormMessage>
+                <FormMessage className="!mb-0">
                   {form.formState.errors.password?.message}
                 </FormMessage>
               </FormItem>
@@ -146,36 +145,34 @@ export default function LoginForm() {
           <div className="w-full text-right">
             <Link
               href="/forgot-password"
-              className="text-sm text-green-200 hover:text-green-500"
+              className="font-maitree text-sm text-green-200 hover:text-green-500"
             >
               Esqueceu sua senha?
             </Link>
           </div>
         </Col>
         <Col className="items-center gap-2 px-5 py-4">
-          <Button.Icon
-            type="submit"
-            leftIcon={<ArrowCircleRightOutlinedIcon size={24} />}
-            text="Login"
-            className="w-full sm:max-w-3xs animate-rotate-icon"
-          />
-          {/* <Text
-            as="span"
-            className="text-green-500 text-xs"
-            weight={Text.Weight.SemiBold}
-          >
-            ou
-          </Text>
-          <Button.Icon
-            type="button"
-            onClick={handleLoginWithGoogle}
-            variant="text"
-            leftIcon={<GoogleOutlinedIcon size={24} />}
-            text="Continue com Google"
-            className="w-full sm:max-w-3xs hover:text-green-700"
-          /> */}
+          <SubmitButton text="Entrar" />
         </Col>
       </form>
     </Form>
   );
+}
+
+{
+  /* <Text
+  as="span"
+  className="text-green-500 text-xs"
+  weight={Text.Weight.SemiBold}
+>
+  ou
+</Text>
+<Button.Icon
+  type="button"
+  onClick={handleLoginWithGoogle}
+  variant="text"
+  leftIcon={<GoogleOutlinedIcon size={24} />}
+  text="Continue com Google"
+  className="w-full sm:max-w-3xs hover:text-green-700"
+/> */
 }
