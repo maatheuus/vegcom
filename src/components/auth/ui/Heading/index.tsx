@@ -19,13 +19,13 @@ export default function Heading({
 }: Props) {
   return (
     <CardHeader
-      className={cn("text-center font-rancho font-normal p-0", className)}
+      className={cn("font-lora p-0 text-center text-xl italic", className)}
       {...props}
     >
       <CardTitle
         as={asTitle}
-        weight={Text.Weight.Normal}
-        type={Text.Type.HeadingOne}
+        weight={Text.Weight.SemiBold}
+        type={Text.Type.HeadingThree}
         className="text-green-500"
       >
         {title}

@@ -1,13 +1,38 @@
 import Logo from "@/components//ui/Logo";
+import { ArrowRightOutlinedIcon } from "@/components/icons";
+import clsx from "clsx";
+import Link from "next/link";
 
 interface Props extends React.ComponentProps<"div"> {
   size?: React.SVGAttributes<SVGSVGElement>;
+  shouldGoBack?: boolean;
 }
 
-export default function AuthHeader({ className, ...props }: Props) {
+export default function AuthHeader({
+  className,
+  shouldGoBack,
+  ...props
+}: Props) {
   return (
-    <div role="banner" className={className} {...props}>
+    <div
+      role="banner"
+      className={clsx("flex items-center justify-between px-6 pt-5", className)}
+      {...props}
+    >
       <Logo />
+
+      {shouldGoBack && (
+        <Link
+          href="/login"
+          className="relative flex items-center justify-start"
+        >
+          <span className="sr-only">Voltar para página anterior</span>
+          <ArrowRightOutlinedIcon
+            size={32}
+            className="rotate-180 text-green-500"
+          />
+        </Link>
+      )}
     </div>
   );
 }

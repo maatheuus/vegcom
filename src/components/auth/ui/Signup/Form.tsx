@@ -4,7 +4,6 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
-import Button from "@/components/ui/Button";
 import {
   Form,
   FormControl,
@@ -15,7 +14,6 @@ import {
 import { InputIcon } from "@/components/ui/Input";
 
 import {
-  ArrowCircleRightOutlinedIcon,
   AtOutlinedIcon,
   ClosedEyeOutlinedIcon,
   LoadingOutlinedIcon,
@@ -23,81 +21,36 @@ import {
   UserDashedFilledIcon,
 } from "@/components/icons";
 import Col from "@/components/ui/Layout/Helpers/Col";
-import useSignupData from "@/hooks/auth/mutations/useSignup";
-import { toast } from "@/hooks/use-toast";
 
 // import { loginWithGoogle } from "@/lib/supabase/authFunctions";
-import { useStepStore } from "@/hooks/auth/signupFlow/setLocalData";
-import {
-  useEffect,
-  useRef,
-  useState,
-  type ComponentProps,
-  type FC,
-} from "react";
+import { useSignupFormState } from "@/hooks/auth/queryes/useSignupFormState";
+import { useState, type ComponentProps, type FC } from "react";
+import SubmitButton from "../SubmitButton/SubmitButton";
 
 const formSchema = z.object({
-  username: z.string().min(2, {
-    message: "Username must be at least 2 characters.",
-  }),
-  email: z.string().email({
-    message: "Invalid email address.",
-  }),
+  username: z.string().min(4, { message: "Deve conter no mínimo 4 letras." }),
+  email: z.string().email({ message: "Endereço de email inválido." }),
   password: z
     .string()
-    .min(8, { message: "Password must be at least 8 characters." }),
+    .min(8, { message: "Senha deve ter pelo menos 8 caracteres" }),
 });
 
 const SignupForm: FC<ComponentProps<"form">> = ({ className, ...props }) => {
-  const closedEyeRef = useRef<SVGSVGElement | null>(null);
   const [showingPassword, setShowingPassword] = useState<boolean>(false);
-  const { nextStep, setStep } = useStepStore();
-
-  const {
-    mutate: signup,
-    error: signupError,
-    isPending: isLoading,
-  } = useSignupData();
+  const { formData, updateFormData, nextStep } = useSignupFormState();
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      username: "",
-      email: "",
-      password: "",
+      username: formData.username || "",
+      email: formData.email || "",
+      password: formData.password || "",
     },
   });
 
-  useEffect(() => {
-    if (closedEyeRef.current) {
-      closedEyeRef.current.addEventListener("click", () => {
-        setShowingPassword(!showingPassword);
-      });
-    }
-  }, [showingPassword]);
-
-  async function onSubmit(data: z.infer<typeof formSchema>) {
-    if (signupError) {
-      toast({
-        title: "Erro ao fazer login",
-        description:
-          signupError?.message ||
-          "Verifique suas credenciais e tente novamente.",
-        variant: "destructive",
-        duration: 8000,
-      });
-    }
-
-    toast({
-      title: "Sucesso!",
-      variant: "success",
-      duration: 5000,
-    });
-
-    signup({ ...data });
-    setStep("signupForm");
+  function onSubmit(data: z.infer<typeof formSchema>) {
+    updateFormData(data);
     nextStep();
-    return data;
   }
 
   // async function handleLoginWithGoogle() {
@@ -127,7 +80,7 @@ const SignupForm: FC<ComponentProps<"form">> = ({ className, ...props }) => {
         onSubmit={form.handleSubmit(onSubmit)}
         {...props}
       >
-        <Col className="gap-3 px-5 pt-4 pb-6 items-center">
+        <Col className="items-center gap-3 px-5 pt-4 pb-6">
           <FormField
             control={form.control}
             name="username"
@@ -137,7 +90,7 @@ const SignupForm: FC<ComponentProps<"form">> = ({ className, ...props }) => {
                   <InputIcon
                     className="w-full text-green-500"
                     type="text"
-                    placeholder="Seu nome completo"
+                    placeholder="Nome completo"
                     autoComplete="name"
                     {...field}
                     icon={
@@ -148,7 +101,7 @@ const SignupForm: FC<ComponentProps<"form">> = ({ className, ...props }) => {
                     }
                   />
                 </FormControl>
-                <FormMessage />
+                <FormMessage className="!mb-0" />
               </FormItem>
             )}
           />
@@ -161,7 +114,7 @@ const SignupForm: FC<ComponentProps<"form">> = ({ className, ...props }) => {
                   <InputIcon
                     className="w-full text-green-500"
                     type="email"
-                    placeholder="Seu Email"
+                    placeholder="Email"
                     autoComplete="email"
                     {...field}
                     icon={
@@ -169,7 +122,7 @@ const SignupForm: FC<ComponentProps<"form">> = ({ className, ...props }) => {
                     }
                   />
                 </FormControl>
-                <FormMessage />
+                <FormMessage className="!mb-0" />
               </FormItem>
             )}
           />
@@ -182,46 +135,38 @@ const SignupForm: FC<ComponentProps<"form">> = ({ className, ...props }) => {
                   <InputIcon
                     className="w-full"
                     type={showingPassword ? "text" : "password"}
-                    placeholder="Sua senha"
+                    placeholder="Senha"
                     autoComplete="new-password"
                     {...field}
                     icon={
-                      showingPassword ? (
-                        <OpenEyesOutlinedIcon
-                          size={18}
-                          ref={closedEyeRef}
-                          className="cursor-pointer text-green-500"
-                        />
-                      ) : (
-                        <ClosedEyeOutlinedIcon
-                          size={18}
-                          ref={closedEyeRef}
-                          className="cursor-pointer text-green-500"
-                        />
-                      )
+                      <div
+                        onClick={() => setShowingPassword(!showingPassword)}
+                        className="cursor-pointer"
+                      >
+                        {showingPassword ? (
+                          <OpenEyesOutlinedIcon
+                            size={18}
+                            className="text-green-500"
+                          />
+                        ) : (
+                          <ClosedEyeOutlinedIcon
+                            size={18}
+                            className="text-green-500"
+                          />
+                        )}
+                      </div>
                     }
                   />
                 </FormControl>
-                <FormMessage />
+                <FormMessage className="!mb-0" />
               </FormItem>
             )}
           />
         </Col>
         <Col className="items-center gap-2 px-5 py-4">
-          <Button.Icon
-            type="submit"
-            rightIcon={
-              isLoading ? (
-                <LoadingOutlinedIcon size={24} />
-              ) : (
-                <ArrowCircleRightOutlinedIcon size={24} />
-              )
-            }
-            text="Seguinte"
-            className="font-semibold w-full sm:max-w-80 hover:[&_svg]:translate-x-1.5 hover:[&_svg]:transition-all hover:[&_svg]:duration-300"
-            disabled={isLoading}
-          />
-
+          <SubmitButton text="Seguinte">
+            <LoadingOutlinedIcon className="!h-6 !w-6 animate-spin" />
+          </SubmitButton>
           {/* <Button
             type="button"
             variant="text"

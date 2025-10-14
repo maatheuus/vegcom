@@ -9,14 +9,15 @@ import {
   REGEXP_ONLY_DIGITS_AND_CHARS,
 } from "@/components/ui/Input/Otp";
 import Col from "@/components/ui/Layout/Helpers/Col";
-import { useStepStore } from "@/hooks/auth/signupFlow/setLocalData";
+import { useSignupFormState } from "@/hooks/auth/queryes/useSignupFormState";
+
 import Link from "next/link";
 
 export default function CodeConfirm() {
-    const { nextStep, setStep } = useStepStore();
-  
+  const { setStep, nextStep } = useSignupFormState();
+
   return (
-    <Col className="mx-auto h-fit gap-24 justify-around">
+    <Col className="mx-auto h-fit justify-around gap-24">
       <InputOTP maxLength={6} pattern={REGEXP_ONLY_DIGITS_AND_CHARS}>
         <InputOTPGroup>
           <InputOTPSlot index={0} />
@@ -33,9 +34,9 @@ export default function CodeConfirm() {
           type="submit"
           rightIcon={<ArrowCircleRightOutlinedIcon size={24} />}
           text="Seguinte"
-          className="font-semibold w-full sm:max-w-80 hover:[&_svg]:translate-x-1.5 hover:[&_svg]:transition-all hover:[&_svg]:duration-300"
+          className="w-full font-semibold sm:max-w-80 hover:[&_svg]:translate-x-1.5 hover:[&_svg]:transition-all hover:[&_svg]:duration-300"
           onClick={() => {
-            setStep("codeConfirm");
+            // setStep("codeConfirm");
             nextStep();
           }}
         />
@@ -43,12 +44,12 @@ export default function CodeConfirm() {
         <Button
           type="button"
           variant="text"
-          className="text-base font-semibold w-full sm:max-w-80 cursor-pointer hover:bg-transparent"
+          className="w-full cursor-pointer text-base font-semibold hover:bg-transparent sm:max-w-80"
         >
           Já possui uma conta?
           <Link
             href="/login"
-            className="font-bold hover:text-green-700 transition-colors duration-300"
+            className="font-bold transition-colors duration-300 hover:text-green-700"
           >
             Login
           </Link>

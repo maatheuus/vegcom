@@ -1,62 +1,52 @@
 "use client";
 
-import CodeConfirmPage from "@/components/auth/ui/Signup/ProgressView/Steps/CodeConfirmPage";
+import { useSignupFormState } from "@/hooks/auth/queryes/useSignupFormState";
+import { AnimatePresence, motion } from "framer-motion";
+import { useEffect, useState } from "react";
+
 import FormPage from "@/components/auth/ui/Signup/ProgressView/Steps/FormPage";
 import SuccessPage from "@/components/auth/ui/Signup/ProgressView/Steps/SuccessPage";
-import VerificationPage from "@/components/auth/ui/Signup/ProgressView/Steps/VerificationPage";
-import useGetSignupUser from "@/hooks/auth/queryes/useGetSignupUser";
-import { useStepStore } from "@/hooks/auth/signupFlow/setLocalData";
-import { useEffect, useState } from "react";
 import UserInformationPage from "./ProgressView/Steps/UserInformationPage";
 
+const stepVariants = {
+  hidden: { opacity: 0, x: -50 },
+  visible: { opacity: 1, x: 0 },
+  exit: { opacity: 0, x: 50, position: "absolute" },
+};
+
 export default function SignupFlow() {
-  const { data: signupUserData } = useGetSignupUser();
-  const [currentStep, setCurrentStep] = useState(0);
-  const { currentStep: step } = useStepStore();
-
-  useEffect(() => {
-    // if (!signupUserData) return;
-
-    switch (step) {
-      case "signupForm":
-        setCurrentStep(0);
-        break;
-      // case "codeConfirm":
-      //   setCurrentStep(1);
-      //   break;
-      // case "verification":
-      //   setCurrentStep(2);
-      //   break;
-      case "userInformation":
-        setCurrentStep(3);
-        break;
-      case "success":
-        setCurrentStep(4);
-        break;
-      default:
-        break;
-    }
-  }, [signupUserData, step]);
+  const { currentStep: stepName } = useSignupFormState(); // <- Use o novo hook
+  const [currentStepIndex, setCurrentStepIndex] = useState(0);
 
   const steps = [
-    <FormPage key="form" />,
-    <CodeConfirmPage key="codeConfirm" />,
-    <VerificationPage key="verification" />,
-    <UserInformationPage key="userInformation" />,
-    <SuccessPage key="success" />,
+    { name: "signupForm", component: <FormPage key="form" /> },
+    {
+      name: "userInformation",
+      component: <UserInformationPage key="userInformation" />,
+    },
+    { name: "success", component: <SuccessPage key="success" /> },
   ];
 
-  // useEffect(() => {
-  //   const container = document.getElementById("signup-steps-container");
-  //   if (container) {
-  //     gsap.killTweensOf(container);
-  //     gsap.fromTo(
-  //       container,
-  //       { x: -100, opacity: 0, ease: "power2.inOut" },
-  //       { x: 0, opacity: 1, duration: 0.8, ease: "power2.inOut" }
-  //     );
-  //   }
-  // }, [currentStep]);
+  useEffect(() => {
+    const newIndex = steps.findIndex((s) => s.name === stepName);
+    if (newIndex !== -1) {
+      setCurrentStepIndex(newIndex);
+    }
+  }, [stepName]);
 
-  return <div id="signup-steps-container">{steps[currentStep]}</div>;
+  return (
+    <AnimatePresence mode="wait">
+      <motion.div
+        key={currentStepIndex}
+        variants={stepVariants}
+        initial="hidden"
+        animate="visible"
+        exit="exit"
+        transition={{ duration: 0.5, ease: "easeInOut" }}
+        className="w-full"
+      >
+        {steps[currentStepIndex].component}
+      </motion.div>
+    </AnimatePresence>
+  );
 }

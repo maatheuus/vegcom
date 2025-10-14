@@ -1,8 +1,4 @@
-import {
-  Card,
-  CardContent,
-  CardFooter
-} from "@/components//ui/card";
+import { Card, CardContent, CardFooter } from "@/components//ui/card";
 
 import Text from "@/components//ui/Text";
 import Link from "next/link";
@@ -11,15 +7,15 @@ import LoginForm from "./Form";
 
 export default function LoginCard() {
   return (
-    <Card className="bg-green-50 gap-4 mt-8 sm:mt-0 md:gap-7 rounded-3xl shadow-card z-99 relative px-4 pb-10 pt-6 md:px-9 md:pb-10 md:pt-10 lg:px-9 lg:pt-6">
-      <Heading title='Bem vindo de volta' subTitle="Login" />
+    <Card className="shadow-card relative z-99 mt-8 gap-4 rounded-3xl bg-green-50 px-4 pt-6 pb-10 sm:mt-0 md:gap-7 md:px-9 md:pt-10 md:pb-10 lg:px-9 lg:pt-6">
+      <Heading title="Bem vindo de volta" subTitle="Login" />
       <CardContent>
         <LoginForm />
       </CardContent>
       <CardFooter className="flex justify-center">
-        <Text>
+        <Text className="font-maitree font-medium">
           Não tem uma conta?{" "}
-          <Link href="/signup" className="text-green-500 font-semibold">
+          <Link href="/signup" className="font-semibold text-green-500">
             Registre-se agora
           </Link>
         </Text>
