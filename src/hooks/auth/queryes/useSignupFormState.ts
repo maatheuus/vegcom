@@ -10,6 +10,8 @@ export type SignupFormData = {
   userInfo?: string;
   meetUsInfo?: string;
   preference?: "vegan" | "vegetarian" | "";
+  location?: string;
+  culinaryLevel?: "beginner" | "intermediate" | "advanced" | "";
 };
 
 const stepsOrder: Step[] = ["signupForm", "userInformation", "success"];

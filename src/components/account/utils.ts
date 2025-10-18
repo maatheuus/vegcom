@@ -148,9 +148,9 @@ export const dietOptions = [
 ];
 
 export const culinaryLevelOptions = [
-  { value: "beginner", label: "Iniciante" },
-  { value: "intermediate", label: "Intermediário" },
-  { value: "advanced", label: "Avançado" },
+  { value: "beginner", label: "Queima tudo" },
+  { value: "intermediate", label: "Sabe fritar um ovo" },
+  { value: "advanced", label: "MasterChef não é nada" },
 ];
 
 export const bioTooShortMessages = [
