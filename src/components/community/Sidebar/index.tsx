@@ -7,7 +7,7 @@ import {
   LogoOutlinedIcon,
   PlantOutlinedIcon,
   PlusOutlinedIcon,
-  QuestionMarkOutlinedIcon,
+  // QuestionMarkOutlinedIcon,
   UserGearOutlinedIcon,
 } from "@/components/icons";
 import Col from "@/components/ui/Layout/Helpers/Col";
@@ -34,11 +34,11 @@ const sidebarLinks = {
       href: "/curiosity",
       icon: ChatCircleOutlinedIcon,
     },
-    {
-      label: "Dúvidas",
-      href: "/ask-your-questions",
-      icon: QuestionMarkOutlinedIcon,
-    },
+    // {
+    //   label: "Dúvidas",
+    //   href: "/ask-your-questions",
+    //   icon: QuestionMarkOutlinedIcon,
+    // },
     {
       label: "Nova receita",
       href: "/new-recipe",
