@@ -85,7 +85,7 @@ const SignupForm: FC<ComponentProps<"form">> = ({ className, ...props }) => {
             control={form.control}
             name="username"
             render={({ field }) => (
-              <FormItem className="w-full max-w-[404px]">
+              <FormItem className="w-full">
                 <FormControl>
                   <InputIcon
                     className="w-full text-green-500"
@@ -109,7 +109,7 @@ const SignupForm: FC<ComponentProps<"form">> = ({ className, ...props }) => {
             control={form.control}
             name="email"
             render={({ field }) => (
-              <FormItem className="w-full max-w-[404px]">
+              <FormItem className="w-full">
                 <FormControl>
                   <InputIcon
                     className="w-full text-green-500"
@@ -130,7 +130,7 @@ const SignupForm: FC<ComponentProps<"form">> = ({ className, ...props }) => {
             control={form.control}
             name="password"
             render={({ field }) => (
-              <FormItem className="w-full max-w-[404px]">
+              <FormItem className="w-full">
                 <FormControl>
                   <InputIcon
                     className="w-full"
@@ -167,15 +167,6 @@ const SignupForm: FC<ComponentProps<"form">> = ({ className, ...props }) => {
           <SubmitButton text="Seguinte">
             <LoadingOutlinedIcon className="!h-6 !w-6 animate-spin" />
           </SubmitButton>
-          {/* <Button
-            type="button"
-            variant="text"
-            className="text-base font-semibold w-full sm:max-w-80 cursor-pointer hover:text-green-700 hover:bg-transparent"
-            disabled={isLoading}
-            onClick={handleLoginWithGoogle}
-          >
-            Continue com Google
-          </Button> */}
         </Col>
       </form>
     </Form>

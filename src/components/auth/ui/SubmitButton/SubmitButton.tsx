@@ -18,7 +18,7 @@ export default function SubmitButton({
   return (
     <Button
       type="submit"
-      className="group font-maitree relative h-10 w-full cursor-pointer overflow-hidden rounded-3xl bg-gradient-to-r from-green-500 to-green-600 shadow-lg shadow-green-500/30 transition-all duration-300 hover:from-green-200 hover:to-green-500 hover:shadow-xl hover:shadow-green-500/40 sm:max-w-3xs"
+      className="group font-maitree relative h-10 w-full cursor-pointer overflow-hidden bg-gradient-to-r from-green-500 to-green-600 shadow-lg shadow-green-500/30 transition-all duration-300 hover:from-green-200 hover:to-green-500"
       disabled={disabled}
       {...props}
     >

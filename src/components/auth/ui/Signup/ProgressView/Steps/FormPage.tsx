@@ -6,7 +6,7 @@ export default function FormPage() {
   return (
     <SignupLayout
       left={{
-        contentClassName: "h-full justify-center gap-y-4",
+        contentClassName: "h-full justify-center max-w-[554px]",
         title: "Que bom ter você aqui",
         subTitle: "Crie sua conta",
         children: <SignupForm />,
