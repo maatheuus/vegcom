@@ -1,16 +1,16 @@
-// components/PostCard/PostCardRoot.tsx
+"use client";
+
 import type { PostCardDataProps } from "@/components/@types";
-import {
-  ChatCircleTextOutlinedIcon,
-  OpenEyeOutlinedIcon,
-} from "@/components/icons";
+import { BookmarkHoveredIcon, SparklesOutlinedIcon } from "@/components/icons";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/Avatar";
+import Button from "@/components/ui/Button";
 import Col from "@/components/ui/Layout/Helpers/Col";
 import Row from "@/components/ui/Layout/Helpers/Row";
 import Text from "@/components/ui/Text";
 import { dateFormatDistanceLocale } from "@/lib/utils";
 import clsx from "clsx";
 import { formatDistance, subDays } from "date-fns";
+import { useState } from "react";
 import CommentsModal from "../CommentsModal";
 import { AvatarGroup } from "./AvatarGroup";
 
@@ -27,82 +27,121 @@ export default function PostCardRoot({
   variant = "default",
   ...props
 }: Props) {
+  const [isLiked, setIsLiked] = useState(false);
+  const [likesCount, setLikesCount] = useState(data.postLikes);
+  const [isSaved, setIsSaved] = useState(false);
+
   const formattedPostDate = formatDistance(
     subDays(new Date(data.postDate), 1),
     new Date(),
-    { addSuffix: true, includeSeconds: true, locale: dateFormatDistanceLocale }
+    { addSuffix: true, includeSeconds: true, locale: dateFormatDistanceLocale },
   );
+
+  const handleLike = () => {
+    setIsLiked(!isLiked);
+    setLikesCount(isLiked ? (likesCount || 0) - 1 : (likesCount || 0) + 1);
+  };
+
+  const handleSave = () => {
+    setIsSaved(!isSaved);
+  };
 
   return (
     <Col
-      className={clsx(
-        "px-4 py-3 w-full border-b border-b-green-100",
-        className
-      )}
+      className={clsx("w-full border-b border-b-gray-100 px-4 py-5", className)}
       {...props}
     >
       <Col>
-        <Row className="py-3 w-full justify-between">
-          <Row className="items-center gap-x-1">
-            <Avatar>
+        {/* Header */}
+        <Row className="mb-4 w-full justify-between">
+          <Row className="items-center gap-x-3">
+            <Avatar className="h-10 w-10">
               <AvatarImage src="https://github.com/shadcn.png" alt="@shadcn" />
-              <AvatarFallback>CN</AvatarFallback>
+              <AvatarFallback>
+                {data.user.name?.slice(0, 2).toUpperCase()}
+              </AvatarFallback>
             </Avatar>
-            <Text
-              as="span"
-              type={Text.Type.BodyFive}
-              weight={Text.Weight.Medium}
-              className="text-green-500 font-lora italic font-semibold"
-            >
-              {data.user.name}
-            </Text>
+            <Col className="gap-y-0">
+              <Text
+                as="span"
+                type={Text.Type.BodyFive}
+                weight={Text.Weight.Medium}
+                className="text-gray-900"
+              >
+                {data.user.name}
+              </Text>
+            </Col>
           </Row>
-          <Row className="items-center">
-            <Text
-              as="span"
-              type={Text.Type.BodyFive}
-              weight={Text.Weight.Medium}
-              className="text-green-500 font-lora italic font-semibold"
-            >
-              {formattedPostDate}
-            </Text>
-          </Row>
+
+          <Button.Icon
+            onClick={handleSave}
+            variant="text"
+            className="cursor-pointer rounded-full border border-green-100 px-3 transition-colors hover:bg-green-100"
+            icon={
+              <BookmarkHoveredIcon
+                size={18}
+                color={isSaved ? "fill" : "outline"}
+                className={clsx(isSaved ? "fill-green-500" : "text-green-500")}
+              />
+            }
+          />
         </Row>
 
         {children}
-      </Col>
 
-      <Row className="py-3 gap-x-3 items-center mt-4 border-t border-t-green-100">
-        {data.comments.comments && (
-          <AvatarGroup comments={data.comments.comments} />
-        )}
+        <Row className="items-baseline justify-between">
+          {data.comments.comments && data.comments.comments.length > 0 && (
+            <Row className="mt-3 items-center gap-x-3 px-1">
+              <AvatarGroup comments={data.comments.comments} />
 
-        {data.comments.haveComments ? (
-          <CommentsModal variant={variant} data={data} />
-        ) : (
+              <span className="size-0.5 rounded-full bg-green-500"></span>
+
+              {data.comments.haveComments && (
+                <CommentsModal
+                  variant={variant}
+                  data={data}
+                  isLiked={isLiked}
+                  likesCount={likesCount || 0}
+                />
+              )}
+
+              <span className="size-0.5 rounded-full bg-green-500"></span>
+
+              <Button.Icon
+                onClick={handleLike}
+                className="flex cursor-pointer items-center gap-x-1.5 rounded-full p-1 hover:bg-green-100"
+                variant="text"
+                leftIcon={
+                  <SparklesOutlinedIcon
+                    size={16}
+                    color={isLiked ? "fill" : "outline"}
+                    className={clsx(
+                      isLiked ? "fill-green-500" : "text-green-500",
+                    )}
+                  />
+                }
+              >
+                <Text
+                  as="span"
+                  type={Text.Type.BodyFive}
+                  weight={Text.Weight.Medium}
+                  className="font-lora flex items-center gap-x-1 font-bold text-green-500 italic"
+                >
+                  {likesCount}
+                </Text>
+              </Button.Icon>
+            </Row>
+          )}
           <Text
             as="span"
-            type={Text.Type.BodyFour}
-            weight={Text.Weight.Medium}
-            className="text-green-500 font-lora italic font-bold flex items-center gap-x-1"
+            type={Text.Type.BodyFive}
+            weight={Text.Weight.Normal}
+            className="text-black-100 font-lora opacity-60"
           >
-            <ChatCircleTextOutlinedIcon size={16} />0
-          </Text>
-        )}
-
-        <span className="size-0.5 rounded-full bg-green-500"></span>
-        <Row className="items-center gap-x-1 text-green-500/80">
-          <OpenEyeOutlinedIcon size={16} />
-          <Text
-            as="span"
-            type={Text.Type.BodyFour}
-            weight={Text.Weight.Medium}
-            className="!font-bold font-lora italic"
-          >
-            {data.postViews}
+            {formattedPostDate}
           </Text>
         </Row>
-      </Row>
+      </Col>
     </Col>
   );
 }

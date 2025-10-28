@@ -22,7 +22,7 @@ interface TypeConfig {
 export const typeConfig: Record<string, TypeConfig> = {
   ingredients: {
     button: {
-      base: "cursor-pointer size-6 rounded-full font-medium border border-green-500 text-green-500",
+      base: "cursor-pointer size-6 min-w-6 min-h-6 rounded-full font-medium border border-green-500 text-green-500",
       checked: "opacity-70",
       checkedIconBg: null as string | null,
     },
@@ -36,7 +36,7 @@ export const typeConfig: Record<string, TypeConfig> = {
   },
   instructions: {
     button: {
-      base: "cursor-pointer size-6 rounded-full font-medium !text-white",
+      base: "cursor-pointer size-6 min-w-6 min-h-6 rounded-full font-medium !text-white",
       uncheckedBg: "bg-green-200 text-green-500",
       checkedBg: "bg-green-500",
       checked: "opacity-70",
@@ -51,7 +51,7 @@ export const typeConfig: Record<string, TypeConfig> = {
   },
   "cooking-note": {
     button: {
-      base: "size-6 rounded-full font-medium border border-green-500 text-green-500 cursor-default",
+      base: "size-6 min-w-6 min-h-6 rounded-full font-medium border border-green-500 text-green-500 cursor-default",
     },
     text: {
       base: "!cursor-default",
@@ -105,7 +105,6 @@ export const mockCookingNotes = [
     label: "Experimente adicionar outros legumes de sua preferência.",
   },
 ];
-
 
 export const mockComments: Comment[] = [
   {

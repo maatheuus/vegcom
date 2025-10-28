@@ -26,10 +26,10 @@ const CommentsSection = memo(function CommentsSection({
   const [newReview, setNewReview] = useState<string>("");
   const [newRating, setNewRating] = useState<number>(0);
   const [likedComments, setLikedComments] = useState<{ [id: number]: boolean }>(
-    {}
+    {},
   );
   const [likesCount, setLikesCount] = useState<{ [id: number]: number }>(
-    Object.fromEntries(comments.map((c) => [c.id, c.likes]))
+    Object.fromEntries(comments.map((c) => [c.id, c.likes])),
   );
 
   const handlePostReview = useCallback(() => {
@@ -67,7 +67,7 @@ const CommentsSection = memo(function CommentsSection({
         };
       });
     },
-    [likedComments]
+    [likedComments],
   );
 
   const visibleComments = localComments.slice(0, MAX_COMMENTS_LENGTH);
@@ -76,13 +76,21 @@ const CommentsSection = memo(function CommentsSection({
   return (
     <Col
       className={clsx(
-        "gap-y-6 pt-6 before:h-0.5 before:w-full before:bg-green-200 before:content-[''] before:rounded-full",
-        className || ""
+        "gap-y-6 pt-6 before:h-0.5 before:w-full before:rounded-full before:bg-green-200 before:content-['']",
+        className || "",
       )}
       role="region"
       aria-label="Seção de comentários"
       {...props}
     >
+      <ReviewForm
+        rating={newRating}
+        review={newReview}
+        onRatingChange={setNewRating}
+        onReviewChange={setNewReview}
+        onPost={handlePostReview}
+      />
+
       <Text
         type={Text.Type.HeadingFive}
         weight={Text.Weight.Medium}
@@ -92,7 +100,7 @@ const CommentsSection = memo(function CommentsSection({
         Comentários
       </Text>
 
-      <div role="list" aria-label="Lista de comentários">
+      <div role="list" aria-label="Lista de comentários" className="space-y-8">
         {visibleComments.map((comment) => (
           <CommentCard
             key={comment.id}
@@ -113,7 +121,7 @@ const CommentsSection = memo(function CommentsSection({
         {remainingComments.length > 0 && (
           <Text
             type={Text.Type.BodyFive}
-            className="w-fit text-green-500 p-1 rounded-md cursor-pointer hover:bg-green-100 transition-colors duration-200"
+            className="w-fit cursor-pointer rounded-md p-1 text-green-500 transition-colors duration-200 hover:bg-green-100"
             role="button"
             tabIndex={0}
             aria-label={`Ver mais ${remainingComments.length} comentários`}
@@ -124,14 +132,6 @@ const CommentsSection = memo(function CommentsSection({
           </Text>
         )}
       </RecipeCommentsModal>
-
-      <ReviewForm
-        rating={newRating}
-        review={newReview}
-        onRatingChange={setNewRating}
-        onReviewChange={setNewReview}
-        onPost={handlePostReview}
-      />
     </Col>
   );
 });

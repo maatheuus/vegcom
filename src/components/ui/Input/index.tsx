@@ -20,7 +20,7 @@ const InputIcon = React.forwardRef<HTMLInputElement, InputIconProps>(
         <input
           type={type}
           className={cn(
-            "font-maitree flex w-full rounded-md border border-green-500 bg-transparent px-3.5 py-3 text-base transition-colors placeholder:text-green-200 focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50",
+            "font-maitree flex w-full rounded-md border border-green-500 bg-transparent px-3.5 py-2 text-base transition-colors placeholder:text-green-200 focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50 lg:py-2.5",
             className,
           )}
           ref={ref}

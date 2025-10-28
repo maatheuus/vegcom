@@ -1,6 +1,6 @@
 "use client";
 
-import { HeartFilledIcon, HeartOutlinedIcon } from "@/components/icons";
+import { BookmarkHoveredIcon } from "@/components/icons";
 import Row from "@/components/ui/Layout/Helpers/Row";
 import { memo, useCallback, useState } from "react";
 
@@ -28,7 +28,7 @@ const SaveRecipeButton = memo(function SaveRecipeButton({
         handleClick();
       }
     },
-    [handleClick]
+    [handleClick],
   );
 
   return (
@@ -43,19 +43,12 @@ const SaveRecipeButton = memo(function SaveRecipeButton({
       }
       aria-pressed={saved}
     >
-      {saved ? (
-        <HeartFilledIcon
-          className="text-green-500"
-          size={18}
-          aria-hidden="true"
-        />
-      ) : (
-        <HeartOutlinedIcon
-          className="text-green-500"
-          size={18}
-          aria-hidden="true"
-        />
-      )}
+      <BookmarkHoveredIcon
+        color={saved ? "fill" : "outline"}
+        className="text-green-500"
+        size={18}
+        aria-hidden="true"
+      />
     </Row>
   );
 });

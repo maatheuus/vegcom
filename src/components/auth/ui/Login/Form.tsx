@@ -86,74 +86,74 @@ export default function LoginForm() {
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(handleLogin)}>
-        <Col className="gap-5 px-5 pt-4 pb-6">
-          <FormField
-            control={form.control}
-            name="email"
-            render={({ field }) => (
-              <FormItem>
-                <FormControl>
-                  <InputIcon
-                    type="email"
-                    placeholder="Email"
-                    autoComplete="email"
-                    {...field}
-                    icon={<AtOutlinedIcon size={18} />}
-                  />
-                </FormControl>
-                <FormMessage className="!mb-0">
-                  {form.formState.errors.email?.message}
-                </FormMessage>
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={form.control}
-            name="password"
-            render={({ field }) => (
-              <FormItem>
-                <FormControl>
-                  <InputIcon
-                    type={showingPassword ? "text" : "password"}
-                    placeholder="Senha"
-                    autoComplete="current-password"
-                    {...field}
-                    icon={
-                      showingPassword ? (
-                        <OpenEyesOutlinedIcon
-                          size={18}
-                          onClick={togglePasswordVisibility}
-                          className="cursor-pointer"
-                        />
-                      ) : (
-                        <ClosedEyeOutlinedIcon
-                          size={18}
-                          onClick={togglePasswordVisibility}
-                          className="cursor-pointer"
-                        />
-                      )
-                    }
-                  />
-                </FormControl>
-                <FormMessage className="!mb-0">
-                  {form.formState.errors.password?.message}
-                </FormMessage>
-              </FormItem>
-            )}
-          />
+      <form onSubmit={form.handleSubmit(handleLogin)} className="w-full px-5">
+        <Col className="gap-2 pt-4 pb-4 md:pb-8">
+          <Col className="gap-5">
+            <FormField
+              control={form.control}
+              name="email"
+              render={({ field }) => (
+                <FormItem>
+                  <FormControl>
+                    <InputIcon
+                      type="email"
+                      placeholder="Digite seu email"
+                      autoComplete="email"
+                      {...field}
+                      icon={<AtOutlinedIcon size={18} />}
+                    />
+                  </FormControl>
+                  <FormMessage className="!mb-0">
+                    {form.formState.errors.email?.message}
+                  </FormMessage>
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="password"
+              render={({ field }) => (
+                <FormItem>
+                  <FormControl>
+                    <InputIcon
+                      type={showingPassword ? "text" : "password"}
+                      placeholder="Digite sua senha"
+                      autoComplete="current-password"
+                      {...field}
+                      icon={
+                        showingPassword ? (
+                          <OpenEyesOutlinedIcon
+                            size={18}
+                            onClick={togglePasswordVisibility}
+                            className="cursor-pointer"
+                          />
+                        ) : (
+                          <ClosedEyeOutlinedIcon
+                            size={18}
+                            onClick={togglePasswordVisibility}
+                            className="cursor-pointer"
+                          />
+                        )
+                      }
+                    />
+                  </FormControl>
+                  <FormMessage className="!mb-0">
+                    {form.formState.errors.password?.message}
+                  </FormMessage>
+                </FormItem>
+              )}
+            />
+          </Col>
           <div className="w-full text-right">
             <Link
               href="/forgot-password"
-              className="font-maitree text-sm text-green-200 hover:text-green-500"
+              className="font-lora text-black-100 text-sm"
             >
               Esqueceu sua senha?
             </Link>
           </div>
         </Col>
-        <Col className="items-center gap-2 px-5 py-4">
-          <SubmitButton text="Entrar" />
-        </Col>
+        <SubmitButton text="Entrar" />
       </form>
     </Form>
   );

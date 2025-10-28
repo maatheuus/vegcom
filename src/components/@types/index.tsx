@@ -43,7 +43,7 @@ export interface PostCardDataProps {
     commentsNumber?: number;
     comments?: Comment[];
   };
-  postViews?: number;
+  postLikes?: number;
   postDate: string;
   postTags?: string[];
 }

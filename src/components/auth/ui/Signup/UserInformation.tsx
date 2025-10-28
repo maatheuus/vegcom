@@ -79,7 +79,7 @@ const UserInformation: FC<React.ComponentProps<"form">> = ({
 
   function onSubmit(data: z.infer<typeof formSchema>) {
     const finalData = { ...formData, ...data };
-    const { currentStep, ...payload } = finalData;
+    const { ...payload } = finalData;
     console.log(payload);
 
     updateFormData(payload);

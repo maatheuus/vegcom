@@ -7,10 +7,7 @@ import {
   BoxBallCustomIcon,
   Dialog1CustomIcon,
   Dialog2CustomIcon,
-  Line9CustomIcon,
   NormalLineOutlinedIcon,
-  Scribble3CustomIcon,
-  Scribble4CustomIcon,
   SprinkleCustomIcon,
 } from "@/components/icons";
 import { cn } from "@/lib/utils";
@@ -32,26 +29,20 @@ export default function BackgroundItems() {
     tl.fromTo(
       " .dialog-2, .dialog-1, .arrow-1, .scribble4, .scribble3",
       { y: -100, opacity: 0 },
-      { y: 0, opacity: 1, duration: 1.2, stagger: 0.3, ease: "none" }
+      { y: 0, opacity: 1, duration: 1.2, stagger: 0.3, ease: "none" },
     );
 
     mm.add("(min-width: 860px)", () => {
       tl.fromTo(
         ".line-bottom",
         { x: -100, width: 0, duration: 0.5 },
-        { x: 0, duration: 1.5, width: "100%" }
+        { x: 0, duration: 1.5, width: "100%" },
       );
 
       tl.fromTo(
         ".brazuka",
         { x: 200, opacity: 0 },
-        { x: 0, opacity: 1, duration: 0.8, ease: "none" }
-      );
-
-      tl.fromTo(
-        ".line-9",
-        { opacity: 0, duration: 0.5 },
-        { opacity: 1, duration: 1 }
+        { x: 0, opacity: 1, duration: 0.8, ease: "none" },
       );
 
       tl.fromTo(
@@ -62,7 +53,7 @@ export default function BackgroundItems() {
           opacity: 1,
           duration: 0.6,
           ease: "power1.in",
-        }
+        },
       );
 
       tl.fromTo(
@@ -73,14 +64,14 @@ export default function BackgroundItems() {
           opacity: 1,
           duration: 1.2,
           ease: "bounce.out",
-        }
+        },
       );
 
       tl.fromTo(
         ".animate-sprinkle",
         { y: -250, opacity: 0 },
         { y: 0, opacity: 1, duration: 1.5, stagger: 0.5 },
-        "-=0.8"
+        "-=0.8",
       );
 
       gsap.to(".animate-sprinkle", {
@@ -118,7 +109,12 @@ export default function BackgroundItems() {
     <div className="overflow-hidden">
       {isMounted && shouldLoad && (
         <>
-          <div className={cn("brazuka pointer-events-none hidden md:block", randomImage.src.includes("sitting") && "brazuca-sitting" )}>
+          <div
+            className={cn(
+              "brazuka pointer-events-none hidden md:block",
+              randomImage.src.includes("sitting") && "brazuca-sitting",
+            )}
+          >
             <Image src={randomImage} alt="brazuca standing" unoptimized />
           </div>
 
@@ -136,10 +132,6 @@ export default function BackgroundItems() {
 
           <div className="arrow-1">
             <Arrow1CustomIcon />
-          </div>
-
-          <div>
-            <Line9CustomIcon className="line-9" width={73} height={297} />
           </div>
 
           <div className="box-arrow">
@@ -168,13 +160,13 @@ export default function BackgroundItems() {
         <SprinkleCustomIcon size={12} />
       </div>
 
-      <div className="scribble4">
+      {/* <div className="scribble4">
         <Scribble4CustomIcon width={239} height={107} />
-      </div>
-
+      </div> */}
+      {/* 
       <div className="scribble3">
         <Scribble3CustomIcon width={252} height={72} />
-      </div>
+      </div> */}
     </div>
   );
 }

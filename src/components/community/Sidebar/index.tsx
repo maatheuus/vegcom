@@ -88,7 +88,7 @@ export default function Sidebar() {
                     <Row
                       className={`relative w-full cursor-pointer gap-x-3 p-2 transition-all duration-300 ${
                         isActive
-                          ? "rounded-full bg-green-200 text-green-100"
+                          ? "rounded-[8px_8px_0_8px] bg-green-200 text-green-100"
                           : "rounded-[8px_8px_0_8px] text-green-200 hover:bg-green-500 hover:text-green-100"
                       }`}
                     >
@@ -123,7 +123,7 @@ export default function Sidebar() {
                     <Row
                       className={`w-full cursor-pointer gap-x-3 p-2 transition-all duration-300 ${
                         isActive
-                          ? "rounded-full bg-green-200 text-green-100"
+                          ? "rounded-[8px_8px_0_8px] bg-green-200 text-green-100"
                           : "rounded-[8px_8px_0_8px] text-green-200 hover:bg-green-500 hover:text-green-100"
                       }`}
                     >

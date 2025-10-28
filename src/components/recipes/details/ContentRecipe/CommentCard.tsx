@@ -20,10 +20,10 @@ export default function CommentCard({
   onLike,
 }: Props) {
   return (
-    <Col className="gap-y-2 border-b border-green-100 pb-4">
+    <Col className="gap-y-2">
       <Row className="items-center justify-between">
-        <Row className="gap-x-2 items-center">
-          <Avatar className="size-8 border rounded-full">
+        <Row className="items-center gap-x-2">
+          <Avatar className="size-8 rounded-full border">
             {comment.avatarUrl ? (
               <AvatarImage src={comment.avatarUrl} alt={comment.author} />
             ) : (

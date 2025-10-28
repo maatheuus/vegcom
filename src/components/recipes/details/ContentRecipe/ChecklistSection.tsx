@@ -34,25 +34,26 @@ export default function ChecklistSection({
   const [checkedItems, setCheckedItems] = useState<number[]>([]);
 
   useEffect(() => {
-    if (cfg.interactive && storageKey) {
+    if (cfg?.interactive && storageKey) {
       const stored = localStorage.getItem(storageKey);
       if (stored) setCheckedItems(JSON.parse(stored));
     }
-  }, [cfg.interactive, storageKey]);
+  }, [cfg?.interactive, storageKey]);
 
   useEffect(() => {
-    if (cfg.interactive && storageKey) {
+    if (cfg?.interactive && storageKey) {
       localStorage.setItem(storageKey!, JSON.stringify(checkedItems));
     }
-  }, [checkedItems, cfg.interactive, storageKey]);
+  }, [checkedItems, cfg?.interactive, storageKey]);
 
   const toggleCheck = (id: number) => {
     if (!cfg.interactive) return;
     setCheckedItems((prev) =>
-      prev.includes(id) ? prev.filter((i) => i !== id) : [...prev, id]
+      prev.includes(id) ? prev.filter((i) => i !== id) : [...prev, id],
     );
   };
 
+  if (!cfg) return null;
   return (
     <Col className={clsx("gap-y-4", className)} {...props}>
       <Text
@@ -63,7 +64,7 @@ export default function ChecklistSection({
         {title}
       </Text>
 
-      <Col className="gap-2 w-fit">
+      <Col className="w-fit gap-2">
         {items.map((item, idx) => {
           const isChecked = checkedItems.includes(item.id);
 
@@ -78,11 +79,11 @@ export default function ChecklistSection({
               : "",
             isChecked && "checked" in cfg.button && cfg.button.checked
               ? cfg.button.checked
-              : ""
+              : "",
           );
 
           const btnContent = isChecked ? (
-            <CheckOutlinedIcon className="w-4 h-4" />
+            <CheckOutlinedIcon className="h-4 w-4" />
           ) : (
             String(idx + 1)
           );
@@ -94,15 +95,15 @@ export default function ChecklistSection({
             cfg.text.lineThrough &&
               isChecked &&
               "line-through " + cfg.text.checkedColor,
-            "cursor-pointer"
+            "cursor-pointer",
           );
 
           return (
             <Row
               key={item.id}
               className={clsx(
-                "gap-2 items-center",
-                cfg.interactive && "cursor-pointer"
+                "items-center gap-2",
+                cfg.interactive && "cursor-pointer",
               )}
               onClick={() => toggleCheck(item.id)}
             >

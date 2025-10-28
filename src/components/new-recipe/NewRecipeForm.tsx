@@ -86,7 +86,7 @@ export default function NewRecipeForm({}: Props) {
                         <FormControl>
                           <Textarea
                             placeholder="Esta receita é ótima para..."
-                            className="h-full max-h-none"
+                            className="h-full max-h-none max-w-full"
                             {...field}
                           />
                         </FormControl>

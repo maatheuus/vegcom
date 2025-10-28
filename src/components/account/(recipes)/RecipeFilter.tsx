@@ -74,7 +74,7 @@ export default function RecipeFilter() {
       ? `?${params.toString()}`
       : window.location.pathname;
     router.push(newUrl, { scroll: false });
-  }, [debouncedSearchParam, sortBy]);
+  }, [debouncedSearchParam, sortBy, router, searchParams]);
 
   useEffect(() => {
     const clearSearch = searchParams.get("clear_search");
@@ -90,7 +90,7 @@ export default function RecipeFilter() {
     } else if (!currentQ && searchTerm && !isClearing.current) {
       setSearchTerm("");
     }
-  }, [searchParams]);
+  }, [searchParams, searchTerm]);
 
   return (
     <>

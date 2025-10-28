@@ -14,7 +14,7 @@ import { useSignupFormState } from "@/hooks/auth/queryes/useSignupFormState";
 import Link from "next/link";
 
 export default function CodeConfirm() {
-  const { setStep, nextStep } = useSignupFormState();
+  const { nextStep } = useSignupFormState();
 
   return (
     <Col className="mx-auto h-fit justify-around gap-24">

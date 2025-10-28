@@ -7,6 +7,9 @@ export { default as StarFilledIcon } from "./filled/Star";
 export { default as UserDashedFilledIcon } from "./filled/UserDashed";
 export { default as UsersFilledIcon } from "./filled/Users";
 
+// Ícones hovered
+export { default as BookmarkHoveredIcon } from "./hovered/Bookmark";
+
 // Ícones outlined
 export { default as AlienOutlinedIcon } from "./outlined/Alien";
 export { default as ArrowCircleRightOutlinedIcon } from "./outlined/ArrowCircleRight";

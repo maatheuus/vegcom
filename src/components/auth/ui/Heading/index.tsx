@@ -1,6 +1,6 @@
 import { CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import Text from "@/components/ui/Text";
-import { cn } from "@/lib/utils";
+import clsx from "clsx";
 
 type Props = {
   title?: string;
@@ -19,7 +19,7 @@ export default function Heading({
 }: Props) {
   return (
     <CardHeader
-      className={cn("font-lora p-0 text-center text-xl italic", className)}
+      className={clsx("font-lora p-0 text-center italic", className)}
       {...props}
     >
       <CardTitle

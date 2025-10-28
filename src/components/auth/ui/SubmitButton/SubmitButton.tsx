@@ -1,4 +1,3 @@
-import { ArrowRightOutlinedIcon } from "@/components/icons";
 import Button from "@/components/ui/Button";
 
 interface SubmitButtonProps
@@ -18,21 +17,14 @@ export default function SubmitButton({
   return (
     <Button
       type="submit"
-      className="group font-maitree relative h-10 w-full cursor-pointer overflow-hidden bg-gradient-to-r from-green-500 to-green-600 shadow-lg shadow-green-500/30 transition-all duration-300 hover:from-green-200 hover:to-green-500"
+      className="group font-maitree relative h-10 w-full cursor-pointer overflow-hidden bg-green-500"
       disabled={disabled}
       {...props}
     >
       {!isLoading ? (
-        <>
-          <span className="absolute inset-0 translate-x-[-100%] bg-gradient-to-r from-transparent via-white/20 to-transparent transition-transform duration-700 group-hover:translate-x-[100%]" />
-          <span className="relative flex items-center justify-center gap-2 font-semibold">
-            {text}
-            <ArrowRightOutlinedIcon
-              size={18}
-              className="transition-transform duration-300 group-hover:translate-x-1"
-            />
-          </span>
-        </>
+        <span className="relative flex items-center justify-center gap-2 font-semibold">
+          {text}
+        </span>
       ) : (
         children
       )}

@@ -29,7 +29,7 @@ const ReviewForm = memo(function ReviewForm({
     (e: React.ChangeEvent<HTMLTextAreaElement>) => {
       onReviewChange(e.target.value);
     },
-    [onReviewChange]
+    [onReviewChange],
   );
 
   const handleSubmit = useCallback(
@@ -37,7 +37,7 @@ const ReviewForm = memo(function ReviewForm({
       e.preventDefault();
       onPost();
     },
-    [onPost]
+    [onPost],
   );
 
   const isFormValid = review.trim().length > 0 && rating > 0;
@@ -80,7 +80,7 @@ const ReviewForm = memo(function ReviewForm({
             value={review}
             onChange={handleReviewChange}
             placeholder="Escreva aqui..."
-            className="w-full min-h-[80px] rounded-md border border-green-200 p-2 text-green-800 focus:border-green-500 focus:ring-1 focus:ring-green-500 transition-colors"
+            className="min-h-[80px] w-full max-w-full rounded-md border border-green-200 p-2 text-green-800 transition-colors focus:border-green-500 focus:ring-1 focus:ring-green-500"
             aria-invalid={!!error}
             aria-describedby={error ? "review-error" : undefined}
             disabled={isSubmitting}
@@ -89,7 +89,7 @@ const ReviewForm = memo(function ReviewForm({
             <Text
               id="review-error"
               type={Text.Type.BodyFive}
-              className="text-red-500 mt-1"
+              className="mt-1 text-red-500"
               role="alert"
             >
               {error}
@@ -101,7 +101,7 @@ const ReviewForm = memo(function ReviewForm({
           type="submit"
           variant="default"
           disabled={!isFormValid || isSubmitting}
-          className="self-end cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed transition-opacity"
+          className="cursor-pointer self-end transition-opacity disabled:cursor-not-allowed disabled:opacity-40"
           aria-busy={isSubmitting}
         >
           {isSubmitting ? "Enviando..." : "Enviar"}

@@ -44,11 +44,7 @@ const tabs = [
   },
 ];
 
-export default function TabsLayout({
-  children,
-}: {
-  children?: React.ReactNode;
-}) {
+export default function TabsLayout() {
   const searchParams = useSearchParams();
   const router = useRouter();
   const pathname = usePathname();

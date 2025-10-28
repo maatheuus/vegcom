@@ -35,14 +35,14 @@ const configs = [
       "@typescript-eslint/explicit-module-boundary-types": "off",
 
       // React Hooks
-      "react-hooks/exhaustive-deps": "warn",
+      "react-hooks/exhaustive-deps": "off",
       "react-hooks/rules-of-hooks": "error",
 
       // JSX: evita aspas diretas, etc.
       "react/no-unescaped-entities": "error",
 
       // Outros
-      "no-console": "warn",
+      "no-console": "off",
       "no-debugger": "error",
     },
   },

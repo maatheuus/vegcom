@@ -104,7 +104,7 @@ export function SearchCityLocation({
     }
   };
 
-  const handleBlur = (e: React.FocusEvent) => {
+  const handleBlur = () => {
     setTimeout(() => {
       if (!listRef.current?.contains(document.activeElement)) {
         setIsOpen(false);

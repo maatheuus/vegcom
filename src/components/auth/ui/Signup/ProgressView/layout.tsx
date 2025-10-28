@@ -39,7 +39,6 @@ function Left({
   children,
   className,
   contentClassName,
-  hasBackArrow,
   ...props
 }: ViewLeftProps) {
   return (

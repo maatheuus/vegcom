@@ -102,14 +102,14 @@ export default function SuggestionsPage() {
     params.set("category", selectedKey);
 
     router.replace(`?${params.toString()}`, { scroll: false });
-  }, [selectedKey, router]);
+  }, [selectedKey, router, searchParams]);
 
   useEffect(() => {
     const category = searchParams.get("category") || "all";
     if (category !== selectedKey) {
       setSelectedKey(category);
     }
-  }, [searchParams]);
+  }, [searchParams, selectedKey]);
 
   const filteredSuggestions =
     selectedKey === "all"

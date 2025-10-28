@@ -1,6 +1,8 @@
+"use client";
+
 import {
+  BookmarkHoveredIcon,
   CalendarOutlinedIcon,
-  HeartOutlinedIcon,
   ScrollOutlinedIcon,
   StarOutlinedIcon,
   UserOutlinedIcon,
@@ -9,7 +11,7 @@ import Col from "@/components/ui/Layout/Helpers/Col";
 import Row from "@/components/ui/Layout/Helpers/Row";
 import Text from "@/components/ui/Text";
 import clsx from "clsx";
-import { memo } from "react";
+import { memo, useState } from "react";
 
 import SaveRecipeButton from "./SaveRecipeButton";
 import ShareDropdown from "./ShareDropdown";
@@ -40,6 +42,12 @@ const Header = memo(function Header({
   isRecipePage,
   ...props
 }: Props) {
+  const [currentSavedCount, setCurrentSavedCount] = useState(savedCount || 0);
+
+  const handleSavedChange = (saved: boolean) => {
+    setCurrentSavedCount((prev) => (saved ? prev + 1 : prev - 1));
+  };
+
   const FIRST_ROW_DATA = [
     {
       label: authorName,
@@ -57,12 +65,12 @@ const Header = memo(function Header({
       ariaLabel: `${commentsCount} comentários`,
     },
     {
-      label: `${savedCount} salvos`,
-      icon: <HeartOutlinedIcon />,
-      ariaLabel: `${savedCount} pessoas salvaram esta receita`,
+      label: `${currentSavedCount} salvos`,
+      icon: <BookmarkHoveredIcon />,
+      ariaLabel: `${currentSavedCount} pessoas salvaram esta receita`,
     },
     {
-      label: `${rating}/${totalReviews} reviews`,
+      label: `${rating} reviews`,
       icon: <StarOutlinedIcon />,
       ariaLabel: `Avaliação média: ${rating} de ${totalReviews}`,
     },
@@ -119,7 +127,10 @@ const Header = memo(function Header({
             })}
           </Row>
           <Row className="gap-x-3" role="group" aria-label="Ações da receita">
-            <SaveRecipeButton initialSaved={isSaved!} />
+            <SaveRecipeButton
+              initialSaved={isSaved!}
+              onSavedChange={handleSavedChange}
+            />
             <ShareDropdown />
           </Row>
         </Row>
