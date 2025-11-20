@@ -1,5 +1,5 @@
 import "@/assets/css/login.css";
-import BackgroundItems from "@/components/auth/ui/Login/BackgroundItems";
+import BackgroundItems from "@/features/auth/components/Login/BackgroundItems";
 
 export default function RootLayout({
   children,

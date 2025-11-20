@@ -1,13 +1,15 @@
-// import AsideCards from "@/components/community/AsideContent";
-import Background from "@/components/community/Background";
-import CommunityLayout from "@/components/community/Layout";
-import Layout from "@/components/ui/Layout/";
+import CommunityLayout from "@/features/community/components/Layout";
+import Layout from "@/shared/ui/Layout/";
 
 export default function Page() {
   return (
-    <Layout.Default extraChildren={<Background />}>
-      <CommunityLayout className="col-start-1 col-end-16" />
-      {/* <AsideCards className="col-start-13" /> */}
+    <Layout.Default
+      className="hidden-scrollbar overflow-hidden"
+      gridClassName="overflow-auto"
+    >
+      <section className="hidden-scrollbar container mx-auto overflow-scroll scroll-auto">
+        <CommunityLayout className="col-start-1 col-end-16" />
+      </section>
     </Layout.Default>
   );
 }

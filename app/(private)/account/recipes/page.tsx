@@ -1,42 +1,26 @@
-import type { DataRecipeCard } from "@/components/@types";
-import RecipeActions from "@/components/account/(recipes)/RecipeActions";
-import type { SortValues } from "@/components/account/(recipes)/RecipeFilter";
-import LayoutAccount from "@/components/account/LayoutAccount";
-import { PlusOutlinedIcon } from "@/components/icons";
+import RecipeActions from "@/features/account/components/(recipes)/RecipeActions";
+import AccountLayout from "@/features/account/components/AccountLayout";
+import Header from "@/features/account/components/Header";
+import { PlusOutlinedIcon } from "@/shared/icons";
+import Button from "@/shared/ui/Button";
 
-import Button from "@/components/ui/Button";
-export interface DataRecipeCardAccount extends DataRecipeCard {
-  description?: string;
-  recipeType?: string;
-  updated_at?: string;
-}
-
-type SearchParams = {
-  q?: string;
-  sort?: SortValues;
-};
-
-interface Props {
-  searchParams?: Promise<SearchParams>;
-}
-
-export default async function Page({ searchParams }: Props) {
-  const resolvedSearchParams = await searchParams;
-
+export default function Page() {
   return (
-    <>
-      <LayoutAccount pathName="recipes" title="Suas 3 receitas">
+    <AccountLayout>
+      <Header
+        title="Minhas Receitas"
+        subTitle="Gerencie e organize suas receitas criadas"
+      >
         <Button.Link
-          leftIcon={<PlusOutlinedIcon className="!size-5" />}
+          leftIcon={<PlusOutlinedIcon className="!size-4" />}
           size="md"
-          className="font-lora py-1.5"
+          className="font-maitree cursor-pointer bg-green-500 py-2"
+          text="Nova Receita"
           href="/new-recipe"
-        >
-          Nova receita
-        </Button.Link>
-      </LayoutAccount>
+        />
+      </Header>
 
-      <RecipeActions searchParams={resolvedSearchParams} />
-    </>
+      <RecipeActions />
+    </AccountLayout>
   );
 }

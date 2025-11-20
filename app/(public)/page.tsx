@@ -1,8 +1,8 @@
 import "@/assets/css/home.css";
 
 import { sideImage } from "@/assets";
-import HomeLayout from "@/components/home/ui/layout";
-import Welcome from "@/components/home/ui/right/Welcome";
+import HomeLayout from "@/shared/components/ui/layout";
+import Welcome from "@/shared/components/ui/right/Welcome";
 
 export default function Page() {
   return (

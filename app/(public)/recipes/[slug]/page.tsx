@@ -1,18 +1,18 @@
-import ContentRecipe from "@/components/recipes/details/ContentRecipe";
-import Header from "@/components/recipes/details/Header";
-import Layout from "@/components/ui/Layout";
+import ContentRecipe from "@/features/recipes/components/details/ContentRecipe";
+import Header from "@/features/recipes/components/details/Header";
+import Layout from "@/shared/ui/Layout";
 
 export default async function page() {
   return (
-    <Layout.Default className="overflow-y-auto style-scrollbar">
-      <div className="mx-auto px-4 py-8 space-y-8">
+    <Layout.Default className="style-scrollbar h-auto">
+      <div className="mx-auto max-w-[74rem] space-y-8 px-4 py-8">
         <Header
           isRecipePage
           savedCount={2}
           isSaved={false}
           authorName="Jorge"
           commentsCount={4}
-          rating={4}
+          rating={4.5}
           timeAgo="2 horas"
           title="Salada mista com carne"
         />

@@ -1,17 +1,15 @@
-import FluctuantTip from "@/components/new-recipe/FluctuantTip";
-import NewRecipeForm from "@/components/new-recipe/NewRecipeForm";
-import Header from "@/components/recipes/details/Header";
-import Layout from "@/components/ui/Layout";
+import Header from "@/features/recipes/components/details/Header";
+import NewRecipeForm from "@/features/recipes/components/new-recipe/NewRecipeForm";
+import Layout from "@/shared/ui/Layout";
 
 export default function page() {
   return (
-    <Layout.Default className="overflow-y-auto style-scrollbar">
-      <div className="px-4 py-8 space-y-8 relative">
-        <FluctuantTip />
+    <Layout.Default className="style-scrollbar overflow-y-auto">
+      <section className="relative container mx-auto space-y-8 px-4">
         <Header title="Nova receita" />
 
         <NewRecipeForm />
-      </div>
+      </section>
     </Layout.Default>
   );
 }

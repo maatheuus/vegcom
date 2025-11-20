@@ -1,35 +1,26 @@
-import RecipeActions from "@/components/account/(recipes)/RecipeActions";
-import type { SortValues } from "@/components/account/(recipes)/RecipeFilter";
-import LayoutAccount from "@/components/account/LayoutAccount";
-import { HeartOutlinedIcon } from "@/components/icons";
-import Button from "@/components/ui/Button";
+import RecipeActions from "@/features/account/components/(recipes)/RecipeActions";
+import AccountLayout from "@/features/account/components/AccountLayout";
+import Header from "@/features/account/components/Header";
+import { HeartOutlinedIcon } from "@/shared/icons";
+import Button from "@/shared/ui/Button";
 
-type SearchParams = {
-  q?: string;
-  sort?: SortValues;
-};
-
-interface Props {
-  searchParams?: Promise<SearchParams>;
-}
-
-export default async function Page({ searchParams }: Props) {
-  const resolvedSearchParams = await searchParams;
-
+export default function Page() {
   return (
-    <>
-      <LayoutAccount pathName="favorites" title="Receitas favoritas">
+    <AccountLayout>
+      <Header
+        title="Receitas Favoritas"
+        subTitle="Suas receitas salvas e favoritas"
+      >
         <Button.Link
-          href="/recipes"
+          leftIcon={<HeartOutlinedIcon className="!size-4" />}
           size="md"
-          className="font-lora py-1.5"
-          leftIcon={<HeartOutlinedIcon className="!size-5" />}
-        >
-          Explorar receitas
-        </Button.Link>
-      </LayoutAccount>
+          className="font-maitree cursor-pointer bg-green-500 py-2"
+          href="/recipes"
+          text="Explorar Receitas"
+        />
+      </Header>
 
-      <RecipeActions isFavorites searchParams={resolvedSearchParams} />
-    </>
+      <RecipeActions isFavorites />
+    </AccountLayout>
   );
 }
