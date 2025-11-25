@@ -6,7 +6,6 @@ import {
   ChefHatOutlinedIcon,
   CommunityOutlinedIcon,
   LightBulbOutlinedIcon,
-  LogoOutlinedIcon,
   PlantOutlinedIcon,
   PlusOutlinedIcon,
   UserGearOutlinedIcon,
@@ -19,6 +18,7 @@ import {
   SelectTrigger,
 } from "@/shared/ui/Select";
 import { AnimatePresence, motion, MotionConfig } from "framer-motion";
+import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
@@ -78,10 +78,16 @@ export default function Menu() {
           href={sidebarLinks.leftLinks.href}
           className="block w-full flex-1"
         >
-          <div className="flex items-center gap-x-2">
-            <LogoOutlinedIcon size={44} />
+          <div className="flex items-center gap-x-2 bg-green-50">
+            <Image
+              src="/favicon-leaf-fork.png"
+              alt="VegCom Logo"
+              width={34}
+              height={34}
+              className="object-cover"
+            />
             <span className="font-lora text-lg font-medium text-nowrap text-green-200 italic">
-              Vegcom
+              VegCom
             </span>
           </div>
         </Link>

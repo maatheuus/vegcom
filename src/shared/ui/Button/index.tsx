@@ -3,6 +3,7 @@ import { type VariantProps } from "class-variance-authority";
 import * as React from "react";
 
 import { cn } from "@/shared/lib/utils";
+import Animated from "./Animated";
 import Icon from "./Icon";
 import Link from "./Link";
 import { buttonVariants } from "./variants";
@@ -17,6 +18,7 @@ export interface ButtonProps
 const Button: React.FC<ButtonProps> & {
   Icon: typeof Icon;
   Link: typeof Link;
+  Animated: typeof Animated;
 } = ({ asChild, variant, size, className, ...props }) => {
   const Comp = asChild ? Slot : "button";
   return (
@@ -29,5 +31,6 @@ const Button: React.FC<ButtonProps> & {
 Button.displayName = "Button";
 Button.Icon = Icon;
 Button.Link = Link;
+Button.Animated = Animated;
 
 export default Button;

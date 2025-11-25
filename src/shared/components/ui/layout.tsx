@@ -1,10 +1,12 @@
 "use client";
 
-import { cn } from "@/shared/lib/utils";
+import { ScrollMouseOutlinedIcon } from "@/shared/icons";
 import Col from "@/shared/ui/Layout/Helpers/Col";
+import clsx from "clsx";
 import { motion } from "framer-motion";
 import type { StaticImport } from "next/dist/shared/lib/get-img-props";
 import Image from "next/image";
+import "../../../assets/css/home.css";
 import BackgroundItems from "./left/BackgroundItems";
 
 interface Props {
@@ -14,8 +16,11 @@ interface Props {
 
 function HomeLayout({ left, right }: Props) {
   return (
-    <div className="flex h-full flex-col overflow-hidden lg:flex-row lg:justify-between">
+    <div className="relative flex h-full flex-col overflow-hidden lg:flex-row lg:justify-between">
       <Left {...left} />
+      <div className="absolute bottom-[2%] left-[45%] z-40 translate-x-[-50%] text-green-500">
+        <ScrollMouseOutlinedIcon size={22} />
+      </div>
       <Right {...right} />
     </div>
   );
@@ -36,28 +41,12 @@ function Left(props: ViewLeftProps) {
     props;
 
   return (
-    <div className="relative hidden h-dvh w-dvw max-w-[645px] content-center overflow-hidden lg:block">
+    <div className="relative hidden h-full w-dvw max-w-[645px] content-center overflow-hidden lg:block">
       <motion.div
-        className={cn("pointer-events-none size-auto", className)}
-        initial={{ opacity: 0, scale: 0.8 }}
-        animate={{
-          opacity: 1,
-          scale: [1, 1.02, 1],
-          y: [0, -15, 0],
-        }}
-        transition={{
-          opacity: { duration: 0.8 },
-          scale: {
-            duration: 4,
-            repeat: Infinity,
-            ease: "easeInOut",
-          },
-          y: {
-            duration: 5,
-            repeat: Infinity,
-            ease: "easeInOut",
-          },
-        }}
+        className={clsx("pointer-events-none size-auto", className)}
+        initial={{ opacity: 0, x: 50 }}
+        animate={{ opacity: 1, x: 0 }}
+        transition={{ duration: 0.8, ease: "easeOut" }}
       >
         <Image
           src={src}
@@ -67,7 +56,7 @@ function Left(props: ViewLeftProps) {
           quality={quality}
           width={width}
           height={height}
-          className={cn("relative z-50 size-full object-cover", classImage)}
+          className={clsx("relative z-50 size-full object-cover", classImage)}
         />
       </motion.div>
       <BackgroundItems />
@@ -89,10 +78,10 @@ function Right({
 }: ViewRightProps) {
   return (
     <Col
-      className={cn("relative w-screen flex-auto items-center", className)}
+      className={clsx("relative w-screen flex-auto items-center", className)}
       {...props}
     >
-      <Col className={cn("h-full w-full", contentClassName)}>{children}</Col>
+      <Col className={clsx("h-full w-full", contentClassName)}>{children}</Col>
     </Col>
   );
 }

@@ -60,6 +60,7 @@ export { default as ProgressLineOutlinedIcon } from "./outlined/ProgressLine";
 export { default as QuestionMarkOutlinedIcon } from "./outlined/QuestionMark";
 export { default as RotateOutlinedIcon } from "./outlined/Rotate";
 export { default as ScrollOutlinedIcon } from "./outlined/Scroll";
+export { default as ScrollMouseOutlinedIcon } from "./outlined/ScrollMouse";
 export { default as SearchOutlinedIcon } from "./outlined/Search";
 export { default as ShareOutlinedIcon } from "./outlined/Share";
 export { default as SmileyFaceOutlinedIcon } from "./outlined/SmileyFace";
