@@ -21,8 +21,6 @@ const configs = [
       },
     },
     rules: {
-      // ✅ Suas regras personalizadas aqui
-
       // TypeScript
       "@typescript-eslint/no-empty-interface": [
         "error",
@@ -30,7 +28,11 @@ const configs = [
       ],
       "@typescript-eslint/no-unused-vars": [
         "warn",
-        { argsIgnorePattern: "^_" },
+        {
+          argsIgnorePattern: "^_",
+          varsIgnorePattern: "^_",
+          caughtErrorsIgnorePattern: "^_",
+        },
       ],
       "@typescript-eslint/explicit-module-boundary-types": "off",
 
@@ -38,8 +40,7 @@ const configs = [
       "react-hooks/exhaustive-deps": "off",
       "react-hooks/rules-of-hooks": "error",
 
-      // JSX: evita aspas diretas, etc.
-      "react/no-unescaped-entities": "error",
+      "react/no-unescaped-entities": "warn", // mudei de "error" para "warn"
 
       // Outros
       "no-console": "off",

@@ -15,7 +15,6 @@ import { InputIcon } from "@/shared/ui/Input";
 
 import Col from "@/shared/ui/Layout/Helpers/Col";
 
-// import { loginWithGoogle } from "@/lib/supabase/authFunctions";
 import { useSignupFormState } from "@/features/auth/hooks/queries/useSignupFormState";
 import {
   AtIcon,
