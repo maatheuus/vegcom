@@ -1,4 +1,5 @@
 import { lora, maitree, montserrat, rancho } from "@/assets/fonts";
+import SmoothScroll from "@/shared/components/ui/SmoothScroll";
 import QueryClientWrapper from "@/shared/tanstack/QueryClientWrapper";
 import { Toaster } from "@/shared/ui/toaster";
 import { SpeedInsights } from "@vercel/speed-insights/next";
@@ -9,6 +10,13 @@ export const metadata: Metadata = {
   title: "VegCom",
   description:
     "A place to you share your favorite vegan recipes and talk to other vegans",
+  icons: {
+    icon: [
+      { url: "/favicon-leaf-fork.png", type: "image/png" },
+      { url: "/favicon-leaf-fork.png", type: "image/png" },
+    ],
+    apple: "/favicon-leaf-fork.png",
+  },
 };
 
 export default function RootLayout({
@@ -22,8 +30,9 @@ export default function RootLayout({
       suppressHydrationWarning
       className={`${lora.variable} ${maitree.variable} ${montserrat.variable} ${rancho.variable} h-full w-full`}
     >
-      <body className="bg-green-100 h-full">
+      <body className="h-full bg-green-50">
         <QueryClientWrapper>
+          <SmoothScroll />
           {children}
           <Toaster />
         </QueryClientWrapper>

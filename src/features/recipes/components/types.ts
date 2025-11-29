@@ -3,7 +3,7 @@ import type { StaticImageData } from "next/image";
 export interface Recipe {
   id: string;
   title: string;
-  image: StaticImageData;
+  image: StaticImageData | string;
   rating?: number;
   category?: string;
   prepTime?: string;

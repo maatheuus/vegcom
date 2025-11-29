@@ -1,5 +1,5 @@
-import { LogoOutlinedIcon } from "@/shared/icons";
 import { cn } from "@/shared/lib/utils";
+import Image from "next/image";
 
 export default function Logo({
   className,
@@ -15,7 +15,13 @@ export default function Logo({
       className={cn("flex items-center justify-center", className)}
       {...props}
     >
-      <LogoOutlinedIcon size={size} />
+      <Image
+        src="/favicon-leaf-fork.png"
+        alt="VegCom Logo"
+        width={size}
+        height={size}
+        className="object-contain"
+      />
     </div>
   );
 }

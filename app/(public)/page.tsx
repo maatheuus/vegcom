@@ -1,24 +1,22 @@
-import "@/assets/css/home.css";
+import { AboutSection } from "@/components/landing/AboutSection";
+import { CategoriesSection } from "@/components/landing/CategoriesSection";
+import { CTASection } from "@/components/landing/CTASection";
+import { FeaturesSection } from "@/components/landing/FeaturesSection";
+import { HeroSection } from "@/components/landing/HeroSection";
+import { MostViewedSection } from "@/components/landing/MostViewedSection";
+import { TestimonialsSection } from "@/components/landing/TestimonialsSection";
 
-import { sideImage } from "@/assets";
-import HomeLayout from "@/shared/components/ui/layout";
-import Welcome from "@/shared/components/ui/right/Welcome";
-
-export default function Page() {
+export default function Home() {
   return (
-    <HomeLayout
-      left={{
-        src: sideImage,
-        alt: "illustrative image",
-        title: "illustrative image",
-        width: 858,
-        height: 538,
-        quality: 100,
-      }}
-      right={{
-        className: "bg-green-50",
-        children: <Welcome />,
-      }}
-    />
+    <main className="flex flex-col">
+      <HeroSection />
+      <CategoriesSection />
+      <FeaturesSection />
+      <MostViewedSection />
+      {/* <StatsSection /> */}
+      <AboutSection />
+      <TestimonialsSection />
+      <CTASection />
+    </main>
   );
 }
