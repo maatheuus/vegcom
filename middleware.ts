@@ -1,4 +1,3 @@
-import { updateSession } from "@/lib/supabase/middleware";
 import { NextResponse, type NextRequest } from "next/server";
 
 // const publicRoutes = [
@@ -8,7 +7,7 @@ import { NextResponse, type NextRequest } from "next/server";
 //   { path: "/community", whenAuthenticated: "next" },
 //   { path: "/recipes", whenAuthenticated: "next" },
 //   { path: "/recipes/[recipeId]", whenAuthenticated: "next" },
-//   // { path: "/curiosity", whenAuthenticated: "redirect" },
+//   // { path: "/chat", whenAuthenticated: "redirect" },
 //   // { path: "/ask-your-questions", whenAuthenticated: "redirect" },
 // ] as const;
 const publicRoutes = [
@@ -21,9 +20,9 @@ const publicRoutes = [
   { pattern: /^\/new-recipe$/, whenAuthenticated: "next" },
   { pattern: /^\/account$/, whenAuthenticated: "next" },
   { pattern: /^\/account\/[^\/]+$/, whenAuthenticated: "next" },
-  { pattern: /^\/curiosity$/, whenAuthenticated: "next" },
+  { pattern: /^\/chat$/, whenAuthenticated: "next" },
+  { pattern: /^\/curiosities$/, whenAuthenticated: "next" },
 ] as const;
-
 
 const REDIRECT_WHEN_NOT_AUTHENTICATED_ROUTE = "/login";
 
@@ -59,12 +58,11 @@ export async function middleware(request: NextRequest) {
     return NextResponse.next();
   }
 
-  return await updateSession(request);
+  return request;
 }
 
 export const config = {
   matcher: [
     "/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)",
-  
   ],
 };
