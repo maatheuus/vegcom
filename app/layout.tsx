@@ -8,9 +8,66 @@ import type { Metadata } from "next";
 import "./global.css";
 
 export const metadata: Metadata = {
-  title: "VegCom",
+  title: {
+    default: "VegCom - Comunidade Vegana de Receitas e Conexões",
+    template: "%s | VegCom",
+  },
   description:
-    "A place to you share your favorite vegan recipes and talk to other vegans",
+    "Descubra e compartilhe receitas veganas deliciosas, conecte-se com outros veganos e vegetarianos e explore o mundo da culinária vegana.",
+  keywords: [
+    "receitas veganas",
+    "culinária vegana",
+    "comunidade vegana",
+    "alimentação plant-based",
+    "receitas vegetarianas",
+    "comida vegana",
+    "receitas saudáveis",
+    "veganismo",
+    "gastronomia vegana",
+  ],
+  authors: [{ name: "VegCom Team" }],
+  creator: "VegCom",
+  publisher: "VegCom",
+  metadataBase: new URL("https://vegcom.life"),
+  alternates: {
+    canonical: "/",
+  },
+  openGraph: {
+    type: "website",
+    locale: "pt_BR",
+    url: "https://vegcom.life",
+    title: "VegCom - Comunidade Vegana de Receitas e Conexões",
+    description:
+      "Descubra e compartilhe receitas veganas deliciosas, conecte-se com outros veganos e vegetarianos e explore o mundo da culinária vegana.",
+    siteName: "VegCom",
+    images: [
+      {
+        url: "/og-image.png",
+        width: 1200,
+        height: 630,
+        alt: "VegCom - Comunidade Vegana",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "VegCom - Comunidade Vegana de Receitas e Conexões",
+    description:
+      "Descubra e compartilhe receitas veganas deliciosas, conecte-se com outros veganos e explore um mundo de culinária plant-based.",
+    images: ["/og-image.png"],
+    creator: "@vegcom",
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-video-preview": -1,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+    },
+  },
   icons: {
     icon: [
       { url: "/favicon-leaf-fork.png", type: "image/png" },
