@@ -22,7 +22,6 @@ import {
 } from "@/shared/icons";
 import Col from "@/shared/ui/Layout/Helpers/Col";
 
-// import { loginWithGoogle } from "@/lib/supabase/authFunctions";
 import { useSignupFormState } from "@/features/auth/hooks/queries/useSignupFormState";
 import { useState, type ComponentProps, type FC } from "react";
 import SubmitButton from "../SubmitButton/SubmitButton";

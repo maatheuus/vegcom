@@ -1,6 +1,5 @@
 /**
  * Middleware utilities - Fake implementation
- * This is a stub to replace the deleted Supabase middleware
  */
 
 import { NextResponse, type NextRequest } from "next/server";

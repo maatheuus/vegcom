@@ -244,12 +244,9 @@ const NotificationPopup = memo(function NotificationPopup({
                             </span>{" "}
                             {notification.message}
                             {notification.recipeName && (
-                              <>
-                                {" "}
-                                <span className="italic">
-                                  "{notification.recipeName}"
-                                </span>
-                              </>
+                              <span className="italic">
+                                &quot;{notification.recipeName}&quot;
+                              </span>
                             )}
                           </Text>
                           <Text
