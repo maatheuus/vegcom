@@ -2,6 +2,7 @@ import { lora, maitree, montserrat, rancho } from "@/assets/fonts";
 import SmoothScroll from "@/shared/components/ui/SmoothScroll";
 import QueryClientWrapper from "@/shared/tanstack/QueryClientWrapper";
 import { Toaster } from "@/shared/ui/toaster";
+import { Analytics } from "@vercel/analytics/next";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import type { Metadata } from "next";
 import "./global.css";
@@ -37,6 +38,7 @@ export default function RootLayout({
           <Toaster />
         </QueryClientWrapper>
         <SpeedInsights />
+        <Analytics />
       </body>
     </html>
   );
