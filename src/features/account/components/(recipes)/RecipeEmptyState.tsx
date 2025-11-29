@@ -1,11 +1,8 @@
-import {
-  BroomOutlinedIcon,
-  HeartOutlinedIcon,
-  PlusOutlinedIcon,
-} from "@/shared/icons";
 import Button from "@/shared/ui/Button";
 import Text from "@/shared/ui/Text";
 import { useGSAP } from "@gsap/react";
+import { HeartIcon, PlusIcon } from "@phosphor-icons/react";
+import { BroomIcon } from "@phosphor-icons/react/dist/ssr";
 import gsap from "gsap";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useCallback, useEffect, useRef, useState } from "react";
@@ -118,7 +115,7 @@ export default function RecipeEmptyState({
         <div ref={buttonRef} className="mt-6 opacity-0">
           <Button.Icon
             onClick={onClearFilters}
-            leftIcon={<BroomOutlinedIcon />}
+            leftIcon={<BroomIcon />}
             className="font-lora"
           >
             Limpar busca
@@ -148,7 +145,7 @@ export default function RecipeEmptyState({
       <div ref={buttonRef} className="mt-6 opacity-0">
         <Button.Link
           href={isFavorites ? "/recipes" : "/recipes/new"}
-          leftIcon={isFavorites ? <HeartOutlinedIcon /> : <PlusOutlinedIcon />}
+          leftIcon={isFavorites ? <HeartIcon /> : <PlusIcon />}
         >
           {isFavorites ? "Explorar receitas" : "Adicionar Receita"}
         </Button.Link>

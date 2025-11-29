@@ -5,10 +5,13 @@ import {
   maxLengthForBio,
   personalInfoFormSchema,
 } from "@/features/account/components/utils";
-import { EditPencilOutlinedIcon, FloppyDiskOutlinedIcon } from "@/shared";
 import Button from "@/shared/ui/Button";
 import Row from "@/shared/ui/Layout/Helpers/Row";
 import { zodResolver } from "@hookform/resolvers/zod";
+import {
+  FloppyDiskIcon,
+  PencilSimpleIcon,
+} from "@phosphor-icons/react/dist/ssr";
 import clsx from "clsx";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
@@ -83,9 +86,9 @@ export default function InformationWrapper({ children }: Props) {
           <Button.Icon
             leftIcon={
               isEditing ? (
-                <FloppyDiskOutlinedIcon className="!size-4" />
+                <FloppyDiskIcon className="!size-4" />
               ) : (
-                <EditPencilOutlinedIcon className="!size-4" />
+                <PencilSimpleIcon className="!size-4" />
               )
             }
             variant="filled"

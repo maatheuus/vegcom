@@ -5,18 +5,7 @@ import {
   newRecipeFormSchema,
 } from "@/features/recipes/components/utils";
 import { useToast } from "@/shared/hooks/use-toast";
-import {
-  ArrowLeftOutlinedIcon,
-  ArrowRightOutlinedIcon,
-  CheckOutlinedIcon,
-} from "@/shared/icons";
 import Button from "@/shared/ui/Button";
-import { zodResolver } from "@hookform/resolvers/zod";
-import type { ComponentProps } from "react";
-import { useState } from "react";
-import { useForm } from "react-hook-form";
-import { z } from "zod";
-
 import {
   Form,
   FormControl,
@@ -27,6 +16,16 @@ import {
 import { Input } from "@/shared/ui/Input";
 import Text from "@/shared/ui/Text";
 import Textarea from "@/shared/ui/TextArea";
+import { zodResolver } from "@hookform/resolvers/zod";
+import {
+  ArrowBendUpLeftIcon,
+  ArrowBendUpRightIcon,
+  SealCheckIcon,
+} from "@phosphor-icons/react";
+import type { ComponentProps } from "react";
+import { useState } from "react";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
 import DynamicFields from "./DynamicFields";
 import FluctuantTip from "./FluctuantTip";
 import GroupFields from "./GroupFields";
@@ -341,7 +340,7 @@ export default function NewRecipeForm({}: Props) {
                     }`}
                   >
                     {currentStep > index + 1 ? (
-                      <CheckOutlinedIcon size={16} />
+                      <SealCheckIcon size={16} />
                     ) : (
                       <span className="text-sm italic">{index + 1}</span>
                     )}
@@ -386,7 +385,7 @@ export default function NewRecipeForm({}: Props) {
               disabled={currentStep === 1}
               className="flex cursor-pointer items-center gap-2 border border-green-500 disabled:pointer-events-auto disabled:cursor-not-allowed"
             >
-              <ArrowLeftOutlinedIcon size={16} />
+              <ArrowBendUpLeftIcon size={16} />
               Anterior
             </Button>
 
@@ -396,15 +395,15 @@ export default function NewRecipeForm({}: Props) {
                 className="flex cursor-pointer items-center gap-2 bg-green-500 hover:bg-green-600"
               >
                 Próximo
-                <ArrowRightOutlinedIcon size={16} />
+                <ArrowBendUpRightIcon size={16} />
               </Button>
             ) : (
               <Button
                 onClick={handlePublish}
                 className="flex cursor-pointer items-center gap-2 bg-green-500 hover:bg-green-800"
               >
-                <CheckOutlinedIcon size={16} />
                 Publicar Receita
+                <SealCheckIcon size={16} />
               </Button>
             )}
           </div>

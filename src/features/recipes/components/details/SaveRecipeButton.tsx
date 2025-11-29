@@ -1,7 +1,7 @@
 "use client";
 
-import { BookmarkHoveredIcon } from "@/shared/icons";
 import Row from "@/shared/ui/Layout/Helpers/Row";
+import { BookmarkIcon } from "@phosphor-icons/react";
 import { memo, useCallback, useState } from "react";
 
 interface SaveRecipeButtonProps {
@@ -43,10 +43,10 @@ const SaveRecipeButton = memo(function SaveRecipeButton({
       }
       aria-pressed={saved}
     >
-      <BookmarkHoveredIcon
-        color={saved ? "fill" : "outline"}
-        className="text-green-500"
+      <BookmarkIcon
+        weight={saved ? "fill" : "thin"}
         size={18}
+        className="text-green-500"
         aria-hidden="true"
       />
     </Row>

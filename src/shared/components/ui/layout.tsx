@@ -1,7 +1,7 @@
 "use client";
 
-import { ScrollMouseOutlinedIcon } from "@/shared/icons";
 import Col from "@/shared/ui/Layout/Helpers/Col";
+import { MouseScrollIcon } from "@phosphor-icons/react";
 import clsx from "clsx";
 import { motion } from "framer-motion";
 import type { StaticImport } from "next/dist/shared/lib/get-img-props";
@@ -19,7 +19,7 @@ function HomeLayout({ left, right }: Props) {
     <div className="relative flex h-full flex-col overflow-hidden lg:flex-row lg:justify-between">
       <Left {...left} />
       <div className="absolute bottom-[2%] left-[45%] z-40 translate-x-[-50%] text-green-500">
-        <ScrollMouseOutlinedIcon size={22} />
+        <MouseScrollIcon size={22} />
       </div>
       <Right {...right} />
     </div>

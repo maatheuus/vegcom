@@ -1,6 +1,6 @@
 "use client";
 
-import { ArrowCircleRightOutlinedIcon } from "@/shared/icons";
+import { useSignupFormState } from "@/features/auth/hooks/queries/useSignupFormState";
 import Button from "@/shared/ui/Button";
 import {
   InputOTP,
@@ -9,7 +9,7 @@ import {
   REGEXP_ONLY_DIGITS_AND_CHARS,
 } from "@/shared/ui/Input/Otp";
 import Col from "@/shared/ui/Layout/Helpers/Col";
-import { useSignupFormState } from "@/features/auth/hooks/queries/useSignupFormState";
+import { ArrowArcRightIcon } from "@phosphor-icons/react/ssr";
 
 import Link from "next/link";
 
@@ -32,7 +32,7 @@ export default function CodeConfirm() {
       <Col className="items-center gap-2 px-5 py-4">
         <Button.Icon
           type="submit"
-          rightIcon={<ArrowCircleRightOutlinedIcon size={24} />}
+          rightIcon={<ArrowArcRightIcon size={24} />}
           text="Seguinte"
           className="w-full font-semibold sm:max-w-80 hover:[&_svg]:translate-x-1.5 hover:[&_svg]:transition-all hover:[&_svg]:duration-300"
           onClick={() => {

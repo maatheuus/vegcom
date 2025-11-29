@@ -1,8 +1,8 @@
 "use client";
 
-import { ShareOutlinedIcon } from "@/shared/icons";
 import Button from "@/shared/ui/Button";
 import Row from "@/shared/ui/Layout/Helpers/Row";
+import { ShareNetworkIcon } from "@phosphor-icons/react";
 import clsx from "clsx";
 import {
   memo,
@@ -72,13 +72,13 @@ const ShareDropdown = memo(function ShareDropdown({
     >
       <Button
         variant="none"
-        className="p-0 cursor-pointer h-fit"
+        className="h-fit cursor-pointer p-0"
         onClick={handleToggle}
         aria-label="Compartilhar receita"
         aria-expanded={isOpen}
         aria-haspopup="true"
       >
-        <ShareOutlinedIcon
+        <ShareNetworkIcon
           className="text-green-500"
           size={18}
           aria-hidden="true"
@@ -89,8 +89,8 @@ const ShareDropdown = memo(function ShareDropdown({
         ref={dropdownRef}
         data-state={isOpen ? "open" : "closed"}
         className={clsx(
-          "absolute right-0 mt-2 w-fit rounded-md bg-green-50 shadow-md z-10 p-3 gap-x-4",
-          "transition-all duration-200 origin-top data-[state=closed]:scale-0 data-[state=closed]:opacity-0 data-[state=open]:scale-100 data-[state=open]:opacity-100"
+          "absolute right-0 z-10 mt-2 w-fit gap-x-4 rounded-md bg-green-50 p-3 shadow-md",
+          "origin-top transition-all duration-200 data-[state=closed]:scale-0 data-[state=closed]:opacity-0 data-[state=open]:scale-100 data-[state=open]:opacity-100",
         )}
         role="menu"
         aria-label="Opções de compartilhamento"

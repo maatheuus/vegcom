@@ -3,11 +3,6 @@
 import { login } from "@/features/auth/api/authApi";
 import { toast } from "@/shared/hooks/use-toast";
 import {
-  AtOutlinedIcon,
-  ClosedEyeOutlinedIcon,
-  OpenEyesOutlinedIcon,
-} from "@/shared/icons";
-import {
   Form,
   FormControl,
   FormField,
@@ -17,6 +12,7 @@ import {
 import { InputIcon } from "@/shared/ui/Input";
 import Col from "@/shared/ui/Layout/Helpers/Col";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { AtIcon, EyeClosedIcon, EyesIcon } from "@phosphor-icons/react";
 import Link from "next/link";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
@@ -98,7 +94,7 @@ export default function LoginForm() {
                       placeholder="Digite seu email"
                       autoComplete="email"
                       {...field}
-                      icon={<AtOutlinedIcon size={18} />}
+                      icon={<AtIcon size={18} />}
                     />
                   </FormControl>
                   <FormMessage className="!mb-0">
@@ -120,13 +116,13 @@ export default function LoginForm() {
                       {...field}
                       icon={
                         showingPassword ? (
-                          <OpenEyesOutlinedIcon
+                          <EyesIcon
                             size={18}
                             onClick={togglePasswordVisibility}
                             className="cursor-pointer"
                           />
                         ) : (
-                          <ClosedEyeOutlinedIcon
+                          <EyeClosedIcon
                             size={18}
                             onClick={togglePasswordVisibility}
                             className="cursor-pointer"

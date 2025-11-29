@@ -6,13 +6,7 @@ import Text from "@/shared/ui/Text";
 import { useRef, useState } from "react";
 import { messagesToDisplayForPremium } from "../utils";
 
-import {
-  EditPencilOutlinedIcon,
-  FloppyDiskOutlinedIcon,
-  TrashOutlinedIcon,
-} from "@/shared/icons";
 import { Avatar, AvatarFallback, AvatarImage } from "@/shared/ui/Avatar";
-import Button from "@/shared/ui/Button";
 import {
   Dialog,
   DialogContent,
@@ -21,6 +15,11 @@ import {
   DialogTrigger,
 } from "@/shared/ui/Dialog";
 import { Form } from "@/shared/ui/Form";
+import {
+  FloppyDiskIcon,
+  PencilSimpleIcon,
+  TrashIcon,
+} from "@phosphor-icons/react";
 import Image from "next/image";
 import FormInformation from "./FormInformation";
 
@@ -136,7 +135,7 @@ export default function UserInformations({
             <DialogTrigger asChild>
               {!isEditing && (
                 <button className="absolute top-1.5 right-0 z-20 flex size-7 cursor-pointer items-center justify-center rounded-full border-2 border-green-50 bg-green-500 transition-colors hover:bg-green-600">
-                  <EditPencilOutlinedIcon size={14} className="text-green-50" />
+                  <PencilSimpleIcon size={14} className="text-green-50" />
                 </button>
               )}
             </DialogTrigger>
@@ -207,7 +206,11 @@ export default function UserInformations({
             <div className="space-y-4">
               <div className="flex justify-center">
                 <Avatar className="size-32 border-4 border-green-500">
-                  <AvatarImage src={imagePreview} alt="Preview" />
+                  <AvatarImage
+                    src={imagePreview}
+                    alt="Preview"
+                    className="object-cover"
+                  />
                   <AvatarFallback>CN</AvatarFallback>
                 </Avatar>
               </div>
@@ -222,10 +225,11 @@ export default function UserInformations({
                 onDragLeave={handleDragLeave}
                 onDrop={handleDrop}
               >
-                <FloppyDiskOutlinedIcon
-                  size={28}
+                <FloppyDiskIcon
+                  size={22}
                   className="mx-auto mb-2 text-green-500"
                 />
+
                 <Text
                   type={Text.Type.BodyThree}
                   className="font-lora mb-2 text-green-500"
@@ -253,24 +257,23 @@ export default function UserInformations({
                 </Text>
               </div>
 
-              <div className="flex gap-2">
+              <div className="flex justify-between gap-2">
                 {selectedImage && (
-                  <Button
-                    variant="text"
+                  <button
+                    className="relative flex h-fit w-full cursor-pointer items-center justify-center gap-2 rounded-full border border-red-500 bg-red-500/20 px-4 py-1.5 font-medium text-red-500 transition-colors duration-300 hover:border-red-100 hover:bg-red-500 hover:text-red-100"
                     onClick={handleImageRemove}
-                    className="font-maitree flex-1 cursor-pointer text-red-500 hover:text-red-600"
                   >
-                    <TrashOutlinedIcon size={16} />
+                    <TrashIcon size={18} />
                     Remover
-                  </Button>
+                  </button>
                 )}
 
                 <button
-                  className="relative flex h-fit flex-1 cursor-pointer items-center justify-center gap-2 rounded-full bg-green-500 px-4 py-1.5 font-medium text-green-100 transition-colors duration-300 hover:bg-green-100 hover:text-green-500 disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:bg-green-500 disabled:hover:text-green-100"
+                  className="relative flex h-fit w-full cursor-pointer items-center justify-center gap-2 rounded-full bg-green-500 px-4 py-1.5 font-medium text-green-100 transition-colors duration-300 hover:bg-green-100 hover:text-green-500 disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:bg-green-500 disabled:hover:text-green-100"
                   onClick={handleImageSave}
                   disabled={!selectedImage}
                 >
-                  <FloppyDiskOutlinedIcon size={18} />
+                  <FloppyDiskIcon size={18} />
                   Salvar
                 </button>
               </div>

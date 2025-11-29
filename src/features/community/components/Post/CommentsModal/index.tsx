@@ -14,13 +14,9 @@ import Col from "@/shared/ui/Layout/Helpers/Col";
 import Row from "@/shared/ui/Layout/Helpers/Row";
 import Textarea from "@/shared/ui/TextArea";
 
-import {
-  ChatCircleTextOutlinedIcon,
-  PaperPlaneOutlinedIcon,
-  SparklesOutlinedIcon,
-} from "@/shared/icons";
 import { MAX_LENGTH_FOR_TEXTAREA } from "@/shared/lib/globalVariables";
 import Text from "@/shared/ui/Text";
+import { ChatCircleTextIcon, SparkleIcon } from "@phosphor-icons/react";
 import clsx from "clsx";
 import Image from "next/image";
 import { useRef, useState, type HTMLAttributes } from "react";
@@ -87,7 +83,7 @@ export default function CommentsModal({
           variant="text"
           className="cursor-pointer rounded-full !p-1 transition-colors hover:bg-green-100"
         >
-          <ChatCircleTextOutlinedIcon size={18} className="text-green-500" />
+          <ChatCircleTextIcon size={18} className="text-green-500" />
           <Text
             as="span"
             type={Text.Type.BodyFive}
@@ -110,10 +106,7 @@ export default function CommentsModal({
 
             <Row className="items-center gap-x-4 text-sm">
               <Row className="items-center gap-x-1.5">
-                <ChatCircleTextOutlinedIcon
-                  size={16}
-                  className="text-green-500"
-                />
+                <ChatCircleTextIcon size={16} className="text-green-500" />
                 <Text
                   as="span"
                   type={Text.Type.BodySix}
@@ -130,9 +123,9 @@ export default function CommentsModal({
               <span className="size-0.5 rounded-full bg-green-500"></span>
 
               <Row className="items-center gap-x-1.5">
-                <SparklesOutlinedIcon
+                <SparkleIcon
                   size={16}
-                  color={isLiked ? "fill" : "outline"}
+                  weight={isLiked ? "fill" : "regular"}
                   className="fill-green-500 text-green-500"
                 />
                 <Text
@@ -189,7 +182,7 @@ export default function CommentsModal({
           </div>
         </Col>
 
-        <Col className="bg-gray-50/50 px-6 py-5">
+        <Col className="px-6 py-5">
           <div className="style-scrollbar h-64 max-w-[575px] overflow-y-scroll pr-2">
             <Col className="gap-y-5">
               {comments &&
@@ -245,7 +238,7 @@ export default function CommentsModal({
           </div>
         </Col>
 
-        <Col className="border-t border-gray-200 bg-green-50 px-6 py-4">
+        <Col className="border-t border-gray-200 px-6 py-4">
           <Row className="items-end gap-x-3">
             <Avatar className="h-9 w-9 ring-2 ring-gray-100">
               <AvatarImage src="https://github.com/shadcn.png" />
@@ -282,7 +275,6 @@ export default function CommentsModal({
                     className="gap-x-2 bg-green-500 text-green-50 transition-opacity duration-300 hover:opacity-90"
                     onClick={handlePostComment}
                   >
-                    <PaperPlaneOutlinedIcon size={14} />
                     Comentar
                   </Button>
                 </DialogFooter>

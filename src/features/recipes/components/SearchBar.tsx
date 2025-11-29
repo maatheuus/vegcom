@@ -1,5 +1,6 @@
 "use client";
-import { SearchOutlinedIcon } from "@/shared/icons";
+
+import { MagnifyingGlassIcon } from "@phosphor-icons/react";
 import clsx from "clsx";
 import { useSearchBar } from "./hooks/useSearchBar";
 
@@ -54,7 +55,7 @@ export function SearchBar({
         {...props}
       />
 
-      <SearchOutlinedIcon
+      <MagnifyingGlassIcon
         className={clsx(
           "absolute top-1/2 h-5 w-5 -translate-y-1/2 transition-all duration-300 ease-in-out",
           isFocused

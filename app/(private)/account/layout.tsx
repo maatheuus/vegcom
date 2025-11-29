@@ -1,42 +1,7 @@
 import PremiumMemberCard from "@/features/account/components/PremiumMemberCard";
 import Sidebar from "@/features/account/components/Sidebar";
-import {
-  ChefHatOutlinedIcon,
-  GearOutlinedIcon,
-  HeartOutlinedIcon,
-  ScrollOutlinedIcon,
-  UserOutlinedIcon,
-} from "@/shared/icons";
 import Layout from "@/shared/ui/Layout";
 import Text from "@/shared/ui/Text";
-
-const sidebarItems = [
-  {
-    label: "Perfil",
-    href: "/account",
-    icon: <UserOutlinedIcon size={20} />,
-  },
-  {
-    label: "Minhas Receitas",
-    href: "/account/recipes",
-    icon: <ChefHatOutlinedIcon size={20} />,
-  },
-  {
-    label: "Favoritos",
-    href: "/account/favorites",
-    icon: <HeartOutlinedIcon size={20} />,
-  },
-  {
-    label: "Assinatura",
-    href: "/account/subscription",
-    icon: <ScrollOutlinedIcon size={20} />,
-  },
-  {
-    label: "Configurações",
-    href: "/account/settings",
-    icon: <GearOutlinedIcon size={20} />,
-  },
-];
 
 export default function layout({
   children,
@@ -71,7 +36,7 @@ export default function layout({
 
         <div className="grid grid-cols-1 gap-6 lg:grid-cols-[320px_1fr]">
           <aside className="h-fit">
-            <Sidebar items={sidebarItems} />
+            <Sidebar />
           </aside>
 
           <main className="min-h-[600px]">{children}</main>

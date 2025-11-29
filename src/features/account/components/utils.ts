@@ -1,41 +1,4 @@
-import {
-  ArrowsClockwiseOutlinedIcon,
-  ChefHatOutlinedIcon,
-  HeartOutlinedIcon,
-  PersonOutlinedIcon,
-} from "@/shared/icons";
 import { z } from "zod";
-
-export const defaultInfoItems = [
-  {
-    title: "Quem é você?",
-    desc: "Atualize seus dados pessoais",
-    link: "personal-info",
-    icon: PersonOutlinedIcon,
-    requiresPremium: false,
-  },
-  {
-    title: "Planos & Assinaturas",
-    desc: "Configure sua assinatura",
-    link: "subscription",
-    icon: ArrowsClockwiseOutlinedIcon,
-    requiresPremium: true,
-  },
-  {
-    title: "Masterchef em Ação",
-    desc: "Aqui ficam as receitas que te transformam em chef!",
-    link: "recipes",
-    icon: ChefHatOutlinedIcon,
-    requiresPremium: false,
-  },
-  {
-    title: "Favoritas do Coração",
-    desc: "Aqui estão as receitas que te fazem salivar só de pensar.",
-    link: "favorites",
-    icon: HeartOutlinedIcon,
-    requiresPremium: false,
-  },
-];
 
 export const messagesToDisplayForPremium = [
   {

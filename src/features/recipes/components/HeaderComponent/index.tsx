@@ -2,9 +2,9 @@
 
 import { Categories } from "@/features/recipes/components/Categories";
 import { SearchBar } from "@/features/recipes/components/SearchBar";
-import { SearchOutlinedIcon } from "@/shared/icons";
 import Button from "@/shared/ui/Button";
 import Col from "@/shared/ui/Layout/Helpers/Col";
+import { MagnifyingGlassIcon } from "@phosphor-icons/react";
 import clsx from "clsx";
 import { useEffect, useRef, useState } from "react";
 
@@ -43,7 +43,7 @@ export default function HeaderComponent({ children }: Props) {
               : "bg-green-50 text-green-500 hover:bg-green-500 hover:text-green-50",
           )}
         >
-          <SearchOutlinedIcon className="h-5 w-5" />
+          <MagnifyingGlassIcon className="h-5 w-5" />
         </Button>
 
         <div

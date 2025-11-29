@@ -1,11 +1,8 @@
 "use client";
 
-import {
-  ArrowsClockwiseOutlinedIcon,
-  SparklesOutlinedIcon,
-} from "@/shared/icons";
 import Button from "@/shared/ui/Button";
 import Text from "@/shared/ui/Text";
+import { ArrowClockwiseIcon, SparkleIcon } from "@phosphor-icons/react";
 import { useEffect, useState } from "react";
 import { defaultCuriosities, didYouKnowPhrases } from "../curiosites/utils";
 
@@ -113,7 +110,7 @@ export default function CuriositiesPage() {
               <div className="flex w-full flex-col items-center justify-between gap-4 pt-4 sm:flex-row">
                 {currentCuriosity.highlight && (
                   <div className="pointer-events-none inline-flex items-center gap-2 rounded-full border-2 border-green-200 bg-gradient-to-r from-green-600 to-green-500 px-5 py-1.5 shadow-md">
-                    <SparklesOutlinedIcon size={18} className="text-green-50" />
+                    <SparkleIcon size={18} className="text-green-50" />
                     <span className="font-lora text-sm font-semibold text-green-50 italic">
                       {currentCuriosity.highlight}
                     </span>
@@ -125,13 +122,9 @@ export default function CuriositiesPage() {
                   disabled={isAnimating}
                   className="group font-lora flex w-full cursor-pointer items-center justify-center gap-3 rounded-full bg-green-500 px-6 py-3.5 font-semibold text-green-50 shadow-md disabled:cursor-not-allowed disabled:opacity-50 sm:ml-auto sm:w-auto"
                 >
-                  <ArrowsClockwiseOutlinedIcon
+                  <ArrowClockwiseIcon
                     size={20}
-                    className={
-                      isAnimating
-                        ? "animate-spin"
-                        : "transition-transform duration-700 group-hover:rotate-[360deg]"
-                    }
+                    className="transition-transform duration-700 group-hover:rotate-[360deg]"
                   />
                   {usedIds.size >= defaultCuriosities.length
                     ? "Recomeçar do início"

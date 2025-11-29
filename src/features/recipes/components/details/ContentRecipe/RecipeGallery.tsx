@@ -1,7 +1,10 @@
 "use client";
 
-import { ArrowLeftOutlinedIcon, ArrowRightOutlinedIcon } from "@/shared/icons";
 import { Dialog, DialogContent } from "@/shared/ui/Dialog";
+import {
+  ArrowBendUpLeftIcon,
+  ArrowBendUpRightIcon,
+} from "@phosphor-icons/react";
 import { AnimatePresence, motion } from "framer-motion";
 import Image, { StaticImageData } from "next/image";
 import { useState } from "react";
@@ -142,7 +145,7 @@ export default function RecipeGallery({ images }: RecipeGalleryProps) {
               }}
               className="absolute top-1/2 left-2 -translate-y-1/2 cursor-pointer rounded-full bg-green-500/20 p-2 text-green-50 backdrop-blur-sm transition-colors hover:bg-green-500/40"
             >
-              <ArrowLeftOutlinedIcon size={24} />
+              <ArrowBendUpLeftIcon size={24} />
             </button>
 
             <button
@@ -152,7 +155,7 @@ export default function RecipeGallery({ images }: RecipeGalleryProps) {
               }}
               className="absolute top-1/2 right-2 -translate-y-1/2 cursor-pointer rounded-full bg-green-500/20 p-2 text-green-50 backdrop-blur-sm transition-colors hover:bg-green-500/40"
             >
-              <ArrowRightOutlinedIcon size={24} />
+              <ArrowBendUpRightIcon size={24} />
             </button>
 
             <div className="absolute bottom-4 left-1/2 -translate-x-1/2 rounded-full bg-green-500/80 px-4 py-1 text-green-50 backdrop-blur-sm">

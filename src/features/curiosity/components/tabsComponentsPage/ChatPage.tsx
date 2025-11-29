@@ -1,13 +1,13 @@
-import {
-  AlienOutlinedIcon,
-  ArrowRightOutlinedIcon,
-  LoadingOutlinedIcon,
-  PaperPlaneOutlinedIcon,
-  SquareFilledIcon,
-} from "@/shared/icons";
 import Button from "@/shared/ui/Button";
 import Col from "@/shared/ui/Layout/Helpers/Col";
 import Text from "@/shared/ui/Text";
+import {
+  AlienIcon,
+  ArrowRightIcon,
+  CircleNotchIcon,
+  PaperPlaneIcon,
+  SquareIcon,
+} from "@phosphor-icons/react";
 import { useSearchParams } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import ChatProvider from "../chat/ChatProvider";
@@ -182,10 +182,10 @@ export default function ChatPage() {
 
   if (!currentChat) {
     return (
-      <div className="flex flex-1 items-center justify-center">
-        <LoadingOutlinedIcon
-          size={48}
-          className="animate-spin text-green-500"
+      <div className="flex h-full flex-1 items-center justify-center">
+        <CircleNotchIcon
+          size={44}
+          className="my-auto animate-spin text-green-500"
         />
       </div>
     );
@@ -204,7 +204,7 @@ export default function ChatPage() {
                 {currentChat.messages.length === 0 ? (
                   <Col className="mt-16 items-center justify-center gap-y-2 text-center">
                     <div className="w-fit rounded-full bg-green-500 p-2">
-                      <AlienOutlinedIcon
+                      <AlienIcon
                         size={32}
                         className="text-green-50 opacity-90"
                       />
@@ -275,7 +275,7 @@ export default function ChatPage() {
                   className="animate-slideUp cursor-pointer rounded-full border border-green-500 bg-green-50 p-2.5 shadow-lg transition-all hover:scale-105 hover:shadow-xl"
                   aria-label="Ir para mensagens recentes"
                 >
-                  <ArrowRightOutlinedIcon className="size-4 rotate-90 text-green-500" />
+                  <ArrowRightIcon className="size-4 rotate-90 text-green-500" />
                   {hasNewMessages && (
                     <div className="absolute -top-1 -right-1 flex h-3 w-3">
                       <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-red-400 opacity-75"></span>
@@ -319,18 +319,17 @@ export default function ChatPage() {
                   icon={
                     showStopButton ? (
                       <div className="relative">
-                        <SquareFilledIcon size={20} className="fill-green-50" />
-                        {/* <span className="absolute inset-0 animate-ping rounded-sm bg-green-50/20" /> */}
+                        <SquareIcon size={20} className="fill-green-50" />
                       </div>
                     ) : isCancelling ? (
-                      <LoadingOutlinedIcon size={20} className="animate-spin" />
+                      <CircleNotchIcon size={20} className="animate-spin" />
                     ) : messageInput.trim() !== "" ? (
-                      <PaperPlaneOutlinedIcon
+                      <PaperPlaneIcon
                         size={20}
                         className="-rotate-45 transition-all duration-300 group-hover:scale-110"
                       />
                     ) : (
-                      <PaperPlaneOutlinedIcon
+                      <PaperPlaneIcon
                         size={20}
                         className="rotate-0 opacity-50 transition-all duration-300"
                       />

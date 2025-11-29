@@ -1,11 +1,10 @@
 "use client";
 
-import { CheckOutlinedIcon } from "@/shared/icons";
-
 import Button from "@/shared/ui/Button";
 import Col from "@/shared/ui/Layout/Helpers/Col";
 import Row from "@/shared/ui/Layout/Helpers/Row";
 import Text from "@/shared/ui/Text";
+import { SealCheckIcon } from "@phosphor-icons/react";
 import clsx from "clsx";
 import { useEffect, useState } from "react";
 import type { RecipeType } from "../../new-recipe/GroupFields";
@@ -93,7 +92,7 @@ export default function ChecklistSection({
           );
 
           const buttonContent = isChecked ? (
-            <CheckOutlinedIcon className="h-4 w-4" />
+            <SealCheckIcon className="h-4 w-4" />
           ) : (
             String(idx + 1)
           );

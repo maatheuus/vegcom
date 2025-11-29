@@ -1,7 +1,7 @@
-import { CheckFilledIcon, SparklesOutlinedIcon } from "@/shared/icons";
 import Button from "@/shared/ui/Button";
 import Row from "@/shared/ui/Layout/Helpers/Row";
 import Text from "@/shared/ui/Text";
+import { SparkleIcon } from "@phosphor-icons/react/dist/ssr";
 
 interface Props {
   className?: string;
@@ -22,7 +22,7 @@ export default function SubscribedView({ className, ...props }: Props) {
       <div className="space-y-6 rounded-xl border border-green-200 bg-green-50 p-8">
         <div className="flex items-center justify-between border-b border-green-100 pb-6">
           <div className="inline-flex items-center gap-2 rounded-lg bg-green-500 px-4 py-2">
-            <SparklesOutlinedIcon size={20} className="text-green-50" />
+            <SparkleIcon size={20} className="text-green-50" />
             <Text
               as="span"
               type={Text.Type.BodyThree}
@@ -76,9 +76,6 @@ export default function SubscribedView({ className, ...props }: Props) {
           <ul className="space-y-3">
             {benefits.map((benefit, index) => (
               <li key={index} className="flex items-center gap-3">
-                <div className="flex size-6 items-center justify-center rounded-full bg-green-500">
-                  <CheckFilledIcon size={14} className="fill-green-50" />
-                </div>
                 <Text
                   as="span"
                   type={Text.Type.BodyThree}

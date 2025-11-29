@@ -1,12 +1,12 @@
 "use client";
 
-import { CheckOutlinedIcon } from "@/shared/icons";
-import Col from "@/shared/ui/Layout/Helpers/Col";
-import Row from "@/shared/ui/Layout/Helpers/Row";
 import {
   useSignupFormState,
   type Step,
 } from "@/features/auth/hooks/queries/useSignupFormState";
+import Col from "@/shared/ui/Layout/Helpers/Col";
+import Row from "@/shared/ui/Layout/Helpers/Row";
+import { CheckIcon } from "@phosphor-icons/react";
 
 import { cn } from "@/shared/lib/utils";
 import { Fragment } from "react";
@@ -41,7 +41,7 @@ export default function StepProgress() {
                 )}
               >
                 {isCompleted && (
-                  <CheckOutlinedIcon size={20} className="text-green-500" />
+                  <CheckIcon size={20} className="text-green-500" />
                 )}
               </Row.Center>
             </Col>

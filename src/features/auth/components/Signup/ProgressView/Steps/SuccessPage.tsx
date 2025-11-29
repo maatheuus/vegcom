@@ -5,7 +5,7 @@ import Col from "@/shared/ui/Layout/Helpers/Col";
 
 import { useSignupFormState } from "@/features/auth/hooks/queries/useSignupFormState";
 import { toast } from "@/shared/hooks/use-toast";
-import { LoadingOutlinedIcon } from "@/shared/icons";
+import { CircleNotchIcon } from "@phosphor-icons/react";
 import { useRouter } from "next/navigation";
 import SubmitButton from "../../../SubmitButton/SubmitButton";
 import SignupLayout from "../layout";
@@ -58,7 +58,7 @@ export default function SuccessPage() {
                 submitFormMutate(formData);
               }}
             >
-              <LoadingOutlinedIcon className="!h-6 !w-6 animate-spin" />
+              <CircleNotchIcon className="!h-6 !w-6 animate-spin" />
             </SubmitButton>
           </Col>
         ),

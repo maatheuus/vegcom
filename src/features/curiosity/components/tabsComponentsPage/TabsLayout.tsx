@@ -1,12 +1,9 @@
 "use client";
 
 import Tabs from "@/features/community/components/Tabs";
-import {
-  ChatCircleOutlinedIcon,
-  HandWavingOutlinedIcon,
-  HistoryChatOutlinedIcon,
-} from "@/shared/icons";
+import { HistoryChatOutlinedIcon } from "@/shared/icons";
 import Col from "@/shared/ui/Layout/Helpers/Col";
+import { ChatCircleIcon, HandWavingIcon } from "@phosphor-icons/react";
 import clsx from "clsx";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
@@ -19,7 +16,7 @@ const tabs = [
   {
     key: "chat",
     label: "Chat",
-    icon: <ChatCircleOutlinedIcon size={24} className="text-green-50" />,
+    icon: <ChatCircleIcon size={24} className="text-green-50" />,
     component: <ChatPage />,
   },
   {
@@ -31,7 +28,7 @@ const tabs = [
   {
     key: "suggestions",
     label: "Sugestões",
-    icon: <HandWavingOutlinedIcon size={24} className="text-green-50" />,
+    icon: <HandWavingIcon size={24} className="text-green-50" />,
     component: <SuggestionsPage />,
   },
 ];

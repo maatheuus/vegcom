@@ -1,9 +1,3 @@
-import {
-  CheckOutlinedIcon,
-  CopyOutlinedIcon,
-  RotateOutlinedIcon,
-  ShareOutlinedIcon,
-} from "@/shared/icons";
 import Button from "@/shared/ui/Button";
 import Col from "@/shared/ui/Layout/Helpers/Col";
 import Row from "@/shared/ui/Layout/Helpers/Row";
@@ -14,6 +8,12 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/shared/ui/Tooltip";
+import {
+  ArrowClockwiseIcon,
+  CheckIcon,
+  CopyIcon,
+  ShareNetworkIcon,
+} from "@phosphor-icons/react";
 import type { Message } from "./types";
 
 interface MessageBubbleProps {
@@ -78,9 +78,9 @@ const MessageBubble: React.FC<MessageBubbleProps> = ({
                   variant="text"
                   icon={
                     messageCopied ? (
-                      <CheckOutlinedIcon size={16} />
+                      <CheckIcon size={16} />
                     ) : (
-                      <CopyOutlinedIcon size={16} />
+                      <CopyIcon size={16} />
                     )
                   }
                 />
@@ -101,7 +101,7 @@ const MessageBubble: React.FC<MessageBubbleProps> = ({
                     onClick={onRegenerate}
                     className="flex items-center rounded px-1 py-1 text-xs text-green-500 transition-colors hover:bg-green-500/20 hover:text-green-500"
                     variant="text"
-                    icon={<RotateOutlinedIcon size={16} />}
+                    icon={<ArrowClockwiseIcon size={16} />}
                   />
                 </TooltipTrigger>
                 <TooltipContent side="bottom">
@@ -117,9 +117,9 @@ const MessageBubble: React.FC<MessageBubbleProps> = ({
                     variant="text"
                     icon={
                       messageCopied ? (
-                        <CheckOutlinedIcon size={16} />
+                        <CheckIcon size={16} />
                       ) : (
-                        <CopyOutlinedIcon size={16} />
+                        <CopyIcon size={16} />
                       )
                     }
                   />
@@ -135,7 +135,7 @@ const MessageBubble: React.FC<MessageBubbleProps> = ({
                     onClick={() => onShare?.(message.content)}
                     className="flex items-center rounded px-1 py-1 text-xs text-green-500 transition-colors hover:bg-green-500/20 hover:text-green-500"
                     variant="text"
-                    icon={<ShareOutlinedIcon size={16} />}
+                    icon={<ShareNetworkIcon size={16} />}
                   />
                 </TooltipTrigger>
                 <TooltipContent side="bottom">

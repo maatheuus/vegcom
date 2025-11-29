@@ -1,4 +1,3 @@
-import { PlantOutlinedIcon } from "@/shared/icons";
 import Text from "@/shared/ui/Text";
 import {
   Tooltip,
@@ -6,6 +5,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/shared/ui/Tooltip";
+import { PlantIcon } from "@phosphor-icons/react/ssr";
 import clsx from "clsx";
 import Link from "next/link";
 import type { ComponentProps } from "react";
@@ -26,7 +26,7 @@ export default function PremiumMemberCard({
       <TooltipProvider delayDuration={100}>
         <Tooltip>
           <TooltipTrigger>
-            <PlantOutlinedIcon
+            <PlantIcon
               size={24}
               className="cursor-pointer text-green-500 group-hover:text-green-50"
             />

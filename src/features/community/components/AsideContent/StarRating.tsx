@@ -1,9 +1,6 @@
-import {
-  HalfStarFilledIcon,
-  StarFilledIcon,
-  StarOutlinedIcon,
-} from "@/shared/icons";
+import { HalfStarFilledIcon } from "@/shared/icons";
 import Row from "@/shared/ui/Layout/Helpers/Row";
+import { StarIcon } from "@phosphor-icons/react/ssr";
 import clsx from "clsx";
 
 export default function StarRating({
@@ -24,8 +21,9 @@ export default function StarRating({
       {stars.map((_, index) => {
         if (index < fullStars)
           return (
-            <StarFilledIcon
+            <StarIcon
               key={index}
+              weight="fill"
               size={20}
               className={clsx("text-green-500", iconClassName)}
             />
@@ -39,8 +37,9 @@ export default function StarRating({
             />
           );
         return (
-          <StarOutlinedIcon
+          <StarIcon
             key={index}
+            weight="regular"
             size={20}
             className={clsx("text-green-500", iconClassName)}
           />

@@ -1,4 +1,3 @@
-import { PlusOutlinedIcon } from "@/shared/icons";
 import Button from "@/shared/ui/Button";
 import {
   FormControl,
@@ -13,6 +12,7 @@ import {
   SortableContext,
   verticalListSortingStrategy,
 } from "@dnd-kit/sortable";
+import { PlusCircleIcon } from "@phosphor-icons/react";
 import { Fragment, useCallback } from "react";
 import { useWatch } from "react-hook-form";
 import DynamicFields from "../DynamicFields";
@@ -206,7 +206,7 @@ export default function GroupFields({
                       variant="text"
                       type="button"
                       className="m-0 cursor-pointer gap-x-1 px-0 font-semibold text-green-500/70 hover:bg-transparent hover:text-green-500"
-                      leftIcon={<PlusOutlinedIcon size={16} />}
+                      leftIcon={<PlusCircleIcon size={16} />}
                     />
                     <FormControl>
                       <Input

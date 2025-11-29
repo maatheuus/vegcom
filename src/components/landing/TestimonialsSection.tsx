@@ -1,9 +1,9 @@
 "use client";
 
 import { useGSAP } from "@gsap/react";
+import { QuotesIcon } from "@phosphor-icons/react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { Quote } from "lucide-react";
 import Image from "next/image";
 import { useRef } from "react";
 
@@ -95,7 +95,7 @@ export function TestimonialsSection() {
               key={testimonial.id}
               className="testimonial-card relative rounded-2xl bg-green-50 p-8"
             >
-              <Quote className="absolute top-8 right-8 h-12 w-12 text-green-200 opacity-50" />
+              <QuotesIcon className="absolute top-7 right-8 h-12 w-12 text-green-200 opacity-50" />
 
               <div className="mb-6 flex items-center gap-4">
                 <div className="h-12 w-12 overflow-hidden rounded-full border-2 border-green-200">

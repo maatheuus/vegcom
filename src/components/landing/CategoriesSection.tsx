@@ -1,32 +1,32 @@
 "use client";
 
 import { useGSAP } from "@gsap/react";
+import {
+  CarrotIcon,
+  CoffeeIcon,
+  IceCreamIcon,
+  LeafIcon,
+} from "@phosphor-icons/react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import {
-  Beef,
-  Carrot,
-  Coffee,
-  Croissant,
-  Fish,
-  IceCream,
-  Leaf,
-  Soup,
-} from "lucide-react";
 import Link from "next/link";
 import { useRef } from "react";
 
 gsap.registerPlugin(ScrollTrigger);
 
 const categories = [
-  { name: "Café da Manhã", icon: Coffee, href: "/recipes?category=breakfast" },
-  { name: "Vegano", icon: Leaf, href: "/recipes?category=vegan" },
-  { name: "Sobremesas", icon: IceCream, href: "/recipes?category=desserts" },
-  { name: "Sopas", icon: Soup, href: "/recipes?category=soups" },
-  { name: "Saladas", icon: Carrot, href: "/recipes?category=salads" },
-  { name: "Confeitaria", icon: Croissant, href: "/recipes?category=bakery" },
-  { name: "Prato Principal", icon: Beef, href: "/recipes?category=main" },
-  { name: "Frutos do Mar", icon: Fish, href: "/recipes?category=seafood" },
+  {
+    name: "Café da Manhã",
+    icon: CoffeeIcon,
+    href: "/recipes?category=breakfast",
+  },
+  { name: "Vegano", icon: LeafIcon, href: "/recipes?category=vegan" },
+  {
+    name: "Sobremesas",
+    icon: IceCreamIcon,
+    href: "/recipes?category=desserts",
+  },
+  { name: "Saladas", icon: CarrotIcon, href: "/recipes?category=salads" },
 ];
 
 export function CategoriesSection() {
@@ -83,17 +83,17 @@ export function CategoriesSection() {
           </p>
         </div>
 
-        <div className="grid grid-cols-2 gap-6 sm:grid-cols-4 lg:grid-cols-8">
+        <div className="flex flex-wrap justify-center gap-6">
           {categories.map((category) => (
             <Link
               key={category.name}
               href={category.href}
-              className="category-card group relative flex flex-col items-center justify-center gap-4 rounded-3xl border border-white/60 bg-white p-6 shadow-lg shadow-green-900/5 transition-all duration-300 hover:border-green-200 hover:shadow-xl hover:shadow-green-900/10"
+              className="category-card group relative flex w-full max-w-32 flex-col items-center justify-center gap-4 rounded-3xl border border-white/60 bg-white p-6 shadow-lg shadow-green-900/5 transition-all duration-300 hover:border-green-200 hover:shadow-xl hover:shadow-green-900/10"
             >
               <div className="flex h-16 w-16 items-center justify-center rounded-full bg-green-50 text-green-600 transition-all duration-300 group-hover:scale-110 group-hover:bg-green-500 group-hover:text-white">
                 <category.icon size={28} strokeWidth={2} />
               </div>
-              <span className="font-maitree text-center text-sm font-bold text-gray-700 transition-colors group-hover:text-green-700 sm:text-base">
+              <span className="font-maitree text-center text-sm font-bold text-green-500 transition-colors group-hover:text-green-700 sm:text-base">
                 {category.name}
               </span>
             </Link>

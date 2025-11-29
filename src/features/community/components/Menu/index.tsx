@@ -1,15 +1,5 @@
 "use client";
 
-import {
-  ArrowCircleRightOutlinedIcon,
-  ChatCircleOutlinedIcon,
-  ChefHatOutlinedIcon,
-  CommunityOutlinedIcon,
-  LightBulbOutlinedIcon,
-  PlantOutlinedIcon,
-  PlusOutlinedIcon,
-  UserGearOutlinedIcon,
-} from "@/shared/icons";
 import Row from "@/shared/ui/Layout/Helpers/Row";
 import {
   Select,
@@ -17,6 +7,16 @@ import {
   SelectItem,
   SelectTrigger,
 } from "@/shared/ui/Select";
+import {
+  ArrowCircleRightIcon,
+  ChatCircleIcon,
+  ChefHatIcon,
+  LightbulbFilamentIcon,
+  PlusCircleIcon,
+  UserCircleIcon,
+  UsersFourIcon,
+} from "@phosphor-icons/react";
+import { PlantIcon } from "@phosphor-icons/react/ssr";
 import { AnimatePresence, motion, MotionConfig } from "framer-motion";
 import Image from "next/image";
 import Link from "next/link";
@@ -30,31 +30,31 @@ const sidebarLinks = {
     href: "/",
   },
   centerLinks: [
-    { label: "Comunidade", href: "/community", icon: CommunityOutlinedIcon },
-    { label: "Receitas", href: "/recipes", icon: ChefHatOutlinedIcon },
+    { label: "Comunidade", href: "/community", icon: UsersFourIcon },
+    { label: "Receitas", href: "/recipes", icon: ChefHatIcon },
     {
       label: "Nova receita",
       href: "/new-recipe",
-      icon: PlusOutlinedIcon,
+      icon: PlusCircleIcon,
     },
     {
       label: "Chat",
       href: "/chat",
-      icon: ChatCircleOutlinedIcon,
+      icon: ChatCircleIcon,
     },
     {
       label: "Curiosidades",
       href: "/curiosities",
-      icon: LightBulbOutlinedIcon,
+      icon: LightbulbFilamentIcon,
     },
   ],
   rightLinks: [
     {
       label: "Upgrade",
       href: "/account/subscription",
-      icon: PlantOutlinedIcon,
+      icon: PlantIcon,
     },
-    { label: "teste@teste.com", href: "/account", icon: UserGearOutlinedIcon },
+    { label: "teste@teste.com", href: "/account", icon: UserCircleIcon },
   ],
 };
 
@@ -141,7 +141,7 @@ export default function Menu() {
               <Row
                 className={`${baseButtonClasses} ${isPremium ? "p-2" : "px-2 py-1"} items-center justify-center rounded-lg bg-green-200 text-green-50`}
               >
-                <PlantOutlinedIcon size={20} className="size-5" />
+                <PlantIcon size={20} className="size-5" />
                 {!isPremium && <span className={textClasses}>Upgrade</span>}
               </Row>
             </Link>
@@ -151,10 +151,7 @@ export default function Menu() {
                 className="flex items-center gap-x-2 rounded-lg border-0 bg-green-100 p-2"
                 showIcon={false}
               >
-                <UserGearOutlinedIcon
-                  size={20}
-                  className="size-5 text-green-200"
-                />
+                <UserCircleIcon size={20} className="size-5 text-green-200" />
 
                 {isLoggedIn && (
                   <span className={`${textClasses} text-green-500`}>
@@ -211,7 +208,7 @@ export default function Menu() {
             <Row
               className={`${baseButtonClasses} ${isPremium ? "p-2" : "px-2 py-1"} items-center justify-center rounded-lg bg-green-200 text-green-50`}
             >
-              <PlantOutlinedIcon size={20} className="size-5" />
+              <PlantIcon size={20} className="size-5" />
               {!isPremium && <span className={textClasses}>Upgrade</span>}
             </Row>
           </Link>
@@ -352,7 +349,7 @@ export default function Menu() {
                   onClick={() => setIsMenuOpen(false)}
                 >
                   <div className="flex items-center gap-x-3 rounded-lg p-3 text-green-200 hover:bg-green-100 hover:text-green-500">
-                    <UserGearOutlinedIcon size={24} />
+                    <UserCircleIcon size={24} />
                     <span className="font-lora text-lg font-medium italic">
                       {isLoggedIn ? "Account" : "Sign In"}
                     </span>
@@ -370,7 +367,7 @@ export default function Menu() {
                 >
                   <Link href="/logout" onClick={() => setIsMenuOpen(false)}>
                     <div className="flex items-center gap-x-3 rounded-lg p-3 text-green-200 hover:bg-green-100 hover:text-green-500">
-                      <ArrowCircleRightOutlinedIcon size={24} />
+                      <ArrowCircleRightIcon size={24} />
                       <span className="font-lora text-lg font-medium italic">
                         Logout
                       </span>
