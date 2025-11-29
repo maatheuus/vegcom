@@ -1,7 +1,7 @@
-import AuthHeader from "@/components//auth/ui/Header";
-import LoginCard from "@/components//auth/ui/Login/Card";
-import AuthFooter from "@/components/auth/ui/Footer";
-import Col from "@/components/ui/Layout/Helpers/Col";
+import AuthHeader from "@/features/auth/components/Header";
+import LoginCard from "@/features/auth/components/Login/Card";
+import AuthFooter from "@/features/auth/components/Footer";
+import Col from "@/shared/ui/Layout/Helpers/Col";
 
 export default async function Page() {
   return (

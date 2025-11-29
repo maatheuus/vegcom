@@ -167,7 +167,7 @@ FFFDF4
   }
 
   body {
-    @apply bg-background text-foreground;
+    @apply bg-background text-foreground !m-0 !p-0;
   }
 }
 

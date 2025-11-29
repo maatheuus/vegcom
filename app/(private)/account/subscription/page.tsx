@@ -1,9 +1,12 @@
-import LayoutAccount from "@/components/account/LayoutAccount";
+import SubscriptionProvider from "@/features/account/components/(subscriptions)/SubscriptionProvider";
+import AccountLayout from "@/features/account/components/AccountLayout";
+import Header from "@/features/account/components/Header";
 
-export default function page() {
+export default function Page() {
   return (
-    <>
-      <LayoutAccount pathName="subscription" title="Assinatura" />
-    </>
+    <AccountLayout>
+      <Header title="Assinatura" subTitle="Gerencie sua assinatura" />
+      <SubscriptionProvider />
+    </AccountLayout>
   );
 }

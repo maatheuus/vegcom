@@ -28,10 +28,19 @@
         "./*"
       ],
       "@icons": [
-        "./components/Icons/index.tsx"
+        "./shared/icons/index.tsx"
       ],
       "@assets/*": [
         "./assets/*"
+      ],
+      "@shared/*": [
+        "./shared/*"
+      ],
+      "@features/*": [
+        "./features/*"
+      ],
+      "@entities/*": [
+        "./entities/*"
       ]
     }
   },
