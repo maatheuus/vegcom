@@ -1,5 +1,7 @@
 import { NextResponse, type NextRequest } from "next/server";
 
+const REDIRECT_WHEN_NOT_AUTHENTICATED_ROUTE = "/login";
+
 // const publicRoutes = [
 //   { path: "/", whenAuthenticated: "next" },
 //   { path: "/login", whenAuthenticated: "redirect" },
@@ -24,15 +26,13 @@ const publicRoutes = [
   { pattern: /^\/curiosities$/, whenAuthenticated: "next" },
 ] as const;
 
-const REDIRECT_WHEN_NOT_AUTHENTICATED_ROUTE = "/login";
-
 export async function middleware(request: NextRequest) {
   const path = request.nextUrl.pathname;
   const publicRoute = publicRoutes.find(({ pattern }) => pattern.test(path));
   const authToken = request.cookies.get("token");
 
   if (!authToken && publicRoute) {
-    NextResponse.next();
+    return NextResponse.next();
   }
 
   if (!authToken && !publicRoute) {
@@ -51,14 +51,7 @@ export async function middleware(request: NextRequest) {
     return NextResponse.redirect(redirectUrl);
   }
 
-  if (authToken && !publicRoute) {
-    // Check if the JWT is valid
-    // if yes, remove the cookie and redirect to login page
-
-    return NextResponse.next();
-  }
-
-  return request;
+  return NextResponse.next();
 }
 
 export const config = {
