@@ -1,8 +1,8 @@
 "use client";
 
-import { ScrollMouseOutlinedIcon } from "@/shared/icons";
 import Button from "@/shared/ui/Button";
 import { useGSAP } from "@gsap/react";
+import { MouseScrollIcon } from "@phosphor-icons/react";
 import gsap from "gsap";
 import { useRef } from "react";
 
@@ -76,7 +76,7 @@ export function HeroSection() {
         ref={scrollRef}
         className="absolute bottom-10 left-1/2 -translate-x-1/2 text-green-500"
       >
-        <ScrollMouseOutlinedIcon size={32} />
+        <MouseScrollIcon size={32} />
       </div>
     </section>
   );

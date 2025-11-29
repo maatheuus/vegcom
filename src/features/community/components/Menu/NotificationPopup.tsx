@@ -1,7 +1,7 @@
-import { NotificationOutlinedIcon } from "@/shared/icons";
 import Col from "@/shared/ui/Layout/Helpers/Col";
 import Row from "@/shared/ui/Layout/Helpers/Row";
 import Text from "@/shared/ui/Text";
+import { BellIcon } from "@phosphor-icons/react";
 import clsx from "clsx";
 import { AnimatePresence, motion } from "framer-motion";
 import {
@@ -66,6 +66,24 @@ const mockNotifications: Notification[] = [
   },
   {
     id: "5",
+    type: "comment",
+    user: "Carla Mendes",
+    message: "comentou na sua receita",
+    recipeName: "Brownie Proteico",
+    timestamp: "1 dia atrás",
+    isRead: true,
+  },
+  {
+    id: "6",
+    type: "comment",
+    user: "Carla Mendes",
+    message: "comentou na sua receita",
+    recipeName: "Brownie Proteico",
+    timestamp: "1 dia atrás",
+    isRead: true,
+  },
+  {
+    id: "7",
     type: "comment",
     user: "Carla Mendes",
     message: "comentou na sua receita",
@@ -157,7 +175,7 @@ const NotificationPopup = memo(function NotificationPopup({
         aria-expanded={isOpen}
         aria-haspopup="true"
       >
-        <NotificationOutlinedIcon size={20} className="size-5 text-green-200" />
+        <BellIcon size={20} className="size-5 text-green-200" />
         {unreadCount > 0 && (
           <span className="absolute -top-1 -right-1 flex h-5 w-5 items-center justify-center rounded-full bg-green-500 text-xs font-bold text-white">
             {unreadCount}
@@ -198,7 +216,7 @@ const NotificationPopup = memo(function NotificationPopup({
               </Row>
             </div>
 
-            <Col className="max-h-[400px] overflow-y-auto">
+            <Col className="max-h-[400px] overflow-y-auto" data-lenis-prevent>
               {notifications.length === 0 ? (
                 <div className="px-4 py-8 text-center">
                   <Text

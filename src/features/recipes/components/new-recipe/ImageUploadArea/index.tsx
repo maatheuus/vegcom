@@ -1,5 +1,4 @@
 import { useToast } from "@/shared/hooks/use-toast";
-import { CloudArrowUpOutlinedIcon, PlusOutlinedIcon } from "@/shared/icons";
 import {
   FormControl,
   FormField,
@@ -17,6 +16,7 @@ import { useCallback, useMemo, useState } from "react";
 import type { UseFormReturn } from "react-hook-form";
 import type { z } from "zod";
 
+import { CloudArrowUpIcon, PlusCircleIcon } from "@phosphor-icons/react";
 import type { newRecipeFormSchema } from "../../utils";
 import ImageGallery from "./ImageGallery";
 
@@ -204,7 +204,7 @@ export default function ImageUploadArea({ form, className }: Props) {
           onChange={handleFileChange}
         />
         <Col className="size-full min-h-[12rem] items-center justify-center gap-y-2">
-          <CloudArrowUpOutlinedIcon className="text-green-500" size={48} />
+          <CloudArrowUpIcon className="text-green-500" size={48} />
           <Text className="font-maitree text-center text-green-500">
             Arraste e solte ou{" "}
             <strong className="cursor-pointer text-green-500">
@@ -245,7 +245,7 @@ export default function ImageUploadArea({ form, className }: Props) {
                 className="cursor-pointer text-green-500"
                 onClick={triggerFileInput}
               >
-                <PlusOutlinedIcon size={18} />
+                <PlusCircleIcon size={18} />
               </div>
             )}
           </Row.Center>

@@ -1,6 +1,5 @@
 "use client";
 
-import { BookmarkHoveredIcon, SparklesOutlinedIcon } from "@/shared/icons";
 import { dateFormatDistanceLocale } from "@/shared/lib/utils";
 import type { PostCardDataProps } from "@/shared/types";
 import { Avatar, AvatarFallback, AvatarImage } from "@/shared/ui/Avatar";
@@ -8,6 +7,7 @@ import Button from "@/shared/ui/Button";
 import Col from "@/shared/ui/Layout/Helpers/Col";
 import Row from "@/shared/ui/Layout/Helpers/Row";
 import Text from "@/shared/ui/Text";
+import { BookmarkIcon, SparkleIcon } from "@phosphor-icons/react";
 import clsx from "clsx";
 import { formatDistance, subDays } from "date-fns";
 import { useState } from "react";
@@ -78,11 +78,7 @@ export default function PostCardRoot({
             variant="text"
             className="cursor-pointer rounded-full border border-green-100 px-3 transition-colors hover:bg-green-100"
             icon={
-              <BookmarkHoveredIcon
-                size={18}
-                color={isSaved ? "fill" : "outline"}
-                className={clsx(isSaved ? "fill-green-500" : "text-green-500")}
-              />
+              <BookmarkIcon size={18} weight={isSaved ? "fill" : "regular"} />
             }
           />
         </Row>
@@ -112,12 +108,9 @@ export default function PostCardRoot({
                 className="flex cursor-pointer items-center gap-x-1.5 rounded-full p-1 hover:bg-green-100"
                 variant="text"
                 leftIcon={
-                  <SparklesOutlinedIcon
+                  <SparkleIcon
                     size={16}
-                    color={isLiked ? "fill" : "outline"}
-                    className={clsx(
-                      isLiked ? "fill-green-500" : "text-green-500",
-                    )}
+                    weight={isLiked ? "fill" : "regular"}
                   />
                 }
               >

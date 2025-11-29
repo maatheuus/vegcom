@@ -1,11 +1,7 @@
 import StarRating from "@/features/community/components/AsideContent/StarRating";
-import {
-  ClockOutlinedIcon,
-  OpenEyeOutlinedIcon,
-  UsersOutlinedIcon,
-} from "@/shared/icons";
 import Button from "@/shared/ui/Button";
 import Text from "@/shared/ui/Text";
+import { ClockIcon, EyeIcon, UsersIcon } from "@phosphor-icons/react/ssr";
 import clsx from "clsx";
 import Image from "next/image";
 import Link from "next/link";
@@ -69,19 +65,16 @@ export function RecipeHero({ className, hightlightedRecipe }: RecipeHeroProps) {
                 </div>
               )}
               <div className="flex items-center gap-1 text-sm sm:text-sm">
-                <ClockOutlinedIcon className="h-4 w-4 sm:h-5 sm:w-5" />
+                <ClockIcon className="h-4 w-4 sm:h-5 sm:w-5" />
                 <span>{prepTime}</span>
               </div>
               <div className="flex items-center gap-1 text-sm sm:text-sm">
-                <UsersOutlinedIcon className="h-4 w-4 sm:h-5 sm:w-5" />
+                <UsersIcon className="h-4 w-4 sm:h-5 sm:w-5" />
                 <span>{servings} porções</span>
               </div>
               {views && (
                 <div className="flex items-center gap-1 text-sm sm:text-sm">
-                  <OpenEyeOutlinedIcon
-                    size={16}
-                    className="h-4 w-4 sm:h-5 sm:w-5"
-                  />
+                  <EyeIcon className="h-4 w-4 sm:h-5 sm:w-5" />
                   <span>{views || 0}</span>
                 </div>
               )}

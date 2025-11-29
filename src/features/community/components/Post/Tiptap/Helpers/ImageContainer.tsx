@@ -1,7 +1,7 @@
 import Button from "@/shared/ui/Button";
 import Row from "@/shared/ui/Layout/Helpers/Row";
+import { XIcon } from "@phosphor-icons/react/ssr";
 import { Editor } from "@tiptap/react";
-import { X } from "lucide-react";
 import Image from "next/image";
 import { useCallback } from "react";
 
@@ -36,16 +36,16 @@ const ImageContainer = ({
         }
       }
     },
-    [editor, onRemoveImage]
+    [editor, onRemoveImage],
   );
 
   if (images.length === 0) return null;
 
   return (
-    <div className="p-3 rounded-md mt-3">
+    <div className="mt-3 rounded-md p-3">
       <Row className="flex-wrap justify-end gap-2">
         {images.map((image, index) => (
-          <div key={`${image.src}-${index}`} className="relative group">
+          <div key={`${image.src}-${index}`} className="group relative">
             <Image
               width={200}
               height={150}
@@ -60,10 +60,10 @@ const ImageContainer = ({
               size="none"
               type="button"
               onClick={() => removeImage(image.src)}
-              className="absolute -top-2 -right-2 bg-red-500 hover:bg-red-600 text-white rounded-full p-1 flex items-center justify-center transition-all opacity-0 group-hover:opacity-100 cursor-pointer"
+              className="absolute -top-2 -right-2 flex cursor-pointer items-center justify-center rounded-full bg-red-500 p-1 text-white opacity-0 transition-all group-hover:opacity-100 hover:bg-red-600"
               title="Remover imagem"
             >
-              <X size={16} />
+              <XIcon size={16} />
             </Button>
           </div>
         ))}

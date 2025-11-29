@@ -1,8 +1,12 @@
-import { ChevronLeft, ChevronRight, MoreHorizontal } from "lucide-react";
 import * as React from "react";
 
 import { cn } from "@/shared/lib/utils";
 import Button from "@/shared/ui/Button";
+import {
+  CaretLeftIcon,
+  CaretRightIcon,
+  DotsThreeCircleIcon,
+} from "@phosphor-icons/react";
 
 const Pagination = ({ className, ...props }: React.ComponentProps<"nav">) => (
   <nav
@@ -75,7 +79,7 @@ const PaginationPrevious = ({
     disabled={disabled}
     {...props}
   >
-    <ChevronLeft className="size-4" />
+    <CaretLeftIcon className="size-4" />
     <span className="hidden sm:inline">Anterior</span>
   </Button>
 );
@@ -99,7 +103,7 @@ const PaginationNext = ({
     {...props}
   >
     <span className="hidden sm:inline">Próxima</span>
-    <ChevronRight className="size-4" />
+    <CaretRightIcon className="size-4" />
   </Button>
 );
 PaginationNext.displayName = "PaginationNext";
@@ -116,7 +120,7 @@ const PaginationEllipsis = ({
     )}
     {...props}
   >
-    <MoreHorizontal className="size-4" />
+    <DotsThreeCircleIcon className="size-4" />
     <span className="sr-only">Mais páginas</span>
   </span>
 );

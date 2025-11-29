@@ -1,5 +1,5 @@
 import Logo from "@/shared/ui/Logo";
-import { ArrowRightOutlinedIcon } from "@/shared/icons";
+import { ArrowArcLeftIcon } from "@phosphor-icons/react/ssr";
 import clsx from "clsx";
 import Link from "next/link";
 
@@ -30,10 +30,7 @@ export default function AuthHeader({
           className="relative flex items-center justify-start"
         >
           <span className="sr-only">Voltar para página anterior</span>
-          <ArrowRightOutlinedIcon
-            size={32}
-            className="rotate-180 text-green-500"
-          />
+          <ArrowArcLeftIcon size={32} className="rotate-180 text-green-500" />
         </Link>
       )}
     </div>

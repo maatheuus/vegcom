@@ -13,17 +13,17 @@ import {
 } from "@/shared/ui/Form";
 import { InputIcon } from "@/shared/ui/Input";
 
-import {
-  AtOutlinedIcon,
-  ClosedEyeOutlinedIcon,
-  LoadingOutlinedIcon,
-  OpenEyesOutlinedIcon,
-  UserDashedFilledIcon,
-} from "@/shared/icons";
 import Col from "@/shared/ui/Layout/Helpers/Col";
 
 // import { loginWithGoogle } from "@/lib/supabase/authFunctions";
 import { useSignupFormState } from "@/features/auth/hooks/queries/useSignupFormState";
+import {
+  AtIcon,
+  CircleNotchIcon,
+  EyeClosedIcon,
+  EyesIcon,
+  UserCircleDashedIcon,
+} from "@phosphor-icons/react";
 import { useState, type ComponentProps, type FC } from "react";
 import SubmitButton from "../SubmitButton/SubmitButton";
 
@@ -94,7 +94,7 @@ const SignupForm: FC<ComponentProps<"form">> = ({ className, ...props }) => {
                     autoComplete="name"
                     {...field}
                     icon={
-                      <UserDashedFilledIcon
+                      <UserCircleDashedIcon
                         className="text-green-500"
                         size={18}
                       />
@@ -117,9 +117,7 @@ const SignupForm: FC<ComponentProps<"form">> = ({ className, ...props }) => {
                     placeholder="Email"
                     autoComplete="email"
                     {...field}
-                    icon={
-                      <AtOutlinedIcon className="text-green-500" size={18} />
-                    }
+                    icon={<AtIcon className="text-green-500" size={18} />}
                   />
                 </FormControl>
                 <FormMessage className="!mb-0" />
@@ -144,15 +142,9 @@ const SignupForm: FC<ComponentProps<"form">> = ({ className, ...props }) => {
                         className="cursor-pointer"
                       >
                         {showingPassword ? (
-                          <OpenEyesOutlinedIcon
-                            size={18}
-                            className="text-green-500"
-                          />
+                          <EyesIcon size={18} className="text-green-500" />
                         ) : (
-                          <ClosedEyeOutlinedIcon
-                            size={18}
-                            className="text-green-500"
-                          />
+                          <EyeClosedIcon size={18} className="text-green-500" />
                         )}
                       </div>
                     }
@@ -165,7 +157,7 @@ const SignupForm: FC<ComponentProps<"form">> = ({ className, ...props }) => {
         </Col>
         <Col className="items-center gap-2 px-5 py-4">
           <SubmitButton text="Seguinte">
-            <LoadingOutlinedIcon className="!h-6 !w-6 animate-spin" />
+            <CircleNotchIcon className="!h-6 !w-6 animate-spin" />
           </SubmitButton>
         </Col>
       </form>

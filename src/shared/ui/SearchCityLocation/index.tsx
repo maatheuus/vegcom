@@ -1,10 +1,9 @@
 import { useCitiesSearch } from "@/shared/hooks/useCitiesSearch";
-import { ChevronDownOutlinedIcon } from "@/shared/icons";
 
 import type { CitySearchResult } from "@/shared/lib/api/cities";
 import { cn } from "@/shared/lib/utils";
+import { CaretDownIcon, MapPinSimpleAreaIcon } from "@phosphor-icons/react";
 import clsx from "clsx";
-import { MapPinIcon } from "lucide-react";
 import React, { useEffect, useRef, useState } from "react";
 import { Input } from "../Input";
 
@@ -152,7 +151,7 @@ export function SearchCityLocation({
           {isLoading ? (
             <div className="h-4 w-4 animate-spin rounded-full border-2 border-green-500 border-t-transparent" />
           ) : (
-            <ChevronDownOutlinedIcon
+            <CaretDownIcon
               className={clsx(
                 "h-4 w-4 text-green-500 transition-transform",
                 isOpen && "rotate-180",
@@ -180,7 +179,7 @@ export function SearchCityLocation({
                   )}
                   onClick={() => handleCitySelect(city)}
                 >
-                  <MapPinIcon className="h-4 w-4 flex-shrink-0 text-green-500 group-hover:text-green-50" />
+                  <MapPinSimpleAreaIcon className="h-4 w-4 flex-shrink-0 text-green-500 group-hover:text-green-50" />
                   <div className="min-w-0 flex-1">
                     {city.nome && (
                       <div className="font-maitree truncate font-medium">

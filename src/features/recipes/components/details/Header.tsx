@@ -1,18 +1,18 @@
 "use client";
 
-import {
-  BookmarkHoveredIcon,
-  CalendarOutlinedIcon,
-  ScrollOutlinedIcon,
-  StarFilledIcon,
-  UserOutlinedIcon,
-} from "@/shared/icons";
 import Col from "@/shared/ui/Layout/Helpers/Col";
 import Row from "@/shared/ui/Layout/Helpers/Row";
 import Text from "@/shared/ui/Text";
 import clsx from "clsx";
 import { Fragment, memo, useState } from "react";
 
+import {
+  BookmarkIcon,
+  CalendarDotsIcon,
+  ScrollIcon,
+  StarIcon,
+  UserIcon,
+} from "@phosphor-icons/react";
 import SaveRecipeButton from "./SaveRecipeButton";
 import ShareDropdown from "./ShareDropdown";
 
@@ -51,7 +51,7 @@ const Header = memo(function Header({
   const FIRST_ROW_DATA = [
     {
       label: authorName,
-      icon: <UserOutlinedIcon />,
+      icon: <UserIcon />,
       ariaLabel: `Autor: ${authorName}`,
     },
     {
@@ -59,7 +59,7 @@ const Header = memo(function Header({
     },
     {
       label: timeAgo,
-      icon: <CalendarOutlinedIcon />,
+      icon: <CalendarDotsIcon />,
       ariaLabel: `Publicado ${timeAgo}`,
     },
     {
@@ -67,7 +67,7 @@ const Header = memo(function Header({
     },
     {
       label: `${commentsCount} comentários`,
-      icon: <ScrollOutlinedIcon />,
+      icon: <ScrollIcon />,
       ariaLabel: `${commentsCount} comentários`,
     },
     {
@@ -75,7 +75,7 @@ const Header = memo(function Header({
     },
     {
       label: `${currentSavedCount} salvos`,
-      icon: <BookmarkHoveredIcon />,
+      icon: <BookmarkIcon />,
       ariaLabel: `${currentSavedCount} pessoas salvaram esta receita`,
     },
     {
@@ -83,7 +83,7 @@ const Header = memo(function Header({
     },
     {
       label: `${rating} (14 reviews)`,
-      icon: <StarFilledIcon />,
+      icon: <StarIcon />,
       ariaLabel: `Avaliação média: ${rating} de ${totalReviews}`,
     },
   ];

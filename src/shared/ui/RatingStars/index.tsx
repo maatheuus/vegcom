@@ -1,6 +1,6 @@
 "use client";
 
-import { StarFilledIcon } from "@/shared/icons";
+import { StarIcon } from "@phosphor-icons/react";
 import { useState } from "react";
 import Button from "../Button";
 import Row from "../Layout/Helpers/Row";
@@ -55,7 +55,7 @@ export default function RatingStars({
     const currentRating = hoveredRating > 0 ? hoveredRating : value;
     return starIndex <= currentRating
       ? "[&_path]:fill-green-500"
-      : "[&_path]:stroke-green-500 [&_path]:fill-transparent [&_path]:hover:fill-green-200 [&_path]:hover:stroke-green-200 [&_path]:transition-colors [&_path]:duration-300";
+      : "[&_path]:stroke-green-500 [&_path]:hover:fill-green-200 [&_path]:hover:stroke-green-200 [&_path]:transition-colors [&_path]:duration-300";
   };
 
   const getTooltipText = (starIndex: number) => {
@@ -87,14 +87,17 @@ export default function RatingStars({
                   onMouseLeave={() => setHoveredRating(0)}
                   aria-label={`${starValue} de ${totalStars} estrelas`}
                 >
-                  <StarFilledIcon
+                  <StarIcon
+                    weight={
+                      starValue <= (hoveredRating || value) ? "fill" : "regular"
+                    }
                     size={20}
                     className={getStarColor(starValue)}
                   />
                 </Button>
               </TooltipTrigger>
               <TooltipContent>
-                <Text as="span" className="!text-xs font-semibold font-frank">
+                <Text as="span" className="font-frank !text-xs font-semibold">
                   {getTooltipText(starValue)}
                 </Text>
               </TooltipContent>

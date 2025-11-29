@@ -1,14 +1,9 @@
 import StarRating from "@/features/community/components/AsideContent/StarRating";
-import {
-  ClockOutlinedIcon,
-  HeartFilledIcon,
-  HeartOutlinedIcon,
-  OpenEyeOutlinedIcon,
-  UsersOutlinedIcon,
-} from "@/shared/icons";
 import Button from "@/shared/ui/Button";
 import Col from "@/shared/ui/Layout/Helpers/Col";
 import Text from "@/shared/ui/Text";
+import { HeartIcon } from "@phosphor-icons/react";
+import { ClockIcon, EyeIcon, UsersIcon } from "@phosphor-icons/react/ssr";
 import Image from "next/image";
 import Link from "next/link";
 import { MouseEvent } from "react";
@@ -49,11 +44,10 @@ export default function RecipeCard({
             }
             onClick={handleFavorite}
             icon={
-              favoriteRecipes ? (
-                <HeartFilledIcon className="size-6 text-green-50" />
-              ) : (
-                <HeartOutlinedIcon className="size-6 text-green-50" />
-              )
+              <HeartIcon
+                weight={favoriteRecipes ? "fill" : "regular"}
+                className="size-6 text-green-50"
+              />
             }
           />
         </div>
@@ -95,7 +89,7 @@ export default function RecipeCard({
                   className="flex items-center gap-1"
                   aria-label={`Tempo: ${recipe.prepTime}`}
                 >
-                  <ClockOutlinedIcon size={16} aria-hidden="true" />
+                  <ClockIcon size={16} aria-hidden="true" />
                   <span>{recipe.prepTime}</span>
                 </div>
               )}
@@ -104,7 +98,7 @@ export default function RecipeCard({
                   className="flex items-center gap-1"
                   aria-label={`Serve: ${recipe.servings}`}
                 >
-                  <UsersOutlinedIcon size={16} aria-hidden="true" />
+                  <UsersIcon size={16} aria-hidden="true" />
                   <span>{recipe.servings}</span>
                 </div>
               )}
@@ -114,7 +108,7 @@ export default function RecipeCard({
                   className="flex items-center gap-1"
                   aria-label={`Serve: ${recipe.views || 0}`}
                 >
-                  <OpenEyeOutlinedIcon size={16} aria-hidden="true" />
+                  <EyeIcon size={16} aria-hidden="true" />
                   <span>{recipe.views || 0}</span>
                 </div>
               )}

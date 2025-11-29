@@ -1,11 +1,11 @@
 "use client";
 
-import {
-  MegaphoneOutlinedIcon,
-  PaperclipOutlinedIcon,
-  ScrollOutlinedIcon,
-} from "@/shared/icons";
 import Col from "@/shared/ui/Layout/Helpers/Col";
+import {
+  MegaphoneIcon,
+  PaperclipIcon,
+  ScrollIcon,
+} from "@phosphor-icons/react";
 import { useState, type HtmlHTMLAttributes } from "react";
 import PostComposer from "../Post/Composer";
 import PostList from "../Post/List";
@@ -24,19 +24,19 @@ export default function Layout({ className, ...props }: Props) {
     {
       key: "posts",
       label: "Posts",
-      icon: <ScrollOutlinedIcon size={24} className="text-green-200" />,
+      icon: <ScrollIcon size={24} className="text-green-200" />,
       component: <PostList />,
     },
     {
       key: "resources",
       label: "Resources",
-      icon: <PaperclipOutlinedIcon size={24} className="text-green-200" />,
+      icon: <PaperclipIcon size={24} className="text-green-200" />,
       component: <Resources />,
     },
     {
       key: "announcements",
       label: "Announcements",
-      icon: <MegaphoneOutlinedIcon size={24} className="text-green-200" />,
+      icon: <MegaphoneIcon size={24} className="-scale-x-100 text-green-200" />,
       component: <Announcements />,
     },
   ];

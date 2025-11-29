@@ -1,14 +1,14 @@
-import {
-  AlienOutlinedIcon,
-  EditPencilOutlinedIcon,
-  PlusOutlinedIcon,
-  TrashOutlinedIcon,
-} from "@/shared/icons";
 import Button from "@/shared/ui/Button";
 import { Input } from "@/shared/ui/Input";
 import Col from "@/shared/ui/Layout/Helpers/Col";
 import Text from "@/shared/ui/Text";
-import { MessageCircle } from "lucide-react";
+import {
+  AlienIcon,
+  ChatCircleIcon,
+  PencilSimpleIcon,
+  PlusCircleIcon,
+  TrashIcon,
+} from "@phosphor-icons/react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useMemo, useState } from "react";
 import { useChat } from "../chat/useChat";
@@ -57,7 +57,7 @@ export default function HistoryChatPage() {
             disabled={chats.length >= 2}
             className="group inline-flex cursor-pointer items-center gap-2 rounded-md border border-green-500 bg-green-50 px-3 py-2 text-green-500 transition-colors duration-300 hover:bg-green-500 hover:text-green-50 disabled:pointer-events-none disabled:opacity-50"
           >
-            <PlusOutlinedIcon
+            <PlusCircleIcon
               size={18}
               className="text-green-200 transition-colors group-hover:text-green-50"
             />{" "}
@@ -77,8 +77,8 @@ export default function HistoryChatPage() {
         <div className="min-h-0 flex-1 overflow-y-auto py-2">
           {visibleChats.length === 0 ? (
             <div className="mt-8 px-4 text-center text-gray-500">
-              <AlienOutlinedIcon
-                size={36}
+              <AlienIcon
+                size={32}
                 className="mx-auto mb-3 text-green-500 opacity-50"
               />
               <p className="font-lora text-sm">
@@ -100,7 +100,7 @@ export default function HistoryChatPage() {
                     }`}
                   >
                     <div className="flex-shrink-0">
-                      <MessageCircle size={16} className="text-green-200" />
+                      <ChatCircleIcon size={16} className="text-green-200" />
                     </div>
 
                     <div className="min-w-0 flex-1">
@@ -128,7 +128,7 @@ export default function HistoryChatPage() {
                         }}
                         className="rounded p-1 text-green-200 hover:bg-green-100"
                         variant="text"
-                        icon={<EditPencilOutlinedIcon size={16} />}
+                        icon={<PencilSimpleIcon size={16} />}
                         type="button"
                       />
 
@@ -140,7 +140,7 @@ export default function HistoryChatPage() {
                         }}
                         className="rounded p-1 text-green-200 hover:bg-red-50 hover:text-red-600"
                         variant="text"
-                        icon={<TrashOutlinedIcon size={16} />}
+                        icon={<TrashIcon size={16} />}
                       />
                     </div>
                   </div>

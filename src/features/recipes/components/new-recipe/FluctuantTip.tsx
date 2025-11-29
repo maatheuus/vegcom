@@ -1,8 +1,8 @@
 "use client";
 
-import { FlyingSaucerOutlinedIcon } from "@/shared/icons";
 import Button from "@/shared/ui/Button";
 import Text from "@/shared/ui/Text";
+import { FlyingSaucerIcon } from "@phosphor-icons/react";
 import clsx from "clsx";
 import { AnimatePresence, motion } from "framer-motion";
 import { memo, useEffect, useRef, useState } from "react";
@@ -118,7 +118,7 @@ const FluctuantTip = memo(function FluctuantTip({
                 },
               )}
               icon={
-                <FlyingSaucerOutlinedIcon
+                <FlyingSaucerIcon
                   className={clsx("transition-colors duration-300", {
                     "text-green-200 group-hover:text-green-50": isOpen,
                     "text-green-50": !isOpen,

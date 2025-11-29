@@ -1,28 +1,28 @@
 "use client";
 
 import { useGSAP } from "@gsap/react";
+import { ChefHatIcon, HeartIcon, UsersIcon } from "@phosphor-icons/react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { ChefHat, Heart, Users } from "lucide-react";
 import { useRef } from "react";
 
 gsap.registerPlugin(ScrollTrigger);
 
 const features = [
   {
-    icon: Users,
+    icon: UsersIcon,
     title: "Conexão Real",
     description:
       "Faça parte de uma comunidade vibrante. Troque dicas, tire dúvidas e faça amigos que compartilham o mesmo amor pela culinária vegetal.",
   },
   {
-    icon: ChefHat,
+    icon: ChefHatIcon,
     title: "Inspiração Diária",
     description:
       "Descubra milhares de receitas testadas e aprovadas pela comunidade. Do café da manhã rápido ao jantar especial, nunca falte criatividade.",
   },
   {
-    icon: Heart,
+    icon: HeartIcon,
     title: "Compartilhe sua Paixão",
     description:
       "O VegCom é o seu palco. Publique suas próprias criações, monte seu livro de receitas digital e inspire outras pessoas a comerem melhor.",

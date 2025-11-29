@@ -13,11 +13,14 @@ import { useState } from "react";
 import AccountLayout from "@/features/account/components/AccountLayout";
 import Header from "@/features/account/components/Header";
 import { personalInfoFormSchema } from "@/features/account/components/utils";
-import { EditPencilOutlinedIcon, FloppyDiskOutlinedIcon } from "@/shared";
 import Button from "@/shared/ui/Button";
 import { Form } from "@/shared/ui/Form";
 import Row from "@/shared/ui/Layout/Helpers/Row";
 import { zodResolver } from "@hookform/resolvers/zod";
+import {
+  FloppyDiskIcon,
+  PencilSimpleIcon,
+} from "@phosphor-icons/react/dist/ssr";
 import clsx from "clsx";
 import { useForm } from "react-hook-form";
 import type { z } from "zod";
@@ -78,9 +81,9 @@ export default function Page() {
           <Button.Icon
             leftIcon={
               isEditing ? (
-                <FloppyDiskOutlinedIcon className="!size-4" />
+                <FloppyDiskIcon className="!size-4" />
               ) : (
-                <EditPencilOutlinedIcon className="!size-4" />
+                <PencilSimpleIcon className="!size-4" />
               )
             }
             variant="filled"

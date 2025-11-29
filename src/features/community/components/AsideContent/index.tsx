@@ -21,7 +21,8 @@ export default function AsideCards({ className, ...props }: Props) {
   return (
     <Col
       {...props}
-      className={`aside-cards gap-y-3 h-dvh max-h-[80%] mt-auto w-full overflow-y-scroll overflow-x-hidden rounded-t-lg bg-green-50 border border-green-200 z-50 p-4 ${className}`}
+      className={`aside-cards z-50 mt-auto h-dvh max-h-[80%] w-full gap-y-3 overflow-x-hidden overflow-y-scroll rounded-t-lg border border-green-200 bg-green-50 p-4 ${className}`}
+      data-lenis-prevent
     >
       <Wrapper cardData={mockTrendingData} header={trendingData} />
       <Wrapper cardData={mockExploreData} header={exploreData} />

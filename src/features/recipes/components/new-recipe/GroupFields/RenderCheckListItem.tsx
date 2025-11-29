@@ -1,8 +1,8 @@
-import { MinusCircleOutlinedIcon } from "@/shared/icons";
 import Button from "@/shared/ui/Button";
 import Row from "@/shared/ui/Layout/Helpers/Row";
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
+import { MinusCircleIcon } from "@phosphor-icons/react";
 import clsx from "clsx";
 import type { RecipeType } from ".";
 
@@ -55,7 +55,7 @@ export default function RenderCheckListItem({
           variant="text"
           type="button"
           className="cursor-pointer gap-x-1 p-0 text-green-500 transition-colors hover:text-green-500/70"
-          leftIcon={<MinusCircleOutlinedIcon size={16} />}
+          leftIcon={<MinusCircleIcon size={16} />}
         />
       </Row>
     </div>

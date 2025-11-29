@@ -1,8 +1,8 @@
-import { SparklesOutlinedIcon } from "@/shared/icons";
 import Button from "@/shared/ui/Button";
 import Col from "@/shared/ui/Layout/Helpers/Col";
 import Row from "@/shared/ui/Layout/Helpers/Row";
 import Text from "@/shared/ui/Text";
+import { SparkleIcon } from "@phosphor-icons/react";
 
 interface Props {
   className?: string;
@@ -63,7 +63,7 @@ export default function NotSubscribedView({ className, ...props }: Props) {
       <div className="rounded-xl border border-green-200 bg-green-50 p-6">
         <Row className="items-center gap-4">
           <div className="flex size-12 items-center justify-center rounded-full bg-green-500">
-            <SparklesOutlinedIcon size={24} className="text-green-50" />
+            <SparkleIcon size={24} className="text-green-50" />
           </div>
           <div className="flex-1">
             <Text

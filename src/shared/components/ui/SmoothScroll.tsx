@@ -1,21 +1,16 @@
 "use client";
 
-import gsap from "gsap";
 import { ReactLenis, type LenisRef } from "lenis/react";
-import { useEffect, useRef } from "react";
+import { usePathname } from "next/navigation";
+import { useRef } from "react";
 
 export default function SmoothScroll() {
   const lenisRef = useRef<LenisRef>(null);
+  const pathname = usePathname();
 
-  useEffect(() => {
-    function update(time: number) {
-      lenisRef.current?.lenis?.raf(time * 1000);
-    }
+  const isLandingPage = pathname === "/";
 
-    gsap.ticker.add(update);
-
-    return () => gsap.ticker.remove(update);
-  }, []);
+  if (!isLandingPage) return null;
 
   return (
     <ReactLenis
@@ -25,7 +20,7 @@ export default function SmoothScroll() {
         easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
         smoothWheel: true,
         orientation: "vertical",
-        autoRaf: false,
+        autoRaf: true,
       }}
       ref={lenisRef}
     />

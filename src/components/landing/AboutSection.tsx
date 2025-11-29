@@ -2,9 +2,9 @@
 
 import { food } from "@/assets/index";
 import { useGSAP } from "@gsap/react";
+import { ForkKnifeIcon, HeartIcon, UsersIcon } from "@phosphor-icons/react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { Heart, Users, Utensils } from "lucide-react";
 import Image from "next/image";
 import { useRef } from "react";
 
@@ -12,17 +12,17 @@ gsap.registerPlugin(ScrollTrigger);
 
 const points = [
   {
-    icon: Utensils,
+    icon: ForkKnifeIcon,
     title: "Compartilhe Suas Criações",
     desc: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor.",
   },
   {
-    icon: Users,
+    icon: UsersIcon,
     title: "Conecte-se com Outros",
     desc: "Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip.",
   },
   {
-    icon: Heart,
+    icon: HeartIcon,
     title: "Coma Saudável",
     desc: "Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu.",
   },

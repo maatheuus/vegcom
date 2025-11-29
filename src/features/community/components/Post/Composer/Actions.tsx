@@ -1,20 +1,17 @@
-import {
-  ImageOutlinedIcon,
-  PaperPlaneOutlinedIcon,
-  SmileyFaceOutlinedIcon,
-} from "@/shared/icons";
 import Button from "@/shared/ui/Button";
 import Row from "@/shared/ui/Layout/Helpers/Row";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/shared/ui/popover";
+import { Popover, PopoverContent, PopoverTrigger } from "@/shared/ui/popover";
 import data from "@emoji-mart/data";
 import EmojiPicker from "@emoji-mart/react";
+import {
+  ImageIcon,
+  PaperPlaneTiltIcon,
+  SmileyIcon,
+} from "@phosphor-icons/react";
 import type { Editor } from "@tiptap/react";
 import clsx from "clsx";
 import { type HTMLAttributes } from "react";
+import type { EmojiPickerProps } from "./types";
 
 interface Props extends HTMLAttributes<HTMLDivElement> {
   addEmoji: (emoji: { native: string }) => void;
@@ -41,16 +38,15 @@ export default function PostComposerActions({
     console.log("Sending message:", editor?.getHTML());
   };
 
-  const emojiPickerOptions = {
+  const emojiPickerOptions: EmojiPickerProps = {
     theme: "light",
     data: data,
     onEmojiSelect: addEmoji,
-    emojiStyle: "native",
     locale: "pt",
     autoFocus: true,
     navPosition: "bottom",
     previewPosition: "top",
-    skinTone: "search",
+    skinTonePosition: "search",
     icons: "solid",
     emojiButtonColors: [
       "rgba(87, 204, 153, 0.7)",
@@ -65,16 +61,16 @@ export default function PostComposerActions({
   return (
     <Row
       className={clsx(
-        "border-t border-t-green-100 py-5 px-4 w-full justify-between",
-        className
+        "z-50 w-full justify-between border-t border-t-green-100 px-4 py-5",
+        className,
       )}
       {...props}
     >
-      <Row className="gap-x-4 items-center">
+      <Row className="items-center gap-x-4">
         <Button.Icon
           variant="text"
           className="p-0 text-green-200 hover:text-green-500"
-          leftIcon={<ImageOutlinedIcon size={24} className="text-current" />}
+          leftIcon={<ImageIcon size={24} className="text-current" />}
           onClick={handleImageClick}
         />
         <Row className={clsx("items-center", className)} {...props}>
@@ -83,12 +79,10 @@ export default function PostComposerActions({
               <Button.Icon
                 variant="text"
                 className="p-0 text-green-200 hover:text-green-500"
-                icon={
-                  <SmileyFaceOutlinedIcon size={24} className="text-current" />
-                }
+                icon={<SmileyIcon size={24} className="text-current" />}
               />
             </PopoverTrigger>
-            <PopoverContent className="z-50 p-0 border-none shadow-xl">
+            <PopoverContent className="border-none p-0 shadow-xl">
               <EmojiPicker {...emojiPickerOptions} />
             </PopoverContent>
           </Popover>
@@ -97,7 +91,7 @@ export default function PostComposerActions({
 
       <Button.Icon
         variant="filled"
-        rightIcon={<PaperPlaneOutlinedIcon size={24} />}
+        rightIcon={<PaperPlaneTiltIcon size={24} />}
         disabled={editor?.isEmpty && postTitleInputRef?.current?.value === ""}
         className="rounded-full"
         title="Send message"

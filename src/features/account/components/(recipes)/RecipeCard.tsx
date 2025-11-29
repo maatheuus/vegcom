@@ -1,13 +1,8 @@
 import StarRating from "@/features/community/components/AsideContent/StarRating";
-import {
-  ChefHatOutlinedIcon,
-  HeartFilledIcon,
-  HeartOutlinedIcon,
-  OpenEyeOutlinedIcon,
-} from "@/shared/icons";
 import Col from "@/shared/ui/Layout/Helpers/Col";
 import Row from "@/shared/ui/Layout/Helpers/Row";
 import Text from "@/shared/ui/Text";
+import { ChefHatIcon, EyeIcon, HeartIcon } from "@phosphor-icons/react";
 import Image from "next/image";
 import Link from "next/link";
 import { useState, type LinkHTMLAttributes } from "react";
@@ -53,13 +48,12 @@ export default function RecipeCard({
           onClick={handleFavorite}
         >
           {isFavorites ? (
-            isRecipeFavorite ? (
-              <HeartFilledIcon className="size-6 text-green-50" />
-            ) : (
-              <HeartOutlinedIcon className="size-6 text-green-50" />
-            )
+            <HeartIcon
+              weight={isRecipeFavorite ? "fill" : "regular"}
+              className="size-6 text-green-50"
+            />
           ) : (
-            <ChefHatOutlinedIcon className="size-6 text-green-50" />
+            <ChefHatIcon className="size-6 text-green-50" />
           )}
         </button>
       </div>
@@ -99,7 +93,7 @@ export default function RecipeCard({
             </Text>
           </div>
           <Row className="items-center">
-            <OpenEyeOutlinedIcon size={16} className="text-green-500" />
+            <EyeIcon size={16} className="text-green-500" />
             <span className="mx-1 size-0.5 rounded-full bg-green-500"></span>
             <Text
               as="span"

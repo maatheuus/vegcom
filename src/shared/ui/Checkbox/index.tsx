@@ -1,8 +1,8 @@
 import * as CheckboxPrimitive from "@radix-ui/react-checkbox";
 import * as React from "react";
 
-import { CheckFilledIcon } from "@/shared/icons";
 import { cn } from "@/shared/lib/utils";
+import { CheckIcon } from "@phosphor-icons/react";
 
 const Checkbox = React.forwardRef<
   React.ElementRef<typeof CheckboxPrimitive.Root>,
@@ -19,7 +19,7 @@ const Checkbox = React.forwardRef<
     <CheckboxPrimitive.Indicator
       className={cn("flex size-4 items-center justify-center text-current")}
     >
-      <CheckFilledIcon className="fill-green-500" />
+      <CheckIcon className="fill-green-500" />
     </CheckboxPrimitive.Indicator>
   </CheckboxPrimitive.Root>
 ));

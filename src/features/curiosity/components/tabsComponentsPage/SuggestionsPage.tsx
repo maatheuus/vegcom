@@ -1,6 +1,6 @@
-import { LightBulbOutlinedIcon } from "@/shared/icons";
 import Text from "@/shared/ui/Text";
 import { useGSAP } from "@gsap/react";
+import { LightbulbFilamentIcon } from "@phosphor-icons/react";
 import clsx from "clsx";
 import gsap from "gsap";
 import { useRouter, useSearchParams } from "next/navigation";
@@ -161,7 +161,7 @@ export default function SuggestionsPage() {
         </div>
         {filteredSuggestions.length === 0 && (
           <div className="py-20 text-center">
-            <LightBulbOutlinedIcon
+            <LightbulbFilamentIcon
               size={48}
               className="mx-auto mb-2 text-green-200/30"
             />

@@ -1,11 +1,11 @@
-import {
-  ChefHatOutlinedIcon,
-  ClockOutlinedIcon,
-  TargetOutlinedIcon,
-  UtensilsOutlinedIcon,
-} from "@/shared/icons";
 import Col from "@/shared/ui/Layout/Helpers/Col";
 import Text from "@/shared/ui/Text";
+import {
+  ChefHatIcon,
+  ClockIcon,
+  ForkKnifeIcon,
+  TargetIcon,
+} from "@phosphor-icons/react/ssr";
 import { memo } from "react";
 
 interface Props extends React.HTMLAttributes<HTMLDivElement> {
@@ -26,25 +26,25 @@ const Details = memo(function Details({
 }: Props) {
   const details = [
     {
-      icon: <ClockOutlinedIcon className="h-5 w-5 text-green-500" />,
+      icon: <ClockIcon className="h-5 w-5 text-green-500" />,
       label: "Tempo de preparo",
       value: preparationTime,
       ariaLabel: `Tempo de preparo: ${preparationTime}`,
     },
     {
-      icon: <UtensilsOutlinedIcon className="h-5 w-5 text-green-500" />,
+      icon: <ForkKnifeIcon className="h-5 w-5 text-green-500" />,
       label: "Porções",
       value: servings,
       ariaLabel: `Rendimento: ${servings} porções`,
     },
     {
-      icon: <TargetOutlinedIcon className="h-5 w-5 text-green-500" />,
+      icon: <TargetIcon className="h-5 w-5 text-green-500" />,
       label: "Dificuldade",
       value: difficulty,
       ariaLabel: `Nível de dificuldade: ${difficulty}`,
     },
     {
-      icon: <ChefHatOutlinedIcon className="h-5 w-5 text-green-500" />,
+      icon: <ChefHatIcon className="h-5 w-5 text-green-500" />,
       label: "Categoria",
       value: category,
       ariaLabel: `Categoria: ${category}`,

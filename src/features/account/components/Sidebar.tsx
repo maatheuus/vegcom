@@ -1,6 +1,13 @@
 "use client";
 
 import { cn } from "@/shared/lib/utils";
+import {
+  ChefHatIcon,
+  GearIcon,
+  HeartIcon,
+  ScrollIcon,
+  UserCircleIcon,
+} from "@phosphor-icons/react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
@@ -11,8 +18,36 @@ interface SidebarItem {
 }
 
 interface SidebarProps {
-  items: SidebarItem[];
+  items?: SidebarItem[];
 }
+
+const sidebarItems = [
+  {
+    label: "Perfil",
+    href: "/account",
+    icon: <UserCircleIcon size={20} />,
+  },
+  {
+    label: "Minhas Receitas",
+    href: "/account/recipes",
+    icon: <ChefHatIcon size={20} />,
+  },
+  {
+    label: "Favoritos",
+    href: "/account/favorites",
+    icon: <HeartIcon size={20} />,
+  },
+  {
+    label: "Assinatura",
+    href: "/account/subscription",
+    icon: <ScrollIcon size={20} />,
+  },
+  {
+    label: "Configurações",
+    href: "/account/settings",
+    icon: <GearIcon size={20} />,
+  },
+];
 
 export default function Sidebar({ items }: SidebarProps) {
   const pathname = usePathname();
@@ -20,7 +55,7 @@ export default function Sidebar({ items }: SidebarProps) {
   return (
     <nav className="mx-auto w-fit rounded-xl border border-green-200 bg-green-50 p-2 lg:w-full">
       <ul className="flex flex-row gap-1 lg:flex-col">
-        {items.map((item) => {
+        {(items || sidebarItems).map((item) => {
           const isActive = pathname === item.href;
 
           return (

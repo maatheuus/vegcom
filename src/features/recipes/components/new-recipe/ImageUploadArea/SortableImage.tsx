@@ -1,13 +1,13 @@
-import {
-  FrameOutlinedIcon,
-  GripVerticalOutlinedIcon,
-  TrashOutlinedIcon,
-} from "@/shared/icons";
 import Button from "@/shared/ui/Button";
 import Row from "@/shared/ui/Layout/Helpers/Row";
 import { TooltipContent, TooltipTrigger } from "@/shared/ui/Tooltip";
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
+import {
+  FrameCornersIcon,
+  SquaresFourIcon,
+  TrashIcon,
+} from "@phosphor-icons/react";
 import Image from "next/image";
 import { Fragment, useState } from "react";
 import DialogImage from "./DialogImage";
@@ -74,10 +74,7 @@ export default function SortableImage({
               {...listeners}
               className="absolute top-0 left-0 z-20 cursor-grab rounded-r bg-white/80 p-1 transition-colors hover:bg-green-50"
             >
-              <GripVerticalOutlinedIcon
-                size={18}
-                className="size-fit fill-green-500"
-              />
+              <SquaresFourIcon size={18} className="size-fit fill-green-500" />
             </div>
           )}
 
@@ -87,18 +84,13 @@ export default function SortableImage({
               size="md"
               className="p-1 hover:bg-green-50"
               onClick={handleRemove}
-              icon={
-                <TrashOutlinedIcon
-                  size={18}
-                  className="text-black-100 size-fit"
-                />
-              }
+              icon={<TrashIcon size={18} className="text-black-100 size-fit" />}
             />
           </div>
 
           {isFirstImage && (
             <div className="textgreen-500 absolute right-0.5 bottom-0 z-10 flex items-center rounded-full bg-green-500 fill-green-50 p-1.5">
-              <FrameOutlinedIcon size={18} />
+              <FrameCornersIcon size={18} className="size-fit fill-green-50" />
             </div>
           )}
 

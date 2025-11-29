@@ -6,7 +6,6 @@ import { z } from "zod";
 
 import { culinaryLevelOptions } from "@/features/account/components/utils";
 import { useSignupFormState } from "@/features/auth/hooks/queries/useSignupFormState";
-import { LoadingOutlinedIcon } from "@/shared/icons";
 import {
   Form,
   FormControl,
@@ -30,6 +29,7 @@ import Text from "@/shared/ui/Text";
 import Textarea from "@/shared/ui/TextArea";
 
 import type { CitySearchResult } from "@/shared/lib/api/cities";
+import { CircleNotchIcon } from "@phosphor-icons/react";
 import { type FC } from "react";
 import SubmitButton from "../SubmitButton/SubmitButton";
 
@@ -235,7 +235,7 @@ const UserInformation: FC<React.ComponentProps<"form">> = ({
             disabled={isSubmitting}
             isLoading={isSubmitting}
           >
-            <LoadingOutlinedIcon className="!h-6 !w-6 animate-spin" />
+            <CircleNotchIcon className="!h-6 !w-6 animate-spin" />
           </SubmitButton>
         </Col>
       </form>

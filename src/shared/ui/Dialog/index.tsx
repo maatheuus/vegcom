@@ -1,7 +1,7 @@
 "use client";
 
+import { XIcon } from "@phosphor-icons/react/ssr";
 import * as DialogPrimitive from "@radix-ui/react-dialog";
-import { X } from "lucide-react";
 import * as React from "react";
 
 import { cn } from "@/shared/lib/utils";
@@ -46,7 +46,7 @@ const DialogContent = React.forwardRef<
     >
       {children}
       <DialogPrimitive.Close className="data-[state=open]:bg-accent absolute top-4 right-4 cursor-pointer rounded-sm opacity-70 ring-offset-green-200 transition-opacity hover:opacity-100 focus:ring-0 focus:outline-none disabled:pointer-events-none data-[state=open]:text-green-500">
-        <X className="size-5 text-green-50" />
+        <XIcon className="size-5 text-green-50" />
         <span className="sr-only">Close</span>
       </DialogPrimitive.Close>
     </DialogPrimitive.Content>
