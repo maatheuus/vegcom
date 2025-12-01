@@ -127,7 +127,7 @@ export default function SuggestionsPage() {
         </div>
       </div>
 
-      <main className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
+      <main className="container__default py-8 sm:px-6 lg:px-8">
         <div className="mb-8 text-center">
           <Text className="font-maitree font-semibold text-green-500">
             Selecione um tópico para iniciar uma conversa.

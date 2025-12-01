@@ -73,7 +73,7 @@ export function CategoriesSection() {
       ref={containerRef}
       className="bg-gradient-to-b from-green-100 to-white py-24"
     >
-      <div className="mx-auto max-w-7xl px-4">
+      <div className="container__default">
         <div className="category-title mb-16 text-center">
           <h2 className="font-frank text-4xl font-bold text-green-600 md:text-5xl">
             Navegue por Categoria
