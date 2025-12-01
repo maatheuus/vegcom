@@ -44,7 +44,7 @@ export function Default({
     <Col
       as="main"
       className={clsx(
-        "size-full gap-y-4 bg-green-50 md:gap-y-5 lg:gap-y-7",
+        "padding__default size-full gap-y-4 bg-green-50",
         className,
       )}
     >
@@ -53,7 +53,7 @@ export function Default({
       <Grid
         columns="16"
         className={clsx(
-          "mx-auto h-auto w-full max-w-[65rem] flex-auto py-4 md:max-w-[75rem] md:py-6 lg:max-w-[85rem] lg:py-8",
+          "container__content h-auto w-full flex-auto",
           gridClassName,
         )}
       >

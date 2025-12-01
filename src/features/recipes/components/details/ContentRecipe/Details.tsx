@@ -53,7 +53,7 @@ const Details = memo(function Details({
 
   return (
     <div
-      className={`grid w-full grid-cols-1 gap-4 self-center md:grid-cols-4 ${className ? className : ""}`}
+      className={`grid w-full grid-cols-2 gap-4 self-center md:grid-cols-4 ${className ? className : ""}`}
       role="list"
       aria-label="Detalhes da receita"
       {...props}

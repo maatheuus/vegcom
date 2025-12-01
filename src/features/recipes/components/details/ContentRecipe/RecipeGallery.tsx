@@ -45,7 +45,7 @@ export default function RecipeGallery({ images }: RecipeGalleryProps) {
   return (
     <div className="flex w-full flex-col gap-4">
       <div
-        className="relative aspect-square h-full w-full cursor-pointer overflow-hidden rounded-lg md:aspect-[18/9]"
+        className="relative aspect-square min-h-[340px] w-full cursor-pointer overflow-hidden rounded-lg md:aspect-[18/9] md:min-h-auto"
         onClick={() => openGallery(images.indexOf(featuredImage))}
       >
         <Image
@@ -61,14 +61,12 @@ export default function RecipeGallery({ images }: RecipeGalleryProps) {
           {otherImages.map((img, index) => {
             const originalIndex = images.indexOf(img);
 
-            // Mobile: show only first thumbnail with overlay if there are more
             const isMobileVisible = index < maxThumbnailsMobile;
             const showOnMobile =
               isMobileVisible && otherImages.length > maxThumbnailsMobile;
             const mobileRemainingCount =
               otherImages.length - maxThumbnailsMobile;
 
-            // Desktop: show first 4 thumbnails, last one with overlay if there are more
             const isLastDesktopThumbnail = index === maxThumbnailsDesktop - 1;
             const showOnDesktop =
               isLastDesktopThumbnail &&

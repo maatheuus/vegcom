@@ -1,0 +1,13 @@
+@reference "../../../app/global.css";
+
+.container__default {
+  @apply mx-auto max-w-7xl px-6 md:px-4 xll:px-0;
+}
+
+.container__content {
+  @apply mx-auto py-4 md:max-w-5xl md:py-6 lg:max-w-xll lg:py-8 xll:px-0;
+}
+
+.padding__default {
+  @apply px-4 md:px-6 lg:px-8;
+}

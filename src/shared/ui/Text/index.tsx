@@ -60,13 +60,13 @@ const typeToAsMap = {
 };
 // className='text-3'
 const typeToClassNameMap = {
-  [Type.HeadingOne]: "text-3xl sm:text-[2.5rem]/tight sm:tracking-px",
-  [Type.HeadingTwo]: "text-[1.75rem]/9 sm:text-4xl/tight",
-  [Type.HeadingThree]: "text-2xl sm:text-[1.75rem]/none",
-  [Type.HeadingFour]: "text-xl sm:text-2xl/tight",
-  [Type.HeadingFive]: "text-base sm:text-xl/tight",
+  [Type.HeadingOne]: "text-3xl md:text-[2.5rem]/tight md:tracking-px",
+  [Type.HeadingTwo]: "text-[1.75rem]/9 md:text-4xl/tight",
+  [Type.HeadingThree]: "text-2xl md:text-[1.75rem]/none",
+  [Type.HeadingFour]: "text-xl md:text-2xl/tight",
+  [Type.HeadingFive]: "text-base md:text-xl/tight",
   [Type.HeadingSix]: "text-xs/2xl",
-  [Type.SubtitleOne]: "text-xl sm:text-4xl/[1.4]",
+  [Type.SubtitleOne]: "text-xl md:text-4xl/[1.4]",
   [Type.SubtitleTwo]: "text-lg sm:text-3xl/[1.1]",
   [Type.SubtitleThree]: "text-base lg:text-2xl/[1.4]",
   [Type.BodyOne]: "text-lg sm:text-xl/normal tracking-[0.03125rem]",

@@ -48,7 +48,7 @@ const Header = memo(function Header({
     setCurrentSavedCount((prev) => (saved ? prev + 1 : prev - 1));
   };
 
-  const FIRST_ROW_DATA = [
+  const ROW_DATA = [
     {
       label: authorName,
       icon: <UserIcon />,
@@ -98,7 +98,7 @@ const Header = memo(function Header({
       <div className="inline-flex w-full items-baseline justify-between">
         <Text
           as="h1"
-          type={Text.Type.HeadingTwo}
+          type={Text.Type.HeadingThree}
           weight={Text.Weight.Medium}
           className="font-lora font-semibold text-green-500"
         >
@@ -125,7 +125,7 @@ const Header = memo(function Header({
           role="list"
           aria-label="Informações da receita"
         >
-          {FIRST_ROW_DATA.map((item, idx) => {
+          {ROW_DATA.map((item, idx) => {
             const Icon = !item.separator && item?.icon?.type;
             return (
               <Fragment key={idx}>

@@ -43,7 +43,7 @@ export default function ContentRecipe() {
           category="Lunch"
         />
       </Col>
-      <Grid className="grid-cols-1 gap-10 md:grid-cols-2 lg:grid-cols-3">
+      <Grid className="grid-cols-1 gap-6 md:grid-cols-2 md:gap-10 lg:grid-cols-3">
         <ChecklistSection
           title="Ingredients"
           type="ingredients"

@@ -5,6 +5,7 @@ import { Toaster } from "@/shared/ui/toaster";
 import { Analytics } from "@vercel/analytics/next";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import type { Metadata } from "next";
+import "../src/assets/css/responsiveness.css";
 import "./global.css";
 
 export const metadata: Metadata = {

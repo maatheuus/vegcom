@@ -5,7 +5,7 @@ import Layout from "@/shared/ui/Layout";
 export default function page() {
   return (
     <Layout.Default className="style-scrollbar overflow-y-auto">
-      <section className="relative container mx-auto space-y-8 px-4">
+      <section className="relative space-y-8 overflow-hidden">
         <Header title="Nova receita" />
 
         <NewRecipeForm />

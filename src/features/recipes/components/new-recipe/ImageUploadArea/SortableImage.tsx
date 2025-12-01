@@ -72,9 +72,9 @@ export default function SortableImage({
           {!image.loading && !isOneImage && (
             <div
               {...listeners}
-              className="absolute top-0 left-0 z-20 cursor-grab rounded-r bg-white/80 p-1 transition-colors hover:bg-green-50"
+              className="absolute top-0 left-0 z-20 cursor-grab rounded-r bg-white/80 p-2 transition-colors hover:bg-green-50"
             >
-              <SquaresFourIcon size={18} className="size-fit fill-green-500" />
+              <SquaresFourIcon size={20} className="size-fit fill-green-500" />
             </div>
           )}
 
