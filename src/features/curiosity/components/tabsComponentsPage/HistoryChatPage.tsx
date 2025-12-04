@@ -1,10 +1,18 @@
 import Button from "@/shared/ui/Button";
 import { Input } from "@/shared/ui/Input";
 import Col from "@/shared/ui/Layout/Helpers/Col";
+import {
+  Sheet,
+  SheetClose,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+} from "@/shared/ui/sheet";
 import Text from "@/shared/ui/Text";
 import {
   AlienIcon,
   ChatCircleIcon,
+  DotsThreeIcon,
   PencilSimpleIcon,
   PlusCircleIcon,
   TrashIcon,
@@ -26,6 +34,7 @@ export default function HistoryChatPage() {
   const [chatIdToRename, setChatIdToRename] = useState<string | null>(null);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [chatIdToDelete, setChatIdToDelete] = useState<string | null>(null);
+  const [menuChatId, setMenuChatId] = useState<string | null>(null);
 
   const visibleChats = useMemo(() => {
     return chats
@@ -51,7 +60,7 @@ export default function HistoryChatPage() {
   return (
     <>
       <Col className="h-full min-h-0 w-full">
-        <div className="flex w-full items-center justify-between gap-6 border-b border-gray-100 py-4">
+        <div className="flex w-full items-center justify-between gap-4 border-b border-gray-100 py-4 md:gap-6">
           <button
             onClick={createNewChat}
             disabled={chats.length >= 2}
@@ -119,29 +128,44 @@ export default function HistoryChatPage() {
                       </Text>
                     </div>
 
-                    <div className="flex items-center gap-1 opacity-0 transition-opacity group-hover:opacity-100">
-                      <Button.Icon
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          setChatIdToRename(chat.id);
-                          setIsRenameModalOpen(true);
-                        }}
-                        className="rounded p-1 text-green-200 hover:bg-green-100"
-                        variant="text"
-                        icon={<PencilSimpleIcon size={16} />}
-                        type="button"
-                      />
+                    <div className="flex items-center gap-1">
+                      <div className="hidden items-center gap-1 opacity-0 transition-opacity group-hover:opacity-100 md:flex">
+                        <Button.Icon
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            setChatIdToRename(chat.id);
+                            setIsRenameModalOpen(true);
+                          }}
+                          className="rounded p-1 text-green-200 hover:bg-green-100"
+                          variant="text"
+                          icon={<PencilSimpleIcon size={16} />}
+                          type="button"
+                        />
 
-                      <Button.Icon
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          setChatIdToDelete(chat.id);
-                          setIsDeleteModalOpen(true);
-                        }}
-                        className="rounded p-1 text-green-200 hover:bg-red-50 hover:text-red-600"
-                        variant="text"
-                        icon={<TrashIcon size={16} />}
-                      />
+                        <Button.Icon
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            setChatIdToDelete(chat.id);
+                            setIsDeleteModalOpen(true);
+                          }}
+                          className="rounded p-1 text-green-200 hover:bg-red-50 hover:text-red-600"
+                          variant="text"
+                          icon={<TrashIcon size={16} />}
+                        />
+                      </div>
+
+                      <div className="relative flex items-center gap-1 md:hidden">
+                        <Button.Icon
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            setMenuChatId(chat.id);
+                          }}
+                          className="rounded p-1 text-green-200 hover:bg-green-100"
+                          variant="text"
+                          icon={<DotsThreeIcon size={18} />}
+                          type="button"
+                        />
+                      </div>
                     </div>
                   </div>
                 );
@@ -162,6 +186,52 @@ export default function HistoryChatPage() {
         isDeleteModalOpen={isDeleteModalOpen}
         onCloseDeleteModal={setIsDeleteModalOpen}
       />
+
+      <Sheet
+        open={!!menuChatId}
+        onOpenChange={(open) => !open && setMenuChatId(null)}
+      >
+        <SheetContent side="bottom" className="rounded-t-2xl">
+          <SheetHeader className="mb-4 text-left">
+            <SheetTitle className="font-lora text-lg text-green-800">
+              Opções da conversa
+            </SheetTitle>
+          </SheetHeader>
+          <div className="flex flex-col gap-2">
+            <SheetClose asChild>
+              <Button.Icon
+                onClick={(e) => {
+                  e.stopPropagation();
+                  if (menuChatId) {
+                    setChatIdToRename(menuChatId);
+                    setIsRenameModalOpen(true);
+                  }
+                }}
+                className="font-lora w-full justify-start rounded-lg bg-green-50 px-4 py-3 text-base text-green-700 hover:bg-green-100"
+                variant="text"
+                leftIcon={<PencilSimpleIcon size={20} />}
+                text="Renomear conversa"
+              />
+            </SheetClose>
+
+            <SheetClose asChild>
+              <Button.Icon
+                onClick={(e) => {
+                  e.stopPropagation();
+                  if (menuChatId) {
+                    setChatIdToDelete(menuChatId);
+                    setIsDeleteModalOpen(true);
+                  }
+                }}
+                className="font-lora w-full justify-start rounded-lg bg-red-50 px-4 py-3 text-base text-red-600 hover:bg-red-100"
+                variant="text"
+                leftIcon={<TrashIcon size={20} />}
+                text="Excluir conversa"
+              />
+            </SheetClose>
+          </div>
+        </SheetContent>
+      </Sheet>
     </>
   );
 }

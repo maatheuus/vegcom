@@ -5,8 +5,8 @@ import { Suspense } from "react";
 
 export default function Page() {
   return (
-    <Layout.Default className="">
-      <Col className="relative container mx-auto flex-1 space-y-8 px-4">
+    <Layout.Default className="style-scrollbar h-full">
+      <Col className="relative flex-1 space-y-8">
         <Suspense fallback={<div>loading...</div>}>
           <TabsLayout />
         </Suspense>

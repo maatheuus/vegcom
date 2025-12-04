@@ -25,7 +25,7 @@ export default function DeleteChatModal({
 
   return (
     <Dialog open={isDeleteModalOpen} onOpenChange={onCloseDeleteModal}>
-      <DialogContent>
+      <DialogContent className="w-[calc(100vw-2rem)] rounded-md">
         <DialogHeader>
           <DialogTitle className="font-lora font-normal italic">
             Essa ação não pode ser desfeita.
