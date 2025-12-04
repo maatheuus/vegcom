@@ -61,7 +61,7 @@ export default function CuriositiesPage() {
   }, []);
 
   return (
-    <div className="h-full overflow-auto">
+    <div className="mt-12 h-full overflow-auto md:mt-0">
       <main className="my-auto flex h-full flex-1 items-center justify-center">
         <div className="w-full max-w-3xl space-y-6">
           {currentCuriosity && (

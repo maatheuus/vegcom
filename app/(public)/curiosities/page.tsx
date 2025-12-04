@@ -4,7 +4,7 @@ import CuriositiesPage from "@/features/curiosity/components/tabsComponentsPage/
 
 export default function page() {
   return (
-    <Layout.Default className="style-scrollbar overflow-y-auto">
+    <Layout.Default className="style-scrollbar h-[90dvh]">
       <CuriositiesPage />
     </Layout.Default>
   );
