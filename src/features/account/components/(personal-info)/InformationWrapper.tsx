@@ -67,8 +67,9 @@ export default function InformationWrapper({ children }: Props) {
       <Header
         title="Informações do Perfil"
         subTitle="Gerencie suas informações pessoais e foto de perfil"
+        className="flex-col items-start gap-4 md:flex-row"
       >
-        <Row className="gap-x-2">
+        <Row className="hidden gap-x-2 md:flex">
           <Button
             variant="text"
             size="default"
@@ -106,6 +107,37 @@ export default function InformationWrapper({ children }: Props) {
         form={form}
         setBioLength={setBioLength}
       />
+      <Row className="ml-auto flex justify-end gap-x-2 md:hidden">
+        <Button
+          variant="text"
+          size="default"
+          onClick={() => setIsEditing(false)}
+          aria-hidden={!isEditing}
+          className={clsx(
+            "font-maitree cursor-pointer border-none bg-transparent transition-all duration-300",
+            isEditing
+              ? "visible z-10 translate-x-0 opacity-100"
+              : "pointer-events-none invisible z-0 translate-x-24 opacity-0",
+          )}
+        >
+          Cancelar
+        </Button>
+        <Button.Icon
+          leftIcon={
+            isEditing ? (
+              <FloppyDiskIcon className="!size-4" />
+            ) : (
+              <PencilSimpleIcon className="!size-4" />
+            )
+          }
+          variant="filled"
+          size="default"
+          onClick={() => setIsEditing(!isEditing)}
+          className="font-maitree cursor-pointer bg-green-500 py-2"
+        >
+          {isEditing ? "Salvar Perfil" : "Editar Perfil"}
+        </Button.Icon>
+      </Row>
     </>
   );
 }

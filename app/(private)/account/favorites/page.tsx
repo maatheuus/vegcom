@@ -1,8 +1,7 @@
 import RecipeActions from "@/features/account/components/(recipes)/RecipeActions";
 import AccountLayout from "@/features/account/components/AccountLayout";
 import Header from "@/features/account/components/Header";
-import Button from "@/shared/ui/Button";
-import { HeartIcon } from "@phosphor-icons/react/ssr";
+import { HeartIcon, PlusCircleIcon } from "@phosphor-icons/react/ssr";
 
 export default function Page() {
   return (
@@ -10,15 +9,19 @@ export default function Page() {
       <Header
         title="Receitas Favoritas"
         subTitle="Suas receitas salvas e favoritas"
-      >
-        <Button.Link
-          leftIcon={<HeartIcon className="!size-4" />}
-          size="md"
-          className="font-maitree cursor-pointer bg-green-500 py-2"
-          href="/recipes"
-          text="Explorar Receitas"
-        />
-      </Header>
+        actions={[
+          {
+            text: "Explorar Receitas",
+            icon: <HeartIcon className="!size-4" />,
+            href: "/recipes",
+          },
+          {
+            text: "Nova Receita",
+            icon: <PlusCircleIcon className="!size-4" />,
+            href: "/new-recipe",
+          },
+        ]}
+      />
 
       <RecipeActions isFavorites />
     </AccountLayout>

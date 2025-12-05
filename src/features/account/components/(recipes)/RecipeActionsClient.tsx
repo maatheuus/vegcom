@@ -105,7 +105,7 @@ export default function RecipeActions({ isFavorites }: Props) {
 
   return (
     <>
-      <div className="flex w-full flex-col justify-start gap-4 md:flex-row md:justify-between">
+      <div className="flex w-full flex-col items-start justify-start gap-4 md:flex-row md:justify-between">
         <RecipeFilter />
       </div>
 
