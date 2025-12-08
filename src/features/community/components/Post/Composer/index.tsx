@@ -3,8 +3,9 @@ import { Input } from "@/shared/ui/Input";
 import Col from "@/shared/ui/Layout/Helpers/Col";
 import { EditorContent } from "@tiptap/react";
 import clsx from "clsx";
-import { useCallback, useRef, type HTMLAttributes } from "react";
-import { CustomImageTiptapExtension } from "../Tiptap/Helpers/CustomTitapExtensions";
+import { useCallback, useRef, useState, type HTMLAttributes } from "react";
+import type { PostImageAttachment } from "../Tiptap/Helpers/ImageContainer";
+import ImageContainer from "../Tiptap/Helpers/ImageContainer";
 import PostComposerActions from "./Actions";
 import PostComposerTextArea from "./PostComposerTextArea";
 
@@ -16,36 +17,52 @@ export default function PostComposer({
   const imageInputRef = useRef<HTMLInputElement | null>(null);
   const postTitleRef = useRef<HTMLInputElement | null>(null);
 
+  const [attachments, setAttachments] = useState<PostImageAttachment[]>([]);
+
+  const isImageLimitReached = attachments.length >= 4;
+
   const handleImageUpload = useCallback(
     (event: React.ChangeEvent<HTMLInputElement>) => {
       const files = event.target.files;
-      if (!files || !editor) return;
+      if (!files) return;
+
+      const currentCount = attachments.length;
+      const newImagesCount = files.length;
+
+      if (currentCount + newImagesCount > 4) {
+        alert("Você só pode adicionar até 4 imagens por post.");
+        if (imageInputRef.current) {
+          imageInputRef.current.value = "";
+        }
+        return;
+      }
+
+      const newAttachments: PostImageAttachment[] = [];
 
       Array.from(files).forEach((file) => {
         if (file.type.startsWith("image/")) {
-          const reader = new FileReader();
-          reader.onload = () => {
-            const src = reader.result as string;
-            editor
-              ?.chain()
-              .focus()
-              .setCustomImage({
-                src,
-                alt: file.name,
-                title: file.name,
-              })
-              .run();
-          };
-          reader.readAsDataURL(file);
+          const previewSrc = URL.createObjectURL(file);
+
+          newAttachments.push({
+            file,
+            previewSrc,
+            id: previewSrc,
+          });
         }
       });
+
+      setAttachments((prev) => [...prev, ...newAttachments]);
 
       if (imageInputRef.current) {
         imageInputRef.current.value = "";
       }
     },
-    [editor],
+    [attachments.length],
   );
+
+  const handleRemoveImage = useCallback((id: string) => {
+    setAttachments((prev) => prev.filter((img) => img.id !== id));
+  }, []);
 
   const addEmoji = useCallback(
     (emoji: { native: string }) => {
@@ -54,10 +71,32 @@ export default function PostComposer({
     [editor],
   );
 
+  const handleSubmit = () => {
+    if (!editor) return;
+
+    const payload = {
+      title: postTitleRef.current?.value,
+      contentHTML: editor.getHTML(),
+      contentText: editor.getText(),
+      images: attachments.map((a) => a.file),
+    };
+
+    console.log("Enviando:", payload);
+    editor.commands.clearContent();
+    attachments.length = 0;
+    if (postTitleRef.current) {
+      postTitleRef.current.value = "";
+    }
+  };
+
   return (
     <Col className={clsx(className)} {...props}>
       <div className="relative">
         <PostComposerTextArea editor={editor}>
+          <ImageContainer
+            images={attachments}
+            onRemoveImage={handleRemoveImage}
+          />
           <Input
             ref={postTitleRef}
             type="text"
@@ -69,18 +108,18 @@ export default function PostComposer({
           <EditorContent
             editor={editor}
             className={clsx(
-              "hidden-scrollbar h-full max-h-[20rem] w-full overflow-hidden py-2",
+              "hidden-scrollbar h-auto max-h-[20rem] min-h-24 w-full overflow-y-auto py-2",
               "[&_.is-editor-empty]:before:content-[attr(data-placeholder)]",
               "[&_.is-editor-empty]:before:absolute",
               "[&_.is-editor-empty]:before:text-green-500/80",
               "[&_.is-editor-empty]:before:top-0 [&_.is-editor-empty]:before:left-0",
               "[&_.is-editor-empty]:before:pointer-events-none",
               "[&_.is-editor-empty]:before:text-base",
+              "[&_.ProseMirror]:pb-8",
+              "[&_.ProseMirror]:min-h-[100px]",
             )}
           />
         </PostComposerTextArea>
-
-        {editor && <CustomImageTiptapExtension editor={editor} />}
       </div>
 
       <PostComposerActions
@@ -88,6 +127,8 @@ export default function PostComposer({
         editor={editor}
         imageInputRef={imageInputRef}
         addEmoji={addEmoji}
+        isImageLimitReached={isImageLimitReached}
+        handleSubmit={handleSubmit}
       />
 
       <input
@@ -97,6 +138,7 @@ export default function PostComposer({
         multiple
         onChange={handleImageUpload}
         className="hidden"
+        disabled={isImageLimitReached}
       />
     </Col>
   );

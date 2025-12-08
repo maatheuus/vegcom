@@ -1,70 +1,44 @@
 import Button from "@/shared/ui/Button";
 import Row from "@/shared/ui/Layout/Helpers/Row";
 import { XIcon } from "@phosphor-icons/react/ssr";
-import { Editor } from "@tiptap/react";
 import Image from "next/image";
-import { useCallback } from "react";
 
-interface ImageContainerProps {
-  editor: Editor;
-  images: Array<{ src: string; alt?: string; title?: string }>;
-  onRemoveImage?: (src: string) => void;
+export interface PostImageAttachment {
+  file: File;
+  previewSrc: string;
+  id: string;
 }
 
-const ImageContainer = ({
-  editor,
-  images,
-  onRemoveImage,
-}: ImageContainerProps) => {
-  const removeImage = useCallback(
-    (src: string) => {
-      const transaction = editor.state.tr;
-      let hasRemoved = false;
+interface ImageContainerProps {
+  images: PostImageAttachment[];
+  onRemoveImage: (id: string) => void;
+}
 
-      editor.state.doc.descendants((node, pos) => {
-        if (node.type.name === "customImage" && node.attrs.src === src) {
-          transaction.delete(pos, pos + node.nodeSize);
-          hasRemoved = true;
-        }
-      });
-
-      if (hasRemoved) {
-        editor.view.dispatch(transaction);
-
-        if (onRemoveImage) {
-          onRemoveImage(src);
-        }
-      }
-    },
-    [editor, onRemoveImage],
-  );
-
+const ImageContainer = ({ images, onRemoveImage }: ImageContainerProps) => {
   if (images.length === 0) return null;
 
   return (
-    <div className="mt-3 rounded-md p-3">
-      <Row className="flex-wrap justify-end gap-2">
-        {images.map((image, index) => (
-          <div key={`${image.src}-${index}`} className="group relative">
+    <div className="mt-3 w-full overflow-x-auto p-1">
+      <Row className="w-max gap-3 transition-all">
+        {images.map((image) => (
+          <div key={image.id} className="group relative">
             <Image
-              width={200}
-              height={150}
+              width={80}
+              height={80}
               loading="lazy"
-              src={image.src}
-              alt={image.alt || "uploaded image"}
-              className="max-h-40 max-w-[200px] rounded-lg object-cover"
+              src={image.previewSrc}
+              alt="uploaded image"
+              className="size-16 rounded-lg object-cover shadow-sm sm:size-12"
             />
 
-            <Button
+            <Button.Icon
               variant="text"
-              size="none"
+              icon={<XIcon size={14} weight="bold" />}
               type="button"
-              onClick={() => removeImage(image.src)}
-              className="absolute -top-2 -right-2 flex cursor-pointer items-center justify-center rounded-full bg-red-500 p-1 text-white opacity-0 transition-all group-hover:opacity-100 hover:bg-red-600"
+              onClick={() => onRemoveImage(image.id)}
+              className="absolute top-0 -right-2 z-10 flex cursor-pointer items-center justify-center rounded-full bg-red-500 p-1 text-white opacity-100 shadow-md transition-all hover:bg-red-600 sm:opacity-0 sm:group-hover:opacity-100"
               title="Remover imagem"
-            >
-              <XIcon size={16} />
-            </Button>
+            />
           </div>
         ))}
       </Row>

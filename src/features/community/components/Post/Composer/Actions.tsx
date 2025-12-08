@@ -18,24 +18,24 @@ interface Props extends HTMLAttributes<HTMLDivElement> {
   imageInputRef: React.RefObject<HTMLInputElement | null>;
   postTitleInputRef: React.RefObject<HTMLInputElement | null>;
   editor: Editor | null;
+  isImageLimitReached?: boolean;
+  handleSubmit?: () => void;
 }
 
 export default function PostComposerActions({
   className,
   editor,
   addEmoji,
+  handleSubmit,
   postTitleInputRef,
   imageInputRef,
+  isImageLimitReached,
   ...props
 }: Props) {
   const handleImageClick = () => {
-    imageInputRef.current?.click();
-  };
-
-  const handleSendMessage = () => {
-    // editor?.commands.clearContent();
-    console.log("postTitleInputRef:", postTitleInputRef.current?.value);
-    console.log("Sending message:", editor?.getHTML());
+    if (!isImageLimitReached) {
+      imageInputRef.current?.click();
+    }
   };
 
   const emojiPickerOptions: EmojiPickerProps = {
@@ -69,7 +69,13 @@ export default function PostComposerActions({
       <Row className="items-center gap-x-4">
         <Button.Icon
           variant="text"
-          className="p-0 text-green-200 hover:text-green-500"
+          className={clsx(
+            "p-0",
+            isImageLimitReached
+              ? "cursor-not-allowed text-gray-400 opacity-50"
+              : "text-green-200 hover:text-green-500",
+          )}
+          disabled={isImageLimitReached}
           leftIcon={<ImageIcon size={24} className="text-current" />}
           onClick={handleImageClick}
         />
@@ -92,10 +98,10 @@ export default function PostComposerActions({
       <Button.Icon
         variant="filled"
         rightIcon={<PaperPlaneTiltIcon size={24} />}
-        disabled={editor?.isEmpty && postTitleInputRef?.current?.value === ""}
+        disabled={editor?.isEmpty || postTitleInputRef?.current?.value === ""}
         className="rounded-full"
-        title="Send message"
-        onClick={handleSendMessage}
+        title="Enviar mensagem"
+        onClick={handleSubmit}
       />
     </Row>
   );

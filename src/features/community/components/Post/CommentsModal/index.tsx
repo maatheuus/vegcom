@@ -3,7 +3,6 @@ import Button from "@/shared/ui/Button";
 import {
   Dialog,
   DialogContent,
-  DialogFooter,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
@@ -14,7 +13,7 @@ import Col from "@/shared/ui/Layout/Helpers/Col";
 import Row from "@/shared/ui/Layout/Helpers/Row";
 import Textarea from "@/shared/ui/TextArea";
 
-import { MAX_LENGTH_FOR_TEXTAREA } from "@/shared/lib/globalVariables";
+import { MAX_LENGTH_FOR_INPUT } from "@/shared/lib/globalVariables";
 import Text from "@/shared/ui/Text";
 import { ChatCircleTextIcon, SparkleIcon } from "@phosphor-icons/react";
 import clsx from "clsx";
@@ -96,7 +95,10 @@ export default function CommentsModal({
       </DialogTrigger>
 
       <DialogContent
-        className={clsx("max-w-2xl gap-0 border-gray-200 p-0", className)}
+        className={clsx(
+          "max-w-[calc(100vw-2rem)] gap-0 overflow-hidden rounded-2xl border-gray-200 p-0 md:max-w-2xl",
+          className,
+        )}
       >
         <Col className="border-b border-gray-100 bg-green-50 px-6 py-5">
           <DialogHeader className="space-y-3">
@@ -109,7 +111,7 @@ export default function CommentsModal({
                 <ChatCircleTextIcon size={16} className="text-green-500" />
                 <Text
                   as="span"
-                  type={Text.Type.BodySix}
+                  type={Text.Type.BodyFive}
                   weight={Text.Weight.Medium}
                   className="text-green-500"
                 >
@@ -130,7 +132,7 @@ export default function CommentsModal({
                 />
                 <Text
                   as="span"
-                  type={Text.Type.BodySix}
+                  type={Text.Type.BodyFive}
                   weight={Text.Weight.Medium}
                   className="text-green-500"
                 >
@@ -140,7 +142,7 @@ export default function CommentsModal({
             </Row>
           </DialogHeader>
 
-          <div className="style-scrollbar max-h-[400px] overflow-y-scroll">
+          <div className="style-scrollbar max-h-[250px] overflow-y-scroll md:max-h-[400px]">
             {variant === "image" && data.postContent.postResources?.images && (
               <Col className="mt-4 gap-y-3">
                 <Text
@@ -183,7 +185,7 @@ export default function CommentsModal({
         </Col>
 
         <Col className="px-6 py-5">
-          <div className="style-scrollbar h-64 max-w-[575px] overflow-y-scroll pr-2">
+          <div className="style-scrollbar h-64 max-h-[10rem] max-w-[575px] overflow-y-scroll pr-2 md:max-h-full md:max-w-full">
             <Col className="gap-y-5">
               {comments &&
                 comments.map((comment, index) => (
@@ -239,45 +241,36 @@ export default function CommentsModal({
         </Col>
 
         <Col className="border-t border-gray-200 px-6 py-4">
-          <Row className="items-end gap-x-3">
-            <Avatar className="h-9 w-9 ring-2 ring-gray-100">
-              <AvatarImage src="https://github.com/shadcn.png" />
-              <AvatarFallback className="bg-gray-200 text-xs">
-                VE
-              </AvatarFallback>
-            </Avatar>
-
-            <Col className="max-w-[575px] flex-1 gap-y-2">
+          <Row className="justify-center gap-x-3">
+            <Col className="max-w-[calc(100vw-5rem)] flex-1 gap-y-2 md:max-w-[575px]">
               <Textarea
                 ref={textareaRef}
                 value={comment}
                 onChange={(e) => setComment(e.target.value)}
                 placeholder="Adicione um comentário..."
                 showCharacterCount
-                maxLength={MAX_LENGTH_FOR_TEXTAREA}
+                maxLength={MAX_LENGTH_FOR_INPUT}
               />
 
-              <Row className="justify-end gap-x-2">
-                <DialogFooter>
-                  <Button
-                    disabled={!comment.trim()}
-                    onClick={() => setComment("")}
-                    variant="outline"
-                    size="sm"
-                    className="cursor-pointer text-gray-600 hover:bg-gray-100 hover:text-gray-900"
-                  >
-                    Cancelar
-                  </Button>
-                  <Button
-                    disabled={!comment.trim()}
-                    variant="default"
-                    size="sm"
-                    className="gap-x-2 bg-green-500 text-green-50 transition-opacity duration-300 hover:opacity-90"
-                    onClick={handlePostComment}
-                  >
-                    Comentar
-                  </Button>
-                </DialogFooter>
+              <Row className="justify-between gap-x-2">
+                <Button
+                  disabled={!comment.trim()}
+                  onClick={() => setComment("")}
+                  variant="text"
+                  size="sm"
+                  className="cursor-pointer text-gray-600 hover:bg-gray-100 hover:text-gray-900"
+                >
+                  Cancelar
+                </Button>
+                <Button
+                  disabled={!comment.trim()}
+                  variant="default"
+                  size="sm"
+                  className="gap-x-2 bg-green-500 text-green-50 transition-opacity duration-300 hover:opacity-90"
+                  onClick={handlePostComment}
+                >
+                  Comentar
+                </Button>
               </Row>
             </Col>
           </Row>

@@ -1,7 +1,8 @@
+import { MAX_LENGTH_FOR_COMPOSER } from "@/shared/lib/globalVariables";
+import CharacterCount from "@tiptap/extension-character-count";
+import Placeholder from "@tiptap/extension-placeholder";
 import { useEditor } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
-import Placeholder from "@tiptap/extension-placeholder";
-import { CustomImage } from "@/features/community/components/Post/Tiptap/Helpers/customTiptap";
 
 export function usePostComposerEditor() {
   const editor = useEditor({
@@ -14,7 +15,9 @@ export function usePostComposerEditor() {
       Placeholder.configure({
         placeholder: "Escreva algo...",
       }),
-      CustomImage,
+      CharacterCount.configure({
+        limit: MAX_LENGTH_FOR_COMPOSER,
+      }),
     ],
     editorProps: {
       attributes: {
