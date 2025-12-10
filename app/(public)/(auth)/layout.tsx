@@ -1,14 +1,14 @@
 import "@/assets/css/login.css";
 import BackgroundItems from "@/features/auth/components/Login/BackgroundItems";
 
-export default function RootLayout({
+export default function AuthLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
   return (
-    <section className="size-full overflow-hidden h-dvh">
-      <div className="max-w-[90rem] h-full mx-auto relative px-6 md:px-0">
+    <section className="size-full h-dvh overflow-hidden">
+      <div className="relative mx-auto flex h-full max-w-[90rem] flex-col gap-y-8 px-6 md:gap-y-12 md:px-0">
         {children}
         <BackgroundItems />
       </div>

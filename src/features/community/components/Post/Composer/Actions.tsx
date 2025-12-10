@@ -11,7 +11,6 @@ import {
 import type { Editor } from "@tiptap/react";
 import clsx from "clsx";
 import { type HTMLAttributes } from "react";
-import type { EmojiPickerProps } from "./types";
 
 interface Props extends HTMLAttributes<HTMLDivElement> {
   addEmoji: (emoji: { native: string }) => void;
@@ -38,26 +37,6 @@ export default function PostComposerActions({
     }
   };
 
-  const emojiPickerOptions: EmojiPickerProps = {
-    theme: "light",
-    data: data,
-    onEmojiSelect: addEmoji,
-    locale: "pt",
-    autoFocus: true,
-    navPosition: "bottom",
-    previewPosition: "top",
-    skinTonePosition: "search",
-    icons: "solid",
-    emojiButtonColors: [
-      "rgba(87, 204, 153, 0.7)",
-      "rgba(132, 255, 174, 0.7)",
-      "rgba(255, 214, 10, 0.7)",
-      "rgba(255, 123, 84, 0.7)",
-      "rgba(72, 207, 173, 0.7)",
-      "rgba(130, 181, 53, 0.7)",
-    ],
-  };
-
   return (
     <Row
       className={clsx(
@@ -79,20 +58,41 @@ export default function PostComposerActions({
           leftIcon={<ImageIcon size={24} className="text-current" />}
           onClick={handleImageClick}
         />
-        <Row className={clsx("items-center", className)} {...props}>
-          <Popover>
-            <PopoverTrigger asChild>
-              <Button.Icon
-                variant="text"
-                className="p-0 text-green-200 hover:text-green-500"
-                icon={<SmileyIcon size={24} className="text-current" />}
+
+        <Popover modal={true}>
+          <PopoverTrigger asChild>
+            <Button.Icon
+              variant="text"
+              className="p-0 text-green-200 hover:text-green-500"
+              icon={<SmileyIcon size={24} className="text-current" />}
+            />
+          </PopoverTrigger>
+          <PopoverContent
+            className="w-auto border-none p-0 shadow-xl"
+            side="top"
+            align="start"
+            onOpenAutoFocus={(e) => e.preventDefault()}
+            onCloseAutoFocus={(e) => e.preventDefault()}
+          >
+            <div
+              onPointerDown={(e) => {
+                e.preventDefault();
+              }}
+            >
+              <EmojiPicker
+                data={data}
+                onEmojiSelect={addEmoji}
+                theme="light"
+                locale="pt"
+                autoFocus={false}
+                navPosition="bottom"
+                previewPosition="top"
+                skinTonePosition="search"
+                icons="solid"
               />
-            </PopoverTrigger>
-            <PopoverContent className="border-none p-0 shadow-xl">
-              <EmojiPicker {...emojiPickerOptions} />
-            </PopoverContent>
-          </Popover>
-        </Row>
+            </div>
+          </PopoverContent>
+        </Popover>
       </Row>
 
       <Button.Icon

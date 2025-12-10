@@ -71,7 +71,7 @@ const mockNotifications: Notification[] = [
     message: "comentou na sua receita",
     recipeName: "Brownie Proteico",
     timestamp: "1 dia atrás",
-    isRead: true,
+    isRead: false,
   },
   {
     id: "6",
@@ -80,7 +80,7 @@ const mockNotifications: Notification[] = [
     message: "comentou na sua receita",
     recipeName: "Brownie Proteico",
     timestamp: "1 dia atrás",
-    isRead: true,
+    isRead: false,
   },
   {
     id: "7",
@@ -89,7 +89,7 @@ const mockNotifications: Notification[] = [
     message: "comentou na sua receita",
     recipeName: "Brownie Proteico",
     timestamp: "1 dia atrás",
-    isRead: true,
+    isRead: false,
   },
 ];
 
@@ -141,9 +141,9 @@ const NotificationPopup = memo(function NotificationPopup({
     };
   }, [isOpen, handleClickOutside]);
 
-  const handleToggle = useCallback(() => {
+  const handleToggle = () => {
     setIsOpen((prev) => !prev);
-  }, []);
+  };
 
   const handleKeyDown = useCallback((e: React.KeyboardEvent) => {
     if (e.key === "Escape") {
@@ -191,7 +191,7 @@ const NotificationPopup = memo(function NotificationPopup({
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.95, y: -10 }}
             transition={{ duration: 0.2, ease: "easeOut" }}
-            className="absolute top-full right-0 z-50 mt-2 w-[380px] max-w-[calc(100vw-2rem)] origin-top-right rounded-lg bg-green-50 shadow-xl"
+            className="absolute top-12 -right-16 z-50 mt-2 w-[380px] max-w-[calc(100vw-6rem)] origin-top-right rounded-lg bg-green-50 shadow-xl md:right-0 md:max-w-[calc(100vw-2rem)]"
             role="dialog"
             aria-label="Painel de notificações"
           >
@@ -208,7 +208,7 @@ const NotificationPopup = memo(function NotificationPopup({
                 {unreadCount > 0 && (
                   <button
                     onClick={markAllAsRead}
-                    className="font-maitree cursor-pointer text-sm text-green-200 transition-colors duration-200 hover:text-green-500"
+                    className="font-maitree hidden cursor-pointer text-sm text-green-200 transition-colors duration-200 hover:text-green-500 md:block"
                   >
                     Marcar todas como lidas
                   </button>
@@ -216,7 +216,10 @@ const NotificationPopup = memo(function NotificationPopup({
               </Row>
             </div>
 
-            <Col className="max-h-[400px] overflow-y-auto" data-lenis-prevent>
+            <Col
+              className="max-h-[400px] overflow-x-hidden overflow-y-auto"
+              data-lenis-prevent
+            >
               {notifications.length === 0 ? (
                 <div className="px-4 py-8 text-center">
                   <Text
@@ -286,11 +289,20 @@ const NotificationPopup = memo(function NotificationPopup({
             </Col>
 
             {notifications.length > 0 && (
-              <div className="border-t border-green-100 px-4 py-3">
-                <button className="font-maitree w-full text-center text-sm text-green-200 transition-colors duration-200 hover:text-green-500">
+              <Row className="border-t border-green-100 px-4 py-3">
+                {unreadCount > 0 && (
+                  <button
+                    onClick={markAllAsRead}
+                    className="font-maitree block flex-1 cursor-pointer text-sm text-green-200 transition-colors duration-200 hover:text-green-500 md:hidden"
+                  >
+                    Marcar todas como lidas
+                  </button>
+                )}
+
+                <button className="font-maitree w-full flex-1 text-center text-sm text-green-200 transition-colors duration-200 hover:text-green-500">
                   Ver todas as notificações
                 </button>
-              </div>
+              </Row>
             )}
           </motion.div>
         )}

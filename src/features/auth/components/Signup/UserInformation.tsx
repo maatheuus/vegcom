@@ -21,7 +21,9 @@ import { SearchCityLocation } from "@/shared/ui/SearchCityLocation";
 import {
   Select,
   SelectContent,
+  SelectGroup,
   SelectItem,
+  SelectLabel,
   SelectTrigger,
   SelectValue,
 } from "@/shared/ui/Select";
@@ -94,7 +96,7 @@ const UserInformation: FC<React.ComponentProps<"form">> = ({
         onSubmit={form.handleSubmit(onSubmit)}
         {...props}
       >
-        <Col className="items-center gap-4 px-5 pt-4 pb-5">
+        <Col className="items-center gap-4">
           <FormField
             control={form.control}
             name="userInfo"
@@ -112,7 +114,7 @@ const UserInformation: FC<React.ComponentProps<"form">> = ({
               </FormItem>
             )}
           />
-          <div className="flex w-full flex-col justify-between gap-4 md:flex-row">
+          <div className="flex w-full flex-col justify-between gap-4">
             <FormField
               control={form.control}
               name="preference"
@@ -164,20 +166,29 @@ const UserInformation: FC<React.ComponentProps<"form">> = ({
                     Nível culinário
                   </FormLabel>
                   <FormControl>
-                    <Select value={field.value} onValueChange={field.onChange}>
-                      <SelectTrigger className="font-lora rounded-sm md:min-w-[200px]">
-                        <SelectValue placeholder="Qual seu nível culinário?" />
+                    <Select
+                      value={field.value || ""}
+                      onValueChange={field.onChange}
+                    >
+                      <SelectTrigger>
+                        <SelectValue
+                          placeholder="Qual seu nível culinário?"
+                          data-slot="select-value"
+                        />
                       </SelectTrigger>
-                      <SelectContent>
-                        {culinaryLevelOptions.map((option) => (
-                          <SelectItem
-                            key={option.value}
-                            value={option.value}
-                            className="font-maitree"
-                          >
-                            {option.label}
-                          </SelectItem>
-                        ))}
+                      <SelectContent className="z-[999]">
+                        <SelectGroup>
+                          <SelectLabel>Opções</SelectLabel>
+                          {culinaryLevelOptions.map((option) => (
+                            <SelectItem
+                              key={option.value}
+                              value={option.value}
+                              className="font-maitree"
+                            >
+                              {option.label}
+                            </SelectItem>
+                          ))}
+                        </SelectGroup>
                       </SelectContent>
                     </Select>
                   </FormControl>
@@ -200,7 +211,7 @@ const UserInformation: FC<React.ComponentProps<"form">> = ({
                     value={field.value}
                     onChange={field.onChange}
                     onSelect={(city: CitySearchResult) => {
-                      field.onChange(city.displayName);
+                      field.onChange(city.displayName || city.nome);
                     }}
                     placeholder="Digite sua cidade..."
                     error={!!fieldState.error}
@@ -210,7 +221,7 @@ const UserInformation: FC<React.ComponentProps<"form">> = ({
               </FormItem>
             )}
           />
-
+          {/* 
           <FormField
             control={form.control}
             name="meetUsInfo"
@@ -227,9 +238,10 @@ const UserInformation: FC<React.ComponentProps<"form">> = ({
                 <FormMessage className="!mb-0" />
               </FormItem>
             )}
-          />
+          /> */}
         </Col>
-        <Col className="items-center gap-2 px-5">
+
+        <Col className="mt-4 items-center gap-2">
           <SubmitButton
             text="Seguinte"
             disabled={isSubmitting}

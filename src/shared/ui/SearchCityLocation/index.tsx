@@ -1,10 +1,9 @@
 import { useCitiesSearch } from "@/shared/hooks/useCitiesSearch";
-
 import type { CitySearchResult } from "@/shared/lib/api/cities";
 import { cn } from "@/shared/lib/utils";
 import { CaretDownIcon, MapPinSimpleAreaIcon } from "@phosphor-icons/react";
 import clsx from "clsx";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import { Input } from "../Input";
 
 interface SearchCityLocationProps {
@@ -32,15 +31,24 @@ export function SearchCityLocation({
   const inputRef = useRef<HTMLInputElement>(null);
   const listRef = useRef<HTMLUListElement>(null);
 
-  const { cities, isLoading, searchCities, clearSearch, hasResults } =
-    useCitiesSearch({
+  // FIX 1: Memoize options to prevent the hook from resetting on every render
+  const searchOptions = useMemo(
+    () => ({
       debounceMs: 300,
       minQueryLength: 2,
-    });
+    }),
+    [],
+  );
 
+  const { cities, isLoading, searchCities, clearSearch, hasResults } =
+    useCitiesSearch(searchOptions);
+
+  // FIX 2: Only sync value if it actually differs to prevent cursor jumping
   useEffect(() => {
-    setInputValue(value);
-  }, [value]);
+    if (value !== inputValue) {
+      setInputValue(value);
+    }
+  }, [value]); // Removing inputValue from deps to avoid loops
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const newValue = e.target.value;
@@ -58,19 +66,28 @@ export function SearchCityLocation({
   };
 
   const handleCitySelect = (city: CitySearchResult) => {
-    setInputValue(city.displayName);
-    onChange?.(city.displayName);
-    onSelect?.(city);
+    const displayValue = city.displayName || city.nome; // Fallback
+
+    setInputValue(displayValue);
     setIsOpen(false);
     setSelectedIndex(-1);
     inputRef.current?.blur();
+
+    // FIX 3: Prevent double-calling onChange if onSelect handles the update
+    if (onSelect) {
+      onSelect(city);
+    } else {
+      onChange?.(displayValue);
+    }
   };
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
-    if (!isOpen || cities.length === 0) {
+    // If not open, allow opening with down arrow
+    if (!isOpen) {
       if (e.key === "ArrowDown" && inputValue.length >= 2) {
+        e.preventDefault(); // Prevent cursor moving
         setIsOpen(true);
-        setSelectedIndex(0);
+        if (hasResults) setSelectedIndex(0);
       }
       return;
     }
@@ -105,8 +122,12 @@ export function SearchCityLocation({
   };
 
   const handleBlur = () => {
+    // Small delay to allow click event on list items to fire before closing
     setTimeout(() => {
-      if (!listRef.current?.contains(document.activeElement)) {
+      if (
+        document.activeElement !== inputRef.current &&
+        !listRef.current?.contains(document.activeElement)
+      ) {
         setIsOpen(false);
         setSelectedIndex(-1);
       }
@@ -134,7 +155,7 @@ export function SearchCityLocation({
           ref={inputRef}
           type="text"
           id="searchCitiesInput"
-          autoComplete="on"
+          autoComplete="off" // Changed to 'off' to prevent browser native autocomplete overlap
           value={inputValue}
           onChange={handleInputChange}
           onFocus={handleFocus}
@@ -143,11 +164,12 @@ export function SearchCityLocation({
           placeholder={placeholder}
           disabled={disabled}
           className={clsx(
+            "rounded-sm",
             error && "border-destructive focus-visible:ring-destructive",
             className,
           )}
         />
-        <div className="absolute top-1/2 right-3 -translate-y-1/2">
+        <div className="pointer-events-none absolute top-1/2 right-3 -translate-y-1/2">
           {isLoading ? (
             <div className="h-4 w-4 animate-spin rounded-full border-2 border-green-500 border-t-transparent" />
           ) : (
@@ -177,7 +199,11 @@ export function SearchCityLocation({
                     "group focus:bg-accent focus:text-accent-foreground relative flex cursor-pointer items-center gap-2 rounded-md px-3 py-2 text-sm transition-colors outline-none select-none hover:bg-green-200 hover:text-green-50",
                     selectedIndex === index && "bg-green-600 text-green-50",
                   )}
-                  onClick={() => handleCitySelect(city)}
+                  // Use onMouseDown instead of onClick to fire before Input onBlur
+                  onMouseDown={(e) => {
+                    e.preventDefault(); // Prevents input blur
+                    handleCitySelect(city);
+                  }}
                 >
                   <MapPinSimpleAreaIcon className="h-4 w-4 flex-shrink-0 text-green-500 group-hover:text-green-50" />
                   <div className="min-w-0 flex-1">

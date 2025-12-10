@@ -15,7 +15,7 @@ export default function PostCardAnnouncement({ data }: Props) {
           as="p"
           type={Text.Type.BodyFour}
           weight={Text.Weight.Medium}
-          className=""
+          className="font-maitree text-base"
         >
           {data.postContent.postResources?.content}
         </Text>

@@ -9,13 +9,13 @@ import SuccessPage from "@/features/auth/components/Signup/ProgressView/Steps/Su
 import UserInformationPage from "./ProgressView/Steps/UserInformationPage";
 
 const stepVariants = {
-  hidden: { opacity: 0, x: -50 },
-  visible: { opacity: 1, x: 0 },
-  exit: { opacity: 0, x: 50, position: "absolute" },
+  hidden: { opacity: 0 },
+  visible: { opacity: 1 },
+  exit: { opacity: 0 },
 };
 
 export default function SignupFlow() {
-  const { currentStep: stepName } = useSignupFormState(); // <- Use o novo hook
+  const { currentStep: stepName } = useSignupFormState();
   const [currentStepIndex, setCurrentStepIndex] = useState(0);
 
   const steps = [

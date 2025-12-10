@@ -11,11 +11,11 @@ import {
   ChatCircleIcon,
   ChefHatIcon,
   LightbulbFilamentIcon,
+  PlantIcon,
   PlusCircleIcon,
   UserCircleIcon,
   UsersFourIcon,
 } from "@phosphor-icons/react";
-import { PlantIcon } from "@phosphor-icons/react/ssr";
 import clsx from "clsx";
 import { AnimatePresence, motion, MotionConfig } from "framer-motion";
 import Image from "next/image";
@@ -78,7 +78,7 @@ export default function Menu() {
           mass: 0.8,
         }}
         className={clsx(
-          "absolute top-0 right-0 left-0 w-full overflow-hidden rounded-4xl border border-green-500/50 bg-green-50/90 backdrop-blur-sm",
+          "absolute top-0 right-0 left-0 w-full rounded-4xl border border-green-500/50 bg-green-50/90 backdrop-blur-sm",
           isMenuOpen || hasScrolled ? "shadow-xl" : "",
         )}
         style={{ left: 0, right: 0 }}
@@ -219,13 +219,15 @@ export default function Menu() {
                   </Row>
                 </Link>
 
+                <NotificationPopup />
+
                 <MotionConfig transition={{ duration: 0.4, ease: "easeInOut" }}>
                   <motion.button
                     layout="position"
                     initial={false}
                     animate={isMenuOpen ? "open" : "closed"}
                     onClick={toggleMenu}
-                    className="relative flex min-h-10 min-w-10 flex-col items-center justify-center rounded-lg bg-green-100"
+                    className="relative flex min-h-9 min-w-9 flex-col items-center justify-center rounded-lg bg-green-100"
                   >
                     <motion.span
                       className="absolute h-0.5 w-5 rounded-full bg-green-600"

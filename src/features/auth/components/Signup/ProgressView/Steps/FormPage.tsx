@@ -1,24 +1,10 @@
-import { bike } from "@/assets";
 import SignupForm from "../../Form";
-import SignupLayout from "../layout";
+import SignupCard from "../../SignupCard";
 
 export default function FormPage() {
   return (
-    <SignupLayout
-      left={{
-        contentClassName: "h-full justify-center max-w-[554px]",
-        title: "Que bom ter você aqui",
-        subTitle: "Crie sua conta",
-        children: <SignupForm />,
-      }}
-      right={{
-        src: bike,
-        alt: "a gif of a man cycling with a dog",
-        title: "a gif of a man cycling with a dog",
-        width: 785,
-        height: 785,
-        quality: 100,
-      }}
-    />
+    <SignupCard title="Que bom ter você aqui" subTitle="Crie sua conta">
+      <SignupForm />
+    </SignupCard>
   );
 }

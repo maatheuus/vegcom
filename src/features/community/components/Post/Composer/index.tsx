@@ -66,7 +66,9 @@ export default function PostComposer({
 
   const addEmoji = useCallback(
     (emoji: { native: string }) => {
-      editor?.chain().focus().insertContent(emoji.native).run();
+      if (!editor) return;
+
+      editor.chain().focus().insertContent(emoji.native).run();
     },
     [editor],
   );
@@ -83,7 +85,7 @@ export default function PostComposer({
 
     console.log("Enviando:", payload);
     editor.commands.clearContent();
-    attachments.length = 0;
+    setAttachments([]);
     if (postTitleRef.current) {
       postTitleRef.current.value = "";
     }

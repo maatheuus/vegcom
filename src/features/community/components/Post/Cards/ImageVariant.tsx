@@ -40,17 +40,17 @@ export default function PostCardImage({ data }: Props) {
             as="p"
             type={Text.Type.BodyFour}
             weight={Text.Weight.Normal}
-            className="font-maitree line-clamp-3 text-base"
+            className="font-maitree line-clamp-4 text-base md:line-clamp-6"
           >
             {data.postContent.postResources?.content}
           </Text>
 
-          <div className="mt-4 grid w-full grid-cols-1 gap-3 md:grid md:grid-cols-2 md:gap-4 lg:grid-cols-3">
+          <div className="mt-4 flex w-full gap-3 md:gap-4">
             {images.map((img, idx) => (
               <div
                 key={idx}
                 onClick={() => openImage(idx)}
-                className="h-full max-h-[14rem] w-full cursor-pointer overflow-hidden rounded-sm md:max-h-[16rem]"
+                className="size-full max-h-[5rem] max-w-[5rem] cursor-pointer overflow-hidden rounded-sm md:max-h-[12rem] md:max-w-[12rem]"
               >
                 <Image
                   src={img.src}

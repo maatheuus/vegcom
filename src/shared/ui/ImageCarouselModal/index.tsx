@@ -1,6 +1,11 @@
 "use client";
 
-import { Dialog, DialogContent } from "@/shared/ui/Dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogTitle,
+} from "@/shared/ui/Dialog";
 import {
   ArrowBendUpLeftIcon,
   ArrowBendUpRightIcon,
@@ -49,8 +54,14 @@ export default function ImageCarouselModal({
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="max-w-4xl border-none bg-transparent p-0 shadow-none sm:rounded-none">
-        <div className="relative flex h-[80vh] w-full flex-col items-center justify-center">
+      <DialogTitle className="sr-only">
+        Imagem for {images[currentImageIndex].alt}
+      </DialogTitle>
+      <DialogDescription className="sr-only">
+        Imagem for {images[currentImageIndex].alt}
+      </DialogDescription>
+      <DialogContent className="max-w-[calc(100vw-2rem)] border-none bg-transparent p-0 md:max-w-2xl">
+        <div className="relative flex h-[80dvh] w-full flex-col items-center justify-center">
           <div className="relative h-full w-full overflow-hidden rounded-lg">
             <AnimatePresence mode="wait">
               <motion.div
@@ -65,7 +76,7 @@ export default function ImageCarouselModal({
                   src={images[currentImageIndex].src}
                   alt={images[currentImageIndex].alt}
                   fill
-                  className="object-contain"
+                  className="size-full object-contain object-center"
                   priority
                 />
               </motion.div>
