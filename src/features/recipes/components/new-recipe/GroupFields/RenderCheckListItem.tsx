@@ -4,17 +4,13 @@ import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import { MinusCircleIcon } from "@phosphor-icons/react";
 import clsx from "clsx";
-import type { RecipeType } from ".";
-
 interface Props {
   item: { id: string; label: string; value: string };
   idx: number;
-  type: RecipeType;
   onDeleteItem: (id: string) => void;
 }
 export default function RenderCheckListItem({
   item,
-  type,
   onDeleteItem,
   idx,
 }: Props) {

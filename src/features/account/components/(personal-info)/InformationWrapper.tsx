@@ -18,10 +18,7 @@ import { useForm } from "react-hook-form";
 import type { z } from "zod";
 import Header from "../Header";
 
-interface Props {
-  children?: React.ReactNode;
-}
-export default function InformationWrapper({ children }: Props) {
+export default function InformationWrapper() {
   const [isEditing, setIsEditing] = useState(false);
 
   const form = useForm<z.infer<typeof personalInfoFormSchema>>({

@@ -9,8 +9,8 @@ import {
   ScrollIcon,
 } from "@phosphor-icons/react";
 import clsx from "clsx";
-import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import {
+  Suspense,
   useEffect,
   useRef,
   useState,
@@ -20,67 +20,45 @@ import {
 import PostComposer from "../Post/Composer";
 import MobilePostComposer from "../Post/Composer/MobileComposer";
 import PostList from "../Post/List";
-import Tabs, { type Tab } from "../Tabs";
+import { type Tab } from "../Tabs";
 import Announcements from "../Tabs/Announcements";
 import Resources from "../Tabs/Resources";
+import TabsClient from "../Tabs/TabsClient";
 
 interface Props extends HtmlHTMLAttributes<HTMLDivElement> {
   className?: string;
 }
 
-export default function Layout({ className, ...props }: Props) {
-  const router = useRouter();
-  const pathname = usePathname();
-  const searchParams = useSearchParams();
+const tabs: Tab[] = [
+  {
+    key: "posts",
+    label: "Posts",
+    icon: <ScrollIcon size={24} className="text-green-200" />,
+    component: <PostList />,
+  },
+  {
+    key: "resources",
+    label: "Recursos",
+    icon: <PaperclipIcon size={24} className="text-green-200" />,
+    component: <Resources />,
+  },
+  {
+    key: "announcements",
+    label: "Anúncios",
+    icon: <MegaphoneIcon size={24} className="-scale-x-100 text-green-200" />,
+    component: <Announcements />,
+  },
+];
 
+export default function CommunityLayout({ className, ...props }: Props) {
   const [isPending, startTransition] = useTransition();
 
   const [selectedTab, setSelectedTab] = useState(() => {
-    return searchParams.get("tab") || "posts";
+    return "posts";
   });
 
   const [showScrollTop, setShowScrollTop] = useState(false);
   const scrollContainerRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    const tabFromUrl = searchParams.get("tab");
-    if (tabFromUrl && tabFromUrl !== selectedTab) {
-      setSelectedTab(tabFromUrl);
-    }
-  }, [searchParams]);
-
-  const tabs: Tab[] = [
-    {
-      key: "posts",
-      label: "Posts",
-      icon: <ScrollIcon size={24} className="text-green-200" />,
-      component: <PostList />,
-    },
-    {
-      key: "resources",
-      label: "Recursos",
-      icon: <PaperclipIcon size={24} className="text-green-200" />,
-      component: <Resources />,
-    },
-    {
-      key: "announcements",
-      label: "Anúncios",
-      icon: <MegaphoneIcon size={24} className="-scale-x-100 text-green-200" />,
-      component: <Announcements />,
-    },
-  ];
-
-  const handleTabChange = (key: string) => {
-    if (key === selectedTab) return;
-
-    startTransition(() => {
-      setSelectedTab(key);
-
-      const params = new URLSearchParams(searchParams.toString());
-      params.set("tab", key);
-      router.replace(`${pathname}?${params.toString()}`, { scroll: false });
-    });
-  };
 
   useEffect(() => {
     const container = scrollContainerRef.current;
@@ -123,13 +101,15 @@ export default function Layout({ className, ...props }: Props) {
         />
 
         <Col>
-          <Tabs
-            tabs={tabs}
-            selectedTab={selectedTab}
-            setSelectedTab={handleTabChange}
-            isTransitioning={isPending}
-            className="sticky -top-1 z-20 bg-green-50 pt-5 md:top-63"
-          />
+          <Suspense fallback={null}>
+            <TabsClient
+              tabs={tabs}
+              isPending={isPending}
+              selectedTab={selectedTab}
+              startTransition={startTransition}
+              setSelectedTab={setSelectedTab}
+            />
+          </Suspense>
 
           <div
             className={clsx(

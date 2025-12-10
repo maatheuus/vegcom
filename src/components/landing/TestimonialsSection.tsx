@@ -116,7 +116,7 @@ export function TestimonialsSection() {
               </div>
 
               <p className="font-maitree leading-relaxed text-gray-600 italic">
-                "{testimonial.content}"
+                &quot;{testimonial.content}&quot;
               </p>
             </div>
           ))}
