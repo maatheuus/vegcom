@@ -1,9 +1,12 @@
 /**
- * Mock user data
+ * Mock user data used for development and testing.
  */
 
 import type { User, UserProfile } from "./types";
 
+/**
+ * Array of mock users.
+ */
 export const mockUsers: User[] = [
   {
     id: "user_1",
@@ -40,6 +43,9 @@ export const mockUsers: User[] = [
   },
 ];
 
+/**
+ * Mock data for the currently logged-in user profile.
+ */
 export const mockCurrentUser: UserProfile = {
   id: "user_current",
   name: "You",

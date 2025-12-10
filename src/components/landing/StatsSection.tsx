@@ -14,6 +14,13 @@ const stats = [
   { number: 50000, suffix: "+", label: "Visualizações Mensais" },
 ];
 
+/**
+ * StatsSection component for the landing page.
+ * Displays key platform statistics with animated counters.
+ * Uses GSAP for counting animations triggered by scroll.
+ *
+ * @returns {JSX.Element} The rendered Stats section.
+ */
 export function StatsSection() {
   const containerRef = useRef<HTMLDivElement>(null);
 

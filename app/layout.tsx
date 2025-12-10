@@ -8,6 +8,10 @@ import type { Metadata } from "next";
 import "../src/assets/css/responsiveness.css";
 import "./global.css";
 
+/**
+ * Metadata configuration for the application.
+ * Defines SEO properties like title, description, and OpenGraph/Twitter tags.
+ */
 export const metadata: Metadata = {
   title: {
     default: "VegCom - Comunidade Vegana de Receitas e Conexões",
@@ -78,6 +82,14 @@ export const metadata: Metadata = {
   },
 };
 
+/**
+ * RootLayout component for the Next.js application.
+ * Wraps all pages with global providers (QueryClient, Toaster) and global styles/fonts.
+ * Also includes analytics and performance monitoring tools.
+ *
+ * @param {Readonly<{ children: React.ReactNode }>} props - The layout props.
+ * @returns {JSX.Element} The rendered HTML structure.
+ */
 export default function RootLayout({
   children,
 }: Readonly<{

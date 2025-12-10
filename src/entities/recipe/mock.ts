@@ -1,10 +1,14 @@
 /**
- * Mock recipe data
+ * Mock recipe data used for development and testing.
  */
 
 import { food } from "@/assets";
 import type { Recipe } from "./types";
 
+/**
+ * Array of mock recipes with detailed information.
+ * Repeated entries simulate a larger database for pagination/list views.
+ */
 export const mockRecipes: Recipe[] = [
   {
     id: "recipe_1",

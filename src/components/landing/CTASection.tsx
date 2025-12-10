@@ -8,6 +8,13 @@ import { useRef } from "react";
 
 gsap.registerPlugin(ScrollTrigger);
 
+/**
+ * Call-to-Action (CTA) section for the landing page.
+ * Encourages users to sign up or explore recipes.
+ * Uses GSAP for entry animations.
+ *
+ * @returns {JSX.Element} The rendered CTA section.
+ */
 export function CTASection() {
   const containerRef = useRef<HTMLDivElement>(null);
 

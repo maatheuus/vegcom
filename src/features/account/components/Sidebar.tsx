@@ -11,13 +11,20 @@ import {
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
+/**
+ * Definition of a navigation item in the sidebar.
+ */
 interface SidebarItem {
+  /** The text label for the item. */
   label: string;
+  /** The URL path the item links to. */
   href: string;
+  /** The icon to display next to the label. */
   icon: React.ReactNode;
 }
 
 interface SidebarProps {
+  /** Optional list of sidebar items. If not provided, default items are used. */
   items?: SidebarItem[];
 }
 
@@ -49,6 +56,14 @@ const sidebarItems = [
   },
 ];
 
+/**
+ * Navigation sidebar for the account section.
+ * Responsive design: horizontal list on mobile, vertical list on desktop.
+ * Highlights the active link based on the current pathname.
+ *
+ * @param {SidebarProps} props - The component props.
+ * @returns {JSX.Element} The rendered sidebar navigation.
+ */
 export default function Sidebar({ items }: SidebarProps) {
   const pathname = usePathname();
 

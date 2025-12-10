@@ -5,11 +5,28 @@
 import { CitiesAPI, type CitySearchResult } from "@/shared/lib/api/cities";
 import { useCallback, useEffect, useRef, useState } from "react";
 
+/**
+ * Options for the useCitiesSearch hook.
+ */
 interface UseCitiesSearchOptions {
+  /** The delay in milliseconds for debouncing search requests. */
   debounceMs?: number;
+  /** The minimum length of the query string required to trigger a search. */
   minQueryLength?: number;
 }
 
+/**
+ * Custom hook for searching cities using the IBGE API with debouncing.
+ *
+ * @param {UseCitiesSearchOptions} [options={}] - Configuration options for the search.
+ * @returns {Object} An object containing search state and functions.
+ * @returns {CitySearchResult[]} return.cities - The list of cities found.
+ * @returns {boolean} return.isLoading - Whether a search is currently in progress.
+ * @returns {string | null} return.error - Error message if the search failed.
+ * @returns {boolean} return.hasResults - Whether the last search returned any results.
+ * @returns {Function} return.searchCities - Function to trigger a search with a query string.
+ * @returns {Function} return.clearSearch - Function to clear the search results and state.
+ */
 export function useCitiesSearch(options: UseCitiesSearchOptions = {}) {
   const { debounceMs = 300, minQueryLength = 2 } = options;
 
@@ -21,6 +38,12 @@ export function useCitiesSearch(options: UseCitiesSearchOptions = {}) {
   const debounceTimerRef = useRef<NodeJS.Timeout | null>(null);
   const currentQueryRef = useRef<string>("");
 
+  /**
+   * Searches for cities matching the given query.
+   * Debounces the API call to avoid excessive requests.
+   *
+   * @param {string} query - The search term (e.g., city name).
+   */
   const searchCities = useCallback(
     (query: string) => {
       if (debounceTimerRef.current) {
@@ -63,6 +86,9 @@ export function useCitiesSearch(options: UseCitiesSearchOptions = {}) {
     [debounceMs, minQueryLength],
   );
 
+  /**
+   * Clears the current search results and resets state.
+   */
   const clearSearch = useCallback(() => {
     if (debounceTimerRef.current) {
       clearTimeout(debounceTimerRef.current);

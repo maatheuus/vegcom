@@ -1,5 +1,8 @@
 /**
  * Auth feature exports
+ *
+ * This module exports the API, types, and hooks associated with user authentication
+ * and registration flows.
  */
 
 // API

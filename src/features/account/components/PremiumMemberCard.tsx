@@ -10,6 +10,13 @@ import clsx from "clsx";
 import Link from "next/link";
 import type { ComponentProps } from "react";
 
+/**
+ * A small card/icon link representing premium membership status or upsell.
+ * Redirects to the subscription page when clicked.
+ *
+ * @param {ComponentProps<"a">} props - Standard HTML anchor props.
+ * @returns {JSX.Element} The rendered component.
+ */
 export default function PremiumMemberCard({
   className,
   ...props

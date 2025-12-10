@@ -29,6 +29,13 @@ const categories = [
   { name: "Saladas", icon: CarrotIcon, href: "/recipes?category=salads" },
 ];
 
+/**
+ * CategoriesSection component for the landing page.
+ * Displays a grid of recipe categories as clickable cards.
+ * Uses GSAP for entry animations.
+ *
+ * @returns {JSX.Element} The rendered Categories section.
+ */
 export function CategoriesSection() {
   const containerRef = useRef<HTMLDivElement>(null);
 

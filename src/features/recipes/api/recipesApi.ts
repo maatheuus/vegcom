@@ -8,7 +8,9 @@ import { mockDelay, generateMockId } from "@/shared/api/mock";
 import type { CreateRecipeData, UpdateRecipeData } from "../types";
 
 /**
- * Get all recipes
+ * Retrieves a list of all recipes.
+ *
+ * @returns {Promise<Recipe[]>} A promise resolving to an array of recipes.
  */
 export const getRecipes = async (): Promise<Recipe[]> => {
   await mockDelay(800);
@@ -16,7 +18,10 @@ export const getRecipes = async (): Promise<Recipe[]> => {
 };
 
 /**
- * Get recipe by ID
+ * Retrieves a single recipe by its ID.
+ *
+ * @param {string} id - The unique identifier of the recipe.
+ * @returns {Promise<Recipe | null>} A promise resolving to the recipe or null if not found.
  */
 export const getRecipeById = async (id: string): Promise<Recipe | null> => {
   await mockDelay(600);
@@ -25,7 +30,10 @@ export const getRecipeById = async (id: string): Promise<Recipe | null> => {
 };
 
 /**
- * Create new recipe
+ * Creates a new recipe.
+ *
+ * @param {CreateRecipeData} data - The content and metadata for the new recipe.
+ * @returns {Promise<Recipe>} A promise resolving to the newly created recipe.
  */
 export const createRecipe = async (
   data: CreateRecipeData,
@@ -52,7 +60,11 @@ export const createRecipe = async (
 };
 
 /**
- * Update recipe
+ * Updates an existing recipe.
+ *
+ * @param {UpdateRecipeData} data - The ID of the recipe to update and the new data.
+ * @returns {Promise<Recipe>} A promise resolving to the updated recipe.
+ * @throws {Error} If the recipe is not found.
  */
 export const updateRecipe = async (
   data: UpdateRecipeData,
@@ -73,7 +85,10 @@ export const updateRecipe = async (
 };
 
 /**
- * Delete recipe
+ * Deletes a recipe.
+ *
+ * @param {string} id - The ID of the recipe to delete.
+ * @returns {Promise<void>} A promise indicating completion.
  */
 export const deleteRecipe = async (id: string): Promise<void> => {
   await mockDelay(700);
@@ -81,7 +96,10 @@ export const deleteRecipe = async (id: string): Promise<void> => {
 };
 
 /**
- * Toggle favorite
+ * Toggles the favorite status of a recipe for the current user.
+ *
+ * @param {string} recipeId - The ID of the recipe to favorite/unfavorite.
+ * @returns {Promise<{ isFavorite: boolean }>} A promise resolving to the new favorite state.
  */
 export const toggleFavorite = async (
   recipeId: string,

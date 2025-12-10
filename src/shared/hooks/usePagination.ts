@@ -1,14 +1,40 @@
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useCallback, useMemo, useState, useTransition } from "react";
 
+/**
+ * Props for the usePagination hook.
+ * @template T
+ */
 interface UsePaginationProps<T> {
+  /** The complete list of items to paginate. */
   items: T[];
+  /** The number of items to display per page. */
   itemsPerPage?: number;
+  /** Artificial delay in milliseconds to simulate loading. */
   loadingDelay?: number;
+  /** The URL query parameter key for the page number. */
   queryKey?: string;
+  /** Optional function to sort items before paginating. */
   sortFn?: (a: T, b: T) => number;
 }
 
+/**
+ * A custom hook for client-side pagination with URL synchronization.
+ *
+ * @template T
+ * @param {UsePaginationProps<T>} props - The configuration properties.
+ * @returns {Object} An object containing pagination state and control functions.
+ * @returns {number} return.currentPage - The current page number (1-based).
+ * @returns {number} return.totalPages - The total number of pages.
+ * @returns {T[]} return.currentItems - The items for the current page.
+ * @returns {Function} return.goToPage - Function to navigate to a specific page.
+ * @returns {Function} return.goToNextPage - Function to navigate to the next page.
+ * @returns {Function} return.goToPreviousPage - Function to navigate to the previous page.
+ * @returns {Function} return.getPageNumbers - Function to generate the list of page numbers to display (including ellipses).
+ * @returns {boolean} return.hasNextPage - Whether there is a next page.
+ * @returns {boolean} return.hasPreviousPage - Whether there is a previous page.
+ * @returns {boolean} return.isLoading - Whether a page transition is in progress.
+ */
 export function usePagination<T>({
   items,
   itemsPerPage = 10,
@@ -56,6 +82,10 @@ export function usePagination<T>({
     [pathname, queryKey, router, searchParams],
   );
 
+  /**
+   * Navigates to a specific page number.
+   * @param {number} page - The target page number.
+   */
   const goToPage = useCallback(
     (page: number) => {
       const pageNumber = Math.max(1, Math.min(page, totalPages));
@@ -71,18 +101,28 @@ export function usePagination<T>({
     [currentPage, loadingDelay, totalPages, updateURL],
   );
 
+  /**
+   * Navigates to the next page if available.
+   */
   const goToNextPage = useCallback(() => {
     if (currentPage < totalPages) {
       goToPage(currentPage + 1);
     }
   }, [currentPage, goToPage, totalPages]);
 
+  /**
+   * Navigates to the previous page if available.
+   */
   const goToPreviousPage = useCallback(() => {
     if (currentPage > 1) {
       goToPage(currentPage - 1);
     }
   }, [currentPage, goToPage]);
 
+  /**
+   * Generates an array of page numbers and ellipses for pagination UI.
+   * @returns {(number | "ellipsis")[]} The array of page numbers/ellipses.
+   */
   const getPageNumbers = () => {
     const pages: (number | "ellipsis")[] = [];
     const maxPagesToShow = 5;

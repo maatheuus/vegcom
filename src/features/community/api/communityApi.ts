@@ -8,7 +8,9 @@ import { mockDelay, generateMockId } from "@/shared/api/mock";
 import type { CreatePostData, UpdatePostData, CreateCommentData } from "../types";
 
 /**
- * Get all posts
+ * Retrieves a list of all community posts.
+ *
+ * @returns {Promise<Post[]>} A promise resolving to an array of posts.
  */
 export const getPosts = async (): Promise<Post[]> => {
   await mockDelay(800);
@@ -16,7 +18,10 @@ export const getPosts = async (): Promise<Post[]> => {
 };
 
 /**
- * Get post by ID
+ * Retrieves a single post by its ID.
+ *
+ * @param {string} id - The unique identifier of the post.
+ * @returns {Promise<Post | null>} A promise resolving to the post or null if not found.
  */
 export const getPostById = async (id: string): Promise<Post | null> => {
   await mockDelay(600);
@@ -25,7 +30,10 @@ export const getPostById = async (id: string): Promise<Post | null> => {
 };
 
 /**
- * Create new post
+ * Creates a new community post.
+ *
+ * @param {CreatePostData} data - The content and metadata for the new post.
+ * @returns {Promise<Post>} A promise resolving to the newly created post.
  */
 export const createPost = async (data: CreatePostData): Promise<Post> => {
   await mockDelay(1000);
@@ -49,7 +57,11 @@ export const createPost = async (data: CreatePostData): Promise<Post> => {
 };
 
 /**
- * Update post
+ * Updates an existing post.
+ *
+ * @param {UpdatePostData} data - The ID of the post to update and the new data.
+ * @returns {Promise<Post>} A promise resolving to the updated post.
+ * @throws {Error} If the post is not found.
  */
 export const updatePost = async (data: UpdatePostData): Promise<Post> => {
   await mockDelay(900);
@@ -68,7 +80,10 @@ export const updatePost = async (data: UpdatePostData): Promise<Post> => {
 };
 
 /**
- * Delete post
+ * Deletes a post.
+ *
+ * @param {string} id - The ID of the post to delete.
+ * @returns {Promise<void>} A promise indicating completion.
  */
 export const deletePost = async (id: string): Promise<void> => {
   await mockDelay(700);
@@ -76,7 +91,10 @@ export const deletePost = async (id: string): Promise<void> => {
 };
 
 /**
- * Like/unlike post
+ * Toggles the like status of a post.
+ *
+ * @param {string} postId - The ID of the post to like/unlike.
+ * @returns {Promise<{ likesCount: number }>} A promise resolving to the new likes count.
  */
 export const toggleLike = async (
   postId: string,
@@ -93,7 +111,10 @@ export const toggleLike = async (
 };
 
 /**
- * Create comment
+ * Adds a comment to a post.
+ *
+ * @param {CreateCommentData} data - The ID of the post and the comment content.
+ * @returns {Promise<PostComment>} A promise resolving to the newly created comment.
  */
 export const createComment = async (
   data: CreateCommentData,
@@ -116,7 +137,10 @@ export const createComment = async (
 };
 
 /**
- * Delete comment
+ * Deletes a comment.
+ *
+ * @param {string} commentId - The ID of the comment to delete.
+ * @returns {Promise<void>} A promise indicating completion.
  */
 export const deleteComment = async (commentId: string): Promise<void> => {
   await mockDelay(600);

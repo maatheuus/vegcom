@@ -36,6 +36,13 @@ const testimonials = [
   },
 ];
 
+/**
+ * TestimonialsSection component for the landing page.
+ * Displays user reviews and testimonials.
+ * Uses GSAP for staggered entry animations.
+ *
+ * @returns {JSX.Element} The rendered Testimonials section.
+ */
 export function TestimonialsSection() {
   const containerRef = useRef<HTMLDivElement>(null);
 

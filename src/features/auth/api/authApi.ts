@@ -7,7 +7,10 @@ import { generateMockId, mockAuth, mockDelay } from "@/shared/api/mock";
 import type { AuthResponse, LoginCredentials, SignupData } from "../types";
 
 /**
- * Login user
+ * Authenticates a user with email and password.
+ *
+ * @param {LoginCredentials} credentials - The user's login credentials.
+ * @returns {Promise<{ error: null; loginData: AuthResponse }>} A promise resolving to the login response data.
  */
 export const login = async (
   credentials: LoginCredentials,
@@ -35,7 +38,9 @@ export const login = async (
 };
 
 /**
- * Login with Google OAuth
+ * Simulates authentication via Google OAuth.
+ *
+ * @returns {Promise<{ error: null; loginData: AuthResponse }>} A promise resolving to the login response data.
  */
 export const loginWithGoogle = async (): Promise<{
   error: null;
@@ -64,7 +69,10 @@ export const loginWithGoogle = async (): Promise<{
 };
 
 /**
- * Signup new user
+ * Registers a new user account.
+ *
+ * @param {SignupData} data - The data required for registration.
+ * @returns {Promise<{ error: null; singupData: AuthResponse }>} A promise resolving to the signup response data.
  */
 export const signup = async (data: SignupData): Promise<{
   error: null;
@@ -93,7 +101,9 @@ export const signup = async (data: SignupData): Promise<{
 };
 
 /**
- * Logout user
+ * Logs out the current user by removing the auth token.
+ *
+ * @returns {Promise<{ error: null }>} A promise indicating completion.
  */
 export const logout = async (): Promise<{ error: null }> => {
   await mockDelay(500);
@@ -104,7 +114,9 @@ export const logout = async (): Promise<{ error: null }> => {
 };
 
 /**
- * Get current user
+ * Retrieves the currently authenticated user session.
+ *
+ * @returns {Promise<{ data: { user: AuthResponse["user"] } | null; error: null }>} A promise resolving to the current user data or null if not authenticated.
  */
 export const getUser = async (): Promise<{
   data: { user: AuthResponse["user"] } | null;

@@ -1,3 +1,7 @@
+/**
+ * Interface representing the raw City data structure from the IBGE API.
+ * The field names correspond directly to the API response.
+ */
 export interface City {
   "municipio-id": number;
   "municipio-nome": string;
@@ -17,23 +21,38 @@ export interface City {
   "regiao-nome": string;
 }
 
+/**
+ * Interface representing a processed and standardized search result for a city.
+ */
 export interface CitySearchResult {
+  /** Unique identifier for the city. */
   id: number;
+  /** Name of the city. */
   nome: string;
+  /** Name of the state (UF). */
   estado: string;
+  /** Abbreviation of the state (UF). */
   sigla: string;
+  /** Formatted display name (e.g., "City Name, UF"). */
   displayName: string;
 }
 
 const IBGE_BASE_URL = "https://servicodados.ibge.gov.br/api/v1";
 
+/**
+ * Service class for interacting with the IBGE API to fetch city data.
+ * Includes caching mechanisms to optimize performance.
+ */
 export class CitiesAPI {
   private static cache = new Map<string, CitySearchResult[]>();
   private static readonly CACHE_DURATION = 5 * 60 * 1000; // 5 minutes
   private static readonly CACHE_TIMESTAMPS = new Map<string, number>();
 
   /**
-   * Search for Brazilian cities by name
+   * Search for Brazilian cities by name.
+   *
+   * @param {string} query - The name or partial name of the city to search for.
+   * @returns {Promise<CitySearchResult[]>} A promise resolving to an array of matching cities.
    */
   static async searchCities(query: string): Promise<CitySearchResult[]> {
     if (!query || query.length < 2) {
@@ -80,7 +99,10 @@ export class CitiesAPI {
   }
 
   /**
-   * Get all cities for a specific state
+   * Get all cities for a specific state.
+   *
+   * @param {string} stateCode - The 2-letter state code (UF) or state ID.
+   * @returns {Promise<CitySearchResult[]>} A promise resolving to the list of cities in the state.
    */
   static async getCitiesByState(
     stateCode: string,
@@ -125,7 +147,7 @@ export class CitiesAPI {
   }
 
   /**
-   * Clear cache and timestamps
+   * Clears the internal city cache and timestamps.
    */
   static clearCache(): void {
     this.cache.clear();

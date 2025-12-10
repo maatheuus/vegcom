@@ -2,6 +2,13 @@ import { getRecipes } from "@/features/recipes/api/recipesApi";
 import type { Recipe } from "@/features/recipes/components/types";
 import { MostViewedClient } from "./MostViewedClient";
 
+/**
+ * Server component that fetches and prepares the most viewed recipes.
+ * Fetches all recipes, sorts them by views, takes the top 4,
+ * and maps them to the format expected by the client component.
+ *
+ * @returns {Promise<JSX.Element>} The rendered MostViewedClient component.
+ */
 export async function MostViewedSection() {
   const recipes = await getRecipes();
   const mostViewed = recipes

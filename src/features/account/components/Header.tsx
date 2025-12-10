@@ -12,27 +12,49 @@ import Text from "@/shared/ui/Text";
 import { DotsThreeIcon } from "@phosphor-icons/react";
 import { useState } from "react";
 
+/**
+ * Definition of an action button within the header.
+ */
 export interface HeaderAction {
+  /** Text to display on the action button. */
   text: string;
+  /** Optional icon to display alongside the text. */
   icon?: React.ReactElement;
+  /** Callback function to execute when clicked. */
   onClick?: () => void;
+  /** URL to navigate to (if it's a link). */
   href?: string;
+  /** Visual variant of the action (default or destructive). */
   variant?: "default" | "destructive";
 }
 
 interface Props {
+  /** Whether to show a default CTA button (mutually exclusive with actions/children). */
   hasButton?: boolean;
+  /** Optional class name for the container. */
   className?: string;
+  /** Custom children elements to render in the action area. */
   children?: React.ReactNode;
+  /** Main title of the header. */
   title: string;
+  /** Subtitle of the header. */
   subTitle: string;
+  /** Configuration for the default CTA button (used if hasButton is true). */
   buttonCta?: {
     text: string;
     onClick: () => void;
   };
+  /** List of actions to render as buttons or a dropdown menu on mobile. */
   actions?: HeaderAction[];
 }
 
+/**
+ * Reusable header component for account sections.
+ * Supports a title, subtitle, and responsive actions (buttons on desktop, sheet on mobile).
+ *
+ * @param {Props} props - The component props.
+ * @returns {JSX.Element} The rendered header.
+ */
 export default function Header({
   title,
   subTitle,

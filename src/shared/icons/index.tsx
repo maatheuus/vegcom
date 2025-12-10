@@ -1,12 +1,19 @@
-// Ícones filled
+/**
+ * Icons Exports
+ *
+ * This file centralizes the exports for all SVG icons used in the application.
+ * Icons are categorized into 'filled', 'outlined', and 'custom'.
+ */
+
+// Filled Icons
 export { default as HalfStarFilledIcon } from "./filled/HalfStar";
 
-// Ícones outlined
+// Outlined Icons
 export { default as HistoryChatOutlinedIcon } from "./outlined/HistoryChat";
 export { default as NormalLineOutlinedIcon } from "./outlined/NormalLine";
 export { default as ProgressLineOutlinedIcon } from "./outlined/ProgressLine";
 
-// Ícones custom
+// Custom Icons
 export { default as Arrow1CustomIcon } from "./custom/Arrow1";
 export { default as AsteriskCustomIcon } from "./custom/Asterisk";
 export { default as BoxArrowCustomIcon } from "./custom/BoxArrow";

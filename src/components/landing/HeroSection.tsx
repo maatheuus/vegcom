@@ -6,6 +6,13 @@ import { MouseScrollIcon } from "@phosphor-icons/react";
 import gsap from "gsap";
 import { useRef } from "react";
 
+/**
+ * HeroSection component for the landing page.
+ * Acts as the main entry point, featuring a large title, subtitle, and CTA button.
+ * Uses GSAP for entry animations and a bouncing scroll indicator.
+ *
+ * @returns {JSX.Element} The rendered Hero section.
+ */
 export function HeroSection() {
   const containerRef = useRef<HTMLDivElement>(null);
   const scrollRef = useRef<HTMLDivElement>(null);

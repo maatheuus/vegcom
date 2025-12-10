@@ -1,5 +1,8 @@
 import { z } from "zod";
 
+/**
+ * Fun messages to display when a user successfully subscribes to premium.
+ */
 export const messagesToDisplayForPremium = [
   {
     text: "Agora você joga no modo turbo!",
@@ -57,8 +60,15 @@ export const messagesToDisplayForPremium = [
   },
 ];
 
+/**
+ * Maximum allowed characters for the user bio.
+ */
 export const maxLengthForBio = 400;
 
+/**
+ * Zod schema for validating the personal information form.
+ * Handles validation for profile fields and conditional password updates.
+ */
 export const personalInfoFormSchema = z
   .object({
     fullName: z.string().min(2, "Nome muito curto"),
@@ -104,24 +114,36 @@ export const personalInfoFormSchema = z
     },
   );
 
+/**
+ * Options for the diet type selection.
+ */
 export const dietOptions = [
   { value: "vegetarian", label: "Vegetariano" },
   { value: "vegan", label: "Vegano" },
   { value: "plant-based", label: "Plant-based" },
 ];
 
+/**
+ * Options for the culinary level selection.
+ */
 export const culinaryLevelOptions = [
   { value: "beginner", label: "Queima tudo" },
   { value: "intermediate", label: "Sabe fritar um ovo" },
   { value: "advanced", label: "MasterChef não é nada" },
 ];
 
+/**
+ * Messages to display when the bio is too short.
+ */
 export const bioTooShortMessages = [
   "Sua bio tá muito curta! Capricha um pouco mais 😄📝",
   "Conta um pouquinho sobre você, tipo aquele textinho de perfil do Insta. 📸✨",
   "Não precisa nos revelar que você é o Batman, apenas um resumo pequeno sobre você. 🦇",
 ];
 
+/**
+ * Messages to display when the bio is too long.
+ */
 export const bioTooLongMessages = [
   "Vamos com calma, essa não é pra ser sua biografia não! 📚😅",
   "Ih, tá muito longa... não é um livro não, hein! 📖🙃",

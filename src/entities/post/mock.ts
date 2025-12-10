@@ -1,9 +1,12 @@
 /**
- * Mock post data
+ * Mock post data used for development and testing.
  */
 
 import type { Post, PostComment } from "./types";
 
+/**
+ * Array of mock comments.
+ */
 export const mockComments: PostComment[] = [
   {
     id: "comment_1",
@@ -29,6 +32,9 @@ export const mockComments: PostComment[] = [
   },
 ];
 
+/**
+ * Array of mock posts including content, authors, stats, and comments.
+ */
 export const mockPosts: Post[] = [
   {
     id: "post_1",

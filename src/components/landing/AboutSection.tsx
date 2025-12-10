@@ -28,6 +28,13 @@ const points = [
   },
 ];
 
+/**
+ * AboutSection component for the landing page.
+ * Displays information about the platform's mission and features.
+ * Uses GSAP for scroll-triggered animations.
+ *
+ * @returns {JSX.Element} The rendered About section.
+ */
 export function AboutSection() {
   const containerRef = useRef<HTMLDivElement>(null);
 

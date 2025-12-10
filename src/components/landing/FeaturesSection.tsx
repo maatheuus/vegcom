@@ -29,6 +29,13 @@ const features = [
   },
 ];
 
+/**
+ * FeaturesSection component for the landing page.
+ * Highlights the main benefits of using the platform using a grid layout.
+ * Uses GSAP for entry animations.
+ *
+ * @returns {JSX.Element} The rendered Features section.
+ */
 export function FeaturesSection() {
   const containerRef = useRef<HTMLDivElement>(null);
 

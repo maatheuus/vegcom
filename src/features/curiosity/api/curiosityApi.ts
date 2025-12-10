@@ -14,7 +14,10 @@ const mockResponses = [
 ];
 
 /**
- * Send message and get AI response
+ * Sends a message to the AI assistant and receives a simulated response.
+ *
+ * @param {SendMessageData} _data - The message content sent by the user.
+ * @returns {Promise<ChatMessage>} A promise resolving to the AI's response message.
  */
 export const sendMessage = async (
   _data: SendMessageData,
@@ -35,7 +38,9 @@ export const sendMessage = async (
 };
 
 /**
- * Get chat history
+ * Retrieves the history of the chat conversation.
+ *
+ * @returns {Promise<ChatMessage[]>} A promise resolving to an array of past messages (currently empty mock).
  */
 export const getChatHistory = async (): Promise<ChatMessage[]> => {
   await mockDelay(600);

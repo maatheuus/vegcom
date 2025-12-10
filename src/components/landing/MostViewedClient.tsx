@@ -9,10 +9,21 @@ import { useRef } from "react";
 
 gsap.registerPlugin(ScrollTrigger);
 
+/**
+ * Props for the MostViewedClient component.
+ */
 interface MostViewedClientProps {
+  /** List of recipes to display. */
   recipes: Recipe[];
 }
 
+/**
+ * Client-side component to display the most viewed recipes.
+ * Handles the GSAP animations for the section entry.
+ *
+ * @param {MostViewedClientProps} props - The component props.
+ * @returns {JSX.Element} The rendered section with animations.
+ */
 export function MostViewedClient({ recipes }: MostViewedClientProps) {
   const containerRef = useRef<HTMLDivElement>(null);
 
