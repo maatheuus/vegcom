@@ -1,4 +1,4 @@
-import CommunityLayout from "@/features/community/components/Layout";
+import CommunityLayout from "@/features/community/components/CommunityLayout";
 import Layout from "@/shared/ui/Layout/";
 
 export default function Page() {

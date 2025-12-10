@@ -46,25 +46,33 @@ export default function Tabs({
     >
       <Row className="gap-x-4">
         {tabs.map((tab) => (
-          <Button.Icon
+          <Button
             key={tab.key}
             onClick={() => handleTabClick(tab.key)}
             variant="text"
-            leftIcon={tab.icon}
             disabled={isTransitioning}
             className={clsx(
-              "font-lora relative p-0 text-green-200 italic transition-all duration-200 after:absolute after:-bottom-2.5 after:left-0 after:h-0.5 after:rounded-full after:bg-green-200 after:transition-all after:duration-300 after:content-[''] hover:text-green-500 [&_svg]:size-fit",
+              "group relative cursor-pointer p-0 transition-all duration-200 after:absolute after:-bottom-2.5 after:left-0 after:h-0.5 after:rounded-full after:bg-green-200 after:transition-all after:duration-300 after:content-[''] [&_svg]:size-fit",
               isChatLayout &&
-                "gap-x-1 rounded-full p-2 text-green-50 after:hidden [&_svg]:rounded-none hover:[&_svg]:text-green-500",
+                "gap-x-1 rounded-full p-2 after:hidden [&_svg]:rounded-none hover:[&_svg]:text-green-500",
               isChatLayout &&
                 selectedTab === tab.key &&
-                "bg-green-50 text-green-500 [&_svg]:text-green-200",
+                "bg-green-50 [&_svg]:text-green-200",
               selectedTab === tab.key ? "after:w-full" : "after:w-0",
               isTransitioning && "pointer-events-none opacity-70",
             )}
           >
-            {tab.label}
-          </Button.Icon>
+            {tab.icon}
+            <span
+              className={clsx(
+                "font-lora hidden italic group-hover:text-green-500 md:inline",
+                isChatLayout && "text-green-50",
+                isChatLayout && selectedTab === tab.key && "text-green-500",
+              )}
+            >
+              {tab.label}
+            </span>
+          </Button>
         ))}
       </Row>
 

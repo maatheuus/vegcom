@@ -79,7 +79,7 @@ const SignupForm: FC<ComponentProps<"form">> = ({ className, ...props }) => {
         onSubmit={form.handleSubmit(onSubmit)}
         {...props}
       >
-        <Col className="items-center gap-3 px-5 pt-4 pb-6">
+        <Col className="items-center gap-3">
           <FormField
             control={form.control}
             name="username"
@@ -154,7 +154,7 @@ const SignupForm: FC<ComponentProps<"form">> = ({ className, ...props }) => {
             )}
           />
         </Col>
-        <Col className="items-center gap-2 px-5 py-4">
+        <Col className="mt-4 items-center gap-2">
           <SubmitButton text="Seguinte">
             <CircleNotchIcon className="!h-6 !w-6 animate-spin" />
           </SubmitButton>

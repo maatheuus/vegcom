@@ -14,6 +14,7 @@ import {
   FormMessage,
 } from "@/shared/ui/Form";
 import { Input } from "@/shared/ui/Input";
+import { ScrollArea } from "@/shared/ui/scroll-area";
 import Text from "@/shared/ui/Text";
 import Textarea from "@/shared/ui/TextArea";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -320,57 +321,50 @@ export default function NewRecipeForm({}: Props) {
     <div>
       <FluctuantTip tips={TIPS_BY_STEP[currentStep]} />
       <div className="border-b border-green-100">
-        <div className="container mx-auto py-6">
-          <div className="flex items-center justify-between gap-2 overflow-x-auto">
-            {stepTitles.map((stepTitle, index) => (
-              <div
-                key={index}
-                className={`flex items-center gap-2 ${
-                  index < stepTitles.length - 1 ? "flex-1" : ""
-                }`}
-              >
-                <div className="flex flex-col items-center gap-1">
-                  <div
-                    className={`font-lora flex h-8 w-8 items-center justify-center rounded-full transition-colors ${
-                      currentStep > index + 1
-                        ? "bg-green-600 font-semibold text-white"
-                        : currentStep === index + 1
-                          ? "bg-green-500 text-green-50"
-                          : "bg-green-100 text-green-500"
-                    }`}
-                  >
-                    {currentStep > index + 1 ? (
-                      <SealCheckIcon size={16} />
-                    ) : (
-                      <span className="text-sm italic">{index + 1}</span>
-                    )}
+        <div className="md:py-6">
+          <ScrollArea orientation="horizontal" className="w-full pb-4">
+            <div className="flex w-full min-w-[600px] items-start justify-between gap-2 text-center md:min-w-0">
+              {stepTitles.map((stepTitle, index) => (
+                <div
+                  key={index}
+                  className="flex flex-1 items-center justify-center gap-2"
+                >
+                  <div className="flex flex-col items-center gap-1">
+                    <div
+                      className={`font-lora flex min-h-8 min-w-8 items-center justify-center rounded-full transition-colors ${
+                        currentStep > index + 1
+                          ? "bg-green-600 font-semibold text-white"
+                          : currentStep === index + 1
+                            ? "bg-green-500 text-green-50"
+                            : "bg-green-100 text-green-500"
+                      }`}
+                    >
+                      {currentStep > index + 1 ? (
+                        <SealCheckIcon size={16} />
+                      ) : (
+                        <span className="text-sm italic">{index + 1}</span>
+                      )}
+                    </div>
+                    <Text
+                      className={`font-lora text-xs ${
+                        currentStep === index + 1
+                          ? "text-green-600"
+                          : currentStep > index + 1
+                            ? "text-green-500"
+                            : "text-green-600"
+                      }`}
+                    >
+                      {stepTitle}
+                    </Text>
                   </div>
-                  <Text
-                    className={`font-lora text-xs ${
-                      currentStep === index + 1
-                        ? "text-green-600"
-                        : currentStep > index + 1
-                          ? "text-green-500"
-                          : "text-green-600"
-                    }`}
-                  >
-                    {stepTitle}
-                  </Text>
                 </div>
-                {index < stepTitles.length - 1 && (
-                  <div
-                    className={`h-0.5 flex-1 transition-colors ${
-                      currentStep > index + 1 ? "bg-green-600" : "bg-gray-200"
-                    }`}
-                  />
-                )}
-              </div>
-            ))}
-          </div>
+              ))}
+            </div>
+          </ScrollArea>
         </div>
       </div>
 
-      <div className="container mx-auto h-full px-6 py-8">
+      <div className="h-full py-8">
         <div className="mx-auto h-full max-w-4xl">
           <Form {...form}>
             <form className="block h-full w-full md:min-h-[420px]">

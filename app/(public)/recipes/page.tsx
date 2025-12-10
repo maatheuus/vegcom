@@ -9,7 +9,7 @@ import Row from "@/shared/ui/Layout/Helpers/Row";
 export default function Page() {
   return (
     <Layout.Default className="style-scrollbar h-auto">
-      <section className="container mx-auto space-y-12 px-4">
+      <section className="space-y-8 md:space-y-12">
         <Row className="items-center justify-between">
           <HeaderComponent>
             <Header title="Receitas" className="border-0 p-0" />

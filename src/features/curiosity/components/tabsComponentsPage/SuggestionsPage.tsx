@@ -1,3 +1,4 @@
+import { ScrollArea } from "@/shared/ui/scroll-area";
 import Text from "@/shared/ui/Text";
 import { useGSAP } from "@gsap/react";
 import { LightbulbFilamentIcon } from "@phosphor-icons/react";
@@ -96,59 +97,45 @@ export default function SuggestionsPage() {
   );
 
   return (
-    <div className="h-full">
-      <div className="mx-auto mt-6 max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div
-          ref={containerRef}
-          className="scrollbar-hide relative flex items-center gap-x-2 overflow-x-auto rounded-full bg-green-50 p-1.5"
-        >
+    <div className="h-full space-y-8 md:space-y-12">
+      <div className="mt-6 w-full max-w-[calc(100vw-5rem)] rounded-none px-0 md:max-w-7xl md:px-6 lg:px-8">
+        <ScrollArea orientation="horizontal" className="w-full pb-4">
           <div
-            ref={pillRef}
-            className="absolute top-0 left-0 my-1.5 h-[calc(100%-0.75rem)] rounded-full bg-green-500 shadow-md will-change-[transform,width,height]"
-          />
+            ref={containerRef}
+            className="relative flex w-full items-center gap-x-2 rounded-full bg-green-50 p-1.5"
+          >
+            <div
+              ref={pillRef}
+              className="absolute top-0 left-0 my-1.5 h-[calc(100%-0.75rem)] rounded-full bg-green-500 shadow-md will-change-[transform,width,height]"
+            />
 
-          {categories.map(({ key, label }, index) => (
-            <button
-              key={key}
-              ref={(el) => {
-                buttonsRef.current[index] = el;
-              }}
-              onClick={() => handleCategoryChange(key)}
-              className={clsx(
-                "font-lora relative z-10 block cursor-pointer rounded-full px-4 py-2 text-sm whitespace-nowrap italic transition-colors duration-300 md:text-base",
-                selectedKey === key
-                  ? "font-semibold text-green-50"
-                  : "text-green-500/70 hover:text-green-500",
-              )}
-            >
-              {label}
-            </button>
-          ))}
-        </div>
+            {categories.map(({ key, label }, index) => (
+              <button
+                key={key}
+                ref={(el) => {
+                  buttonsRef.current[index] = el;
+                }}
+                onClick={() => handleCategoryChange(key)}
+                className={clsx(
+                  "font-lora relative z-10 cursor-pointer rounded-full px-4 py-2 text-sm italic transition-colors duration-300 md:text-base",
+                  selectedKey === key
+                    ? "font-semibold text-green-50"
+                    : "text-green-500/70 hover:text-green-500",
+                )}
+              >
+                {label}
+              </button>
+            ))}
+          </div>
+        </ScrollArea>
       </div>
 
-      <main className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
-        <div className="mb-8 text-center">
+      <main className="space-y-8 sm:px-6 md:space-y-10 lg:px-8">
+        <div className="text-center">
           <Text className="font-maitree font-semibold text-green-500">
             Selecione um tópico para iniciar uma conversa.
           </Text>
         </div>
-        {/* 
-        {isLoading ? (
-          <div className="flex items-center justify-center py-20">
-            <div className="h-12 w-12 animate-spin rounded-full border-b-2 border-green-500" />
-          </div>
-        ) : (
-          <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
-            {filteredSuggestions.slice(0, 9).map((suggestion) => (
-              <SuggestionCard
-                key={suggestion.id}
-                suggestion={suggestion}
-                onClick={() => handleSuggestionClick(suggestion)}
-              />
-            ))}
-          </div>
-        )} */}
 
         <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
           {filteredSuggestions.slice(0, 9).map((suggestion) => (

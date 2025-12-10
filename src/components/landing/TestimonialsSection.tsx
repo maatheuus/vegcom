@@ -79,7 +79,7 @@ export function TestimonialsSection() {
       ref={containerRef}
       className="bg-gradient-to-b from-green-100 to-white py-24"
     >
-      <div className="mx-auto max-w-7xl px-4">
+      <div className="container__default">
         <div className="testimonials-title mb-16 text-center">
           <h2 className="font-frank text-4xl font-bold text-green-600 md:text-5xl">
             O Que Nossa Comunidade Diz
@@ -116,7 +116,7 @@ export function TestimonialsSection() {
               </div>
 
               <p className="font-maitree leading-relaxed text-gray-600 italic">
-                "{testimonial.content}"
+                &quot;{testimonial.content}&quot;
               </p>
             </div>
           ))}

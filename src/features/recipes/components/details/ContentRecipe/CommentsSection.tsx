@@ -1,13 +1,23 @@
 "use client";
 
+import { usePagination } from "@/shared/hooks/usePagination";
 import Col from "@/shared/ui/Layout/Helpers/Col";
+import {
+  Pagination,
+  PaginationContent,
+  PaginationEllipsis,
+  PaginationItem,
+  PaginationLink,
+  PaginationNext,
+  PaginationPrevious,
+} from "@/shared/ui/Pagination";
 import Text from "@/shared/ui/Text";
 import clsx from "clsx";
 import { memo, useCallback, useState } from "react";
 
 import type { Comment } from "../../types";
 import CommentCard from "./CommentCard";
-import RecipeCommentsModal from "./RecipeCommentsModal";
+import CommentSkeleton from "./CommentSkeleton";
 import ReviewForm from "./ReviewForm";
 
 interface Props extends React.HTMLAttributes<HTMLDivElement> {
@@ -15,7 +25,7 @@ interface Props extends React.HTMLAttributes<HTMLDivElement> {
   comments: Comment[];
 }
 
-const MAX_COMMENTS_LENGTH = 3;
+const ITEMS_PER_PAGE = 4;
 
 const CommentsSection = memo(function CommentsSection({
   className,
@@ -31,6 +41,23 @@ const CommentsSection = memo(function CommentsSection({
   const [likesCount, setLikesCount] = useState<{ [id: number]: number }>(
     Object.fromEntries(comments.map((c) => [c.id, c.likes])),
   );
+
+  const {
+    currentItems,
+    currentPage,
+    goToPage,
+    goToNextPage,
+    goToPreviousPage,
+    getPageNumbers,
+    hasNextPage,
+    hasPreviousPage,
+    isLoading,
+  } = usePagination({
+    items: localComments,
+    itemsPerPage: ITEMS_PER_PAGE,
+    loadingDelay: 0,
+    queryKey: "comments_page",
+  });
 
   const handlePostReview = useCallback(() => {
     if (!newReview) return;
@@ -48,7 +75,8 @@ const CommentsSection = memo(function CommentsSection({
     setLocalComments((prev) => [review, ...prev]);
     setNewReview("");
     setNewRating(0);
-  }, [newReview, localComments]);
+    goToPage(1);
+  }, [newReview, localComments, goToPage]);
 
   const handleLike = useCallback(
     (id: number) => {
@@ -70,13 +98,12 @@ const CommentsSection = memo(function CommentsSection({
     [likedComments],
   );
 
-  const visibleComments = localComments.slice(0, MAX_COMMENTS_LENGTH);
-  const remainingComments = localComments.slice(MAX_COMMENTS_LENGTH);
+  const shouldShowPagination = localComments.length > ITEMS_PER_PAGE;
 
   return (
     <Col
       className={clsx(
-        "gap-y-6 pt-6 before:h-0.5 before:w-full before:rounded-full before:bg-green-200 before:content-['']",
+        "items-start gap-y-6 border-t border-t-green-200 pt-6",
         className || "",
       )}
       role="region"
@@ -90,7 +117,6 @@ const CommentsSection = memo(function CommentsSection({
         onReviewChange={setNewReview}
         onPost={handlePostReview}
       />
-
       <Text
         type={Text.Type.HeadingFive}
         weight={Text.Weight.Medium}
@@ -99,39 +125,64 @@ const CommentsSection = memo(function CommentsSection({
       >
         Comentários
       </Text>
-
-      <div role="list" aria-label="Lista de comentários" className="space-y-8">
-        {visibleComments.map((comment) => (
-          <CommentCard
-            key={comment.id}
-            comment={comment}
-            likes={likesCount[comment.id] ?? comment.likes}
-            isLiked={!!likedComments[comment.id]}
-            onLike={() => handleLike(comment.id)}
-          />
-        ))}
-      </div>
-
-      <RecipeCommentsModal
-        data={remainingComments}
-        likesCount={likesCount}
-        likedComments={likedComments}
-        handleLike={handleLike}
+      <div
+        role="list"
+        aria-label="Lista de comentários"
+        className="w-full space-y-8"
       >
-        {remainingComments.length > 0 && (
-          <Text
-            type={Text.Type.BodyFive}
-            className="w-fit cursor-pointer rounded-md p-1 text-green-500 transition-colors duration-200 hover:bg-green-100"
-            role="button"
-            tabIndex={0}
-            aria-label={`Ver mais ${remainingComments.length} comentários`}
-          >
-            {`+${remainingComments.length} ${
-              remainingComments.length > 1 ? "comentários" : "comentário"
-            }`}
-          </Text>
+        {isLoading ? (
+          <CommentSkeleton count={ITEMS_PER_PAGE} />
+        ) : (
+          currentItems.map((comment) => (
+            <CommentCard
+              key={comment.id}
+              comment={comment}
+              likes={likesCount[comment.id] ?? comment.likes}
+              isLiked={!!likedComments[comment.id]}
+              onLike={() => handleLike(comment.id)}
+            />
+          ))
         )}
-      </RecipeCommentsModal>
+      </div>
+      {shouldShowPagination && (
+        <div className="block w-full">
+          <Pagination>
+            <PaginationContent>
+              <PaginationItem>
+                <PaginationPrevious
+                  onClick={goToPreviousPage}
+                  disabled={!hasPreviousPage || isLoading}
+                />
+              </PaginationItem>
+
+              {getPageNumbers().map((pageNumber, index) =>
+                pageNumber === "ellipsis" ? (
+                  <PaginationItem key={`ellipsis-${index}`}>
+                    <PaginationEllipsis />
+                  </PaginationItem>
+                ) : (
+                  <PaginationItem key={pageNumber}>
+                    <PaginationLink
+                      onClick={() => goToPage(pageNumber as number)}
+                      isActive={currentPage === pageNumber}
+                      disabled={isLoading}
+                    >
+                      {pageNumber}
+                    </PaginationLink>
+                  </PaginationItem>
+                ),
+              )}
+
+              <PaginationItem>
+                <PaginationNext
+                  onClick={goToNextPage}
+                  disabled={!hasNextPage || isLoading}
+                />
+              </PaginationItem>
+            </PaginationContent>
+          </Pagination>
+        </div>
+      )}
     </Col>
   );
 });

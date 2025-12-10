@@ -11,51 +11,30 @@ import {
 import type { Editor } from "@tiptap/react";
 import clsx from "clsx";
 import { type HTMLAttributes } from "react";
-import type { EmojiPickerProps } from "./types";
 
 interface Props extends HTMLAttributes<HTMLDivElement> {
   addEmoji: (emoji: { native: string }) => void;
   imageInputRef: React.RefObject<HTMLInputElement | null>;
   postTitleInputRef: React.RefObject<HTMLInputElement | null>;
   editor: Editor | null;
+  isImageLimitReached?: boolean;
+  handleSubmit?: () => void;
 }
 
 export default function PostComposerActions({
   className,
   editor,
   addEmoji,
+  handleSubmit,
   postTitleInputRef,
   imageInputRef,
+  isImageLimitReached,
   ...props
 }: Props) {
   const handleImageClick = () => {
-    imageInputRef.current?.click();
-  };
-
-  const handleSendMessage = () => {
-    // editor?.commands.clearContent();
-    console.log("postTitleInputRef:", postTitleInputRef.current?.value);
-    console.log("Sending message:", editor?.getHTML());
-  };
-
-  const emojiPickerOptions: EmojiPickerProps = {
-    theme: "light",
-    data: data,
-    onEmojiSelect: addEmoji,
-    locale: "pt",
-    autoFocus: true,
-    navPosition: "bottom",
-    previewPosition: "top",
-    skinTonePosition: "search",
-    icons: "solid",
-    emojiButtonColors: [
-      "rgba(87, 204, 153, 0.7)",
-      "rgba(132, 255, 174, 0.7)",
-      "rgba(255, 214, 10, 0.7)",
-      "rgba(255, 123, 84, 0.7)",
-      "rgba(72, 207, 173, 0.7)",
-      "rgba(130, 181, 53, 0.7)",
-    ],
+    if (!isImageLimitReached) {
+      imageInputRef.current?.click();
+    }
   };
 
   return (
@@ -69,33 +48,60 @@ export default function PostComposerActions({
       <Row className="items-center gap-x-4">
         <Button.Icon
           variant="text"
-          className="p-0 text-green-200 hover:text-green-500"
+          className={clsx(
+            "p-0",
+            isImageLimitReached
+              ? "cursor-not-allowed text-gray-400 opacity-50"
+              : "text-green-200 hover:text-green-500",
+          )}
+          disabled={isImageLimitReached}
           leftIcon={<ImageIcon size={24} className="text-current" />}
           onClick={handleImageClick}
         />
-        <Row className={clsx("items-center", className)} {...props}>
-          <Popover>
-            <PopoverTrigger asChild>
-              <Button.Icon
-                variant="text"
-                className="p-0 text-green-200 hover:text-green-500"
-                icon={<SmileyIcon size={24} className="text-current" />}
+
+        <Popover modal={true}>
+          <PopoverTrigger asChild>
+            <Button.Icon
+              variant="text"
+              className="p-0 text-green-200 hover:text-green-500"
+              icon={<SmileyIcon size={24} className="text-current" />}
+            />
+          </PopoverTrigger>
+          <PopoverContent
+            className="w-auto border-none p-0 shadow-xl"
+            side="top"
+            align="start"
+            onOpenAutoFocus={(e) => e.preventDefault()}
+            onCloseAutoFocus={(e) => e.preventDefault()}
+          >
+            <div
+              onPointerDown={(e) => {
+                e.preventDefault();
+              }}
+            >
+              <EmojiPicker
+                data={data}
+                onEmojiSelect={addEmoji}
+                theme="light"
+                locale="pt"
+                autoFocus={false}
+                navPosition="bottom"
+                previewPosition="top"
+                skinTonePosition="search"
+                icons="solid"
               />
-            </PopoverTrigger>
-            <PopoverContent className="border-none p-0 shadow-xl">
-              <EmojiPicker {...emojiPickerOptions} />
-            </PopoverContent>
-          </Popover>
-        </Row>
+            </div>
+          </PopoverContent>
+        </Popover>
       </Row>
 
       <Button.Icon
         variant="filled"
         rightIcon={<PaperPlaneTiltIcon size={24} />}
-        disabled={editor?.isEmpty && postTitleInputRef?.current?.value === ""}
+        disabled={editor?.isEmpty || postTitleInputRef?.current?.value === ""}
         className="rounded-full"
-        title="Send message"
-        onClick={handleSendMessage}
+        title="Enviar mensagem"
+        onClick={handleSubmit}
       />
     </Row>
   );

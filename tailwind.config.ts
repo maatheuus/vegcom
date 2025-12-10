@@ -64,10 +64,12 @@ module.exports = {
         sm: "calc(var(--radius) - 4px)",
       },
       screens: {
-        xll: "90rem", // 1440px
+        xll: "90rem", // 1440px,
+        desktop: "69.375rem", // 1110px
       },
       maxWidth: {
-        xll: "90rem", // 1440px
+        xll: "90rem", // 1440px,
+        desktop: "69.375rem", // 1110px
       },
       keyframes: {
         slideInRight: {

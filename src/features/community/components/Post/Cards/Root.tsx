@@ -48,7 +48,10 @@ export default function PostCardRoot({
 
   return (
     <Col
-      className={clsx("w-full border-b border-b-gray-100 px-4 py-5", className)}
+      className={clsx(
+        "w-full border-b border-b-gray-100 py-5 md:px-4",
+        className,
+      )}
       {...props}
     >
       <Col>

@@ -55,7 +55,7 @@ export function MostViewedClient({ recipes }: MostViewedClientProps) {
       ref={containerRef}
       className="bg-gradient-to-b from-white to-green-50 py-24"
     >
-      <div className="mx-auto max-w-7xl px-4">
+      <div className="container__default">
         <div className="most-viewed-title mb-16 text-center">
           <h2 className="font-frank text-4xl font-bold text-green-600 md:text-5xl">
             Receitas Mais Visualizadas

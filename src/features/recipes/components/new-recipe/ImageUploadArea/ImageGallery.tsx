@@ -1,7 +1,15 @@
 import Grid from "@/shared/ui/Layout/Helpers/Grid";
 import Text from "@/shared/ui/Text";
 import { Tooltip, TooltipProvider } from "@/shared/ui/Tooltip";
-import { closestCenter, DndContext, DragEndEvent } from "@dnd-kit/core";
+import {
+  closestCenter,
+  DndContext,
+  DragEndEvent,
+  MouseSensor,
+  TouchSensor,
+  useSensor,
+  useSensors,
+} from "@dnd-kit/core";
 import { rectSortingStrategy, SortableContext } from "@dnd-kit/sortable";
 import SortableImage, { type ImageItem } from "./SortableImage";
 
@@ -12,6 +20,16 @@ interface Props {
 }
 
 export default function ImageGallery({ images, onRemove, onDragEnd }: Props) {
+  const sensors = useSensors(
+    useSensor(MouseSensor),
+    useSensor(TouchSensor, {
+      activationConstraint: {
+        delay: 150,
+        tolerance: 5,
+      },
+    }),
+  );
+
   if (images.length === 0) return;
 
   return (
@@ -24,7 +42,11 @@ export default function ImageGallery({ images, onRemove, onDragEnd }: Props) {
       >
         Imagens da Receita
       </Text>
-      <DndContext collisionDetection={closestCenter} onDragEnd={onDragEnd}>
+      <DndContext
+        sensors={sensors}
+        collisionDetection={closestCenter}
+        onDragEnd={onDragEnd}
+      >
         <SortableContext
           items={images.map((img) => img.id)}
           strategy={rectSortingStrategy}

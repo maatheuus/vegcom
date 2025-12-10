@@ -34,7 +34,7 @@ export default function Heading({
         <CardDescription
           as={asSubtitle}
           weight={Text.Weight.Normal}
-          type={Text.Type.HeadingTwo}
+          type={Text.Type.HeadingFour}
           className="text-green-500"
         >
           {subTitle}

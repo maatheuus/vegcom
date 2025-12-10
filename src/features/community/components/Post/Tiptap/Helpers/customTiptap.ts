@@ -74,7 +74,7 @@ export const CustomImage = Node.create<CustomImageOptions>({
 
   addNodeView() {
     return ReactNodeViewRenderer(
-      ImageComponent as React.FC<NodeViewContentProps>
+      ImageComponent as React.FC<NodeViewContentProps>,
     );
   },
 
@@ -82,14 +82,20 @@ export const CustomImage = Node.create<CustomImageOptions>({
     return {
       setCustomImage:
         (options) =>
-        ({ commands }) => {
-          return commands.insertContent({
-            type: this.name,
-            attrs: {
-              ...options,
-              id: `img-${Math.random().toString(36).substring(2, 11)}`,
+        ({ commands, tr }) => {
+          // Insert the image custom node
+          const imageInsertion = commands.insertContent([
+            {
+              type: this.name,
+              attrs: {
+                ...options,
+                id: `img-${Math.random().toString(36).substring(2, 11)}`,
+              },
             },
-          });
+            { type: "paragraph" }, // Ensure a paragraph follows
+          ]);
+
+          return imageInsertion;
         },
       removeCustomImage:
         () =>

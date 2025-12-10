@@ -326,12 +326,12 @@ export default function ChatPage() {
                     ) : messageInput.trim() !== "" ? (
                       <PaperPlaneIcon
                         size={20}
-                        className="-rotate-45 transition-all duration-300 group-hover:scale-110"
+                        className="transition-all duration-300 group-hover:scale-110"
                       />
                     ) : (
                       <PaperPlaneIcon
                         size={20}
-                        className="rotate-0 opacity-50 transition-all duration-300"
+                        className="opacity-50 transition-opacity duration-300"
                       />
                     )
                   }

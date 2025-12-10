@@ -21,7 +21,10 @@ const sortByOptions = [
   { value: "rating", label: "Mais avaliadas" },
 ];
 
-export default function RecipeFilter() {
+interface Props {
+  children?: React.ReactNode;
+}
+export default function RecipeFilter({ children }: Props) {
   const router = useRouter();
   const searchParams = useSearchParams();
 
@@ -100,24 +103,49 @@ export default function RecipeFilter() {
         inputClassName="!max-w-full w-full"
       />
 
-      <div className="max-w-fit">
-        <Select onValueChange={handleSort} value={sortBy || ""}>
-          <SelectTrigger>
-            <SelectValue placeholder="Ordenar por" data-slot="select-value" />
-          </SelectTrigger>
-
-          <SelectContent>
-            <SelectGroup>
-              <SelectLabel>Opções</SelectLabel>
-              {sortByOptions.map((option) => (
-                <SelectItem key={option.value} value={option.value}>
-                  {option.label}
-                </SelectItem>
-              ))}
-            </SelectGroup>
-          </SelectContent>
-        </Select>
-      </div>
+      {children ? (
+        <div className="flex w-full justify-between md:justify-end">
+          <div className="max-w-fit">
+            <Select onValueChange={handleSort} value={sortBy || ""}>
+              <SelectTrigger>
+                <SelectValue
+                  placeholder="Ordenar por"
+                  data-slot="select-value"
+                />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectGroup>
+                  <SelectLabel>Opções</SelectLabel>
+                  {sortByOptions.map((option) => (
+                    <SelectItem key={option.value} value={option.value}>
+                      {option.label}
+                    </SelectItem>
+                  ))}
+                </SelectGroup>
+              </SelectContent>
+            </Select>
+          </div>
+          {children}
+        </div>
+      ) : (
+        <div className="max-w-fit">
+          <Select onValueChange={handleSort} value={sortBy || ""}>
+            <SelectTrigger>
+              <SelectValue placeholder="Ordenar por" data-slot="select-value" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectGroup>
+                <SelectLabel>Opções</SelectLabel>
+                {sortByOptions.map((option) => (
+                  <SelectItem key={option.value} value={option.value}>
+                    {option.label}
+                  </SelectItem>
+                ))}
+              </SelectGroup>
+            </SelectContent>
+          </Select>
+        </div>
+      )}
     </>
   );
 }

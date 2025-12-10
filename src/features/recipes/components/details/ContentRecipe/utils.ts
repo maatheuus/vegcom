@@ -135,4 +135,49 @@ export const mockComments: Comment[] = [
     timeAgo: "1hr ago",
     likes: 46,
   },
+  {
+    id: 4,
+    author: "David Wilson",
+    avatarUrl: jorgeTest.src,
+    content:
+      "The combination of fresh greens and the zesty sun-dried tomato dressing is a total game-changer. It’s become a staple in my weekly menu. So easy to make and so incredibly delicious!",
+    timeAgo: "1hr ago",
+    likes: 46,
+  },
+  {
+    id: 5,
+    author: "David Wilson",
+    avatarUrl: jorgeTest.src,
+    content:
+      "The combination of fresh greens and the zesty sun-dried tomato dressing is a total game-changer. It’s become a staple in my weekly menu. So easy to make and so incredibly delicious!",
+    timeAgo: "1hr ago",
+    likes: 46,
+  },
+  {
+    id: 6,
+    author: "David Wilson",
+    avatarUrl: jorgeTest.src,
+    content:
+      "The combination of fresh greens and the zesty sun-dried tomato dressing is a total game-changer. It’s become a staple in my weekly menu. So easy to make and so incredibly delicious!",
+    timeAgo: "1hr ago",
+    likes: 46,
+  },
+  {
+    id: 7,
+    author: "David Wilson",
+    avatarUrl: jorgeTest.src,
+    content:
+      "The combination of fresh greens and the zesty sun-dried tomato dressing is a total game-changer. It’s become a staple in my weekly menu. So easy to make and so incredibly delicious!",
+    timeAgo: "1hr ago",
+    likes: 46,
+  },
+  {
+    id: 8,
+    author: "David Wilson",
+    avatarUrl: jorgeTest.src,
+    content:
+      "The combination of fresh greens and the zesty sun-dried tomato dressing is a total game-changer. It’s become a staple in my weekly menu. So easy to make and so incredibly delicious!",
+    timeAgo: "1hr ago",
+    likes: 46,
+  },
 ];

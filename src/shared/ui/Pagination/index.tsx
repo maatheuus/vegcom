@@ -3,8 +3,8 @@ import * as React from "react";
 import { cn } from "@/shared/lib/utils";
 import Button from "@/shared/ui/Button";
 import {
-  CaretLeftIcon,
-  CaretRightIcon,
+  ArrowBendUpLeftIcon,
+  ArrowBendUpRightIcon,
   DotsThreeCircleIcon,
 } from "@phosphor-icons/react";
 
@@ -79,7 +79,7 @@ const PaginationPrevious = ({
     disabled={disabled}
     {...props}
   >
-    <CaretLeftIcon className="size-4" />
+    <ArrowBendUpLeftIcon className="size-4" />
     <span className="hidden sm:inline">Anterior</span>
   </Button>
 );
@@ -103,7 +103,7 @@ const PaginationNext = ({
     {...props}
   >
     <span className="hidden sm:inline">Próxima</span>
-    <CaretRightIcon className="size-4" />
+    <ArrowBendUpRightIcon className="size-4" />
   </Button>
 );
 PaginationNext.displayName = "PaginationNext";

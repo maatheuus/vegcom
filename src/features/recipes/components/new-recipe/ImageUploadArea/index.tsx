@@ -32,7 +32,7 @@ export interface Props extends ComponentProps<"div"> {
   form: UseFormReturn<z.infer<typeof newRecipeFormSchema>>;
 }
 
-export const MAX_IMAGES = 8;
+export const MAX_IMAGES = 6;
 export const DURATION_TOAST_IN_SEG = 2000;
 
 export default function ImageUploadArea({ form, className }: Props) {

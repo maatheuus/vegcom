@@ -237,7 +237,6 @@ export default function GroupFields({
               strategy={verticalListSortingStrategy}
             >
               <RenderCheckList
-                type={type}
                 items={current[type]}
                 onDeleteItem={(id) => handleDeleteItemFromList(id, type)}
               />

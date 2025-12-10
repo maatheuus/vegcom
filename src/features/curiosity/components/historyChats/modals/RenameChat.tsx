@@ -34,7 +34,7 @@ export default function RenameChatModal({
 
   return (
     <Dialog open={isRenameModalOpen} onOpenChange={onCloseRenameModal}>
-      <DialogContent>
+      <DialogContent className="w-[calc(100vw-2rem)] rounded-md">
         <DialogHeader>
           <DialogTitle className="font-lora font-normal italic">
             Novo nome

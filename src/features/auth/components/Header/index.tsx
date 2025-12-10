@@ -30,7 +30,7 @@ export default function AuthHeader({
           className="relative flex items-center justify-start"
         >
           <span className="sr-only">Voltar para página anterior</span>
-          <ArrowArcLeftIcon size={32} className="rotate-180 text-green-500" />
+          <ArrowArcLeftIcon size={32} className="text-green-500" />
         </Link>
       )}
     </div>

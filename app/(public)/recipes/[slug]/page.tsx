@@ -5,7 +5,7 @@ import Layout from "@/shared/ui/Layout";
 export default async function page() {
   return (
     <Layout.Default className="style-scrollbar h-auto">
-      <div className="mx-auto max-w-[74rem] space-y-8 px-4 py-8">
+      <div className="mx-auto space-y-6 py-8 md:space-y-8">
         <Header
           isRecipePage
           savedCount={2}

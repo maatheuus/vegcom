@@ -10,7 +10,7 @@ export const ITEMS_PER_PAGE = 8;
 export default function RecipeParent() {
   // featured recipe need to be the most viewed and rated
   return (
-    <Col as="section" className="gap-y-12">
+    <Col as="section" className="gap-y-10 md:gap-y-12">
       <RecipeHero hightlightedRecipe={recipes[0]} />
       <Suspense fallback={<RecipeGridSkeleton count={ITEMS_PER_PAGE} />}>
         <RecipeContent

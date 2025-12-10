@@ -101,7 +101,7 @@ export default function PreparationFields({ form, className }: Props) {
                   onValueChange={field.onChange}
                   defaultValue={field.value}
                 >
-                  <FormControl className="min-h-[46px]">
+                  <FormControl className="min-h-[38px] md:min-h-[46px]">
                     <SelectTrigger className="font-lora rounded-sm! focus-within:ring-1">
                       <SelectValue placeholder="Categoria" />
                     </SelectTrigger>

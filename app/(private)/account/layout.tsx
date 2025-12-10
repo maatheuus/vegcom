@@ -9,9 +9,9 @@ export default function layout({
   children: React.ReactNode;
 }>) {
   return (
-    <Layout.Default className="style-scrollbar overflow-y-auto bg-green-50">
-      <div className="mx-auto w-full max-w-7xl space-y-8 py-8">
-        <div className="flex items-center justify-between">
+    <Layout.Default className="style-scrollbar h-auto">
+      <div className="w-full space-y-8 py-8">
+        <div className="flex items-center justify-between gap-x-4">
           <div>
             <Text
               as="h1"

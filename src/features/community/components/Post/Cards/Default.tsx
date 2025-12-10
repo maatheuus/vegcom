@@ -23,7 +23,7 @@ export default function PostCardDefault({ data }: Props) {
           as="p"
           type={Text.Type.BodyFour}
           weight={Text.Weight.Normal}
-          className="font-maitree line-clamp-3 text-base"
+          className="font-maitree text-base"
         >
           {data.postContent.postResources?.content}
         </Text>

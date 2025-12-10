@@ -39,7 +39,7 @@ export default function HeaderComponent({ children }: Props) {
             "rounded-full shadow-none transition-all duration-300",
 
             isSearchOpen
-              ? "rotate-90 bg-green-500 text-green-50"
+              ? "bg-green-500 text-green-50"
               : "bg-green-50 text-green-500 hover:bg-green-500 hover:text-green-50",
           )}
         >

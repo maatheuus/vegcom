@@ -64,7 +64,7 @@ export function StatsSection() {
       ref={containerRef}
       className="bg-gradient-to-r from-green-500 to-green-600 py-20"
     >
-      <div className="mx-auto max-w-7xl px-4">
+      <div className="container__default">
         <div className="grid grid-cols-2 gap-8 md:grid-cols-4">
           {stats.map((stat, index) => (
             <div key={stat.label} className="text-center">
