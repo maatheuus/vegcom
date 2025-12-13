@@ -1,0 +1,92 @@
+export interface Ingredient {
+  name: string;
+  quantity: string;
+  notes?: string;
+}
+
+export interface Recipe {
+  diet?: string;
+  steps?: string[];
+  title?: string;
+  servings?: number;
+  description?: string;
+  ingredients?: Ingredient[];
+  cookTimeMinutes?: number;
+  prepTimeMinutes?: number;
+}
+export interface Metadata {
+  recipes: Recipe[];
+  answer: string | null;
+  error: null | string;
+  chatId: number;
+}
+
+export interface SendMessagePayload {
+  title: string;
+  topic: string;
+}
+
+export interface CreateChatResponseData {
+  id: number;
+  userId: number;
+  createdAt: string;
+  updatedAt: string;
+  title: string;
+  topic: string;
+}
+
+export interface LastMessage {
+  id: number;
+  chatId: number;
+  role: Role;
+  content: string;
+  isRead: boolean;
+  metadata: Metadata | null;
+  createdAt: string;
+}
+
+export interface GetChatsDataResponse extends CreateChatResponseData {
+  lastMessage: LastMessage;
+}
+
+export interface GetChatsData {
+  success: boolean;
+  data: GetChatsDataResponse[];
+}
+
+export interface CreateChatResponse {
+  success: boolean;
+  data: CreateChatResponseData[];
+}
+
+export interface GetChatByIdDataResponse extends CreateChatResponseData {
+  messages: LastMessage[];
+}
+
+export interface GetChatByIdResponse {
+  success: boolean;
+  data: GetChatByIdDataResponse;
+}
+
+export interface GetChatMessageDataPayload {
+  chatId: number;
+  role: Role;
+  content: string;
+}
+
+export interface GetChatMessageDataResponse {
+  id: number;
+  chatId: number;
+  role: Role;
+  content: string;
+  isRead: boolean;
+  metadata: Metadata | null;
+  createdAt: Date;
+}
+
+export interface GetChatMessageResponse {
+  success: boolean;
+  data: GetChatMessageDataResponse;
+}
+
+type Role = "assistant" | "user";

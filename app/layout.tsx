@@ -41,21 +41,12 @@ export const metadata: Metadata = {
     description:
       "Descubra e compartilhe receitas veganas deliciosas, conecte-se com outros veganos e vegetarianos e explore o mundo da culinária vegana.",
     siteName: "VegCom",
-    images: [
-      {
-        url: "/og-image.png",
-        width: 1200,
-        height: 630,
-        alt: "VegCom - Comunidade Vegana",
-      },
-    ],
   },
   twitter: {
     card: "summary_large_image",
     title: "VegCom - Comunidade Vegana de Receitas e Conexões",
     description:
       "Descubra e compartilhe receitas veganas deliciosas, conecte-se com outros veganos e explore um mundo de culinária plant-based.",
-    images: ["/og-image.png"],
     creator: "@vegcom",
   },
   robots: {
@@ -70,10 +61,7 @@ export const metadata: Metadata = {
     },
   },
   icons: {
-    icon: [
-      { url: "/favicon-leaf-fork.png", type: "image/png" },
-      { url: "/favicon-leaf-fork.png", type: "image/png" },
-    ],
+    icon: "/favicon-leaf-fork.png",
     apple: "/favicon-leaf-fork.png",
   },
 };

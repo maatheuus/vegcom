@@ -5,6 +5,7 @@ const nextConfig: NextConfig = {
   reactStrictMode: true,
   experimental: {
     viewTransition: true,
+    useCache: true,
   },
   images: {
     remotePatterns: [

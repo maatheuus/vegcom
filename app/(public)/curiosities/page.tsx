@@ -1,6 +1,6 @@
 import Layout from "@/shared/ui/Layout";
 
-import CuriositiesPage from "@/features/curiosity/components/tabsComponentsPage/CuriositiesPage";
+import CuriositiesPage from "@/features/curiosities/components/page/CuriositiesPage";
 
 export default function page() {
   return (

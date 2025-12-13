@@ -8,7 +8,7 @@ export interface Tab {
   key: string;
   label: string;
   icon: JSX.Element;
-  component: JSX.Element;
+  component?: JSX.Element;
 }
 
 interface Props {
