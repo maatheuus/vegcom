@@ -1,6 +1,7 @@
 import Button from "@/shared/ui/Button";
 import {
   Sheet,
+  SheetClose,
   SheetContent,
   SheetHeader,
   SheetTitle,
@@ -35,33 +36,37 @@ export default function SheetMobile({
           </SheetTitle>
         </SheetHeader>
         <div className="flex flex-col gap-2">
-          <Button.Icon
-            onClick={() => {
-              if (menuChatId) {
-                setChatIdToRename(menuChatId);
-                setIsRenameModalOpen(true);
-                setMenuChatId(null);
-              }
-            }}
-            className="font-lora w-full justify-start rounded-lg bg-green-50 px-4 py-3 text-base text-green-700 hover:bg-green-100"
-            variant="text"
-            leftIcon={<PencilSimpleIcon size={20} />}
-            text="Renomear conversa"
-          />
+          <SheetClose asChild>
+            <Button.Icon
+              onClick={(e) => {
+                e.stopPropagation();
+                if (menuChatId) {
+                  setIsRenameModalOpen(true);
+                  setChatIdToRename(menuChatId);
+                }
+              }}
+              className="font-lora w-full justify-start rounded-lg bg-green-50 px-4 py-3 text-base text-green-700 hover:bg-green-100"
+              variant="text"
+              leftIcon={<PencilSimpleIcon size={20} />}
+              text="Renomear conversa"
+            />
+          </SheetClose>
 
-          <Button.Icon
-            onClick={() => {
-              if (menuChatId) {
-                setChatIdToDelete(menuChatId);
-                setIsDeleteModalOpen(true);
-                setMenuChatId(null);
-              }
-            }}
-            className="font-lora w-full justify-start rounded-lg bg-red-50 px-4 py-3 text-base text-red-600 hover:bg-red-100"
-            variant="text"
-            leftIcon={<TrashIcon size={20} />}
-            text="Excluir conversa"
-          />
+          <SheetClose asChild>
+            <Button.Icon
+              onClick={(e) => {
+                e.stopPropagation();
+                if (menuChatId) {
+                  setIsDeleteModalOpen(true);
+                  setChatIdToDelete(menuChatId);
+                }
+              }}
+              className="font-lora w-full justify-start rounded-lg bg-red-50 px-4 py-3 text-base text-red-600 hover:bg-red-100"
+              variant="text"
+              leftIcon={<TrashIcon size={20} />}
+              text="Excluir conversa"
+            />
+          </SheetClose>
         </div>
       </SheetContent>
     </Sheet>

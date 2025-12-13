@@ -14,24 +14,24 @@ import { useTransition, type Dispatch, type SetStateAction } from "react";
 interface DeleteChatModalProps {
   chatIdToDelete: string | null;
   isDeleteModalOpen: boolean;
-  onCloseDeleteModal: Dispatch<SetStateAction<boolean>>;
+  handleIsDeleteModalOpen: Dispatch<SetStateAction<boolean>>;
 }
 export default function DeleteChatModal({
   chatIdToDelete,
   isDeleteModalOpen,
-  onCloseDeleteModal,
+  handleIsDeleteModalOpen,
 }: DeleteChatModalProps) {
   const [isPending, startTransition] = useTransition();
 
   const handleChatDelete = (id: number) => {
     startTransition(async () => {
       await deleteChat(id);
+      handleIsDeleteModalOpen(false);
     });
-    onCloseDeleteModal(false);
   };
 
   return (
-    <Dialog open={isDeleteModalOpen} onOpenChange={onCloseDeleteModal}>
+    <Dialog open={isDeleteModalOpen}>
       <DialogContent className="w-[calc(100vw-2rem)] rounded-md">
         <DialogHeader>
           <DialogTitle className="font-lora font-normal italic">
@@ -46,7 +46,7 @@ export default function DeleteChatModal({
         <DialogFooter>
           <DialogTrigger asChild>
             <Button
-              onClick={() => onCloseDeleteModal(true)}
+              onClick={() => handleIsDeleteModalOpen(false)}
               className="font-maitree cursor-pointer"
               type="submit"
               variant="secondary"

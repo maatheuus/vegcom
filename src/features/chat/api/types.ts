@@ -1,4 +1,4 @@
-export interface Ingredient {
+interface Ingredient {
   name: string;
   quantity: string;
   notes?: string;
@@ -16,9 +16,10 @@ export interface Recipe {
 }
 export interface Metadata {
   recipes: Recipe[];
-  answer: string | null;
   error: null | string;
   chatId: number;
+  messageContent: string;
+  chatTitle: string;
 }
 
 export interface SendMessagePayload {
@@ -56,7 +57,7 @@ export interface GetChatsData {
 
 export interface CreateChatResponse {
   success: boolean;
-  data: CreateChatResponseData[];
+  data: CreateChatResponseData | CreateChatResponseData[];
 }
 
 export interface GetChatByIdDataResponse extends CreateChatResponseData {

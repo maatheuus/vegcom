@@ -7,12 +7,13 @@ import { LightbulbFilamentIcon } from "@phosphor-icons/react";
 import clsx from "clsx";
 import gsap from "gsap";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import SuggestionCard from "./SuggestionCard";
+import { suggestions } from "./utils";
 
 export interface Suggestion {
   id: string;
-  key: string;
+  key: "vegan" | "vegetarian" | "cooking";
   category: string;
   title: string;
   description: string;
@@ -31,10 +32,7 @@ export default function SuggestionsPage() {
   const buttonsRef = useRef<(HTMLButtonElement | null)[]>([]);
 
   const categories = [
-    {
-      key: "all",
-      label: "Todas",
-    },
+    { key: "all", label: "Todas" },
     ...Array.from(
       new Map(suggestions.map((s) => [s.key, s.category])).entries(),
     ).map(([key, label]) => ({ key, label })),
@@ -42,18 +40,33 @@ export default function SuggestionsPage() {
 
   const handleCategoryChange = (key: string) => {
     if (key === selectedKey) return;
-
     setSelectedKey(key);
-
     const params = new URLSearchParams(searchParams.toString());
     params.set("category", key);
     router.replace(`?${params.toString()}`, { scroll: false });
   };
 
-  const filteredSuggestions =
-    selectedKey === "all"
-      ? suggestions
-      : suggestions.filter((s) => s.key === selectedKey);
+  const displayedSuggestions = useMemo(() => {
+    if (selectedKey === "all") {
+      const mix: Suggestion[] = [];
+      const grouped = suggestions.reduce(
+        (acc, curr) => {
+          if (!acc[curr.key]) acc[curr.key] = [];
+          acc[curr.key].push(curr);
+          return acc;
+        },
+        {} as Record<string, Suggestion[]>,
+      );
+
+      const keys = Object.keys(grouped) as Array<keyof typeof grouped>;
+      keys.forEach((key) => {
+        mix.push(...grouped[key].slice(0, 2));
+      });
+      return mix;
+    }
+
+    return suggestions.filter((s) => s.key === selectedKey);
+  }, [selectedKey]);
 
   const handleSuggestionClick = (suggestion: Suggestion) => {
     router.push(
@@ -65,15 +78,13 @@ export default function SuggestionsPage() {
     if (paramCategory !== selectedKey) {
       setSelectedKey(paramCategory);
     }
-  }, [paramCategory]);
+  }, [paramCategory, selectedKey]);
 
   useGSAP(
     () => {
       if (buttonsRef.current.length !== categories.length) return;
-
       const activeIndex = categories.findIndex((c) => c.key === selectedKey);
       const activeButton = buttonsRef.current[activeIndex];
-
       if (!activeButton || !pillRef.current) return;
 
       activeButton.scrollIntoView({
@@ -82,7 +93,7 @@ export default function SuggestionsPage() {
         inline: "center",
       });
 
-      const animation = gsap.to(pillRef.current, {
+      gsap.to(pillRef.current, {
         x: activeButton.offsetLeft,
         width: activeButton.offsetWidth,
         height: activeButton.offsetHeight,
@@ -90,10 +101,6 @@ export default function SuggestionsPage() {
         ease: "back.out(1.4)",
         overwrite: true,
       });
-
-      return () => {
-        animation.kill();
-      };
     },
     { scope: containerRef, dependencies: [selectedKey, categories] },
   );
@@ -110,7 +117,6 @@ export default function SuggestionsPage() {
               ref={pillRef}
               className="absolute top-0 left-0 my-1.5 h-[calc(100%-0.75rem)] rounded-full bg-green-500 shadow-md will-change-[transform,width,height]"
             />
-
             {categories.map(({ key, label }, index) => (
               <button
                 key={key}
@@ -119,7 +125,7 @@ export default function SuggestionsPage() {
                 }}
                 onClick={() => handleCategoryChange(key)}
                 className={clsx(
-                  "font-lora relative z-10 cursor-pointer rounded-full px-4 py-2 text-sm italic transition-colors duration-300 md:text-base",
+                  "font-lora relative z-10 cursor-pointer rounded-full px-4 py-2 text-sm whitespace-nowrap italic transition-colors duration-300 md:text-base",
                   selectedKey === key
                     ? "font-semibold text-green-50"
                     : "text-green-500/70 hover:text-green-500",
@@ -132,15 +138,17 @@ export default function SuggestionsPage() {
         </ScrollArea>
       </div>
 
-      <main className="space-y-8 sm:px-6 md:space-y-10 lg:px-8">
+      <main className="space-y-8 pb-10 sm:px-6 md:space-y-10 lg:px-8">
         <div className="text-center">
           <Text className="font-maitree font-semibold text-green-500">
-            Selecione um tópico para iniciar uma conversa.
+            {selectedKey === "all"
+              ? "Selecione um tópico para iniciar uma conversa."
+              : `Sugestões sobre ${categories.find((c) => c.key === selectedKey)?.label}`}
           </Text>
         </div>
 
         <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
-          {filteredSuggestions.slice(0, 9).map((suggestion) => (
+          {displayedSuggestions.map((suggestion) => (
             <SuggestionCard
               key={suggestion.id}
               suggestion={suggestion}
@@ -148,7 +156,8 @@ export default function SuggestionsPage() {
             />
           ))}
         </div>
-        {filteredSuggestions.length === 0 && (
+
+        {displayedSuggestions.length === 0 && (
           <div className="py-20 text-center">
             <LightbulbFilamentIcon
               size={48}
@@ -163,51 +172,3 @@ export default function SuggestionsPage() {
     </div>
   );
 }
-
-const suggestions: Suggestion[] = [
-  {
-    id: "1",
-    key: "vegan",
-    category: "Vegano",
-    title: "Plano de estudos personalizado",
-    description: "Crie um cronograma de estudos otimizado",
-    prompt:
-      "Crie um plano de estudos personalizado para [sua área de interesse] considerando [seu tempo disponível] horas por dia",
-  },
-  {
-    id: "2",
-    key: "vegetarian",
-    category: "Vegetariano",
-    title: "Explicar conceito de programação",
-    description: "Entenda conceitos complexos de forma simples",
-    prompt:
-      "Explique o conceito de [algoritmo/estrutura de dados] com exemplos práticos em Python",
-  },
-  {
-    id: "3",
-    key: "cooking",
-    category: "Culinária",
-    title: "Receita com ingredientes disponíveis",
-    description: "Crie pratos com o que tem em casa",
-    prompt:
-      "Sugira uma receita usando apenas estes ingredientes: [liste seus ingredientes]",
-  },
-  {
-    id: "4",
-    key: "vegan",
-    category: "Vegano",
-    title: "Refeição vegana balanceada",
-    description: "Crie pratos veganos saudáveis e completos",
-    prompt:
-      "Monte uma refeição vegana completa com foco em proteínas usando apenas estes ingredientes: [liste seus ingredientes].",
-  },
-  {
-    id: "5",
-    key: "vegan",
-    category: "Vegano",
-    title: "Lista de compras vegana",
-    description: "Monte uma lista prática para sua semana vegana",
-    prompt:
-      "Crie uma lista de compras vegana para uma semana considerando meu orçamento: [valor] e minhas preferências: [preferências].",
-  },
-];

@@ -1,7 +1,7 @@
 import Text from "@/shared/ui/Text";
 import { ArrowRightIcon, LightbulbFilamentIcon } from "@phosphor-icons/react";
 import React from "react";
-import type { Suggestion } from "../tabsComponents/SuggestionsPage";
+import type { Suggestion } from "./";
 
 const SuggestionCard: React.FC<{
   suggestion: Suggestion;

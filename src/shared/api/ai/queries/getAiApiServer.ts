@@ -2,7 +2,6 @@
 
 import type { Metadata } from "@/features/chat/api/types";
 import { serverFetch } from "@/shared/api/axios/serverFetch";
-import { revalidatePath } from "next/cache";
 import type { GenerateParams } from "../ai";
 
 export const generateResponse = async ({
@@ -10,11 +9,8 @@ export const generateResponse = async ({
   chatId,
   userId,
 }: GenerateParams) => {
-  const response = await serverFetch<Metadata[]>("/ai/generate", {
+  return serverFetch<Metadata[]>("/ai/generate", {
     method: "POST",
-    body: { query, chatId },
+    body: { query, chatId, userId },
   });
-
-  revalidatePath(`/chat/${chatId}`);
-  return response;
 };

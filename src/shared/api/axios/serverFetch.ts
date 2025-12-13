@@ -3,8 +3,8 @@ import { cookies } from "next/headers";
 const BASE_URL = process.env.NEXT_PUBLIC_API_URL;
 const TEMPORARY_TOKEN = `eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwibmFtZSI6IlRlc3QgMiIsImVtYWlsIjoidGVzdCsxNkBjb20uY29tIiwiaWF0IjoxNzY1NDg5NTQzLCJleHAiOjE3NjYwOTQzNDN9.eUATS0OyyyC-8a3Jwg25CYRP8I1V4-G9BNG5EyzEKxQ`;
 
-interface FetchOptions extends RequestInit {
-  body?: any;
+interface FetchOptions extends Omit<RequestInit, "body"> {
+  body?: object;
 }
 
 export const serverFetch = async <T>(
@@ -23,13 +23,7 @@ export const serverFetch = async <T>(
     (headers as Record<string, string>)["Authorization"] = `Bearer ${token}`;
   }
 
-  let url = `${BASE_URL}${endpoint}`;
-
-  if (url.includes("localhost")) {
-    url = url.replace("localhost", "127.0.0.1");
-  }
-
-  const response = await fetch(url, {
+  const response = await fetch(`${BASE_URL}${endpoint}`, {
     ...options,
     headers,
     body: options.body ? JSON.stringify(options.body) : undefined,

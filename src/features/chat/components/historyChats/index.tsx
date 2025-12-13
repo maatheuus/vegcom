@@ -4,10 +4,10 @@ import useDebounce from "@/shared/hooks/useDebounce";
 import { Input } from "@/shared/ui/Input";
 import Text from "@/shared/ui/Text";
 import { AlienIcon, PlusCircleIcon } from "@phosphor-icons/react";
+import Link from "next/link";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
 import type { GetChatsData } from "../../api/types";
-import { useChat } from "../chat/useChat";
 import ChatsCard from "./ChatsCard";
 import DeleteChatModal from "./modals/DeleteChat";
 import RenameChatModal from "./modals/RenameChat";
@@ -15,11 +15,9 @@ import SheetMobile from "./SheetMobile";
 
 interface Props {
   chats: GetChatsData;
-  children?: React.ReactNode;
 }
 
-export default function HistoryChatPage({ chats: { data }, children }: Props) {
-  const { createNewChat } = useChat();
+export default function HistoryChatPage({ chats: { data } }: Props) {
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
@@ -62,9 +60,8 @@ export default function HistoryChatPage({ chats: { data }, children }: Props) {
   return (
     <>
       <div className="flex w-full items-center justify-between gap-4 border-b border-gray-100 py-4 md:gap-6">
-        <button
-          onClick={createNewChat}
-          disabled={visibleChats.length >= 2}
+        <Link
+          href="/chat"
           className="group inline-flex cursor-pointer items-center gap-2 rounded-md border border-green-500 bg-green-50 px-3 py-2.5 text-green-500 transition-colors duration-300 hover:bg-green-500 hover:text-green-50 disabled:pointer-events-none disabled:opacity-50"
         >
           <PlusCircleIcon
@@ -74,7 +71,7 @@ export default function HistoryChatPage({ chats: { data }, children }: Props) {
           <Text type={Text.Type.BodyFour} className="font-lora">
             Nova conversa
           </Text>
-        </button>
+        </Link>
 
         <Input
           value={query}
@@ -99,8 +96,8 @@ export default function HistoryChatPage({ chats: { data }, children }: Props) {
           <div className="space-y-1">
             <ChatsCard
               chats={visibleChats}
-              setIsRenameModalOpen={setIsRenameModalOpen}
-              setIsDeleteModalOpen={setIsDeleteModalOpen}
+              handleIsRenameModalOpen={setIsRenameModalOpen}
+              handleIsDeleteModalOpen={setIsDeleteModalOpen}
               setMenuChatId={setMenuChatId}
               setChatIdToRename={setChatIdToRename}
               setChatIdToDelete={setChatIdToDelete}
@@ -115,13 +112,13 @@ export default function HistoryChatPage({ chats: { data }, children }: Props) {
         }
         chatIdToRename={chatIdToRename}
         isRenameModalOpen={isRenameModalOpen}
-        onCloseRenameModal={setIsRenameModalOpen}
+        handleIsRenameModalOpen={setIsRenameModalOpen}
       />
 
       <DeleteChatModal
         chatIdToDelete={chatIdToDelete}
         isDeleteModalOpen={isDeleteModalOpen}
-        onCloseDeleteModal={setIsDeleteModalOpen}
+        handleIsDeleteModalOpen={setIsDeleteModalOpen}
       />
 
       <SheetMobile

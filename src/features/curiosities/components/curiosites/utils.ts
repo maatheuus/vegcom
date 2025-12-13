@@ -1,4 +1,4 @@
-import type { Curiosity } from "../tabsComponentsPage/CuriositiesPage";
+import type { Curiosity } from "../page/CuriositiesPage";
 
 export const didYouKnowPhrases = [
   "O veganismo negro é um movimento de resistência que conecta justiça social, saúde e espiritualidade, inspirado em práticas africanas ancestrais.",

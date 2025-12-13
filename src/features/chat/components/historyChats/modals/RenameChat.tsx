@@ -21,13 +21,13 @@ interface RenameChatModalProps {
   chatIdToRename: string | null;
   chatName?: string;
   isRenameModalOpen: boolean;
-  onCloseRenameModal: Dispatch<SetStateAction<boolean>>;
+  handleIsRenameModalOpen: Dispatch<SetStateAction<boolean>>;
 }
 export default function RenameChatModal({
   chatIdToRename,
   chatName,
   isRenameModalOpen,
-  onCloseRenameModal,
+  handleIsRenameModalOpen,
 }: RenameChatModalProps) {
   const [renameText, setRenameText] = useState(chatName ?? "");
   const [isPending, startTransition] = useTransition();
@@ -36,7 +36,7 @@ export default function RenameChatModal({
     startTransition(async () => {
       await updateChatTitle({ id, title });
     });
-    onCloseRenameModal(false);
+    handleIsRenameModalOpen(false);
   };
 
   return (
@@ -61,6 +61,17 @@ export default function RenameChatModal({
         </DialogDescription>
 
         <DialogFooter>
+          <DialogTrigger asChild>
+            <Button
+              onClick={() => handleIsRenameModalOpen(false)}
+              className="font-maitree cursor-pointer"
+              type="submit"
+              variant="text"
+              disabled={isPending}
+            >
+              Cancelar
+            </Button>
+          </DialogTrigger>
           <DialogTrigger asChild>
             <Button
               onClick={() =>

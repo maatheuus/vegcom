@@ -15,8 +15,8 @@ import type { GetChatsDataResponse } from "../../api/types";
 interface Props {
   className?: string;
   chats: GetChatsDataResponse[];
-  setIsRenameModalOpen: (open: boolean) => void;
-  setIsDeleteModalOpen: (open: boolean) => void;
+  handleIsRenameModalOpen: (open: boolean) => void;
+  handleIsDeleteModalOpen: (open: boolean) => void;
   setMenuChatId: (id: string | null) => void;
   setChatIdToRename: (id: string | null) => void;
   setChatIdToDelete: (id: string | null) => void;
@@ -25,8 +25,8 @@ interface Props {
 export default function ChatsCard({
   className,
   chats,
-  setIsRenameModalOpen,
-  setIsDeleteModalOpen,
+  handleIsRenameModalOpen,
+  handleIsDeleteModalOpen,
   setMenuChatId,
   setChatIdToRename,
   setChatIdToDelete,
@@ -42,7 +42,7 @@ export default function ChatsCard({
     <div
       key={idx}
       onClick={() => openChatInTab(chat.id.toString())}
-      className={`group flex cursor-pointer items-center gap-3 rounded-lg border border-green-100 bg-green-50 px-3 py-2 shadow-sm transition-all ${className ?? ""}`}
+      className={`group flex cursor-pointer items-center gap-3 rounded-lg border border-green-100 bg-green-50 px-3 py-2 transition-all hover:shadow-sm ${className ?? ""}`}
       {...props}
     >
       <div className="flex-shrink-0">
@@ -66,7 +66,7 @@ export default function ChatsCard({
           <Button.Icon
             onClick={(e) => {
               e.stopPropagation();
-              setIsRenameModalOpen(true);
+              handleIsRenameModalOpen(true);
               setChatIdToRename(chat.id.toString());
             }}
             className="rounded p-1 text-green-200 hover:bg-green-100"
@@ -78,7 +78,7 @@ export default function ChatsCard({
           <Button.Icon
             onClick={(e) => {
               e.stopPropagation();
-              setIsDeleteModalOpen(true);
+              handleIsDeleteModalOpen(true);
               setChatIdToDelete(chat.id.toString());
             }}
             className="rounded p-1 text-green-200 hover:bg-red-50 hover:text-red-600"
