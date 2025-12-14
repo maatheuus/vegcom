@@ -42,7 +42,6 @@ export default function ChatPage() {
       const response = await generateResponse({
         query: content,
         chatId: undefined as any,
-        userId: 1,
       });
 
       if (response && response.chatId) {

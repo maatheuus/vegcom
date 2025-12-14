@@ -5,6 +5,7 @@ import {
   maxLengthForBio,
   personalInfoFormSchema,
 } from "@/features/account/components/utils";
+import type { User } from "@/features/auth/api/types";
 import Button from "@/shared/ui/Button";
 import Row from "@/shared/ui/Layout/Helpers/Row";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -18,18 +19,21 @@ import { useForm } from "react-hook-form";
 import type { z } from "zod";
 import Header from "../Header";
 
-export default function InformationWrapper() {
+interface InformationWrapperProps {
+  user: User;
+}
+export default function InformationWrapper({ user }: InformationWrapperProps) {
   const [isEditing, setIsEditing] = useState(false);
 
   const form = useForm<z.infer<typeof personalInfoFormSchema>>({
     resolver: zodResolver(personalInfoFormSchema),
     defaultValues: {
-      fullName: "Julio do Grau",
-      email: "juliog@me.com",
-      bio: "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, nknown printer took a galley of type and scrambled it to make a type specimen book.",
-      dietType: "vegan",
-      culinaryLevel: "intermediate",
-      location: "São Paulo, SP",
+      fullName: user.name,
+      email: user.email,
+      bio: user.informations.aboutInfo,
+      dietType: user.informations.preference,
+      culinaryLevel: user.informations.culinaryLevel,
+      location: user.informations.location,
       publicProfile: true,
     },
   });

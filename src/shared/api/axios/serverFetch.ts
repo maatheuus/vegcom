@@ -1,7 +1,7 @@
 import { cookies } from "next/headers";
 
 const BASE_URL = process.env.NEXT_PUBLIC_API_URL;
-const TEMPORARY_TOKEN = `eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwibmFtZSI6IlRlc3QgMiIsImVtYWlsIjoidGVzdCsxNkBjb20uY29tIiwiaWF0IjoxNzY1NDg5NTQzLCJleHAiOjE3NjYwOTQzNDN9.eUATS0OyyyC-8a3Jwg25CYRP8I1V4-G9BNG5EyzEKxQ`;
+// const TEMPORARY_TOKEN = `eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwibmFtZSI6IlRlc3QgMiIsImVtYWlsIjoidGVzdCsxNkBjb20uY29tIiwiaWF0IjoxNzY1NDg5NTQzLCJleHAiOjE3NjYwOTQzNDN9.eUATS0OyyyC-8a3Jwg25CYRP8I1V4-G9BNG5EyzEKxQ`;
 
 interface FetchOptions extends Omit<RequestInit, "body"> {
   body?: object;
@@ -12,8 +12,7 @@ export const serverFetch = async <T>(
   options: FetchOptions = {},
 ): Promise<T> => {
   const cookieStore = await cookies();
-  const token = cookieStore.get("token")?.value || TEMPORARY_TOKEN;
-
+  const token = cookieStore.get("token")?.value;
   const headers: HeadersInit = {
     "Content-Type": "application/json",
     ...options.headers,

@@ -45,7 +45,6 @@ export default function ExistingChatPage({ chatId }: Props) {
       await generateResponse({
         query: content,
         chatId,
-        userId: 1,
       });
     } catch (error) {
       console.error("Erro ao enviar mensagem:", error);
@@ -65,7 +64,6 @@ export default function ExistingChatPage({ chatId }: Props) {
     await generateResponse({
       query: lastUserMessage.content,
       chatId,
-      userId: 1,
       isRegeneration: true,
     });
   };

@@ -54,6 +54,7 @@ export default function UserInformations({
   const [isDialogShowImageOpen, setIsDialogShowImageOpen] = useState(false);
   const [isDragging, setIsDragging] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const { fullName, email } = form.getValues();
 
   const randomMessage =
     messagesToDisplayForPremium[
@@ -129,7 +130,9 @@ export default function UserInformations({
             <DialogTrigger asChild>
               <Avatar className="size-24 border-4 border-green-500">
                 <AvatarImage src={imagePreview} alt="Avatar do usuário" />
-                <AvatarFallback>CN</AvatarFallback>
+                <AvatarFallback>
+                  {fullName.split(" ")[0][0] + fullName.split(" ")[1][0]}
+                </AvatarFallback>
               </Avatar>
             </DialogTrigger>
             <DialogTrigger asChild>
@@ -148,7 +151,7 @@ export default function UserInformations({
               weight={Text.Weight.Bold}
               className="font-lora text-green-500"
             >
-              Sarah Mitchell
+              {fullName}
             </Text>
             <Text
               as="p"
@@ -156,7 +159,7 @@ export default function UserInformations({
               weight={Text.Weight.Medium}
               className="font-maitree text-green-200"
             >
-              sarah.mitchell@example.com
+              {email}
             </Text>
           </div>
         </div>

@@ -1,9 +1,3 @@
-/**
- * Centralized API Client
- * This is a fake API client that simulates async operations
- * Replace with real API calls when backend is ready
- */
-
 import { mockDelay } from "./mock";
 
 export class ApiError extends Error {
@@ -21,6 +15,7 @@ export interface ApiResponse<T> {
   data: T;
   status: number;
   message?: string;
+  code?: string;
 }
 
 export interface ApiClientConfig {

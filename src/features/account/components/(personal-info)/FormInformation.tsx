@@ -57,6 +57,8 @@ export default function FormInformation({
     null,
   );
 
+  const { email, location, publicProfile, culinaryLevel } = form.getValues();
+
   return (
     <form className={`space-y-6 ${className || ""}`}>
       <div className="flex w-full flex-col items-start gap-x-4 md:flex-row">
@@ -94,7 +96,7 @@ export default function FormInformation({
                 <FormControl className="rounded-lg">
                   <Input
                     type="email"
-                    placeholder="julio@email.com"
+                    placeholder={email || "email@gmail.com"}
                     disabled={isEditing}
                     {...field}
                   />
@@ -118,7 +120,7 @@ export default function FormInformation({
                 </FormLabel>
                 <FormControl className="rounded-lg">
                   <Input
-                    placeholder="Ex: São Paulo, SP"
+                    placeholder={location || "Ex: São Paulo, SP"}
                     disabled={isEditing}
                     {...field}
                   />
@@ -152,7 +154,7 @@ export default function FormInformation({
                   </Text>
                   <FormControl>
                     <Switch
-                      checked={field.value}
+                      checked={publicProfile}
                       onCheckedChange={field.onChange}
                       disabled={isEditing}
                     />
@@ -172,7 +174,7 @@ export default function FormInformation({
             render={({ field }) => (
               <FormItem>
                 <FormLabel className="font-maitree text-base font-semibold text-green-500">
-                  Tipo de dieta
+                  Estilo de vida
                 </FormLabel>
                 <FormControl>
                   <Select
@@ -181,7 +183,7 @@ export default function FormInformation({
                     onValueChange={field.onChange}
                   >
                     <SelectTrigger className="font-lora min-h-[2.875rem] rounded-lg">
-                      <SelectValue placeholder="Selecione seu tipo de dieta" />
+                      <SelectValue placeholder="Selecione seu estilo de vida" />
                     </SelectTrigger>
                     <SelectContent>
                       {dietOptions.map((option) => (
@@ -221,15 +223,21 @@ export default function FormInformation({
                       <SelectValue placeholder="Qual seu nível culinário?" />
                     </SelectTrigger>
                     <SelectContent>
-                      {culinaryLevelOptions.map((option) => (
-                        <SelectItem
-                          key={option.value}
-                          value={option.value}
-                          className="font-maitree"
-                        >
-                          {option.label}
-                        </SelectItem>
-                      ))}
+                      {culinaryLevelOptions.map((option) => {
+                        const level = culinaryLevelOptions.find(
+                          (level) => level.value === culinaryLevel,
+                        );
+
+                        return (
+                          <SelectItem
+                            key={option.value}
+                            value={level?.value || option.value}
+                            className="font-maitree"
+                          >
+                            {option.label}
+                          </SelectItem>
+                        );
+                      })}
                     </SelectContent>
                   </Select>
                 </FormControl>
@@ -254,7 +262,7 @@ export default function FormInformation({
                 disabled={isEditing}
                 showCharacterCount
                 maxLength={maxLengthForBio}
-                className="max-w-fit"
+                className="w-full max-w-full"
                 {...field}
                 onChange={(e) => {
                   const value = e.target.value;

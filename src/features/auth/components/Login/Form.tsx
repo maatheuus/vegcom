@@ -1,6 +1,6 @@
 "use client";
 
-import { login } from "@/features/auth/api/authApi";
+import { AUTH_ERRORS } from "@/shared/api/errors/codes";
 import { toast } from "@/shared/hooks/use-toast";
 import {
   Form,
@@ -12,11 +12,18 @@ import {
 import { InputIcon } from "@/shared/ui/Input";
 import Col from "@/shared/ui/Layout/Helpers/Col";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { AtIcon, EyeClosedIcon, EyesIcon } from "@phosphor-icons/react";
+import {
+  AtIcon,
+  CircleNotchIcon,
+  EyeClosedIcon,
+  EyesIcon,
+} from "@phosphor-icons/react";
 import Link from "next/link";
-import { useState } from "react";
+import { useRouter } from "next/navigation";
+import { useState, useTransition } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
+import { getSignin } from "../../api/queries/getAuthApiServer";
 import SubmitButton from "../SubmitButton/SubmitButton";
 
 const formSchema = z.object({
@@ -25,9 +32,16 @@ const formSchema = z.object({
     .string()
     .min(6, { message: "A senha deve ter pelo menos 6 caracteres." }),
 });
+const loginErrorMessages: Partial<Record<keyof typeof AUTH_ERRORS, string>> = {
+  [AUTH_ERRORS.USER_NOT_FOUND]: "Usuário não encontrado.",
+  [AUTH_ERRORS.AUTH_INVALID_CREDENTIALS]: "E-mail ou senha incorretos.",
+  [AUTH_ERRORS.INVALID_CURRENT_PASSWORD]: "Senha atual incorreta.",
+};
 
 export default function LoginForm() {
   const [showingPassword, setShowingPassword] = useState<boolean>(false);
+  const [isPending, startTransition] = useTransition();
+  const router = useRouter();
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -40,21 +54,37 @@ export default function LoginForm() {
     setShowingPassword((prev) => !prev);
   }
 
-  async function handleLogin(data: z.infer<typeof formSchema>) {
-    const { error } = await login(data);
+  async function handleLogin(credentials: z.infer<typeof formSchema>) {
+    try {
+      startTransition(async () => {
+        const data = await getSignin(credentials);
 
-    if (error) {
-      toast({
-        title: "Erro ao fazer login",
-        description: error || "Verifique suas credenciais e tente novamente.",
-        variant: "destructive",
+        localStorage.setItem("token", data.accessToken);
+        router.push("/community/");
       });
-    } else {
+
       toast({
         title: "Sucesso!",
-        description: "Você foi logado com sucesso.",
+        description: "Você será redirecionado.",
         variant: "success",
       });
+    } catch (error: any) {
+      console.error("Login error:", error);
+      if (error.code) {
+        toast({
+          title: "Erro ao fazer login",
+          description:
+            loginErrorMessages[error.code as keyof typeof AUTH_ERRORS] ||
+            "Verifique suas credenciais e tente novamente.",
+          variant: "destructive",
+        });
+      } else {
+        toast({
+          title: "Erro inesperado",
+          description: "Ocorreu um erro ao tentar fazer login.",
+          variant: "destructive",
+        });
+      }
     }
   }
 
@@ -147,7 +177,9 @@ export default function LoginForm() {
             </Link>
           </div>
         </Col>
-        <SubmitButton text="Entrar" />
+        <SubmitButton text="Entrar" isLoading={isPending}>
+          <CircleNotchIcon size={24} className="animate-spin" />
+        </SubmitButton>
       </form>
     </Form>
   );
