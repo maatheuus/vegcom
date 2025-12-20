@@ -1,10 +1,15 @@
 "use server";
 
+import type { User } from "@/entities/user/types";
+import type { AuthResponse, LoginCredentials } from "@/features/auth/types";
 import { serverFetch } from "@/shared/api/axios/serverFetch";
 import { revalidatePath } from "next/cache";
 import { cookies } from "next/headers";
-import type { AuthResponse, LoginCredentials } from "../../types";
-import type { ApiResponse, User } from "../types";
+
+interface ApiResponse<T> {
+  success: boolean;
+  data: T;
+}
 
 export const getUser = async () => {
   return serverFetch<ApiResponse<User>>("/auth/me", {

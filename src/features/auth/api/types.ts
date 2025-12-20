@@ -3,11 +3,30 @@ export interface ApiResponse<T> {
   data: T;
 }
 
+export type SubscriptionStatus =
+  | "active"
+  | "canceled"
+  | "past_due"
+  | "trialing"
+  | "incomplete"
+  | "incomplete_expired"
+  | "unpaid";
+
+export interface SubscriptionData {
+  stripeCustomerId: string;
+  stripeSubscriptionId: string;
+  status: SubscriptionStatus;
+  startedAt: string;
+  expiresAt: string | null;
+  currentInvoiceAmount: number;
+  currency: string;
+}
+
 export interface User {
   id: number;
   name: string;
   email: string;
-  hasSubscription: boolean;
+  subscription?: SubscriptionData;
   recipesCount: number;
   informations: UserInformations;
   savedRecipes: any[];
@@ -15,6 +34,14 @@ export interface User {
   chats: Chat[];
   createdAt: string;
   updatedAt: string;
+}
+
+export function hasActiveSubscription(
+  subscription: SubscriptionData | null | undefined,
+): boolean {
+  return (
+    subscription?.status === "active" || subscription?.status === "trialing"
+  );
 }
 
 export interface UserInformations {

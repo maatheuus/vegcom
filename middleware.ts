@@ -1,54 +1,55 @@
+import { isTokenExpired } from "@/shared/lib/jwt";
 import { NextResponse, type NextRequest } from "next/server";
 
-const REDIRECT_WHEN_NOT_AUTHENTICATED_ROUTE = "/login";
+const PUBLIC_ROUTES = [
+  "/",
+  "/login",
+  "/signup",
+  "/logout",
+  "/forgot-password",
+  "/community",
+  "/recipes",
+  "/curiosities",
+];
+const AUTH_REDIRECT_ROUTES = ["/login", "/signup"];
 
-// const publicRoutes = [
-//   { path: "/", whenAuthenticated: "next" },
-//   { path: "/login", whenAuthenticated: "redirect" },
-//   { path: "/signup", whenAuthenticated: "redirect" },
-//   { path: "/community", whenAuthenticated: "next" },
-//   { path: "/recipes", whenAuthenticated: "next" },
-//   { path: "/recipes/[recipeId]", whenAuthenticated: "next" },
-//   // { path: "/chat", whenAuthenticated: "redirect" },
-//   // { path: "/ask-your-questions", whenAuthenticated: "redirect" },
-// ] as const;
-const publicRoutes = [
-  { pattern: /^\/$/, whenAuthenticated: "next" },
-  { pattern: /^\/login$/, whenAuthenticated: "redirect" },
-  { pattern: /^\/signup$/, whenAuthenticated: "redirect" },
-  { pattern: /^\/community$/, whenAuthenticated: "next" },
-  { pattern: /^\/recipes$/, whenAuthenticated: "next" },
-  { pattern: /^\/recipes\/[^\/]+$/, whenAuthenticated: "next" },
-  { pattern: /^\/new-recipe$/, whenAuthenticated: "next" },
-  { pattern: /^\/account$/, whenAuthenticated: "next" },
-  { pattern: /^\/account\/[^\/]+$/, whenAuthenticated: "next" },
-  { pattern: /^\/chat$/, whenAuthenticated: "next" },
-  { pattern: /^\/curiosities$/, whenAuthenticated: "next" },
-] as const;
+function isPublicRoute(pathname: string): boolean {
+  if (PUBLIC_ROUTES.includes(pathname)) return true;
+  if (pathname.startsWith("/recipes/")) return true;
+  return false;
+}
 
 export async function middleware(request: NextRequest) {
-  const path = request.nextUrl.pathname;
-  const publicRoute = publicRoutes.find(({ pattern }) => pattern.test(path));
-  const authToken = request.cookies.get("token");
+  const { pathname, searchParams } = request.nextUrl;
 
-  if (!authToken && publicRoute) {
-    return NextResponse.next();
+  const isServerExpired = searchParams.get("expired") === "true";
+
+  const tokenCookie = request.cookies.get("token");
+  const tokenValue = tokenCookie?.value;
+
+  const isTokenValid =
+    tokenValue && !isTokenExpired(tokenValue) && !isServerExpired;
+
+  const isPublic = isPublicRoute(pathname);
+  const isAuthRoute = AUTH_REDIRECT_ROUTES.includes(pathname);
+
+  if (!isTokenValid) {
+    if (isPublic) {
+      const response = NextResponse.next();
+
+      if (tokenValue) {
+        response.cookies.delete("token");
+      }
+      return response;
+    }
+
+    const response = NextResponse.redirect(new URL("/login", request.url));
+    response.cookies.delete("token");
+    return response;
   }
 
-  if (!authToken && !publicRoute) {
-    const redirectUrl = request.nextUrl.clone();
-    redirectUrl.pathname = REDIRECT_WHEN_NOT_AUTHENTICATED_ROUTE;
-    return NextResponse.redirect(redirectUrl);
-  }
-
-  if (
-    authToken &&
-    publicRoute &&
-    publicRoute.whenAuthenticated === "redirect"
-  ) {
-    const redirectUrl = request.nextUrl.clone();
-    redirectUrl.pathname = "/";
-    return NextResponse.redirect(redirectUrl);
+  if (isAuthRoute) {
+    return NextResponse.redirect(new URL("/", request.url));
   }
 
   return NextResponse.next();

@@ -57,9 +57,7 @@ export default function LoginForm() {
   async function handleLogin(credentials: z.infer<typeof formSchema>) {
     try {
       startTransition(async () => {
-        const data = await getSignin(credentials);
-
-        localStorage.setItem("token", data.accessToken);
+        await getSignin(credentials);
         router.push("/community/");
       });
 
@@ -87,26 +85,6 @@ export default function LoginForm() {
       }
     }
   }
-
-  // async function handleLoginWithGoogle() {
-  //   const { error } = await loginWithGoogle();
-
-  //   if (error) {
-  //     toast({
-  //       title: "Erro ao fazer login",
-  //       description:
-  //         error.message || "Verifique suas credenciais e tente novamente.",
-  //       variant: "destructive",
-  //       duration: 8000,
-  //     });
-  //   } else {
-  //     toast({
-  //       title: "Sucesso!",
-  //       description: " Vocé foi logado com sucesso.",
-  //       variant: "success",
-  //     });
-  //   }
-  // }
 
   return (
     <Form {...form}>
@@ -183,22 +161,4 @@ export default function LoginForm() {
       </form>
     </Form>
   );
-}
-
-{
-  /* <Text
-  as="span"
-  className="text-green-500 text-xs"
-  weight={Text.Weight.SemiBold}
->
-  ou
-</Text>
-<Button.Icon
-  type="button"
-  onClick={handleLoginWithGoogle}
-  variant="text"
-  leftIcon={<GoogleOutlinedIcon size={24} />}
-  text="Continue com Google"
-  className="w-full sm:max-w-3xs hover:text-green-700"
-/> */
 }

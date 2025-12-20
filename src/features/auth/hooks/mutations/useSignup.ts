@@ -1,6 +1,6 @@
-import { signup } from "../../api/authApi";
-import type { AuthResponse } from "../../types";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { authApi } from "../../api/authApi";
+import type { AuthResponse } from "../../types";
 
 type SignupData = {
   username: string;
@@ -10,14 +10,20 @@ type SignupData = {
 };
 
 const signupUser = async (payload: SignupData): Promise<SignupData> => {
-  const { singupData } = await signup({
+  const singupData = await authApi.signup({
     email: payload.email,
     password: payload.password,
     username: payload.username,
+    informations: {
+      aboutInfo: "",
+      culinaryLevel: "",
+      location: "",
+      preferences: "vegan",
+    },
   });
 
   return {
-    singupData,
+    singupData: singupData as any,
     username: payload.username,
     email: payload.email,
     password: payload.password,

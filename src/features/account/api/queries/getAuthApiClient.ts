@@ -1,6 +1,6 @@
+import { authApi } from "@/features/auth/api/authApi";
+import type { LoginCredentials, SignupData } from "@/features/auth/types";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import type { LoginCredentials, SignupData } from "../../types";
-import { authApi } from "../authApi";
 
 export const authKeys = {
   all: ["auth"] as const,
