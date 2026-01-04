@@ -8,6 +8,18 @@ interface FetchOptions extends Omit<RequestInit, "body"> {
   body?: object;
 }
 
+export class ApiError extends Error {
+  code?: string;
+  status?: number;
+
+  constructor(message: string, code?: string, status?: number) {
+    super(message);
+    this.name = "ApiError";
+    this.code = code;
+    this.status = status;
+  }
+}
+
 export const serverFetch = async <T>(
   endpoint: string,
   options: FetchOptions = {},
@@ -41,8 +53,10 @@ export const serverFetch = async <T>(
     }
 
     const errorData = await response.json().catch(() => null);
-    throw new Error(
+    throw new ApiError(
       errorData?.message || `Request failed with status ${response.status}`,
+      errorData?.code,
+      response.status,
     );
   }
 

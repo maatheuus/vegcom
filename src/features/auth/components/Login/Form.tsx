@@ -55,35 +55,34 @@ export default function LoginForm() {
   }
 
   async function handleLogin(credentials: z.infer<typeof formSchema>) {
-    try {
-      startTransition(async () => {
+    startTransition(async () => {
+      try {
         await getSignin(credentials);
+        toast({
+          title: "Sucesso!",
+          description: "Você será redirecionado.",
+          variant: "success",
+        });
         router.push("/community/");
-      });
-
-      toast({
-        title: "Sucesso!",
-        description: "Você será redirecionado.",
-        variant: "success",
-      });
-    } catch (error: any) {
-      console.error("Login error:", error);
-      if (error.code) {
-        toast({
-          title: "Erro ao fazer login",
-          description:
-            loginErrorMessages[error.code as keyof typeof AUTH_ERRORS] ||
-            "Verifique suas credenciais e tente novamente.",
-          variant: "destructive",
-        });
-      } else {
-        toast({
-          title: "Erro inesperado",
-          description: "Ocorreu um erro ao tentar fazer login.",
-          variant: "destructive",
-        });
+      } catch (error: any) {
+        console.error("Login error:", error);
+        if (error.code) {
+          toast({
+            title: "Erro ao fazer login",
+            description:
+              loginErrorMessages[error.code as keyof typeof AUTH_ERRORS] ||
+              "Verifique suas credenciais e tente novamente.",
+            variant: "destructive",
+          });
+        } else {
+          toast({
+            title: "Erro inesperado",
+            description: "Ocorreu um erro ao tentar fazer login.",
+            variant: "destructive",
+          });
+        }
       }
-    }
+    });
   }
 
   return (
