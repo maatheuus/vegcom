@@ -6,6 +6,7 @@ const BASE_URL = process.env.NEXT_PUBLIC_API_URL;
 
 interface FetchOptions extends Omit<RequestInit, "body"> {
   body?: object;
+  skipRedirectOn401?: boolean;
 }
 
 export class ApiError extends Error {
@@ -48,7 +49,7 @@ export const serverFetch = async <T>(
   });
 
   if (!response.ok) {
-    if (response.status === 401) {
+    if (response.status === 401 && !options.skipRedirectOn401) {
       redirect("/login?expired=true");
     }
 

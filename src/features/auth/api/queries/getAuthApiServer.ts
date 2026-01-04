@@ -18,6 +18,7 @@ export const getSignin = async (credentials: LoginCredentials) => {
     method: "POST",
     next: { tags: ["user"] },
     body: credentials,
+    skipRedirectOn401: true,
   });
 
   const cookieStore = await cookies();
