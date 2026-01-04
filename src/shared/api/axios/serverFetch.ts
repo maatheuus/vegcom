@@ -6,6 +6,19 @@ const BASE_URL = process.env.NEXT_PUBLIC_API_URL;
 
 interface FetchOptions extends Omit<RequestInit, "body"> {
   body?: object;
+  skipRedirectOn401?: boolean;
+}
+
+export class ApiError extends Error {
+  code?: string;
+  status?: number;
+
+  constructor(message: string, code?: string, status?: number) {
+    super(message);
+    this.name = "ApiError";
+    this.code = code;
+    this.status = status;
+  }
 }
 
 export const serverFetch = async <T>(
@@ -36,13 +49,15 @@ export const serverFetch = async <T>(
   });
 
   if (!response.ok) {
-    if (response.status === 401) {
+    if (response.status === 401 && !options.skipRedirectOn401) {
       redirect("/login?expired=true");
     }
 
     const errorData = await response.json().catch(() => null);
-    throw new Error(
+    throw new ApiError(
       errorData?.message || `Request failed with status ${response.status}`,
+      errorData?.code,
+      response.status,
     );
   }
 

@@ -9,15 +9,11 @@ function getTokenFromCookies(): string | null {
   if (typeof window === "undefined") return null;
 
   const cookies = document.cookie.split("; ");
-  console.log("cookies", cookies);
   const tokenCookie = cookies.find((cookie) => cookie.startsWith("token="));
-  console.log("tokenCookie", tokenCookie);
   if (!tokenCookie) return null;
 
   const token = tokenCookie.split("=")[1];
-  console.log("token", token);
   if (isTokenExpired(token)) {
-    console.log("token expired");
     return null;
   }
 

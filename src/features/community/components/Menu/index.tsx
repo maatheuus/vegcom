@@ -1,12 +1,13 @@
 "use client";
 
-import Row from "@/shared/ui/Layout/Helpers/Row";
+import { useGetUser } from "@/features/account/api/queries/getAuthApiClient";
 import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-} from "@/shared/ui/Select";
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/shared/ui/DropdownMenu";
+import Row from "@/shared/ui/Layout/Helpers/Row";
 import {
   ChatCircleIcon,
   ChefHatIcon,
@@ -51,9 +52,10 @@ export default function Menu() {
   const [hoveredItem, setHoveredItem] = useState("");
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [hasScrolled, setHasScrolled] = useState(false);
+  const { data: user } = useGetUser();
 
-  const isPremium = false;
-  const isLoggedIn = false;
+  const isPremium = Boolean(user?.subscription);
+  const isLoggedIn = Boolean(user);
 
   const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
 
@@ -150,11 +152,8 @@ export default function Menu() {
                   </Row>
                 </Link>
 
-                <Select>
-                  <SelectTrigger
-                    className="flex items-center gap-x-2 rounded-lg border-0 bg-green-100 p-2"
-                    showIcon={false}
-                  >
+                <DropdownMenu>
+                  <DropdownMenuTrigger className="flex cursor-pointer items-center gap-x-2 rounded-lg border-0 bg-green-100 p-2 outline-none">
                     <UserCircleIcon
                       size={20}
                       className="size-5 text-green-200"
@@ -162,49 +161,56 @@ export default function Menu() {
 
                     {isLoggedIn && (
                       <span className={`${textClasses} text-green-500`}>
-                        Matheus
+                        {user?.name}
                       </span>
                     )}
-                  </SelectTrigger>
+                  </DropdownMenuTrigger>
 
-                  <SelectContent className="border-0 bg-green-100" align="end">
+                  <DropdownMenuContent
+                    className="border-0 bg-green-100"
+                    align="end"
+                  >
                     {!isLoggedIn && (
                       <>
-                        <SelectItem
-                          value="signin"
-                          className={`${textClasses} text-green-500`}
-                        >
-                          <Link href="/login">Sign In</Link>
-                        </SelectItem>
+                        <Link href="/login" className="contents">
+                          <DropdownMenuItem
+                            className={`${textClasses} cursor-pointer text-green-500`}
+                          >
+                            Entrar
+                          </DropdownMenuItem>
+                        </Link>
 
-                        <SelectItem
-                          value="signup"
-                          className={`${textClasses} text-green-500`}
-                        >
-                          <Link href="/signup">Sign Up</Link>
-                        </SelectItem>
+                        <Link href="/signup" className="contents">
+                          <DropdownMenuItem
+                            className={`${textClasses} cursor-pointer text-green-500`}
+                          >
+                            Cadastrar
+                          </DropdownMenuItem>
+                        </Link>
                       </>
                     )}
 
                     {isLoggedIn && (
                       <>
-                        <SelectItem
-                          value="account"
-                          className={`${textClasses} text-green-500`}
-                        >
-                          <Link href="/account">Account</Link>
-                        </SelectItem>
+                        <Link href="/account" className="contents">
+                          <DropdownMenuItem
+                            className={`${textClasses} cursor-pointer text-green-500`}
+                          >
+                            Minha conta
+                          </DropdownMenuItem>
+                        </Link>
 
-                        <SelectItem
-                          value="logout"
-                          className={`${textClasses} text-green-500`}
-                        >
-                          <Link href="/logout">Logout</Link>
-                        </SelectItem>
+                        <Link href="/logout" className="contents">
+                          <DropdownMenuItem
+                            className={`${textClasses} cursor-pointer text-green-500`}
+                          >
+                            Sair
+                          </DropdownMenuItem>
+                        </Link>
                       </>
                     )}
-                  </SelectContent>
-                </Select>
+                  </DropdownMenuContent>
+                </DropdownMenu>
 
                 <NotificationPopup />
               </Row>

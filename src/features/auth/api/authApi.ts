@@ -1,11 +1,11 @@
 import { api } from "@/shared/api/axios/axiosInstance";
 import type { AuthResponse, LoginCredentials, SignupData } from "../types";
-import type { User } from "./types";
+import type { ApiResponse, User } from "./types";
 
 export const authApi = {
   getUser: async () => {
-    const { data: responseData } = await api.get<User>("/auth/me");
-    return responseData;
+    const { data: responseData } = await api.get<ApiResponse<User>>("/auth/me");
+    return responseData.data;
   },
 
   signin: async (credentials: LoginCredentials) => {
