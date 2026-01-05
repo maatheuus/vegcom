@@ -2,6 +2,7 @@
 
 import { cn } from "@/shared/lib/utils";
 import {
+  BellIcon,
   ChefHatIcon,
   GearIcon,
   HeartIcon,
@@ -41,6 +42,11 @@ const sidebarItems = [
     label: "Assinatura",
     href: "/account/subscription",
     icon: <ScrollIcon size={20} />,
+  },
+  {
+    label: "Notificações",
+    href: "/account/notifications",
+    icon: <BellIcon size={20} />,
   },
   {
     label: "Configurações",
