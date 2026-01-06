@@ -21,83 +21,99 @@ Users must be able to opt-out of these emails via their account settings.
     *   **Trigger:** Another user likes a comment made by the user.
     *   **Content:** "User X liked your comment on [Recipe/Post Name]".
     *   **Recipient:** The author of the comment.
-    *   **Batching:** Consider batching if high volume (e.g., "User X and 5 others liked...").
 
 4.  **Like on Recipe/Post**
     *   **Trigger:** Another user likes/saves a recipe or post created by the user.
     *   **Content:** "User X liked your recipe [Recipe Name]".
     *   **Recipient:** The creator of the recipe/post.
 
-5.  **New Follower** (Future Scope)
+5.  **New Follower**
     *   **Trigger:** User gets a new follower.
     *   **Content:** "User X started following you".
 
-6.  **System/Security (Transactional - No Opt-out)**
+6.  **System/Security**
     *   **Email Verification:** Link to verify email address.
     *   **Password Recovery:** Link to reset password.
-    *   **Security Alerts:** Login from new device (Low priority for now).
 
 ---
 
 ## 2. In-App Notifications API
 
-The backend needs to provide endpoints to manage the user's notification center (the bell icon in the menu).
+The backend provides the following endpoints to manage the user's notification center.
 
-### Data Model (Notification)
+### 1. List Notifications
+Returns a paginated list of notifications for the authenticated user.
 
+- **Method:** `GET`
+- **Endpoint:** `/notifications`
+- **Query Params:**
+  - `page` (optional, number): Page number. Default: `1`.
+  - `limit` (optional, number): Items per page. Default: `10`.
+
+**Response Example:**
 ```json
 {
-  "id": "string (uuid)",
-  "userId": "string (recipient)",
-  "type": "COMMENT_REPLY" | "COMMENT_LIKE" | "RECIPE_LIKE" | "FOLLOW" | "SYSTEM",
-  "actorId": "string (user who performed action)",
-  "actorName": "string",
-  "actorAvatar": "string (url)",
-  "entityId": "string (id of the recipe/post/comment)",
-  "entityName": "string (title of recipe/post)",
-  "message": "string (e.g., 'respondeu seu comentário')",
-  "isRead": "boolean",
-  "createdAt": "date (ISO string)"
-}
-```
-
-### Endpoints
-
-#### `GET /notifications`
-*   **Description:** Fetch a paginated list of notifications for the authenticated user.
-*   **Query Params:** `page`, `limit` (default 10).
-*   **Response:** `{ data: Notification[], meta: { total, page, totalPages } }`
-
-#### `GET /notifications/unread-count`
-*   **Description:** Get the count of unread notifications to display on the badge.
-*   **Response:** `{ count: number }`
-
-#### `PATCH /notifications/:id/read`
-*   **Description:** Mark a specific notification as read.
-*   **Response:** `{ success: true }`
-
-#### `PATCH /notifications/read-all`
-*   **Description:** Mark all notifications for the current user as read.
-*   **Response:** `{ success: true, count: number }`
-
----
-
-## 3. User Preferences API (Account Settings)
-
-Add fields to the User entity or a separate `UserPreferences` entity to store email opt-in status.
-
-### Schema Addition
-```json
-{
-  "emailPreferences": {
-    "newFollower": boolean,
-    "recipeLike": boolean,
-    "commentReply": boolean,
-    "commentLike": boolean
-    // ...
+  "data": [
+    {
+      "id": "1",
+      "type": "COMMENT_REPLY",
+      "actorId": "u1",
+      "actorName": "Maria Silva",
+      "actorAvatar": "https://...",
+      "entityId": "r1",
+      "entityName": "Feijoada Vegana",
+      "message": "respondeu seu comentário",
+      "isRead": false,
+      "createdAt": "2023-10-27T10:00:00Z"
+    }
+  ],
+  "meta": {
+    "page": 1,
+    "limit": 10,
+    "total": 50,
+    "totalPages": 5
   }
 }
 ```
 
-#### `PATCH /account/preferences`
-*   **Payload:** Partial `emailPreferences` object.
+### 2. Unread Notification Count
+Returns the total number of unread notifications.
+
+- **Method:** `GET`
+- **Endpoint:** `/notifications/unread-count`
+
+**Response Example:**
+```json
+{
+  "count": 5
+}
+```
+
+### 3. Mark Notification as Read
+Marks a specific notification as read.
+
+- **Method:** `PATCH`
+- **Endpoint:** `/notifications/:id/read`
+- **URL Params:**
+  - `id` (string/number): ID of the notification.
+
+**Response Example:**
+```json
+{
+  "success": true
+}
+```
+
+### 4. Mark All Notifications as Read
+Marks all notifications for the user as read.
+
+- **Method:** `PATCH`
+- **Endpoint:** `/notifications/read-all`
+
+**Response Example:**
+```json
+{
+  "success": true,
+  "count": 5
+}
+```

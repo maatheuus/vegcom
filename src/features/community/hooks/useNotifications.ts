@@ -1,4 +1,6 @@
-import { useCallback, useState } from "react";
+import { notificationsApi } from "@/features/community/api/notificationsApi";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useCallback } from "react";
 
 export type NotificationType = "COMMENT_REPLY" | "COMMENT_LIKE" | "RECIPE_LIKE" | "FOLLOW" | "SYSTEM";
 
@@ -11,75 +13,61 @@ export interface Notification {
   entityId?: string;
   entityName?: string;
   message: string;
-  timestamp: string; // ISO string in real app, relative time in mock for now
+  createdAt: string;
   isRead: boolean;
 }
 
-// Mock Data matching the specs
-const mockNotifications: Notification[] = [
-  {
-    id: "1",
-    type: "COMMENT_REPLY",
-    actorId: "u1",
-    actorName: "Maria Silva",
-    message: "respondeu seu comentário",
-    entityName: "Feijoada Vegana",
-    timestamp: "2 min atrás",
-    isRead: false,
-  },
-  {
-    id: "2",
-    type: "RECIPE_LIKE",
-    actorId: "u2",
-    actorName: "João Santos",
-    message: "curtiu sua receita",
-    entityName: "Bolo de Chocolate Fit",
-    timestamp: "15 min atrás",
-    isRead: false,
-  },
-  {
-    id: "3",
-    type: "COMMENT_REPLY",
-    actorId: "u3",
-    actorName: "Ana Costa",
-    message: "respondeu seu comentário",
-    entityName: "Smoothie Verde Energético",
-    timestamp: "1 hora atrás",
-    isRead: true,
-  },
-  {
-    id: "4",
-    type: "RECIPE_LIKE",
-    actorId: "u4",
-    actorName: "Pedro Oliveira",
-    message: "curtiu sua receita",
-    entityName: "Hambúrguer de Grão-de-Bico",
-    timestamp: "3 horas atrás",
-    isRead: true,
-  },
-];
+export const notificationKeys = {
+  all: ["notifications"] as const,
+  list: (page: number, limit: number) => ["notifications", "list", page, limit] as const,
+  unreadCount: ["notifications", "unread-count"] as const,
+};
 
-export function useNotifications() {
-  const [notifications, setNotifications] = useState<Notification[]>(mockNotifications);
+export function useNotifications(page = 1, limit = 10) {
+  const queryClient = useQueryClient();
 
-  const unreadCount = notifications.filter((n) => !n.isRead).length;
+  const { data: notificationsData } = useQuery({
+    queryKey: notificationKeys.list(page, limit),
+    queryFn: () => notificationsApi.getNotifications(page, limit),
+    // Placeholder data to prevent crash if backend not ready, or remove if strict
+    placeholderData: { data: [], meta: { page: 1, limit: 10, total: 0, totalPages: 0 } }
+  });
+
+  const { data: unreadCountData } = useQuery({
+    queryKey: notificationKeys.unreadCount,
+    queryFn: notificationsApi.getUnreadCount,
+    // Polling could be enabled here for real-time-ish updates
+    // refetchInterval: 30000
+  });
+
+  const markAsReadMutation = useMutation({
+    mutationFn: notificationsApi.markAsRead,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: notificationKeys.all });
+    },
+  });
+
+  const markAllAsReadMutation = useMutation({
+    mutationFn: notificationsApi.markAllAsRead,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: notificationKeys.all });
+    },
+  });
 
   const markAsRead = useCallback((id: string) => {
-    // In a real app, this would be an API call: PATCH /notifications/:id/read
-    setNotifications((prev) =>
-      prev.map((n) => (n.id === id ? { ...n, isRead: true } : n))
-    );
-  }, []);
+    markAsReadMutation.mutate(id);
+  }, [markAsReadMutation]);
 
   const markAllAsRead = useCallback(() => {
-    // In a real app, this would be an API call: PATCH /notifications/read-all
-    setNotifications((prev) => prev.map((n) => ({ ...n, isRead: true })));
-  }, []);
+    markAllAsReadMutation.mutate();
+  }, [markAllAsReadMutation]);
 
   return {
-    notifications,
-    unreadCount,
+    notifications: notificationsData?.data || [],
+    meta: notificationsData?.meta,
+    unreadCount: unreadCountData?.count || 0,
     markAsRead,
     markAllAsRead,
+    isLoading: markAsReadMutation.isPending || markAllAsReadMutation.isPending
   };
 }
