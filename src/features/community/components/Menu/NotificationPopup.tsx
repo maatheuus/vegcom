@@ -2,6 +2,8 @@ import {
   useNotifications,
   type NotificationType,
 } from "@/features/community/hooks/useNotifications";
+import { formatDistanceToNow } from "date-fns";
+import { ptBR } from "date-fns/locale";
 import Col from "@/shared/ui/Layout/Helpers/Col";
 import Row from "@/shared/ui/Layout/Helpers/Row";
 import Text from "@/shared/ui/Text";
@@ -186,7 +188,10 @@ const NotificationPopup = memo(function NotificationPopup({
                             type={Text.Type.BodySix}
                             className="font-maitree text-green-200"
                           >
-                            {notification.timestamp}
+                            {formatDistanceToNow(new Date(notification.createdAt), {
+                              addSuffix: true,
+                              locale: ptBR,
+                            })}
                           </Text>
                         </Col>
 
