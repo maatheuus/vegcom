@@ -1,3 +1,7 @@
+import {
+  useNotifications,
+  type NotificationType,
+} from "@/features/community/hooks/useNotifications";
 import Col from "@/shared/ui/Layout/Helpers/Col";
 import Row from "@/shared/ui/Layout/Helpers/Row";
 import Text from "@/shared/ui/Text";
@@ -13,96 +17,15 @@ import {
   type ComponentProps,
 } from "react";
 
-type NotificationType = "comment" | "save" | "reply" | "like";
-
-interface Notification {
-  id: string;
-  type: NotificationType;
-  user: string;
-  userAvatar?: string;
-  message: string;
-  timestamp: string;
-  isRead: boolean;
-  recipeName?: string;
-}
-
-// Fake notification data
-const mockNotifications: Notification[] = [
-  {
-    id: "1",
-    type: "comment",
-    user: "Maria Silva",
-    message: "comentou na sua receita",
-    recipeName: "Feijoada Vegana",
-    timestamp: "2 min atrás",
-    isRead: false,
-  },
-  {
-    id: "2",
-    type: "save",
-    user: "João Santos",
-    message: "salvou sua receita",
-    recipeName: "Bolo de Chocolate Fit",
-    timestamp: "15 min atrás",
-    isRead: false,
-  },
-  {
-    id: "3",
-    type: "reply",
-    user: "Ana Costa",
-    message: "respondeu seu comentário",
-    recipeName: "Smoothie Verde Energético",
-    timestamp: "1 hora atrás",
-    isRead: true,
-  },
-  {
-    id: "4",
-    type: "like",
-    user: "Pedro Oliveira",
-    message: "curtiu sua receita",
-    recipeName: "Hambúrguer de Grão-de-Bico",
-    timestamp: "3 horas atrás",
-    isRead: true,
-  },
-  {
-    id: "5",
-    type: "comment",
-    user: "Carla Mendes",
-    message: "comentou na sua receita",
-    recipeName: "Brownie Proteico",
-    timestamp: "1 dia atrás",
-    isRead: false,
-  },
-  {
-    id: "6",
-    type: "comment",
-    user: "Carla Mendes",
-    message: "comentou na sua receita",
-    recipeName: "Brownie Proteico",
-    timestamp: "1 dia atrás",
-    isRead: false,
-  },
-  {
-    id: "7",
-    type: "comment",
-    user: "Carla Mendes",
-    message: "comentou na sua receita",
-    recipeName: "Brownie Proteico",
-    timestamp: "1 dia atrás",
-    isRead: false,
-  },
-];
-
 const getNotificationIcon = (type: NotificationType) => {
   switch (type) {
-    case "comment":
+    case "COMMENT_REPLY":
+    case "COMMENT_LIKE":
       return "💬";
-    case "save":
-      return "🔖";
-    case "reply":
-      return "↩️";
-    case "like":
+    case "RECIPE_LIKE":
       return "❤️";
+    case "FOLLOW":
+      return "➕";
     default:
       return "🔔";
   }
@@ -113,12 +36,11 @@ const NotificationPopup = memo(function NotificationPopup({
   ...props
 }: ComponentProps<"div">) {
   const [isOpen, setIsOpen] = useState(false);
-  const [notifications, setNotifications] =
-    useState<Notification[]>(mockNotifications);
+  const { notifications, unreadCount, markAsRead, markAllAsRead } =
+    useNotifications();
+
   const popupRef = useRef<HTMLDivElement>(null);
   const buttonRef = useRef<HTMLDivElement>(null);
-
-  const unreadCount = notifications.filter((n) => !n.isRead).length;
 
   const handleClickOutside = useCallback((event: MouseEvent) => {
     if (
@@ -149,16 +71,6 @@ const NotificationPopup = memo(function NotificationPopup({
     if (e.key === "Escape") {
       setIsOpen(false);
     }
-  }, []);
-
-  const markAsRead = useCallback((id: string) => {
-    setNotifications((prev) =>
-      prev.map((n) => (n.id === id ? { ...n, isRead: true } : n)),
-    );
-  }, []);
-
-  const markAllAsRead = useCallback(() => {
-    setNotifications((prev) => prev.map((n) => ({ ...n, isRead: true })));
   }, []);
 
   return (
@@ -261,12 +173,12 @@ const NotificationPopup = memo(function NotificationPopup({
                             className="font-maitree text-green-500"
                           >
                             <span className="font-bold">
-                              {notification.user}
+                              {notification.actorName}
                             </span>{" "}
                             {notification.message}
-                            {notification.recipeName && (
+                            {notification.entityName && (
                               <span className="italic">
-                                &quot;{notification.recipeName}&quot;
+                                &quot;{notification.entityName}&quot;
                               </span>
                             )}
                           </Text>
