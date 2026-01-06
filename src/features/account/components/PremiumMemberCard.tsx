@@ -18,7 +18,7 @@ export default function PremiumMemberCard({
     <Link
       href="/account/subscription"
       className={clsx(
-        "group my-auto flex size-auto cursor-pointer items-center rounded-full bg-green-100 p-2 transition-colors duration-300 hover:bg-green-500",
+        "group my-auto flex size-auto cursor-pointer items-center rounded-full bg-green-100 p-1 transition-colors duration-300 hover:bg-green-500",
         className,
       )}
       {...props}
@@ -27,12 +27,12 @@ export default function PremiumMemberCard({
         <Tooltip>
           <TooltipTrigger>
             <PlantIcon
-              size={24}
+              size={20}
               className="cursor-pointer text-green-500 group-hover:text-green-50"
             />
           </TooltipTrigger>
 
-          <TooltipContent className="mr-2 mb-4 flex items-start">
+          <TooltipContent className="mr-2 mb-2 flex items-start">
             <Text type={Text.Type.BodyFour}>Desbloqueie um sabor extra</Text>
           </TooltipContent>
         </Tooltip>

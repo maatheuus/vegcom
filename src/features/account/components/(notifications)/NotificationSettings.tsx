@@ -4,9 +4,15 @@ import AccountLayout from "@/features/account/components/AccountLayout";
 import Header from "@/features/account/components/Header";
 import { useGetUser } from "@/features/account/api/queries/getAuthApiClient";
 import Button from "@/shared/ui/Button";
-import { Form, FormControl, FormField, FormItem, FormLabel } from "@/shared/ui/Form";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+} from "@/shared/ui/Form";
 import Row from "@/shared/ui/Layout/Helpers/Row";
-import * as SwitchPrimitive from "@radix-ui/react-switch";
+import { Switch } from "@/shared/ui/Switch";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { FloppyDiskIcon, PencilSimpleIcon } from "@phosphor-icons/react";
 import clsx from "clsx";
@@ -15,7 +21,6 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 
 const notificationSettingsSchema = z.object({
-  newFollower: z.boolean().default(true),
   recipeLike: z.boolean().default(true),
   commentReply: z.boolean().default(true),
   commentLike: z.boolean().default(true),
@@ -23,27 +28,6 @@ const notificationSettingsSchema = z.object({
 });
 
 type NotificationSettingsForm = z.infer<typeof notificationSettingsSchema>;
-
-function Switch({
-  className,
-  ...props
-}: React.ComponentPropsWithoutRef<typeof SwitchPrimitive.Root>) {
-  return (
-    <SwitchPrimitive.Root
-      className={clsx(
-        "peer inline-flex h-6 w-11 shrink-0 cursor-pointer items-center rounded-full border-2 border-transparent transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green-500 focus-visible:ring-offset-2 focus-visible:ring-offset-green-50 disabled:cursor-not-allowed disabled:opacity-50 data-[state=checked]:bg-green-500 data-[state=unchecked]:bg-green-200",
-        className
-      )}
-      {...props}
-    >
-      <SwitchPrimitive.Thumb
-        className={clsx(
-          "pointer-events-none block h-5 w-5 rounded-full bg-white shadow-lg ring-0 transition-transform data-[state=checked]:translate-x-5 data-[state=unchecked]:translate-x-0"
-        )}
-      />
-    </SwitchPrimitive.Root>
-  );
-}
 
 export default function NotificationSettings() {
   const [isEditing, setIsEditing] = useState(false);
@@ -53,7 +37,6 @@ export default function NotificationSettings() {
   const form = useForm<NotificationSettingsForm>({
     resolver: zodResolver(notificationSettingsSchema),
     defaultValues: {
-      newFollower: true,
       recipeLike: true,
       commentReply: true,
       commentLike: true,
@@ -105,7 +88,9 @@ export default function NotificationSettings() {
             }
             variant="filled"
             size="default"
-            onClick={() => (isEditing ? form.handleSubmit(onSubmit)() : setIsEditing(true))}
+            onClick={() =>
+              isEditing ? form.handleSubmit(onSubmit)() : setIsEditing(true)
+            }
             className="font-maitree cursor-pointer bg-green-500 py-2"
           >
             {isEditing ? "Salvar Preferências" : "Editar Preferências"}
@@ -117,7 +102,9 @@ export default function NotificationSettings() {
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
             <div className="space-y-4">
-              <h3 className="font-lora text-lg font-bold text-green-500 italic">Interações</h3>
+              <h3 className="font-lora text-lg font-bold text-green-500 italic">
+                Interações
+              </h3>
 
               <FormField
                 control={form.control}
@@ -125,9 +112,12 @@ export default function NotificationSettings() {
                 render={({ field }) => (
                   <FormItem className="flex flex-row items-center justify-between rounded-lg border border-green-100 p-4">
                     <div className="space-y-0.5">
-                      <FormLabel className="font-maitree text-base text-green-800">Respostas em comentários</FormLabel>
-                      <p className="text-sm text-green-600/70 font-maitree">
-                        Receba um email quando alguém responder ao seu comentário.
+                      <FormLabel className="font-maitree text-base text-green-800">
+                        Respostas em comentários
+                      </FormLabel>
+                      <p className="font-maitree text-sm text-green-600/70">
+                        Receba um email quando alguém responder ao seu
+                        comentário.
                       </p>
                     </div>
                     <FormControl>
@@ -147,8 +137,10 @@ export default function NotificationSettings() {
                 render={({ field }) => (
                   <FormItem className="flex flex-row items-center justify-between rounded-lg border border-green-100 p-4">
                     <div className="space-y-0.5">
-                      <FormLabel className="font-maitree text-base text-green-800">Curtidas em comentários</FormLabel>
-                      <p className="text-sm text-green-600/70 font-maitree">
+                      <FormLabel className="font-maitree text-base text-green-800">
+                        Curtidas em comentários
+                      </FormLabel>
+                      <p className="font-maitree text-sm text-green-600/70">
                         Receba um email quando alguém curtir seu comentário.
                       </p>
                     </div>
@@ -169,8 +161,10 @@ export default function NotificationSettings() {
                 render={({ field }) => (
                   <FormItem className="flex flex-row items-center justify-between rounded-lg border border-green-100 p-4">
                     <div className="space-y-0.5">
-                      <FormLabel className="font-maitree text-base text-green-800">Curtidas em Receitas/Posts</FormLabel>
-                      <p className="text-sm text-green-600/70 font-maitree">
+                      <FormLabel className="font-maitree text-base text-green-800">
+                        Curtidas em Receitas/Posts
+                      </FormLabel>
+                      <p className="font-maitree text-sm text-green-600/70">
                         Receba um email quando alguém curtir suas publicações.
                       </p>
                     </div>
@@ -187,42 +181,20 @@ export default function NotificationSettings() {
             </div>
 
             <div className="space-y-4 pt-4">
-              <h3 className="font-lora text-lg font-bold text-green-500 italic">Comunidade</h3>
+              <h3 className="font-lora text-lg font-bold text-green-500 italic">
+                Outros
+              </h3>
 
               <FormField
-                control={form.control}
-                name="newFollower"
-                render={({ field }) => (
-                  <FormItem className="flex flex-row items-center justify-between rounded-lg border border-green-100 p-4">
-                    <div className="space-y-0.5">
-                      <FormLabel className="font-maitree text-base text-green-800">Novos Seguidores</FormLabel>
-                      <p className="text-sm text-green-600/70 font-maitree">
-                        Seja notificado por email quando alguém começar a te seguir.
-                      </p>
-                    </div>
-                    <FormControl>
-                      <Switch
-                        checked={field.value}
-                        onCheckedChange={field.onChange}
-                        disabled={!isEditing}
-                      />
-                    </FormControl>
-                  </FormItem>
-                )}
-              />
-            </div>
-
-            <div className="space-y-4 pt-4">
-               <h3 className="font-lora text-lg font-bold text-green-500 italic">Outros</h3>
-
-               <FormField
                 control={form.control}
                 name="marketing"
                 render={({ field }) => (
                   <FormItem className="flex flex-row items-center justify-between rounded-lg border border-green-100 p-4">
                     <div className="space-y-0.5">
-                      <FormLabel className="font-maitree text-base text-green-800">Marketing e Novidades</FormLabel>
-                      <p className="text-sm text-green-600/70 font-maitree">
+                      <FormLabel className="font-maitree text-base text-green-800">
+                        Marketing e Novidades
+                      </FormLabel>
+                      <p className="font-maitree text-sm text-green-600/70">
                         Receba novidades sobre o VegCom e receitas em destaque.
                       </p>
                     </div>

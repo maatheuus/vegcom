@@ -87,7 +87,7 @@ export default function Menu() {
       >
         <div className="desktop:p-4 desktop:flex desktop:items-center h-full p-2">
           <motion.div layout="position" className="flex w-full items-center">
-            <Row className="group h-full w-full items-center justify-between px-2 md:px-4">
+            <Row className="group h-full w-full items-center gap-x-2 justify-between px-2 md:px-4">
               <Link href={sidebarLinks.leftLinks.href} className="block flex-1">
                 <div className="flex items-center gap-x-2">
                   <Image
