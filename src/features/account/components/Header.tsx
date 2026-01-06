@@ -85,7 +85,7 @@ export default function Header({
                       className={`font-maitree cursor-pointer py-2 ${
                         action.variant === "destructive"
                           ? "bg-red-500 hover:bg-red-600"
-                          : "bg-green-500"
+                          : "bg-green-200"
                       }`}
                       text={action.text}
                       href={action.href}
@@ -155,7 +155,7 @@ export default function Header({
                       className={`font-lora w-full justify-start rounded-lg px-4 py-3 text-base ${
                         action.variant === "destructive"
                           ? "bg-red-50 text-red-600"
-                          : "bg-green-500 text-green-50"
+                          : "bg-green-200 text-green-50"
                       }`}
                       variant="text"
                       leftIcon={action.icon || undefined}
@@ -167,7 +167,7 @@ export default function Header({
                       className={`font-lora w-full justify-start rounded-lg px-4 py-3 text-base ${
                         action.variant === "destructive"
                           ? "bg-red-50 text-red-600"
-                          : "bg-green-500 text-green-50"
+                          : "bg-green-200 text-green-50"
                       }`}
                       variant="text"
                       leftIcon={action.icon || undefined}

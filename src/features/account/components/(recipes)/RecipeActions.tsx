@@ -1,3 +1,4 @@
+import Loading from "@/shared/components/ui/Loading";
 import { Suspense } from "react";
 import RecipeActionsClient from "./RecipeActionsClient";
 
@@ -7,7 +8,7 @@ interface Props {
 
 export default function RecipeActions({ isFavorites }: Props) {
   return (
-    <Suspense fallback={<div>Carregando receitas...</div>}>
+    <Suspense fallback={<Loading size={24} color="green-500" />}>
       <RecipeActionsClient isFavorites={isFavorites} />
     </Suspense>
   );

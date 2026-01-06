@@ -42,7 +42,7 @@ export default function SubscribedView({ className, user, ...props }: Props) {
     <div className={`space-y-6 ${className || ""}`} {...props}>
       <div className="space-y-6 rounded-xl border border-green-200 bg-green-50 p-8">
         <div className="flex items-center justify-between border-b border-green-100 pb-6">
-          <div className="inline-flex items-center gap-2 rounded-lg bg-green-500 px-4 py-2">
+          <div className="inline-flex items-center gap-2 rounded-lg bg-green-200 px-4 py-2">
             <SparkleIcon size={20} className="text-green-50" />
             <Text
               as="span"
@@ -123,7 +123,7 @@ export default function SubscribedView({ className, user, ...props }: Props) {
             size="default"
             onClick={handleManageSubscription}
             disabled={isPending}
-            className="cursor-pointer rounded-lg bg-green-500 py-1.5 disabled:cursor-not-allowed disabled:opacity-50"
+            className="cursor-pointer rounded-lg bg-green-200 py-1.5 disabled:cursor-not-allowed disabled:opacity-50"
           >
             {isPending ? "Carregando..." : "Gerenciar Assinatura"}
           </Button>

@@ -94,7 +94,7 @@ export default function NotSubscribedView({
             <Button
               variant="default"
               size="lg"
-              className="font-maitree w-full cursor-pointer"
+              className="font-maitree w-full cursor-pointer bg-green-200"
               onClick={handleSubscribe}
               disabled={isPending}
             >
@@ -106,7 +106,7 @@ export default function NotSubscribedView({
 
       <div className="rounded-xl border border-green-200 bg-green-50 p-6">
         <Row className="items-center gap-4">
-          <div className="flex size-12 items-center justify-center rounded-full bg-green-500">
+          <div className="flex size-12 items-center justify-center rounded-full bg-green-200">
             <SparkleIcon size={24} className="text-green-50" />
           </div>
           <div className="flex-1">

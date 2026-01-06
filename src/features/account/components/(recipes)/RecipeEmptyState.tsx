@@ -6,17 +6,16 @@ import { BroomIcon } from "@phosphor-icons/react/dist/ssr";
 import gsap from "gsap";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useCallback, useEffect, useRef, useState } from "react";
-import type { DataRecipeCardAccount } from "./types";
 
 interface Props {
-  filteredData: DataRecipeCardAccount[];
+  isEmpty: boolean;
   searchQuery?: string;
   isFavorites?: boolean;
 }
 
 export default function RecipeEmptyState({
-  filteredData,
   isFavorites,
+  isEmpty,
   searchQuery,
 }: Props) {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -80,13 +79,13 @@ export default function RecipeEmptyState({
   );
 
   useEffect(() => {
-    if (filteredData.length === 0) {
+    if (isEmpty) {
       const timer = setTimeout(() => setShouldAnimate(true), 100);
       return () => clearTimeout(timer);
     } else {
       setShouldAnimate(false);
     }
-  }, [filteredData.length]);
+  }, [isEmpty]);
 
   if (searchQuery && searchQuery.length > 0) {
     return (

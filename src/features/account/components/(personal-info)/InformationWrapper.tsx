@@ -96,7 +96,7 @@ export default function InformationWrapper({ user }: InformationWrapperProps) {
             variant="filled"
             size="default"
             onClick={() => setIsEditing(!isEditing)}
-            className="font-maitree cursor-pointer bg-green-500 py-2"
+            className="font-maitree cursor-pointer bg-green-200 py-2"
           >
             {isEditing ? "Salvar Perfil" : "Editar Perfil"}
           </Button.Icon>
@@ -134,7 +134,7 @@ export default function InformationWrapper({ user }: InformationWrapperProps) {
           variant="filled"
           size="default"
           onClick={() => setIsEditing(!isEditing)}
-          className="font-maitree cursor-pointer bg-green-500 py-2"
+          className="font-maitree cursor-pointer bg-green-200 py-2"
         >
           {isEditing ? "Salvar Perfil" : "Editar Perfil"}
         </Button.Icon>

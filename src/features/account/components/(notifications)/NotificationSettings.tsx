@@ -1,8 +1,8 @@
 "use client";
 
+import { useGetUser } from "@/features/account/api/queries/getAuthApiClient";
 import AccountLayout from "@/features/account/components/AccountLayout";
 import Header from "@/features/account/components/Header";
-import { useGetUser } from "@/features/account/api/queries/getAuthApiClient";
 import Button from "@/shared/ui/Button";
 import {
   Form,
@@ -91,7 +91,7 @@ export default function NotificationSettings() {
             onClick={() =>
               isEditing ? form.handleSubmit(onSubmit)() : setIsEditing(true)
             }
-            className="font-maitree cursor-pointer bg-green-500 py-2"
+            className="font-maitree cursor-pointer bg-green-200 py-2"
           >
             {isEditing ? "Salvar Preferências" : "Editar Preferências"}
           </Button.Icon>
