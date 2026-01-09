@@ -30,7 +30,7 @@ export interface User {
   recipesCount: number;
   informations: UserInformations;
   savedRecipes: any[];
-  recipes: any[];
+  recipes: Record<string, number>[];
   chats: Chat[];
   createdAt: string;
   updatedAt: string;

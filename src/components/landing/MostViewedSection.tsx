@@ -1,21 +1,23 @@
-import { getRecipes } from "@/features/recipes/api/recipesApi";
-import type { Recipe } from "@/features/recipes/components/types";
+import { getRecipes } from "@/features/recipes/api/queries/getRecipesApiServer";
+import type { Recipe } from "@/features/recipes/api/types";
 import { MostViewedClient } from "./MostViewedClient";
 
 export async function MostViewedSection() {
-  const recipes = await getRecipes();
+  const { data: recipes } = await getRecipes();
+  console.log("recipes", recipes);
+
   const mostViewed = recipes
     .sort((a, b) => (b.views || 0) - (a.views || 0))
     .slice(0, 4);
 
   const mappedRecipes: Recipe[] = mostViewed.map((recipe) => ({
-    id: recipe.id,
+    id: String(recipe.id),
     title: recipe.title,
-    image: recipe.imageUrl,
+    image: recipe.images[0],
     rating: recipe.rating,
     category: "Vegetarian",
-    prepTime: recipe.prepTime ? `${recipe.prepTime} min` : undefined,
-    servings: recipe.servings,
+    prepTime: recipe.cookTime ? `${recipe.cookTime} min` : undefined,
+    servings: recipe.quantity,
     description: recipe.description,
     views: recipe.views,
   }));

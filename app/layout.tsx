@@ -1,10 +1,12 @@
 import { lora, maitree, montserrat, rancho } from "@/assets/fonts";
+import ProgressProviderClient from "@/shared/components/ui/ProgressProviderClient";
 import SmoothScroll from "@/shared/components/ui/SmoothScroll";
 import QueryClientWrapper from "@/shared/tanstack/QueryClientWrapper";
 import { Toaster } from "@/shared/ui/toaster";
 import { Analytics } from "@vercel/analytics/next";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import type { Metadata } from "next";
+import Script from "next/script";
 import "../src/assets/css/responsiveness.css";
 import "./global.css";
 
@@ -80,11 +82,29 @@ export default function RootLayout({
       <body className="h-full bg-green-50">
         <QueryClientWrapper>
           <SmoothScroll />
-          {children}
+          <ProgressProviderClient>{children}</ProgressProviderClient>
           <Toaster />
         </QueryClientWrapper>
         <SpeedInsights />
         <Analytics />
+
+        {/* Google tag (gtag.js) */}
+        <Script
+          strategy="afterInteractive"
+          src="https://www.googletagmanager.com/gtag/js?id=G-BX49PBRG5B"
+        />
+        <Script
+          id="google-analytics"
+          strategy="afterInteractive"
+          dangerouslySetInnerHTML={{
+            __html: `
+              window.dataLayer = window.dataLayer || [];
+              function gtag(){dataLayer.push(arguments);}
+              gtag('js', new Date());
+              gtag('config', 'G-BX49PBRG5B');
+            `,
+          }}
+        />
       </body>
     </html>
   );

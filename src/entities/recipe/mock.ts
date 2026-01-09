@@ -3,7 +3,7 @@
  */
 
 import { food } from "@/assets";
-import type { Recipe } from "./types";
+import type { Recipe } from "@/features/recipes/api/types";
 
 export const mockRecipes: Recipe[] = [
   {

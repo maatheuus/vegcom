@@ -88,7 +88,9 @@ export default function Page() {
             }
             variant="filled"
             size="default"
-            onClick={() => setIsEditing(!isEditing)}
+            onClick={() =>
+              isEditing ? onSubmit(form.getValues()) : setIsEditing(!isEditing)
+            }
             className="font-maitree cursor-pointer bg-green-200 py-2"
           >
             {isEditing ? "Salvar Perfil" : "Editar Perfil"}
