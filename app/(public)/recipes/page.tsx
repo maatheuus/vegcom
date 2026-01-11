@@ -32,15 +32,13 @@ export default async function Page({ searchParams }: PageProps) {
           <HeaderComponent>
             <Header title="Receitas" className="border-0 p-0" />
 
-            {recipes.length > 0 ? (
-              <Row className="hidden items-center gap-1 md:flex">
-                <Row className="gap-2">
-                  <SearchBar />
-                  <Categories />
-                </Row>
-                <ClearFiltersButton />
+            <Row className="hidden items-center gap-1 md:flex">
+              <Row className="gap-2">
+                <SearchBar />
+                <Categories />
               </Row>
-            ) : null}
+              <ClearFiltersButton />
+            </Row>
           </HeaderComponent>
         </Row>
 

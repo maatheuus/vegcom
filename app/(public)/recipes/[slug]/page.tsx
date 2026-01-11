@@ -2,6 +2,7 @@ import {
   getRecipeById,
   getRecipeBySlug,
 } from "@/features/recipes/api/queries/getRecipesApiServer";
+import BackButton from "@/features/recipes/components/details/BackButton";
 import ContentRecipe from "@/features/recipes/components/details/ContentRecipe";
 import Header from "@/features/recipes/components/details/Header";
 import { ViewTracker } from "@/features/recipes/components/details/ViewTracker";
@@ -48,7 +49,8 @@ export default async function page({ params }: Props) {
   return (
     <Layout.Default className="style-scrollbar h-auto">
       <ViewTracker recipeId={recipe.id} />
-      <div className="mx-auto space-y-6 py-8 md:space-y-8">
+      <div className="mx-auto space-y-6 md:space-y-8">
+        <BackButton />
         <Header
           isRecipePage
           views={recipe.views || 0}
