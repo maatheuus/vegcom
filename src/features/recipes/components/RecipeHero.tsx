@@ -1,34 +1,81 @@
+"use client";
+
 import StarRating from "@/features/community/components/AsideContent/StarRating";
+import { getFeaturedRecipeClient } from "@/features/recipes/api/client/getFeaturedRecipe";
 import type { Recipe } from "@/features/recipes/api/types";
 import Button from "@/shared/ui/Button";
 import Text from "@/shared/ui/Text";
-import { ClockIcon, EyeIcon, UsersIcon } from "@phosphor-icons/react/ssr";
+import {
+  CaretDown,
+  ClockIcon,
+  EyeIcon,
+  UsersIcon,
+} from "@phosphor-icons/react";
 import clsx from "clsx";
 import Image from "next/image";
 import Link from "next/link";
+import { useState } from "react";
 
 interface RecipeHeroProps extends React.HTMLAttributes<HTMLLinkElement> {
   hightlightedRecipe: Recipe;
 }
 
-// featured recipe need to be the most viewed and rated
+const filterOptions = [
+  { label: "Mais vista do mês", value: "most_viewed_month" },
+  { label: "Mais vista da semana", value: "most_viewed_week" },
+  { label: "Mais avaliada do mês", value: "best_rated_month" },
+  { label: "Mais avaliada da semana", value: "best_rated_week" },
+];
+
 export function RecipeHero({ className, hightlightedRecipe }: RecipeHeroProps) {
+  const [recipe, setRecipe] = useState<Recipe>(hightlightedRecipe);
+  const [isLoading, setIsLoading] = useState(false);
+  const [selectedFilter, setSelectedFilter] = useState(filterOptions[0].value);
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+
   const { title, description, cookTime, quantity, rating, images, views, slug } =
-    hightlightedRecipe;
+    recipe;
 
   const image = images[0];
 
-  return (
-    <Link href={`/recipes/${slug}`} className={clsx("contents", className)}>
-      <span className="sr-only">{title}</span>
+  const handleFilterChange = async (filterValue: string) => {
+    setSelectedFilter(filterValue);
+    setIsDropdownOpen(false);
+    setIsLoading(true);
+    try {
+      const data = await getFeaturedRecipeClient(filterValue);
+      // The API response structure in client fetch assumes { data: Recipe }
+      // If the backend returns the recipe directly as per spec, adjustments might be needed.
+      // Assuming getFeaturedRecipeClient returns { data: Recipe } based on its implementation.
+      if (data && data.data) {
+        setRecipe(data.data);
+      } else if (data) {
+         // Fallback if the response is just the recipe
+         setRecipe(data as unknown as Recipe);
+      }
+    } catch (error) {
+      console.error("Failed to fetch featured recipe:", error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
-      <div className="group relative min-h-[340px] overflow-hidden rounded-xl shadow-md transition-all duration-500 hover:shadow-lg md:min-h-auto">
+  const selectedLabel = filterOptions.find(
+    (opt) => opt.value === selectedFilter,
+  )?.label;
+
+  return (
+    <div className={clsx("relative w-full", className)}>
+      <Link href={`/recipes/${slug}`} className="group relative block min-h-[340px] overflow-hidden rounded-xl shadow-md transition-all duration-500 hover:shadow-lg md:min-h-auto">
         <div className="relative min-h-[340px] md:aspect-[21/9] md:min-h-auto">
           <Image
             src={image}
             fill
             alt={title}
-            className="h-full w-full object-cover transition-transform duration-700 ease-out group-hover:scale-110"
+            className={clsx(
+              "h-full w-full object-cover transition-transform duration-700 ease-out group-hover:scale-110",
+              isLoading && "scale-105 blur-sm grayscale",
+            )}
           />
           <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/60 to-transparent opacity-100 transition-opacity duration-500 ease-out lg:opacity-0 lg:group-hover:opacity-100" />
         </div>
@@ -88,7 +135,52 @@ export function RecipeHero({ className, hightlightedRecipe }: RecipeHeroProps) {
             </Button>
           </div>
         </div>
+      </Link>
+
+      {/* Filter Dropdown */}
+      <div className="absolute right-4 top-4 z-10 md:right-8 md:top-8">
+        <div className="relative">
+          <button
+            onClick={(e) => {
+              e.preventDefault();
+              setIsDropdownOpen(!isDropdownOpen);
+            }}
+            className="flex items-center gap-2 rounded-lg bg-black/40 px-3 py-1.5 text-sm font-medium text-white backdrop-blur-md transition-colors hover:bg-black/50"
+          >
+            {selectedLabel}
+            <CaretDown
+              className={clsx(
+                "h-4 w-4 transition-transform",
+                isDropdownOpen && "rotate-180",
+              )}
+            />
+          </button>
+
+          {isDropdownOpen && (
+            <div className="absolute right-0 top-full mt-2 w-56 overflow-hidden rounded-lg bg-white shadow-xl ring-1 ring-black/5">
+              <div className="py-1">
+                {filterOptions.map((option) => (
+                  <button
+                    key={option.value}
+                    onClick={(e) => {
+                      e.preventDefault();
+                      handleFilterChange(option.value);
+                    }}
+                    className={clsx(
+                      "block w-full px-4 py-2 text-left text-sm transition-colors hover:bg-gray-50",
+                      selectedFilter === option.value
+                        ? "font-medium text-green-600"
+                        : "text-gray-700",
+                    )}
+                  >
+                    {option.label}
+                  </button>
+                ))}
+              </div>
+            </div>
+          )}
+        </div>
       </div>
-    </Link>
+    </div>
   );
 }
