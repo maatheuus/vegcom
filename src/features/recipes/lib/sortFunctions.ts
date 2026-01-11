@@ -31,5 +31,5 @@ export const sortByPrepTime = (a: Recipe, b: Recipe): number => {
     return match ? parseInt(match[1]) : 0;
   };
 
-  return getMinutes(a.prepTime) - getMinutes(b.prepTime);
+  return getMinutes(a.cookTime) - getMinutes(b.cookTime);
 };

@@ -1,16 +1,5 @@
-import type { StaticImageData } from "next/image";
-
-export interface Recipe {
-  id: string;
-  title: string;
-  image: StaticImageData | string;
-  rating?: number;
-  category?: string;
-  prepTime?: string;
-  servings?: number;
-  description?: string;
-  views?: number;
-}
+import type { Recipe } from "../api/types";
+export type { Recipe };
 
 export interface RecipeGridProps {
   recipes: Recipe[];

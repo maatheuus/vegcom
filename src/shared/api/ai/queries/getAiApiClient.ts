@@ -7,10 +7,11 @@ export const useGenerateResponse = () => {
 
   return useMutation({
     mutationFn: aiApi.generateResponse,
-    onSuccess: (data: any) => {
-      if (data && data.chatId) {
+    onSuccess: (data) => {
+      const chatId = data?.[0]?.chatId;
+      if (chatId) {
         queryClient.invalidateQueries({
-          queryKey: chatKeys.detail(data.chatId),
+          queryKey: chatKeys.detail(chatId),
         });
 
         queryClient.invalidateQueries({

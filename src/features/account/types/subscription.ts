@@ -11,7 +11,7 @@ export interface Price {
     usage_type: string;
   } | null;
   product: string;
-  metadata: Record<string, any>;
+  metadata: Record<string, unknown>;
 }
 
 export interface Product {
@@ -22,7 +22,7 @@ export interface Product {
   description: string | null;
   images: string[];
   default_price: Price;
-  metadata: Record<string, any>;
+  metadata: Record<string, unknown>;
   marketing_features: string[];
 }
 

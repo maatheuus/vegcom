@@ -29,7 +29,7 @@ export default function RecipeCard({
       <Col className="group relative h-full w-full cursor-pointer overflow-hidden rounded-xl border border-green-200 bg-green-50 shadow-sm transition-all hover:shadow-md">
         <div className="relative aspect-square max-h-[220px] overflow-hidden">
           <Image
-            src={recipe.image}
+            src={recipe.images[0]}
             alt={recipe.title}
             width={500}
             height={500}
@@ -84,22 +84,22 @@ export default function RecipeCard({
             )}
 
             <div className="font-maitree text-black-100 flex items-center gap-x-2 text-xs font-semibold">
-              {recipe.prepTime && (
+              {recipe.cookTime && (
                 <div
                   className="flex items-center gap-1"
-                  aria-label={`Tempo: ${recipe.prepTime}`}
+                  aria-label={`Tempo: ${recipe.cookTime}`}
                 >
                   <ClockIcon size={16} aria-hidden="true" />
-                  <span>{recipe.prepTime}</span>
+                  <span>{recipe.cookTime}</span>
                 </div>
               )}
-              {recipe.servings && (
+              {recipe.quantity && (
                 <div
                   className="flex items-center gap-1"
-                  aria-label={`Serve: ${recipe.servings}`}
+                  aria-label={`Serve: ${recipe.quantity}`}
                 >
                   <UsersIcon size={16} aria-hidden="true" />
-                  <span>{recipe.servings}</span>
+                  <span>{recipe.quantity}</span>
                 </div>
               )}
 

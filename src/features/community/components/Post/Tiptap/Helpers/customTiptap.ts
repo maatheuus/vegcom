@@ -82,7 +82,7 @@ export const CustomImage = Node.create<CustomImageOptions>({
     return {
       setCustomImage:
         (options) =>
-        ({ commands, tr }) => {
+        ({ commands, tr: _tr }) => {
           // Insert the image custom node
           const imageInsertion = commands.insertContent([
             {

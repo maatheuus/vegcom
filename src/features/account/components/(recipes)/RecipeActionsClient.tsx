@@ -2,6 +2,8 @@
 
 import RecipeCard from "@/features/account/components/(recipes)/RecipeCard";
 import { useGetUser } from "@/features/auth/api/queries/getAuthApiClient";
+import { recipeApi } from "@/features/recipes/api/recipesApi";
+import type { DetailedRecipe } from "@/features/recipes/api/types";
 import { RecipeGridSkeleton } from "@/features/recipes/components/RecipeGridSkeleton";
 import { usePagination } from "@/shared/hooks/usePagination";
 import {
@@ -13,11 +15,11 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from "@/shared/ui/Pagination";
+import { useQueries } from "@tanstack/react-query";
 import { useSearchParams } from "next/navigation";
 import { useMemo } from "react";
 import RecipeEmptyState from "./RecipeEmptyState";
 import RecipeFilter, { type SortValues } from "./RecipeFilter";
-import type { DataRecipeCardAccount } from "./types";
 
 const ITEMS_PER_PAGE = 6;
 
@@ -33,7 +35,7 @@ function normalizeSearchText(text: string): string {
 }
 
 export default function RecipeActions({ isFavorites }: Props) {
-  const { data: user } = useGetUser();
+  const { data: user, isLoading: isUserLoading } = useGetUser();
   const recipes = user?.recipes;
   const savedRecipes = user?.savedRecipes;
 
@@ -41,14 +43,44 @@ export default function RecipeActions({ isFavorites }: Props) {
   const query = searchParams.get("q") || "";
   const sortBy = (searchParams.get("sort") as SortValues) || "";
 
+  const recipeIds = useMemo(() => {
+    const sourceData = isFavorites ? savedRecipes : recipes;
+    if (!sourceData || sourceData.length === 0) return [];
+
+    return sourceData.map((item) =>
+      typeof item === "object" && item !== null && "id" in item
+        ? (item as { id: number }).id
+        : (item as number),
+    );
+  }, [isFavorites, savedRecipes, recipes]);
+
+  const recipeQueries = useQueries({
+    queries: recipeIds.map((id: number) => ({
+      queryKey: ["recipes", "detail", id],
+      queryFn: () => recipeApi.getRecipeById(id),
+      enabled: !!id,
+      staleTime: 5 * 60 * 1000, // 5 minutos
+    })),
+  });
+
+  const isLoadingRecipes = recipeQueries.some((q) => q.isLoading);
+  const allRecipes = recipeQueries
+    .filter((q) => q.isSuccess && q.data?.data)
+    .map((q) => q.data!.data as DetailedRecipe);
+
   const filteredData = useMemo(() => {
-    let data: DataRecipeCardAccount[] = isFavorites ? savedRecipes! : recipes!;
+    if (allRecipes.length === 0) return [];
+
+    let data = [...allRecipes];
 
     if (query) {
       const normalizedQuery = normalizeSearchText(query);
 
       data = data.filter((recipe) => {
-        if (normalizeSearchText(recipe.title).includes(normalizedQuery)) {
+        if (
+          recipe.title &&
+          normalizeSearchText(recipe.title).includes(normalizedQuery)
+        ) {
           return true;
         }
 
@@ -60,8 +92,8 @@ export default function RecipeActions({ isFavorites }: Props) {
         }
 
         if (
-          recipe.recipeType &&
-          normalizeSearchText(recipe.recipeType).includes(normalizedQuery)
+          recipe.category &&
+          normalizeSearchText(recipe.category).includes(normalizedQuery)
         ) {
           return true;
         }
@@ -75,14 +107,21 @@ export default function RecipeActions({ isFavorites }: Props) {
     } else if (sortBy === "views") {
       data = [...data].sort((a, b) => (b.views || 0) - (a.views || 0));
     } else if (sortBy === "recent") {
-      data = [...data].sort(
-        (a, b) =>
-          new Date(b.updated_at!).getTime() - new Date(a.updated_at!).getTime(),
-      );
+      data = [...data].sort((a, b) => {
+        const dateA = a.updatedAt ? new Date(a.updatedAt).getTime() : 0;
+        const dateB = b.updatedAt ? new Date(b.updatedAt).getTime() : 0;
+        return dateB - dateA;
+      });
+    } else if (sortBy === "old") {
+      data = [...data].sort((a, b) => {
+        const dateA = a.updatedAt ? new Date(a.updatedAt).getTime() : 0;
+        const dateB = b.updatedAt ? new Date(b.updatedAt).getTime() : 0;
+        return dateA - dateB;
+      });
     }
 
     return data;
-  }, [query, sortBy]);
+  }, [query, sortBy, allRecipes]);
 
   const {
     currentItems,
@@ -93,36 +132,44 @@ export default function RecipeActions({ isFavorites }: Props) {
     getPageNumbers,
     hasNextPage,
     hasPreviousPage,
-    isLoading,
+    isLoading: isPaginationLoading,
   } = usePagination({
-    items: filteredData || [],
+    items: filteredData,
     itemsPerPage: ITEMS_PER_PAGE,
     loadingDelay: 400,
     queryKey: "page",
   });
 
-  const shouldShowPagination = filteredData?.length > ITEMS_PER_PAGE;
+  const currentItemsRecipe = currentItems as DetailedRecipe[];
+
+  const shouldShowPagination = filteredData.length > ITEMS_PER_PAGE;
+
+  const isLoading = isUserLoading || isLoadingRecipes || isPaginationLoading;
 
   if (!isLoading && currentPage > 1 && currentItems?.length === 0) {
     goToPage(1);
   }
 
-  return isLoading ? (
-    <RecipeGridSkeleton count={ITEMS_PER_PAGE} className="lg:grid-cols-3" />
-  ) : (
+  if (isLoading) {
+    return (
+      <RecipeGridSkeleton count={ITEMS_PER_PAGE} className="lg:grid-cols-3" />
+    );
+  }
+
+  return (
     <>
-      {currentItems && currentItems.length > 0 ? (
+      {currentItemsRecipe && currentItemsRecipe.length > 0 ? (
         <>
           <div className="flex w-full flex-col items-start justify-start gap-4 md:flex-row md:justify-between">
             <RecipeFilter />
           </div>
+
           <div className="grid w-full grid-cols-1 items-center justify-start gap-4 md:grid-cols-2 lg:grid-cols-3">
-            {currentItems.map((card, index) => (
+            {currentItemsRecipe.map((recipe) => (
               <RecipeCard
-                key={index}
-                data={card}
+                key={recipe.id}
+                recipeId={recipe.id}
                 isFavorites={isFavorites}
-                className="col-span-1"
               />
             ))}
           </div>
@@ -135,7 +182,7 @@ export default function RecipeActions({ isFavorites }: Props) {
         />
       )}
 
-      {shouldShowPagination && currentItems.length > 0 && (
+      {shouldShowPagination && currentItemsRecipe.length > 0 && (
         <div className="flex w-full justify-center">
           <Pagination>
             <PaginationContent>

@@ -56,7 +56,7 @@ export default function UserInformations({
   const fileInputRef = useRef<HTMLInputElement>(null);
   const { fullName, email } = form.getValues();
 
-  const randomMessage =
+  const _randomMessage =
     messagesToDisplayForPremium[
       Math.floor(Math.random() * messagesToDisplayForPremium.length)
     ];

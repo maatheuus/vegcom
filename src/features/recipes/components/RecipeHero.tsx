@@ -1,11 +1,11 @@
 import StarRating from "@/features/community/components/AsideContent/StarRating";
+import type { Recipe } from "@/features/recipes/api/types";
 import Button from "@/shared/ui/Button";
 import Text from "@/shared/ui/Text";
 import { ClockIcon, EyeIcon, UsersIcon } from "@phosphor-icons/react/ssr";
 import clsx from "clsx";
 import Image from "next/image";
 import Link from "next/link";
-import type { Recipe } from "./types";
 
 interface RecipeHeroProps extends React.HTMLAttributes<HTMLLinkElement> {
   hightlightedRecipe: Recipe;
@@ -13,8 +13,10 @@ interface RecipeHeroProps extends React.HTMLAttributes<HTMLLinkElement> {
 
 // featured recipe need to be the most viewed and rated
 export function RecipeHero({ className, hightlightedRecipe }: RecipeHeroProps) {
-  const { title, description, prepTime, servings, rating, image, views } =
+  const { title, description, cookTime, quantity, rating, images, views } =
     hightlightedRecipe;
+
+  const image = images[0];
 
   const slug = title.trim().split(" ").join("-").toLowerCase();
 
@@ -66,11 +68,11 @@ export function RecipeHero({ className, hightlightedRecipe }: RecipeHeroProps) {
               )}
               <div className="flex items-center gap-1 text-sm sm:text-sm">
                 <ClockIcon className="h-4 w-4 sm:h-5 sm:w-5" />
-                <span>{prepTime}</span>
+                <span>{cookTime}</span>
               </div>
               <div className="flex items-center gap-1 text-sm sm:text-sm">
                 <UsersIcon className="h-4 w-4 sm:h-5 sm:w-5" />
-                <span>{servings} porções</span>
+                <span>{quantity} porções</span>
               </div>
               {views && (
                 <div className="flex items-center gap-1 text-sm sm:text-sm">

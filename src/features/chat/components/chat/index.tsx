@@ -41,13 +41,14 @@ export default function ChatPage() {
     try {
       const response = await generateResponse({
         query: content,
-        chatId: undefined as any,
+        chatId: 0,
       });
 
-      if (response && response.chatId) {
+      const metadata = response?.[0];
+
+      if (metadata && metadata.chatId) {
         setIsNavigating(true);
 
-        const metadata = response;
         const newChatId = metadata.chatId;
 
         const optimisticChat: GetChatByIdResponse = {

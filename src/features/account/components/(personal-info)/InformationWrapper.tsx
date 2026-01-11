@@ -42,7 +42,7 @@ export default function InformationWrapper({ user }: InformationWrapperProps) {
     form.getValues().bio.length,
   );
 
-  const formErros =
+  const _formErros =
     form.formState.errors.bio ||
     form.formState.errors.fullName ||
     form.formState.errors.email ||
@@ -51,14 +51,14 @@ export default function InformationWrapper({ user }: InformationWrapperProps) {
     form.formState.errors.location ||
     bioLength > maxLengthForBio;
 
-  const onSubmit = (values: z.infer<typeof personalInfoFormSchema>) => {
+  const _onSubmit = (values: z.infer<typeof personalInfoFormSchema>) => {
     if (form.formState.errors) return;
 
     console.log("Salvo com sucesso:", values);
     setIsEditing(false);
   };
 
-  const onCancel = () => {
+  const _onCancel = () => {
     form.reset();
     setIsEditing(false);
   };

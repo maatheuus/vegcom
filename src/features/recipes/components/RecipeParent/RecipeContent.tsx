@@ -1,5 +1,7 @@
 "use client";
 
+import type { Recipe } from "@/features/recipes/api/types";
+import RecipeEmptyState from "@/features/recipes/components/RecipeEmptyState";
 import { RecipeGrid } from "@/features/recipes/components/RecipeGrid";
 import { RecipeGridSkeleton } from "@/features/recipes/components/RecipeGridSkeleton";
 import {
@@ -21,7 +23,6 @@ import {
 } from "@/shared/ui/Pagination";
 import Text from "@/shared/ui/Text";
 import { ITEMS_PER_PAGE } from ".";
-import type { Recipe } from "../types";
 
 export type SortType = "rating" | "views" | "title" | "prepTime" | "none";
 
@@ -92,11 +93,16 @@ export default function RecipeContent({
       <Col className="items-center justify-center gap-y-5">
         {isLoading ? (
           <RecipeGridSkeleton count={ITEMS_PER_PAGE} />
-        ) : (
+        ) : currentItems.length > 0 ? (
           <RecipeGrid recipes={currentItems} />
+        ) : (
+          <RecipeEmptyState
+            title="Nenhuma receita encontrada"
+            description={`Não encontramos nenhuma receita para "${title}".`}
+          />
         )}
 
-        {shouldShowPagination && (
+        {shouldShowPagination && currentItems.length > 0 && (
           <div className="block">
             <Pagination>
               <PaginationContent>

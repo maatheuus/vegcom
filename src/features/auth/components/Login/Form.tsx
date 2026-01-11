@@ -64,13 +64,14 @@ export default function LoginForm() {
           variant: "success",
         });
         router.push("/community/");
-      } catch (error: any) {
+      } catch (error: unknown) {
         console.error("Login error:", error);
-        if (error.message) {
+        const err = error as { message?: string; code?: string };
+        if (err.message) {
           toast({
             title: "Erro ao fazer login",
             description:
-              loginErrorMessages[error.code as keyof typeof AUTH_ERRORS] ||
+              loginErrorMessages[err.code as keyof typeof AUTH_ERRORS] ||
               "Verifique suas credenciais e tente novamente.",
             variant: "destructive",
           });

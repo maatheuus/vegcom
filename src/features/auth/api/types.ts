@@ -29,7 +29,7 @@ export interface User {
   subscription?: SubscriptionData;
   recipesCount: number;
   informations: UserInformations;
-  savedRecipes: any[];
+  savedRecipes: unknown[];
   recipes: Record<string, number>[];
   chats: Chat[];
   createdAt: string;

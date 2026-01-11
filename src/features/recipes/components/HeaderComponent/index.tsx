@@ -1,9 +1,11 @@
 "use client";
 
 import { Categories } from "@/features/recipes/components/Categories";
+import { ClearFiltersButton } from "@/features/recipes/components/ClearFiltersButton";
 import { SearchBar } from "@/features/recipes/components/SearchBar";
 import Button from "@/shared/ui/Button";
 import Col from "@/shared/ui/Layout/Helpers/Col";
+import Row from "@/shared/ui/Layout/Helpers/Row";
 import { MagnifyingGlassIcon } from "@phosphor-icons/react";
 import clsx from "clsx";
 import { useEffect, useRef, useState } from "react";
@@ -57,7 +59,10 @@ export default function HeaderComponent({ children }: Props) {
         >
           <Col className="gap-3">
             <SearchBar className="w-full" />
-            <Categories className="w-full justify-between" />
+            <Row className="items-center gap-2">
+              <Categories className="w-full justify-between" />
+              <ClearFiltersButton />
+            </Row>
           </Col>
         </div>
       </div>

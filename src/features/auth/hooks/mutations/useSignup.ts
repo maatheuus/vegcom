@@ -23,7 +23,7 @@ const signupUser = async (payload: SignupData): Promise<SignupData> => {
   });
 
   return {
-    singupData: singupData as any,
+    singupData: singupData as unknown as AuthResponse,
     username: payload.username,
     email: payload.email,
     password: payload.password,
