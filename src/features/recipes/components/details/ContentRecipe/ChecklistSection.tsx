@@ -10,15 +10,10 @@ import { useEffect, useState } from "react";
 import type { RecipeType } from "../../new-recipe/GroupFields";
 import { typeConfig } from "./utils";
 
-interface ChecklistItem {
-  id: number;
-  label: string;
-}
-
 interface ChecklistProps extends React.HTMLAttributes<HTMLDivElement> {
   title: string;
   type: RecipeType;
-  items: ChecklistItem[];
+  items: string[];
   storageKey?: string;
 }
 
@@ -76,7 +71,7 @@ export default function ChecklistSection({
 
       <Col className="w-fit gap-2">
         {items.map((item, idx) => {
-          const isChecked = checkedItems.includes(item.id);
+          const isChecked = checkedItems.includes(idx);
 
           const getButtonBgClass = () => {
             if (type !== "instructions") return "";
@@ -109,12 +104,12 @@ export default function ChecklistSection({
 
           return (
             <Row
-              key={item.id}
+              key={idx}
               className={clsx(
                 "items-center gap-2",
                 config.interactive && "cursor-pointer",
               )}
-              onClick={() => toggleCheck(item.id)}
+              onClick={() => toggleCheck(idx)}
             >
               <Button
                 variant="none"
@@ -125,7 +120,7 @@ export default function ChecklistSection({
               </Button>
 
               <Text as="span" type={Text.Type.BodyFour} className={textClasses}>
-                {item.label}
+                {item}
               </Text>
             </Row>
           );

@@ -1,46 +1,37 @@
-import { food } from "@/assets";
 import Col from "@/shared/ui/Layout/Helpers/Col";
 import Grid from "@/shared/ui/Layout/Helpers/Grid";
 import Text from "@/shared/ui/Text";
 import ChecklistSection from "./ChecklistSection";
 import CommentsSection from "./CommentsSection";
 import Details from "./Details";
-import {
-  mockComments,
-  mockCookingNotes,
-  mockIngredients,
-  mockInstructions,
-} from "./utils";
 
+import type { DetailedRecipe } from "@/features/recipes/api/types";
 import RecipeGallery from "./RecipeGallery";
 
-export default function ContentRecipe() {
-  const mockImages = Array(6)
-    .fill({
-      src: food,
-      alt: "Salada mista com carne",
-    })
-    .map((img, index) => ({
-      ...img,
-      isFeatured: index === 0,
-    }));
+interface Props {
+  recipe: DetailedRecipe;
+}
+
+export default function ContentRecipe({ recipe }: Props) {
+  const edittedImages = recipe.images.map((image) => ({
+    src: image,
+    alt: recipe.title,
+  }));
 
   return (
     <div className="flex w-full flex-col gap-y-8">
       <Col className="gap-y-6">
         <Text as="p" type={Text.Type.BodyThree} className="text-green-500">
-          O tofu é uma excelente fonte de proteína vegetal e pode ser preparado
-          de várias maneiras. Nesta receita, ele é combinado com legumes frescos
-          e um molho agridoce, criando um prato saboroso e nutritivo.
+          {recipe.description}
         </Text>
 
-        <RecipeGallery images={mockImages} />
+        <RecipeGallery images={edittedImages} />
 
         <Details
-          preparationTime="30 min"
-          servings="4"
-          difficulty="Fácil"
-          category="Lunch"
+          cookTime={recipe.cookTime}
+          quantity={recipe.quantity}
+          difficulty={recipe.difficulty}
+          category={recipe.category}
         />
       </Col>
       <Grid className="grid-cols-1 gap-6 md:grid-cols-2 md:gap-10 lg:grid-cols-3">
@@ -48,24 +39,28 @@ export default function ContentRecipe() {
           title="Ingredients"
           type="ingredients"
           storageKey="checklist-ingredients"
-          items={mockIngredients}
+          items={recipe.steps.ingredients}
         />
 
         <ChecklistSection
           title="Instructions"
           type="instructions"
           storageKey="checklist-instructions"
-          items={mockInstructions}
+          items={recipe.steps.instructions}
         />
 
         <ChecklistSection
           title="Cooking Notes"
           type="cookingNotes"
-          items={mockCookingNotes}
+          items={recipe.steps.cookingNotes}
         />
       </Grid>
 
-      <CommentsSection comments={mockComments} />
+      <CommentsSection
+        comments={recipe.comments}
+        user={recipe.user}
+        recipeId={recipe.id}
+      />
     </div>
   );
 }

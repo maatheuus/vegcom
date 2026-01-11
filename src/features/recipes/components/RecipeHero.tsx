@@ -13,12 +13,10 @@ interface RecipeHeroProps extends React.HTMLAttributes<HTMLLinkElement> {
 
 // featured recipe need to be the most viewed and rated
 export function RecipeHero({ className, hightlightedRecipe }: RecipeHeroProps) {
-  const { title, description, cookTime, quantity, rating, images, views } =
+  const { title, description, cookTime, quantity, rating, images, views, slug } =
     hightlightedRecipe;
 
   const image = images[0];
-
-  const slug = title.trim().split(" ").join("-").toLowerCase();
 
   return (
     <Link href={`/recipes/${slug}`} className={clsx("contents", className)}>

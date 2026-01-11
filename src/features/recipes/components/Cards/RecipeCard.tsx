@@ -20,10 +20,8 @@ export default function RecipeCard({
   favoriteRecipes,
   handleFavorite,
 }: Props) {
-  const slug = recipe.title.trim().split(" ").join("-").toLowerCase();
-
   return (
-    <Link href={`/recipes/${slug}`} className="relative contents">
+    <Link href={`/recipes/${recipe.slug}`} className="relative contents">
       <span className="sr-only">link for {recipe.title}</span>
 
       <Col className="group relative h-full w-full cursor-pointer overflow-hidden rounded-xl border border-green-200 bg-green-50 shadow-sm transition-all hover:shadow-md">

@@ -4,11 +4,11 @@ import Col from "@/shared/ui/Layout/Helpers/Col";
 import Row from "@/shared/ui/Layout/Helpers/Row";
 import Text from "@/shared/ui/Text";
 import clsx from "clsx";
-import { Fragment, memo, useState } from "react";
+import { Fragment, memo } from "react";
 
 import {
-  BookmarkIcon,
   CalendarDotsIcon,
+  EyeIcon,
   ScrollIcon,
   StarIcon,
   UserIcon,
@@ -18,7 +18,7 @@ import ShareDropdown from "./ShareDropdown";
 
 interface Props extends React.ComponentProps<"div"> {
   size?: "default" | "max" | "min";
-  savedCount?: number;
+  views?: number;
   isSaved?: boolean;
   title?: string;
   authorName?: string;
@@ -31,7 +31,7 @@ interface Props extends React.ComponentProps<"div"> {
 
 const Header = memo(function Header({
   className,
-  savedCount,
+  views,
   isSaved,
   title,
   authorName,
@@ -42,11 +42,7 @@ const Header = memo(function Header({
   isRecipePage,
   ...props
 }: Props) {
-  const [currentSavedCount, setCurrentSavedCount] = useState(savedCount || 0);
-
-  const handleSavedChange = (saved: boolean) => {
-    setCurrentSavedCount((prev) => (saved ? prev + 1 : prev - 1));
-  };
+  function handleSavedChange() {}
 
   const ROW_DATA = [
     {
@@ -74,9 +70,9 @@ const Header = memo(function Header({
       separator: true,
     },
     {
-      label: `${currentSavedCount} salvos`,
-      icon: <BookmarkIcon />,
-      ariaLabel: `${currentSavedCount} pessoas salvaram esta receita`,
+      label: `${views} vistos`,
+      icon: <EyeIcon />,
+      ariaLabel: `${views} pessoas visualizaram esta receita`,
     },
     {
       separator: true,

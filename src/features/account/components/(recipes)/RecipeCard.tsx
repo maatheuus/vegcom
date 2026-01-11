@@ -1,7 +1,5 @@
 import StarRating from "@/features/community/components/AsideContent/StarRating";
-import { getRecipeById } from "@/features/recipes/api/queries/getRecipesApiServer";
 import type { DetailedRecipe } from "@/features/recipes/api/types";
-import { RecipeCardSkeleton } from "@/features/recipes/components/RecipeGridSkeleton";
 import ImageCarouselModal, {
   type CarouselImage,
 } from "@/shared/ui/ImageCarouselModal";
@@ -16,10 +14,10 @@ import {
 } from "@phosphor-icons/react";
 import Image from "next/image";
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 interface Props {
-  recipeId: number;
+  recipe: DetailedRecipe;
   isEditing?: boolean;
   isFavorites?: boolean;
   className?: string;
@@ -29,11 +27,9 @@ export default function RecipeCard({
   className,
   isEditing,
   isFavorites,
-  recipeId,
+  recipe,
 }: Props) {
   const [isRecipeFavorite, setIsRecipeFavorite] = useState(true);
-  const [recipe, setRecipe] = useState<DetailedRecipe | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
   const [isGalleryOpen, setIsGalleryOpen] = useState(false);
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
 
@@ -41,28 +37,6 @@ export default function RecipeCard({
     e.preventDefault();
     setIsRecipeFavorite(!isRecipeFavorite);
   };
-
-  useEffect(() => {
-    if (!recipeId) return;
-
-    const fetchRecipe = async () => {
-      setIsLoading(true);
-      try {
-        const { data } = await getRecipeById(recipeId);
-        setRecipe(data);
-      } catch (error) {
-        console.error("Error fetching recipe:", error);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    fetchRecipe();
-  }, [recipeId]);
-
-  if (isLoading) return <RecipeCardSkeleton />;
-
-  if (!recipe) return null;
 
   return (
     <>
@@ -110,7 +84,9 @@ export default function RecipeCard({
 
         <Link
           className="contents"
-          href={isEditing ? `/new-recipe/${recipe.id}` : `/recipe/${recipe.id}`}
+          href={
+            isEditing ? `/new-recipe/${recipe.id}` : `/recipes/${recipe.slug}`
+          }
         >
           <Col className="flex flex-1 flex-col p-4">
             <div className="space-y-2">

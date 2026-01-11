@@ -20,6 +20,7 @@ export interface Recipe {
   id: number;
   userId: number;
   title: string;
+  slug: string;
   description: string;
   cookTime: string;
   prepTimeCategory?: PrepTimeCategory;
@@ -63,6 +64,7 @@ export interface DetailedRecipe extends Recipe {
 export interface CreateRecipePayload {
   userId: number;
   title: string;
+  slug?: string;
   description: string;
   cookTime: string;
   quantity: string;
@@ -82,6 +84,7 @@ export interface CreateRecipeResponse {
   data: {
     id: number;
     title: string;
+    slug: string;
     description: string;
     category: string;
     difficulty: string;
@@ -103,6 +106,7 @@ export interface GetRecipeByIdResponse {
   success: boolean;
   data: DetailedRecipe;
 }
+export type GetRecipeBySlugResponse = GetRecipeByIdResponse;
 export interface FavoriteRecipeResponse {
   saved: boolean;
 }
@@ -111,4 +115,14 @@ export interface RecipeFilterDto {
   mealType?: MealType;
   prepTimeCategory?: PrepTimeCategory;
   sort?: "popular" | "rated" | "newest";
+}
+
+export interface GetRecipesByIdsResponse {
+  success: boolean;
+  data: DetailedRecipe[];
+}
+
+export interface IncrementViewResponse {
+  success: boolean;
+  views: number;
 }

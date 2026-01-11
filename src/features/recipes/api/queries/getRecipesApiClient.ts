@@ -6,6 +6,8 @@ export const recipeKeys = {
   all: ["recipes"] as const,
   lists: () => [...recipeKeys.all, "list"] as const,
   detail: (id: number) => [...recipeKeys.all, "detail", id] as const,
+  detailBySlug: (slug: string) =>
+    [...recipeKeys.all, "detail", "slug", slug] as const,
 };
 
 export const useGetRecipes = () => {
@@ -20,6 +22,14 @@ export const useGetRecipeById = (id: number) => {
     queryKey: recipeKeys.detail(id),
     queryFn: () => recipeApi.getRecipeById(id),
     enabled: !!id,
+  });
+};
+
+export const useGetRecipeBySlug = (slug: string) => {
+  return useQuery({
+    queryKey: recipeKeys.detailBySlug(slug),
+    queryFn: () => recipeApi.getRecipeBySlug(slug),
+    enabled: !!slug,
   });
 };
 

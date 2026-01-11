@@ -4,6 +4,7 @@ import {
   defaultValues,
   newRecipeFormSchema,
 } from "@/features/recipes/components/utils";
+import { generateSlug } from "@/features/recipes/lib/slug";
 import { useToast } from "@/shared/hooks/use-toast";
 import Button from "@/shared/ui/Button";
 import {
@@ -212,8 +213,12 @@ export default function NewRecipeForm({}: Props) {
       const { recipe_preparationHours, recipe_preparationMinutes, ...rest } =
         data;
 
+      // Generate slug from recipe title
+      const slug = generateSlug(data.recipe_title);
+
       const formattedData = {
         ...rest,
+        recipe_slug: slug,
         recipe_preparationTime: {
           hours: Number(recipe_preparationHours),
           minutes: Number(recipe_preparationMinutes),
@@ -222,6 +227,7 @@ export default function NewRecipeForm({}: Props) {
 
       toast({ title: "Receita publicada com sucesso!", variant: "success" });
       // após publicar a receita, fazer o redirect para a página da receita.
+      // O slug gerado deve ser incluído no payload enviado à API
       console.log("Submit:", formattedData);
       console.log(
         "Imagens incluídas:",

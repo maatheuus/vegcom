@@ -10,16 +10,16 @@ import { memo } from "react";
 
 interface Props extends React.HTMLAttributes<HTMLDivElement> {
   className?: string;
-  preparationTime: string;
-  servings: string;
+  cookTime: string;
+  quantity: string;
   difficulty: string;
   category: string;
 }
 
 const Details = memo(function Details({
   className,
-  preparationTime,
-  servings,
+  cookTime,
+  quantity,
   difficulty,
   category,
   ...props
@@ -28,14 +28,14 @@ const Details = memo(function Details({
     {
       icon: <ClockIcon className="h-5 w-5 text-green-500" />,
       label: "Tempo de preparo",
-      value: preparationTime,
-      ariaLabel: `Tempo de preparo: ${preparationTime}`,
+      value: cookTime,
+      ariaLabel: `Tempo de preparo: ${cookTime}`,
     },
     {
       icon: <ForkKnifeIcon className="h-5 w-5 text-green-500" />,
       label: "Porções",
-      value: servings,
-      ariaLabel: `Rendimento: ${servings} porções`,
+      value: quantity,
+      ariaLabel: `Rendimento: ${quantity} porções`,
     },
     {
       icon: <TargetIcon className="h-5 w-5 text-green-500" />,

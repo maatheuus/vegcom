@@ -6,6 +6,7 @@ import type {
   CreateRecipeResponse,
   FavoriteRecipeResponse,
   GetRecipeByIdResponse,
+  GetRecipeBySlugResponse,
   GetRecipesResponse,
   UpdateRecipePayload,
 } from "../types";
@@ -19,6 +20,14 @@ export const getRecipeById = async (id: number) => {
   return serverFetch<GetRecipeByIdResponse>(`/recipes/get/${id}`, {
     method: "GET",
   });
+};
+export const getRecipeBySlug = async (slug: string) => {
+  return serverFetch<GetRecipeBySlugResponse>(
+    `/recipes/get/slug/${slug}`,
+    {
+      method: "GET",
+    },
+  );
 };
 export const createRecipe = async (data: CreateRecipePayload) => {
   revalidatePath("/recipes/list");

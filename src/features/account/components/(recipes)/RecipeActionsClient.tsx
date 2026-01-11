@@ -15,7 +15,7 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from "@/shared/ui/Pagination";
-import { useQueries } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 import { useSearchParams } from "next/navigation";
 import { useMemo } from "react";
 import RecipeEmptyState from "./RecipeEmptyState";
@@ -54,19 +54,14 @@ export default function RecipeActions({ isFavorites }: Props) {
     );
   }, [isFavorites, savedRecipes, recipes]);
 
-  const recipeQueries = useQueries({
-    queries: recipeIds.map((id: number) => ({
-      queryKey: ["recipes", "detail", id],
-      queryFn: () => recipeApi.getRecipeById(id),
-      enabled: !!id,
-      staleTime: 5 * 60 * 1000, // 5 minutos
-    })),
+  const { data: recipesResponse, isLoading: isLoadingRecipes } = useQuery({
+    queryKey: ["recipes", "batch", recipeIds],
+    queryFn: () => recipeApi.getRecipesByIds(recipeIds),
+    enabled: recipeIds.length > 0,
+    staleTime: 5 * 60 * 1000, // 5 minutos
   });
 
-  const isLoadingRecipes = recipeQueries.some((q) => q.isLoading);
-  const allRecipes = recipeQueries
-    .filter((q) => q.isSuccess && q.data?.data)
-    .map((q) => q.data!.data as DetailedRecipe);
+  const allRecipes = recipesResponse?.data ?? [];
 
   const filteredData = useMemo(() => {
     if (allRecipes.length === 0) return [];
@@ -168,7 +163,7 @@ export default function RecipeActions({ isFavorites }: Props) {
             {currentItemsRecipe.map((recipe) => (
               <RecipeCard
                 key={recipe.id}
-                recipeId={recipe.id}
+                recipe={recipe}
                 isFavorites={isFavorites}
               />
             ))}
