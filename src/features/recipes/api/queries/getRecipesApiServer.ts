@@ -55,3 +55,10 @@ export const favoriteRecipe = async (id: number) => {
     method: "PATCH",
   });
 };
+
+export const getFeaturedRecipe = async (filter: string) => {
+  return serverFetch<GetRecipeByIdResponse>(`/recipes/featured?filter=${filter}`, {
+    method: "GET",
+    next: { tags: ["featured-recipe"] },
+  });
+};

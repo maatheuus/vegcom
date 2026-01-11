@@ -2,7 +2,7 @@ import { isTokenExpired } from "@/shared/lib/jwt";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 
-const BASE_URL = process.env.NEXT_PUBLIC_API_URL;
+const BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3001/api/v1";
 
 interface FetchOptions extends Omit<RequestInit, "body"> {
   body?: object;

@@ -1,4 +1,8 @@
-import { getRecipes } from "@/features/recipes/api/queries/getRecipesApiServer";
+import {
+  getFeaturedRecipe,
+  getRecipes,
+} from "@/features/recipes/api/queries/getRecipesApiServer";
+import type { DetailedRecipe, Recipe } from "@/features/recipes/api/types";
 import { Categories } from "@/features/recipes/components/Categories";
 import { ClearFiltersButton } from "@/features/recipes/components/ClearFiltersButton";
 import Header from "@/features/recipes/components/details/Header";
@@ -20,9 +24,27 @@ interface PageProps {
 
 export default async function Page({ searchParams }: PageProps) {
   const params = await searchParams;
-  const { data } = await getRecipes();
 
-  let recipes = filterRecipes(data, params.q, params.category);
+  const [recipesResult, featuredResult] = await Promise.allSettled([
+    getRecipes(),
+    getFeaturedRecipe("most_viewed_month"),
+  ]);
+
+  let recipesData: Recipe[] = [];
+  if (recipesResult.status === "fulfilled") {
+    recipesData = recipesResult.value.data || [];
+  } else {
+    console.error("Failed to fetch recipes:", recipesResult.reason);
+  }
+
+  let featuredRecipe: DetailedRecipe | Recipe | undefined = undefined;
+  if (featuredResult.status === "fulfilled") {
+    featuredRecipe = featuredResult.value?.data || undefined;
+  } else {
+    console.warn("Failed to fetch featured recipe:", featuredResult.reason);
+  }
+
+  let recipes = filterRecipes(recipesData, params.q, params.category);
   recipes = sortRecipes(recipes, params.sort);
 
   return (
@@ -42,7 +64,7 @@ export default async function Page({ searchParams }: PageProps) {
           </HeaderComponent>
         </Row>
 
-        <RecipeParent recipes={recipes} />
+        <RecipeParent recipes={recipes} featuredRecipe={featuredRecipe} />
       </section>
     </Layout.Default>
   );
