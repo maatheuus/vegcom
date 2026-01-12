@@ -1,4 +1,4 @@
-import type { Comment } from "@/shared/types";
+import type { PostComment } from "@/shared";
 import { Avatar, AvatarFallback, AvatarImage } from "@/shared/ui/Avatar";
 import clsx from "clsx";
 
@@ -8,7 +8,7 @@ export function AvatarGroup({
   className,
   ...props
 }: {
-  comments: Comment[];
+  comments: PostComment[];
   limit?: number;
   className?: string;
 }) {
@@ -24,7 +24,7 @@ export function AvatarGroup({
           <Avatar key={index}>
             <AvatarImage src="https://github.com/shadcn.png" alt="@shadcn" />
             <AvatarFallback>
-              {comment.user.name?.substring(0, 2)}
+              {comment.user?.name?.substring(0, 2)}
             </AvatarFallback>
           </Avatar>
         ))}

@@ -2,8 +2,8 @@
 
 import Grid from "@/shared/ui/Layout/Helpers/Grid";
 import { useState } from "react";
+import type { RecipeGridProps } from "../types";
 import RecipeCard from "./Cards/RecipeCard";
-import type { RecipeGridProps } from "./types";
 
 interface Props {
   recipes: RecipeGridProps["recipes"];

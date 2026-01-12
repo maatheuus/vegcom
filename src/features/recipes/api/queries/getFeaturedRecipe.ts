@@ -1,4 +1,4 @@
-import type { Recipe } from "@/features/recipes/api/types";
+import type { Recipe } from "@/entities/recipe/types";
 import { api } from "@/shared/api/axios/axiosInstance";
 
 interface GetFeaturedRecipeResponse {

@@ -1,3 +1,4 @@
+import type { Recipe } from "@/entities/recipe/types";
 import StarRating from "@/features/community/components/AsideContent/StarRating";
 import Button from "@/shared/ui/Button";
 import Col from "@/shared/ui/Layout/Helpers/Col";
@@ -7,7 +8,6 @@ import { ClockIcon, EyeIcon, UsersIcon } from "@phosphor-icons/react/ssr";
 import Image from "next/image";
 import Link from "next/link";
 import { MouseEvent } from "react";
-import type { Recipe } from "../types";
 
 interface Props {
   recipe: Recipe;

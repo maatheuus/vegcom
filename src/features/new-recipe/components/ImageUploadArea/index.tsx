@@ -17,7 +17,7 @@ import type { UseFormReturn } from "react-hook-form";
 import type { z } from "zod";
 
 import { CloudArrowUpIcon, PlusCircleIcon } from "@phosphor-icons/react";
-import type { newRecipeFormSchema } from "../../utils";
+import type { newRecipeFormSchema } from "../../../recipes/components/utils";
 import ImageGallery from "./ImageGallery";
 
 interface UploadingImage {

@@ -15,6 +15,7 @@ import {
 import { PlusCircleIcon } from "@phosphor-icons/react";
 import { Fragment, useCallback } from "react";
 import { useWatch } from "react-hook-form";
+
 import DynamicFields from "../DynamicFields";
 import type { Props } from "../ImageUploadArea";
 import RenderCheckList from "./RenderCheckList";

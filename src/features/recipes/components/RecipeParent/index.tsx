@@ -1,10 +1,10 @@
-import type { Recipe } from "@/features/recipes/api/types";
 import RecipeEmptyState from "@/features/recipes/components/RecipeEmptyState";
 import { RecipeGridSkeleton } from "@/features/recipes/components/RecipeGridSkeleton";
 import Col from "@/shared/ui/Layout/Helpers/Col";
 import { Suspense } from "react";
 import RecipeContent from "./RecipeContent";
 
+import type { Recipe } from "@/entities/recipe";
 import { RecipeHero } from "@/features/recipes/components/RecipeHero";
 
 export const ITEMS_PER_PAGE = 8;
@@ -27,9 +27,7 @@ export default function RecipeParent({
 
   return (
     <Col as="section" className="gap-y-10 md:gap-y-12">
-      {featuredRecipe && (
-        <RecipeHero hightlightedRecipe={featuredRecipe} />
-      )}
+      {featuredRecipe && <RecipeHero hightlightedRecipe={featuredRecipe} />}
       <Suspense fallback={<RecipeGridSkeleton count={ITEMS_PER_PAGE} />}>
         <RecipeContent
           recipes={recipes}

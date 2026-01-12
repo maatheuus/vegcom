@@ -1,5 +1,5 @@
 import { jorgeTest } from "@/assets";
-import type { Comment } from "../../types";
+import type { Comment } from "@/features/recipes";
 
 type RecipeType = "ingredients" | "instructions" | "cookingNotes";
 

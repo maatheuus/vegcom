@@ -1,5 +1,6 @@
 "use client";
 
+import type { RecipeType } from "@/features/new-recipe/components/GroupFields";
 import Button from "@/shared/ui/Button";
 import Col from "@/shared/ui/Layout/Helpers/Col";
 import Row from "@/shared/ui/Layout/Helpers/Row";
@@ -7,7 +8,6 @@ import Text from "@/shared/ui/Text";
 import { SealCheckIcon } from "@phosphor-icons/react";
 import clsx from "clsx";
 import { useEffect, useState } from "react";
-import type { RecipeType } from "../../new-recipe/GroupFields";
 import { typeConfig } from "./utils";
 
 interface ChecklistProps extends React.HTMLAttributes<HTMLDivElement> {

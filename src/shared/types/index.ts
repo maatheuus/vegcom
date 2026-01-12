@@ -49,10 +49,3 @@ export interface PostCardDataProps {
   postDate: string;
   postTags: string[];
 }
-
-export interface Comment {
-  user: {
-    name: string;
-    urlImage?: string;
-  };
-}

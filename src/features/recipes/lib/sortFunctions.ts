@@ -1,4 +1,4 @@
-import type { Recipe } from "../components/types";
+import type { Recipe } from "../types";
 
 /**
  * Sort recipes by rating (highest first)
@@ -25,9 +25,9 @@ export const sortByTitle = (a: Recipe, b: Recipe): number => {
  * Sort recipes by preparation time (shortest first)
  */
 export const sortByPrepTime = (a: Recipe, b: Recipe): number => {
-  const getMinutes = (time?: string) => {
+  const getMinutes = (time?: string | number) => {
     if (!time) return 0;
-    const match = time.match(/(\d+)/);
+    const match = time.toString().match(/(\d+)/);
     return match ? parseInt(match[1]) : 0;
   };
 

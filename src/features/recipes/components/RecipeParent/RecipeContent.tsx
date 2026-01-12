@@ -1,6 +1,5 @@
 "use client";
 
-import type { Recipe } from "@/features/recipes/api/types";
 import RecipeEmptyState from "@/features/recipes/components/RecipeEmptyState";
 import { RecipeGrid } from "@/features/recipes/components/RecipeGrid";
 import { RecipeGridSkeleton } from "@/features/recipes/components/RecipeGridSkeleton";
@@ -10,6 +9,8 @@ import {
   sortByTitle,
   sortByViews,
 } from "@/features/recipes/lib/sortFunctions";
+
+import type { Recipe } from "@/entities/recipe";
 import { usePagination } from "@/shared/hooks/usePagination";
 import Col from "@/shared/ui/Layout/Helpers/Col";
 import {

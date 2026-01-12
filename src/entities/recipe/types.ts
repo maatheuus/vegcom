@@ -2,28 +2,30 @@
  * Recipe entity types
  */
 
+import type {
+  MealType,
+  PrepTimeCategory,
+  RecipeSteps,
+} from "@/features/recipes/api/types";
 import type { StaticImageData } from "next/image";
 
 export interface Recipe {
-  id: string;
+  id: number;
+  userId: number;
   title: string;
-  description?: string;
-  imageUrl: string | StaticImageData;
-  ingredients?: string[];
-  instructions?: string[];
-  prepTime?: number;
-  cookTime?: number;
-  servings?: number;
-  difficulty?: "easy" | "medium" | "hard";
-  tags?: string[];
-  userId: string;
-  user: {
-    name: string;
-    avatarUrl: string;
-  };
-  rating?: number;
-  views?: number;
-  isFavorite?: boolean;
+  slug: string;
+  description: string;
+  cookTime: string;
+  prepTimeCategory?: PrepTimeCategory;
+  quantity: string;
+  category: string;
+  difficulty: string;
+  images: string[];
+  steps: RecipeSteps;
+  mealType?: MealType;
+  isPublished: boolean;
+  views: number;
+  rating: number;
   createdAt: string;
   updatedAt: string;
 }

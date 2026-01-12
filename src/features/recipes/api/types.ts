@@ -1,3 +1,5 @@
+import type { Recipe } from "@/entities/recipe/types";
+
 export enum MealType {
   BREAKFAST = "BREAKFAST",
   LUNCH = "LUNCH",
@@ -14,27 +16,6 @@ export interface RecipeSteps {
   ingredients: string[];
   instructions: string[];
   cookingNotes: string[];
-}
-
-export interface Recipe {
-  id: number;
-  userId: number;
-  title: string;
-  slug: string;
-  description: string;
-  cookTime: string;
-  prepTimeCategory?: PrepTimeCategory;
-  quantity: string;
-  category: string;
-  difficulty: string;
-  images: string[];
-  steps: RecipeSteps;
-  mealType?: MealType;
-  isPublished: boolean;
-  views: number;
-  rating: number;
-  createdAt: string;
-  updatedAt: string;
 }
 
 export interface RecipeUser {

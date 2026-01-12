@@ -1,4 +1,4 @@
-import type { Recipe } from "@/features/chat/api/types";
+import type { Recipe } from "@/entities/recipe";
 import Button from "@/shared/ui/Button";
 import Text from "@/shared/ui/Text";
 import {
@@ -12,7 +12,6 @@ import {
   ClockIcon,
   CookingPotIcon,
   CopyIcon,
-  FireIcon,
   LeafIcon,
   UsersIcon,
 } from "@phosphor-icons/react";
@@ -30,18 +29,14 @@ export default function RecipeEmbed({ recipe }: RecipeEmbedProps) {
       recipe.title,
       recipe.description,
       "",
-      `Porções: ${recipe.servings || "-"}`,
-      `Tempo de preparo: ${recipe.prepTimeMinutes || "-"} min`,
-      `Tempo de cozimento: ${recipe.cookTimeMinutes || "-"} min`,
+      `Porções: ${recipe.quantity || "-"}`,
+      `Tempo de preparo: ${recipe.cookTime || "-"} min`,
       "",
       "Ingredientes:",
-      ...(recipe.ingredients?.map(
-        (ing) =>
-          `- ${ing.quantity} ${ing.name} ${ing.notes ? `(${ing.notes})` : ""}`,
-      ) || []),
+      ...(recipe.steps.ingredients || []),
       "",
       "Modo de Preparo:",
-      ...(recipe.steps?.map((step, idx) => `${idx + 1}. ${step}`) || []),
+      ...(recipe.steps.cookingNotes || []),
     ].join("\n");
 
     navigator.clipboard.writeText(text);
@@ -63,10 +58,11 @@ export default function RecipeEmbed({ recipe }: RecipeEmbedProps) {
             </Text>
           )}
           <div className="flex items-center gap-2">
-            {recipe.diet && (
+            {recipe.category && (
               <span className="flex shrink-0 items-center gap-1 rounded-full bg-green-100 px-2 py-1 text-xs font-medium text-green-700">
                 <LeafIcon weight="fill" />
-                {recipe.diet.charAt(0).toUpperCase() + recipe.diet.slice(1)}
+                {recipe.category.charAt(0).toUpperCase() +
+                  recipe.category.slice(1)}
               </span>
             )}
             <TooltipProvider>
@@ -101,28 +97,22 @@ export default function RecipeEmbed({ recipe }: RecipeEmbedProps) {
 
       {/* Meta Info */}
       <div className="flex flex-wrap gap-4 text-xs text-green-700">
-        {recipe.servings && (
+        {recipe.quantity && (
           <div className="flex items-center gap-1.5 rounded-md bg-green-50 px-2.5 py-1.5">
             <UsersIcon size={16} />
-            <span>{recipe.servings} porções</span>
+            <span>{recipe.quantity} porções</span>
           </div>
         )}
-        {recipe.prepTimeMinutes && (
+        {recipe.cookTime && (
           <div className="flex items-center gap-1.5 rounded-md bg-green-50 px-2.5 py-1.5">
             <ClockIcon size={16} />
-            <span>Prep: {recipe.prepTimeMinutes}min</span>
-          </div>
-        )}
-        {recipe.cookTimeMinutes && recipe.cookTimeMinutes !== 0 && (
-          <div className="flex items-center gap-1.5 rounded-md bg-green-50 px-2.5 py-1.5">
-            <FireIcon size={16} />
-            <span>Cozimento: {recipe.cookTimeMinutes}min</span>
+            <span>Prep: {recipe.cookTime}min</span>
           </div>
         )}
       </div>
 
       {/* Ingredients */}
-      {recipe.ingredients && recipe.ingredients.length > 0 && (
+      {recipe.steps.ingredients?.length > 0 && (
         <div className="flex flex-col gap-2 rounded-lg bg-green-50/50 p-2 md:p-4">
           <div className="flex items-center gap-2 text-green-800">
             <CookingPotIcon size={18} />
@@ -131,23 +121,18 @@ export default function RecipeEmbed({ recipe }: RecipeEmbedProps) {
             </Text>
           </div>
           <ul className="grid grid-cols-1 gap-x-8 gap-y-2 text-sm sm:grid-cols-2">
-            {recipe.ingredients.map((ing, idx) => (
+            {recipe.steps.ingredients.map((ing, idx) => (
               <li key={idx} className="flex items-baseline gap-2 text-gray-700">
                 <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-green-400" />
                 <div className="flex flex-1 flex-col">
                   <span className="font-maitree text-sm">
-                    {ing.name} (
-                    <span className="font-semibold text-green-900">
-                      {ing.quantity}
-                    </span>
-                    )
+                    {ing} (
+                    <span className="font-semibold text-green-900">999</span>)
                   </span>
-                  {ing.notes && (
-                    <span className="text-xs text-gray-500 italic">
-                      {" "}
-                      (nota: {ing.notes})
-                    </span>
-                  )}
+                  <span className="text-xs text-gray-500 italic">
+                    {" "}
+                    (nota: TESTETSTETSTE)
+                  </span>
                 </div>
               </li>
             ))}
@@ -156,7 +141,7 @@ export default function RecipeEmbed({ recipe }: RecipeEmbedProps) {
       )}
 
       {/* Steps */}
-      {recipe.steps && recipe.steps.length > 0 && (
+      {recipe.steps.cookingNotes?.length > 0 && (
         <div className="flex flex-col gap-3">
           <Text
             type={Text.Type.BodyFour}
@@ -165,7 +150,7 @@ export default function RecipeEmbed({ recipe }: RecipeEmbedProps) {
             Modo de Preparo
           </Text>
           <div className="flex flex-col gap-3">
-            {recipe.steps.map((step, idx) => (
+            {recipe.steps.cookingNotes.map((step, idx) => (
               <div key={idx} className="flex gap-3 text-sm">
                 <span className="font-lora flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-green-100 text-xs font-bold text-green-700">
                   {idx + 1}

@@ -6,7 +6,6 @@ import {
   getFeaturedRecipeClient,
   type GetAvailableFiltersResponse,
 } from "@/features/recipes/api/queries/getFeaturedRecipe";
-import type { Recipe } from "@/features/recipes/api/types";
 import Button from "@/shared/ui/Button";
 import {
   Select,
@@ -21,6 +20,7 @@ import clsx from "clsx";
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState } from "react";
+import type { Recipe } from "../types";
 
 interface RecipeHeroProps extends React.HTMLAttributes<HTMLLinkElement> {
   hightlightedRecipe: Recipe;

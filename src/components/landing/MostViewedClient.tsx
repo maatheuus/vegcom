@@ -1,6 +1,6 @@
 "use client";
 
-import type { Recipe } from "@/features/recipes/api/types";
+import type { Recipe } from "@/entities/recipe";
 import { RecipeGrid } from "@/features/recipes/components/RecipeGrid";
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";

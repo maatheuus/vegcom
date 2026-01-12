@@ -1,10 +1,10 @@
+import type { Comment } from "@/features/recipes";
 import { Avatar, AvatarFallback, AvatarImage } from "@/shared/ui/Avatar";
 import Button from "@/shared/ui/Button";
 import Col from "@/shared/ui/Layout/Helpers/Col";
 import Row from "@/shared/ui/Layout/Helpers/Row";
 import Text from "@/shared/ui/Text";
 import { HeartIcon } from "@phosphor-icons/react";
-import type { Comment } from "../../types";
 
 interface Props {
   comment: Comment;

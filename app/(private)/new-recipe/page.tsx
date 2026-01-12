@@ -1,5 +1,5 @@
-import Header from "@/features/recipes/components/details/Header";
-import NewRecipeForm from "@/features/recipes/components/new-recipe/NewRecipeForm";
+import NewRecipeForm from "@/features/new-recipe/components/NewRecipeForm";
+import Header from "@/features/recipe-details/Header";
 import Layout from "@/shared/ui/Layout";
 
 export default function page() {

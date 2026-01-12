@@ -2,16 +2,19 @@ import {
   getFeaturedRecipe,
   getRecipes,
 } from "@/features/recipes/api/queries/getRecipesApiServer";
-import type { DetailedRecipe, Recipe } from "@/features/recipes/api/types";
+
 import { Categories } from "@/features/recipes/components/Categories";
 import { ClearFiltersButton } from "@/features/recipes/components/ClearFiltersButton";
-import Header from "@/features/recipes/components/details/Header";
 import HeaderComponent from "@/features/recipes/components/HeaderComponent";
+
 import RecipeParent from "@/features/recipes/components/RecipeParent";
 import { SearchBar } from "@/features/recipes/components/SearchBar";
 import Layout from "@/shared/ui/Layout";
 import Row from "@/shared/ui/Layout/Helpers/Row";
 
+import type { Recipe } from "@/entities/recipe";
+import Header from "@/features/recipe-details/Header";
+import type { DetailedRecipe } from "@/features/recipes/api/types";
 import { filterRecipes, sortRecipes } from "@/features/recipes/lib/filterUtils";
 
 interface PageProps {

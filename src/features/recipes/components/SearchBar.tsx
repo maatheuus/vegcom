@@ -5,7 +5,7 @@ import { MagnifyingGlassIcon } from "@phosphor-icons/react";
 import clsx from "clsx";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
-import { useSearchBar } from "./hooks/useSearchBar";
+import { useSearchBar } from "../hooks/useSearchBar";
 
 interface Props extends React.ComponentProps<"input"> {
   inputClassName?: string;

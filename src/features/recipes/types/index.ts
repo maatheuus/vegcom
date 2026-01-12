@@ -1,6 +1,4 @@
-/**
- * Recipes feature types
- */
+import type { Recipe } from "@/entities/recipe";
 
 export * from "@/entities/recipe";
 
@@ -19,4 +17,17 @@ export interface CreateRecipeData {
 
 export interface UpdateRecipeData extends Partial<CreateRecipeData> {
   id: string;
+}
+
+export interface RecipeGridProps {
+  recipes: Recipe[];
+}
+
+export interface Comment {
+  id: number;
+  author: string;
+  avatarUrl?: string;
+  timeAgo: string;
+  content: string;
+  likes: number;
 }

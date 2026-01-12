@@ -1,4 +1,4 @@
-import type { Recipe } from "../api/types";
+import type { Recipe } from "@/entities/recipe";
 import { categories } from "../components/utils";
 
 export function normalizeText(text: string): string {

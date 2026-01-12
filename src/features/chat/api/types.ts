@@ -1,19 +1,11 @@
+import type { Recipe } from "@/entities/recipe";
+
 interface Ingredient {
   name: string;
   quantity: string;
   notes?: string;
 }
 
-export interface Recipe {
-  diet?: string;
-  steps?: string[];
-  title?: string;
-  servings?: number;
-  description?: string;
-  ingredients?: Ingredient[];
-  cookTimeMinutes?: number;
-  prepTimeMinutes?: number;
-}
 export interface Metadata {
   recipes: Recipe[];
   error: null | string;

@@ -1,11 +1,11 @@
+import BackButton from "@/features/recipe-details/BackButton";
+import ContentRecipe from "@/features/recipe-details/ContentRecipe";
+import Header from "@/features/recipe-details/Header";
+import { ViewTracker } from "@/features/recipe-details/ViewTracker";
 import {
   getRecipeById,
   getRecipeBySlug,
 } from "@/features/recipes/api/queries/getRecipesApiServer";
-import BackButton from "@/features/recipes/components/details/BackButton";
-import ContentRecipe from "@/features/recipes/components/details/ContentRecipe";
-import Header from "@/features/recipes/components/details/Header";
-import { ViewTracker } from "@/features/recipes/components/details/ViewTracker";
 import Layout from "@/shared/ui/Layout";
 import { formatDistanceToNow } from "date-fns";
 import { ptBR } from "date-fns/locale";
