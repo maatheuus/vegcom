@@ -13,7 +13,7 @@ const aiApi = {
     query,
     chatId,
     isRegeneration,
-  }: GenerateParams): Promise<Metadata[]> => {
+  }: GenerateParams): Promise<Metadata> => {
     const userId = (await getUser()).data?.id;
 
     const res = await api.post("/ai/generate", {

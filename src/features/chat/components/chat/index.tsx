@@ -44,7 +44,7 @@ export default function ChatPage() {
         chatId: 0,
       });
 
-      const metadata = response?.[0];
+      const metadata = response;
 
       if (metadata && metadata.chatId) {
         setIsNavigating(true);

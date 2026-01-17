@@ -1,13 +1,16 @@
 import type { Recipe } from "@/entities/recipe/types";
 import StarRating from "@/features/community/components/AsideContent/StarRating";
 import Button from "@/shared/ui/Button";
+import ImageCarouselModal, {
+  type CarouselImage,
+} from "@/shared/ui/ImageCarouselModal";
 import Col from "@/shared/ui/Layout/Helpers/Col";
 import Text from "@/shared/ui/Text";
-import { HeartIcon } from "@phosphor-icons/react";
+import { HeartIcon, ImagesIcon } from "@phosphor-icons/react";
 import { ClockIcon, EyeIcon, UsersIcon } from "@phosphor-icons/react/ssr";
 import Image from "next/image";
 import Link from "next/link";
-import { MouseEvent } from "react";
+import { MouseEvent, useState } from "react";
 
 interface Props {
   recipe: Recipe;
@@ -20,27 +23,54 @@ export default function RecipeCard({
   favoriteRecipes,
   handleFavorite,
 }: Props) {
-  return (
-    <Link href={`/recipes/${recipe.slug}`} className="relative contents">
-      <span className="sr-only">link for {recipe.title}</span>
+  const [isGalleryOpen, setIsGalleryOpen] = useState(false);
+  const [selectedImageIndex, setSelectedImageIndex] = useState(0);
 
-      <Col className="group relative h-full w-full cursor-pointer overflow-hidden rounded-xl border border-green-200 bg-green-50 shadow-sm transition-all hover:shadow-md">
+  return (
+    <>
+      <Col className="group relative h-full w-full overflow-hidden rounded-xl border border-green-200 bg-green-50 shadow-sm transition-all hover:shadow-md">
         <div className="relative aspect-square max-h-[220px] overflow-hidden">
-          <Image
-            src={recipe.images[0]}
-            alt={recipe.title}
-            width={500}
-            height={500}
-            loading="lazy"
-            className="h-full w-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
-          />
+          <Link
+            href={`/recipes/${recipe.slug}`}
+            className="block h-full w-full"
+          >
+            <span className="sr-only">link for {recipe.title}</span>
+            <Image
+              src={recipe.images[0]}
+              alt={recipe.title}
+              width={500}
+              height={500}
+              loading="lazy"
+              className="h-full w-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
+            />
+          </Link>
+
+          {recipe.images && recipe.images.length > 1 && (
+            <button
+              className="absolute bottom-2 left-2 z-50 flex items-center gap-1 rounded-full bg-green-500/80 px-2 py-1 text-xs text-green-50 backdrop-blur-sm transition-colors hover:bg-green-500"
+              onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                setSelectedImageIndex(0);
+                setIsGalleryOpen(true);
+              }}
+              aria-label="Ver todas as imagens"
+            >
+              <ImagesIcon size={14} />
+              {recipe.images.length}
+            </button>
+          )}
 
           <Button.Icon
             className="absolute top-2 right-2 flex items-center justify-center rounded-full bg-green-500/80 p-2 backdrop-blur-sm transition-colors hover:bg-green-500"
             aria-label={
               favoriteRecipes ? "Desfavoritar receita" : "Favoritar receita"
             }
-            onClick={handleFavorite}
+            onClick={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              handleFavorite(e);
+            }}
             icon={
               <HeartIcon
                 weight={favoriteRecipes ? "fill" : "regular"}
@@ -50,7 +80,10 @@ export default function RecipeCard({
           />
         </div>
 
-        <div className="grid h-full flex-[1] space-y-2 p-4">
+        <Link
+          href={`/recipes/${recipe.slug}`}
+          className="grid h-full flex-[1] space-y-2 p-4"
+        >
           <div className="space-y-2">
             <Text
               as="h3"
@@ -112,9 +145,24 @@ export default function RecipeCard({
               )}
             </div>
           </div>
-        </div>
+        </Link>
       </Col>
-    </Link>
+
+      {recipe.images && recipe.images.length > 0 && (
+        <ImageCarouselModal
+          isOpen={isGalleryOpen}
+          onClose={setIsGalleryOpen}
+          images={recipe.images.map(
+            (img): CarouselImage => ({
+              src: img,
+              alt: recipe.title,
+            }),
+          )}
+          initialIndex={selectedImageIndex}
+          showCounter
+        />
+      )}
+    </>
   );
 }
 
