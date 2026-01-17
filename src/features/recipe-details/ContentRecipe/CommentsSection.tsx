@@ -1,5 +1,13 @@
 "use client";
 
+import { useGetUser } from "@/features/account/api/queries/getAuthApiClient";
+import {
+  useCreateComment,
+  useDeleteComment,
+  useGetCommentsByRecipe,
+  useToggleLike,
+} from "@/features/comments";
+import { useToast } from "@/shared/hooks/use-toast";
 import { usePagination } from "@/shared/hooks/usePagination";
 import Col from "@/shared/ui/Layout/Helpers/Col";
 import {
@@ -16,15 +24,12 @@ import { ChatTeardropTextIcon } from "@phosphor-icons/react";
 import clsx from "clsx";
 import { memo, useCallback, useState } from "react";
 
-import type { RecipeComment, RecipeUser } from "@/features/recipes/api/types";
 import CommentCard from "./CommentCard";
 import CommentSkeleton from "./CommentSkeleton";
 import ReviewForm from "./ReviewForm";
 
 interface Props extends React.HTMLAttributes<HTMLDivElement> {
   className?: string;
-  comments: RecipeComment[];
-  user: RecipeUser;
   recipeId: number;
 }
 
@@ -32,22 +37,30 @@ const ITEMS_PER_PAGE = 4;
 
 const CommentsSection = memo(function CommentsSection({
   className,
-  comments,
-  user,
   recipeId,
   ...props
 }: Props) {
-  const [localComments, setLocalComments] = useState<RecipeComment[]>(comments);
   const [newReview, setNewReview] = useState<string>("");
   const [newRating, setNewRating] = useState<number>(0);
-  const [likedComments, setLikedComments] = useState<{ [id: number]: boolean }>(
-    {},
-  );
-  const [likesCount, setLikesCount] = useState<{ [id: number]: number }>(
-    Object.fromEntries(comments.map((c) => [c.id, c.likesCount])),
-  );
+  const { toast } = useToast();
 
-  console.log(user);
+  const { data: user } = useGetUser();
+  const currentUserId = user?.id;
+
+  const {
+    data: commentsData,
+    isLoading: isLoadingComments,
+    error: commentsError,
+  } = useGetCommentsByRecipe(recipeId);
+
+  const { mutate: createComment, isPending: isCreating } = useCreateComment();
+
+  const { mutate: toggleLike } = useToggleLike(recipeId);
+
+  const { mutate: deleteComment } = useDeleteComment(recipeId);
+
+  const comments = commentsData?.data || [];
+
   const {
     currentItems,
     currentPage,
@@ -57,66 +70,101 @@ const CommentsSection = memo(function CommentsSection({
     getPageNumbers,
     hasNextPage,
     hasPreviousPage,
-    isLoading,
+    isLoading: isPaginationLoading,
   } = usePagination({
-    items: localComments,
+    items: comments,
     itemsPerPage: ITEMS_PER_PAGE,
     loadingDelay: 0,
     queryKey: "comments_page",
   });
 
-  const handlePostReview = useCallback(() => {
-    if (!newReview) return;
-    const nextId = localComments.length
-      ? Math.max(...localComments.map((c) => c.id)) + 1
-      : 1;
+  const isLoading = isLoadingComments || isPaginationLoading;
 
-    const review: RecipeComment = {
-      id: nextId,
-      userId: user.id,
-      createdAt: new Date().toISOString(),
-      isLikedByCurrentUser: false,
-      recipeId,
-      user,
-      likesCount: 0,
-      content: newReview,
-    };
-    setLocalComments((prev) => [review, ...prev]);
-    setNewReview("");
-    setNewRating(0);
-    goToPage(1);
-  }, [newReview, localComments, goToPage]);
+  const handlePostReview = useCallback(() => {
+    if (!newReview.trim() || newRating === 0) return;
+
+    if (!currentUserId) {
+      toast({
+        title: "Erro",
+        description: "Você precisa estar logado para comentar.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    createComment(
+      {
+        recipeId,
+        userId: currentUserId,
+        text: newReview.trim(),
+        rating: newRating,
+      },
+      {
+        onSuccess: () => {
+          setNewReview("");
+          setNewRating(0);
+          goToPage(1);
+          toast({
+            title: "Comentário enviado!",
+            description: "Seu comentário foi publicado com sucesso.",
+          });
+        },
+        onError: () => {
+          toast({
+            title: "Erro ao enviar comentário",
+            description: "Tente novamente mais tarde.",
+            variant: "destructive",
+          });
+        },
+      },
+    );
+  }, [
+    newReview,
+    newRating,
+    currentUserId,
+    recipeId,
+    createComment,
+    goToPage,
+    toast,
+  ]);
 
   const handleLike = useCallback(
-    (id: number) => {
-      setLikedComments((prev) => ({
-        ...prev,
-        [id]: !prev[id],
-      }));
-
-      setLikesCount((prev) => {
-        const alreadyLiked = likedComments[id] ?? false;
-        const currentLikes = prev[id] ?? 0;
-
-        return {
-          ...prev,
-          [id]: currentLikes + (alreadyLiked ? -1 : 1),
-        };
-      });
+    (commentId: number) => {
+      if (!currentUserId) {
+        toast({
+          title: "Atenção",
+          description: "Você precisa estar logado para curtir.",
+          variant: "destructive",
+        });
+        return;
+      }
+      toggleLike(commentId);
     },
-    [likedComments],
+    [currentUserId, toggleLike, toast],
   );
 
-  const shouldShowPagination = localComments.length > ITEMS_PER_PAGE;
+  const handleDelete = useCallback(
+    (commentId: number) => {
+      deleteComment(commentId, {
+        onSuccess: () => {
+          toast({
+            title: "Comentário excluído",
+            description: "Seu comentário foi removido.",
+          });
+        },
+        onError: () => {
+          toast({
+            title: "Erro ao excluir",
+            description: "Não foi possível excluir o comentário.",
+            variant: "destructive",
+          });
+        },
+      });
+    },
+    [deleteComment, toast],
+  );
 
-  const localComment = {
-    id: 1,
-    author: "Matheus",
-    avatarUrl: "https://github.com/matheus.png",
-    timeAgo: "2 days ago",
-    content: "This is a comment",
-    likes: 1,
-  };
+  const shouldShowPagination = comments.length > ITEMS_PER_PAGE;
 
   return (
     <Col
@@ -128,13 +176,28 @@ const CommentsSection = memo(function CommentsSection({
       aria-label="Seção de comentários"
       {...props}
     >
-      <ReviewForm
-        rating={newRating}
-        review={newReview}
-        onRatingChange={setNewRating}
-        onReviewChange={setNewReview}
-        onPost={handlePostReview}
-      />
+      {currentUserId ? (
+        <ReviewForm
+          rating={newRating}
+          review={newReview}
+          onRatingChange={setNewRating}
+          onReviewChange={setNewReview}
+          onPost={handlePostReview}
+          isSubmitting={isCreating}
+          error={
+            newReview.length > 0 && newReview.length < 3
+              ? "O comentário deve ter pelo menos 3 caracteres."
+              : undefined
+          }
+        />
+      ) : (
+        <Col className="w-full items-center rounded-md border border-green-200 py-4">
+          <Text type={Text.Type.BodyThree} className="text-green-600">
+            Faça login para deixar um comentário
+          </Text>
+        </Col>
+      )}
+
       <Text
         type={Text.Type.HeadingFive}
         weight={Text.Weight.Medium}
@@ -143,6 +206,15 @@ const CommentsSection = memo(function CommentsSection({
       >
         Comentários
       </Text>
+
+      {commentsError && (
+        <Col className="w-full items-center py-4">
+          <Text type={Text.Type.BodyThree} className="text-red-500">
+            Erro ao carregar comentários. Tente novamente.
+          </Text>
+        </Col>
+      )}
+
       <div
         role="list"
         aria-label="Lista de comentários"
@@ -154,10 +226,15 @@ const CommentsSection = memo(function CommentsSection({
           currentItems.map((comment) => (
             <CommentCard
               key={comment.id}
-              comment={localComment}
-              likes={likesCount[comment.id] ?? comment.likesCount}
-              isLiked={!!likedComments[comment.id]}
+              comment={comment}
+              isLiked={comment.isLikedByCurrentUser}
               onLike={() => handleLike(comment.id)}
+              currentUserId={currentUserId}
+              onDelete={
+                currentUserId === comment.user.id
+                  ? () => handleDelete(comment.id)
+                  : undefined
+              }
             />
           ))
         ) : (
@@ -172,6 +249,7 @@ const CommentsSection = memo(function CommentsSection({
           </Col>
         )}
       </div>
+
       {shouldShowPagination && (
         <div className="block w-full">
           <Pagination>

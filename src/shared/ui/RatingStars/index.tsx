@@ -15,7 +15,7 @@ import {
 interface Props extends React.HTMLAttributes<HTMLDivElement> {
   initialRating?: number;
   value?: number;
-  onRatingChange: (rating: number) => void;
+  onRatingChange?: (rating: number) => void;
 }
 
 const labelStars = [

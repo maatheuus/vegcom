@@ -56,11 +56,7 @@ export default function ContentRecipe({ recipe }: Props) {
         />
       </Grid>
 
-      <CommentsSection
-        comments={recipe.comments}
-        user={recipe.user}
-        recipeId={recipe.id}
-      />
+      <CommentsSection recipeId={recipe.id} />
     </div>
   );
 }

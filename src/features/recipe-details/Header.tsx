@@ -25,7 +25,7 @@ interface Props extends React.ComponentProps<"div"> {
   timeAgo?: string;
   commentsCount?: number;
   rating?: number;
-  totalReviews?: number;
+
   isRecipePage?: boolean;
 }
 
@@ -38,7 +38,7 @@ const Header = memo(function Header({
   timeAgo,
   commentsCount,
   rating,
-  totalReviews = 0,
+
   isRecipePage,
   ...props
 }: Props) {
@@ -46,6 +46,7 @@ const Header = memo(function Header({
 
   const ROW_DATA = [
     {
+      key: "author",
       label: authorName,
       icon: <UserIcon />,
       ariaLabel: `Autor: ${authorName}`,
@@ -54,6 +55,7 @@ const Header = memo(function Header({
       separator: true,
     },
     {
+      key: "timeAgo",
       label: timeAgo,
       icon: <CalendarDotsIcon />,
       ariaLabel: `Publicado ${timeAgo}`,
@@ -62,6 +64,7 @@ const Header = memo(function Header({
       separator: true,
     },
     {
+      key: "commentsCount",
       label: `${commentsCount} ${commentsCount === 1 ? "comentário" : "comentários"}`,
       icon: <ScrollIcon />,
       ariaLabel: `${commentsCount} ${commentsCount === 1 ? "comentário" : "comentários"}`,
@@ -70,6 +73,7 @@ const Header = memo(function Header({
       separator: true,
     },
     {
+      key: "views",
       label: `${views} ${views === 1 ? "visto" : "vistos"}`,
       icon: <EyeIcon />,
       ariaLabel: `${views} ${views === 1 ? "pessoa" : "pessoas"} visualizaram esta receita`,
@@ -78,9 +82,10 @@ const Header = memo(function Header({
       separator: true,
     },
     {
-      label: `${rating} (${totalReviews} ${totalReviews === 1 ? "review" : "reviews"})`,
+      key: "rating",
+      label: `${rating?.toFixed(1)}`,
       icon: <StarIcon />,
-      ariaLabel: `Avaliação média: ${rating} de ${totalReviews} ${totalReviews === 1 ? "review" : "reviews"}`,
+      ariaLabel: `Avaliação média: ${rating}`,
     },
   ];
 
