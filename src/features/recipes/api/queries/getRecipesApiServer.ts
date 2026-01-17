@@ -10,25 +10,26 @@ import type {
   GetRecipesResponse,
   UpdateRecipePayload,
 } from "../types";
+
 export const getRecipes = async () => {
   return serverFetch<GetRecipesResponse>("/recipes/list", {
     method: "GET",
     next: { tags: ["recipes"] },
   });
 };
+
 export const getRecipeById = async (id: number) => {
   return serverFetch<GetRecipeByIdResponse>(`/recipes/get/${id}`, {
     method: "GET",
   });
 };
+
 export const getRecipeBySlug = async (slug: string) => {
-  return serverFetch<GetRecipeBySlugResponse>(
-    `/recipes/get/slug/${slug}`,
-    {
-      method: "GET",
-    },
-  );
+  return serverFetch<GetRecipeBySlugResponse>(`/recipes/get/slug/${slug}`, {
+    method: "GET",
+  });
 };
+
 export const createRecipe = async (data: CreateRecipePayload) => {
   revalidatePath("/recipes/list");
   return serverFetch<CreateRecipeResponse>("/recipes/create", {
@@ -36,6 +37,7 @@ export const createRecipe = async (data: CreateRecipePayload) => {
     body: data,
   });
 };
+
 export const updateRecipe = async (id: number, data: UpdateRecipePayload) => {
   revalidatePath("/recipes/list");
   return serverFetch<CreateRecipeResponse>(`/recipes/update/${id}`, {
@@ -43,12 +45,14 @@ export const updateRecipe = async (id: number, data: UpdateRecipePayload) => {
     body: data,
   });
 };
+
 export const deleteRecipe = async (id: number) => {
   revalidatePath("/recipes/list");
   return serverFetch<CreateRecipeResponse>(`/recipes/delete/${id}`, {
     method: "DELETE",
   });
 };
+
 export const favoriteRecipe = async (id: number) => {
   revalidatePath("/recipes/list");
   return serverFetch<FavoriteRecipeResponse>(`/recipes/${id}/favorite`, {
@@ -57,8 +61,11 @@ export const favoriteRecipe = async (id: number) => {
 };
 
 export const getFeaturedRecipe = async (filter: string) => {
-  return serverFetch<GetRecipeByIdResponse>(`/recipes/featured?filter=${filter}`, {
-    method: "GET",
-    next: { tags: ["featured-recipe"] },
-  });
+  return serverFetch<GetRecipeByIdResponse>(
+    `/recipes/featured?filter=${filter}`,
+    {
+      method: "GET",
+      next: { tags: ["featured-recipe"] },
+    },
+  );
 };

@@ -47,10 +47,12 @@ export interface CreateRecipePayload {
   title: string;
   slug?: string;
   description: string;
+  timeForPreparation: string;
   cookTime: string;
   quantity: string;
   category: string;
   difficulty: string;
+  rating?: number;
   images: string[];
   steps: RecipeSteps;
   mealType?: MealType;

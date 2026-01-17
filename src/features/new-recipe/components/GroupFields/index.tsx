@@ -98,7 +98,18 @@ export default function GroupFields({
   );
 
   const handleAddItemToList = useCallback(
-    (value: string, type: RecipeType) => {
+    async (value: string, type: RecipeType) => {
+      const fieldName =
+        type === "ingredients"
+          ? "new_recipe_ingredient_text"
+          : type === "instructions"
+            ? "new_recipe_instruction_text"
+            : "new_recipe_cookingNote_text";
+
+      const isValid = await form.trigger(fieldName);
+
+      if (!isValid) return;
+
       if (value.trim() === "") return;
 
       const newRecipeObject = {
@@ -206,7 +217,7 @@ export default function GroupFields({
                       )}
                       variant="text"
                       type="button"
-                      className="m-0 cursor-pointer gap-x-1 px-0 font-semibold text-green-500/70 hover:bg-transparent hover:text-green-500"
+                      className="m-0 cursor-pointer gap-x-1 px-0 font-semibold text-green-500/70 hover:bg-transparent hover:text-green-500 md:pr-5.5"
                       leftIcon={<PlusCircleIcon size={16} />}
                     />
                     <FormControl>

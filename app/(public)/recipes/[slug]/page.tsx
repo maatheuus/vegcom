@@ -57,7 +57,7 @@ export default async function page({ params }: Props) {
           isSaved={false}
           authorName={recipe.user.name}
           commentsCount={recipe.totalComments || 0}
-          rating={recipe.averageRating || recipe.rating || 0}
+          rating={recipe.averageRating || 0}
           timeAgo={timeAgo}
           title={recipe.title}
         />

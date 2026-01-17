@@ -38,7 +38,7 @@ const Header = memo(function Header({
   timeAgo,
   commentsCount,
   rating,
-  totalReviews = 5,
+  totalReviews = 0,
   isRecipePage,
   ...props
 }: Props) {
@@ -62,25 +62,25 @@ const Header = memo(function Header({
       separator: true,
     },
     {
-      label: `${commentsCount} comentários`,
+      label: `${commentsCount} ${commentsCount === 1 ? "comentário" : "comentários"}`,
       icon: <ScrollIcon />,
-      ariaLabel: `${commentsCount} comentários`,
+      ariaLabel: `${commentsCount} ${commentsCount === 1 ? "comentário" : "comentários"}`,
     },
     {
       separator: true,
     },
     {
-      label: `${views} vistos`,
+      label: `${views} ${views === 1 ? "visto" : "vistos"}`,
       icon: <EyeIcon />,
-      ariaLabel: `${views} pessoas visualizaram esta receita`,
+      ariaLabel: `${views} ${views === 1 ? "pessoa" : "pessoas"} visualizaram esta receita`,
     },
     {
       separator: true,
     },
     {
-      label: `${rating} (14 reviews)`,
+      label: `${rating} (${totalReviews} ${totalReviews === 1 ? "review" : "reviews"})`,
       icon: <StarIcon />,
-      ariaLabel: `Avaliação média: ${rating} de ${totalReviews}`,
+      ariaLabel: `Avaliação média: ${rating} de ${totalReviews} ${totalReviews === 1 ? "review" : "reviews"}`,
     },
   ];
 

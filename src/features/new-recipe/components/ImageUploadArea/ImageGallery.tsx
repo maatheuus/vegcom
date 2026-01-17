@@ -40,7 +40,7 @@ export default function ImageGallery({ images, onRemove, onDragEnd }: Props) {
         type={Text.Type.BodyFour}
         className="font-maitree text-green-500"
       >
-        Imagens da Receita
+        {images.length === 1 ? "Imagem da Receita" : "Imagens da Receita"}
       </Text>
       <DndContext
         sensors={sensors}

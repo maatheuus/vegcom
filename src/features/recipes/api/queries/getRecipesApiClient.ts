@@ -33,19 +33,6 @@ export const useGetRecipeBySlug = (slug: string) => {
   });
 };
 
-export const useCreateRecipe = () => {
-  const queryClient = useQueryClient();
-  return useMutation({
-    mutationFn: recipeApi.createRecipe,
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: recipeKeys.lists() });
-    },
-    onError: (error) => {
-      console.error("Erro ao criar receita:", error);
-    },
-  });
-};
-
 export const useUpdateRecipe = () => {
   const queryClient = useQueryClient();
   return useMutation({

@@ -1,68 +1,42 @@
 import { api } from "@/shared/api/axios/axiosInstance";
-import type {
-  CreateRecipePayload,
-  CreateRecipeResponse,
-  FavoriteRecipeResponse,
-  GetRecipeByIdResponse,
-  GetRecipeBySlugResponse,
-  GetRecipesByIdsResponse,
-  GetRecipesResponse,
-  IncrementViewResponse,
-  UpdateRecipePayload,
-} from "../../recipes/api/types";
+import type { CreateRecipeResponse } from "../../recipes/api/types";
 
-const recipeApi = {
-  createRecipe: async (data: CreateRecipePayload) => {
+export interface CreateRecipeFormData {
+  userId: number;
+  title: string;
+  description: string;
+  timeForPreparation: string;
+  cookTime: string;
+  quantity: string;
+  category: string;
+  difficulty: string;
+  steps: {
+    ingredients: string[];
+    instructions: string[];
+    cookingNotes: string[];
+  };
+}
+
+const newRecipeApi = {
+  createRecipe: async (data: CreateRecipeFormData, images: File[]) => {
+    const formData = new FormData();
+
+    formData.append("data", JSON.stringify(data));
+
+    images.forEach((image) => {
+      formData.append("images", image);
+    });
+
     const { data: responseData } = await api.post<CreateRecipeResponse>(
       "/recipes/create",
-      data,
+      formData,
+      {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      },
     );
     return responseData;
-  },
-  getRecipes: async () => {
-    const { data } = await api.get<GetRecipesResponse>("/recipes/list");
-    return data;
-  },
-  getRecipeById: async (id: number) => {
-    const { data } = await api.get<GetRecipeByIdResponse>(`/recipes/get/${id}`);
-    return data;
-  },
-  getRecipeBySlug: async (slug: string) => {
-    const { data } = await api.get<GetRecipeBySlugResponse>(
-      `/recipes/get/slug/${slug}`,
-    );
-    return data;
-  },
-  updateRecipe: async (id: number, data: UpdateRecipePayload) => {
-    const { data: responseData } = await api.put<CreateRecipeResponse>(
-      `/recipes/update/${id}`,
-      data,
-    );
-    return responseData;
-  },
-  deleteRecipe: async (id: number) => {
-    const { data } = await api.delete<CreateRecipeResponse>(
-      `/recipes/delete/${id}`,
-    );
-    return data;
-  },
-  favoriteRecipe: async (id: number) => {
-    const { data } = await api.patch<FavoriteRecipeResponse>(
-      `/recipes/${id}/favorite`,
-    );
-    return data;
-  },
-  getRecipesByIds: async (ids: number[]) => {
-    const { data } = await api.post<GetRecipesByIdsResponse>("/recipes/batch", {
-      ids,
-    });
-    return data;
-  },
-  incrementView: async (id: number) => {
-    const { data } = await api.post<IncrementViewResponse>(
-      `/recipes/${id}/view`,
-    );
-    return data;
   },
 };
-export { recipeApi };
+export { newRecipeApi };

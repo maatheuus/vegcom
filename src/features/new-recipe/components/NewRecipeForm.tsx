@@ -1,327 +1,152 @@
 "use client";
 
+import { useGetUser } from "@/features/account/api/queries/getAuthApiClient";
 import {
   defaultValues,
   newRecipeFormSchema,
 } from "@/features/recipes/components/utils";
-import { generateSlug } from "@/features/recipes/lib/slug";
 import { useToast } from "@/shared/hooks/use-toast";
+import { usePersistentForm } from "@/shared/hooks/usePersistentForm";
 import Button from "@/shared/ui/Button";
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormMessage,
-} from "@/shared/ui/Form";
-import { Input } from "@/shared/ui/Input";
+import { Form } from "@/shared/ui/Form";
 import { ScrollArea } from "@/shared/ui/scroll-area";
 import Text from "@/shared/ui/Text";
-import Textarea from "@/shared/ui/TextArea";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
   ArrowBendUpLeftIcon,
   ArrowBendUpRightIcon,
+  BasketIcon,
+  ChefHatIcon,
+  CookingPotIcon,
+  ImagesSquareIcon,
+  NotePencilIcon,
   SealCheckIcon,
 } from "@phosphor-icons/react";
-import type { ComponentProps } from "react";
-import { useState } from "react";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import type { ComponentProps, ElementType } from "react";
+import { useCallback } from "react";
 import { useForm } from "react-hook-form";
-import { z } from "zod";
-import DynamicFields from "./DynamicFields";
+import { useCreateNewRecipe } from "../api/queries/getNewRecipesApiClient";
+import {
+  TIPS_BY_STEP,
+  transformFormToApiPayload,
+  validateStep,
+  type NewRecipeFormValues,
+} from "../utils";
 import FluctuantTip from "./FluctuantTip";
-import GroupFields from "./GroupFields";
-import ImageUploadArea from "./ImageUploadArea";
-import PreparationFields from "./PreparationFields";
+import RenderStepContent from "./RenderStepContent";
 
 interface Props extends ComponentProps<"div"> {
   className?: string;
 }
 
-const TIPS_BY_STEP: Record<number, string[]> = {
-  1: [
-    "Escolha um nome claro e descritivo para a receita.",
-    "Adicione uma descrição curta e apetitosa.",
-    "Defina o tempo de preparo para ajudar no planejamento.",
-  ],
-  2: [
-    "Liste todos os ingredientes necessários.",
-    "Especifique as quantidades corretamente.",
-    "Se possível, indique marcas ou tipos específicos de ingredientes.",
-  ],
-  3: [
-    "Escreva instruções simples e passo a passo.",
-    "Seja claro sobre tempos e temperaturas.",
-  ],
-  4: [
-    "Use notas de preparo para compartilhar truques ou sugestões extras.",
-    "Mencione substituições possíveis para ingredientes.",
-  ],
-  5: [
-    "A primeira foto será a de destaque da receita.",
-    "Adicione fotos do prato pronto.",
-    "Mostre detalhes da textura.",
-    "Fotos do processo também ajudam muito!",
-  ],
-};
-
 export default function NewRecipeForm({}: Props) {
-  const [currentStep, setCurrentStep] = useState(1);
-  const totalSteps = 5;
-  const { toast } = useToast();
+  const router = useRouter();
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
+  const { data: user } = useGetUser();
 
-  const form = useForm<z.infer<typeof newRecipeFormSchema>>({
+  const form = useForm<NewRecipeFormValues>({
     resolver: zodResolver(newRecipeFormSchema),
     defaultValues: { ...defaultValues },
   });
+  const {
+    mutateAsync: createNewRecipe,
+    isPending,
+    isSuccess,
+  } = useCreateNewRecipe();
+
+  const { toast } = useToast();
+
+  const { clearStorage } = usePersistentForm(form, {
+    key: "vegcom-new-recipe-form",
+    ttlSeconds: 1800,
+    excludeFields: ["recipe_images"],
+  });
+
   const values = form.getValues();
+  const currentStep = Number(searchParams.get("step")) || 1;
+  const totalSteps = 5;
 
-  const validateStep = (step: number): boolean => {
-    switch (step) {
-      case 1:
-        if (!values.recipe_title?.trim() || values.recipe_title?.length < 4) {
-          toast({
-            title: "O título precisa ter pelo menos 4 letras!",
-            variant: "destructive",
-          });
-          return false;
-        } else if (values.recipe_title?.length > 50) {
-          toast({
-            title: "Esse título tá meio longo demais, hein? 🤔",
-            variant: "destructive",
-          });
-          return false;
-        }
+  const createQueryString = useCallback(
+    (name: string, value: string) => {
+      const params = new URLSearchParams(searchParams.toString());
+      params.set(name, value);
 
-        if (!values.recipe_description?.trim()) {
-          toast({
-            title: "Uma boa receita merece uma descrição bacana",
-            variant: "destructive",
-          });
-          return false;
-        } else if (values.recipe_description?.length > 500) {
-          toast({
-            title: "Vamos manter a descrição mais objetiva 😉",
-            variant: "destructive",
-          });
-          return false;
-        }
-
-        if (!values.recipe_preparationHours) {
-          toast({
-            title: "Informe as horas, mesmo que seja zero",
-            variant: "destructive",
-          });
-          return false;
-        } else if (!values.recipe_preparationMinutes) {
-          toast({
-            title: "Quantos minutinhos?",
-            variant: "destructive",
-          });
-          return false;
-        }
-
-        if (!values.recipe_servings) {
-          toast({
-            title: "Quantas pessoas vão se deliciar com essa receita?",
-            variant: "destructive",
-          });
-          return false;
-        }
-
-        if (!values.recipe_category) {
-          toast({
-            title: "Por favor, selecione uma categoria",
-            variant: "destructive",
-          });
-          return false;
-        }
-
-        if (!values.recipe_difficulty) {
-          toast({
-            title: "Qual o nível de dificuldade da receita?",
-            variant: "destructive",
-          });
-          return false;
-        }
-
-        return true;
-
-      case 2:
-        // Ingredients
-        if (values.recipe_ingredients.length === 0) {
-          toast({
-            title: "Por favor, adicione pelo menos um ingrediente",
-            variant: "destructive",
-          });
-          return false;
-        }
-        return true;
-
-      case 3:
-        // Instructions
-        if (values.recipe_instructions.length === 0) {
-          toast({
-            title:
-              "Por favor, adicione pelo menos uma instrução. Você precisa ensinar como fazer, né? 😅",
-            variant: "destructive",
-          });
-          return false;
-        }
-        return true;
-
-      case 4:
-        // Cooking Notes
-        if (values.recipe_cookingNotes.length === 0) {
-          toast({
-            title: "Por favor, deixe pelo menos uma dica",
-            variant: "destructive",
-          });
-          return false;
-        }
-        return true;
-
-      case 5:
-        // Images
-        if (values.recipe_images.length === 0) {
-          toast({
-            title: "Pelo menos uma imagem ajuda bastante!",
-            variant: "destructive",
-          });
-          return false;
-        }
-        return true;
-
-      default:
-        return true;
-    }
-  };
+      return params.toString();
+    },
+    [searchParams],
+  );
 
   const nextStep = () => {
-    if (validateStep(currentStep)) {
-      setCurrentStep((prev) => Math.min(prev + 1, totalSteps));
-    }
-  };
-
-  const prevStep = () => {
-    setCurrentStep((prev) => Math.max(prev - 1, 1));
-  };
-
-  const handlePublish = () => {
-    if (validateStep(currentStep)) {
-      const data = form.getValues();
-      const { recipe_preparationHours, recipe_preparationMinutes, ...rest } =
-        data;
-
-      // Generate slug from recipe title
-      const slug = generateSlug(data.recipe_title);
-
-      const formattedData = {
-        ...rest,
-        recipe_slug: slug,
-        recipe_preparationTime: {
-          hours: Number(recipe_preparationHours),
-          minutes: Number(recipe_preparationMinutes),
-        },
-      };
-
-      toast({ title: "Receita publicada com sucesso!", variant: "success" });
-      // após publicar a receita, fazer o redirect para a página da receita.
-      // O slug gerado deve ser incluído no payload enviado à API
-      console.log("Submit:", formattedData);
-      console.log(
-        "Imagens incluídas:",
-        formattedData.recipe_images.map((img) => img.name),
+    if (validateStep(currentStep, values, toast)) {
+      const nextStepValue = Math.min(currentStep + 1, totalSteps);
+      router.push(
+        pathname + "?" + createQueryString("step", String(nextStepValue)),
       );
     }
   };
 
-  const stepTitles = [
-    "Informações Básicas",
-    "Ingredientes",
-    "Instruções",
-    "Notas de Cozimento",
-    "Imagens",
-  ];
+  const prevStep = () => {
+    const prevStepValue = Math.max(currentStep - 1, 1);
+    router.push(
+      pathname + "?" + createQueryString("step", String(prevStepValue)),
+    );
+  };
 
-  const renderStepContent = () => {
-    switch (currentStep) {
-      case 1:
-        return (
-          <div className="space-y-6">
-            <DynamicFields title="Título & Descrição" className="w-full">
-              <FormField
-                control={form.control}
-                name="recipe_title"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormControl>
-                      <Input
-                        type="text"
-                        className="rounded-sm!"
-                        placeholder="Nova receita de..."
-                        {...field}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="recipe_description"
-                render={({ field }) => (
-                  <FormItem className="h-full">
-                    <FormControl>
-                      <Textarea
-                        placeholder="Esta receita é ótima para..."
-                        className="h-full max-h-none min-h-[120px] max-w-full rounded-sm!"
-                        {...field}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-            </DynamicFields>
-            <PreparationFields form={form} />
-          </div>
-        );
+  const handlePublish = async () => {
+    if (validateStep(currentStep, values, toast)) {
+      const formData = form.getValues();
 
-      case 2:
-        return (
-          <div className="space-y-6">
-            <GroupFields form={form} type="ingredients" />
-          </div>
-        );
+      const userId = user?.id;
+      const payload = transformFormToApiPayload(formData, Number(userId));
 
-      case 3:
-        return (
-          <div className="space-y-6">
-            <GroupFields form={form} type="instructions" />
-          </div>
-        );
+      console.log("Payload para API:", payload);
 
-      case 4:
-        return (
-          <div className="space-y-6">
-            <GroupFields form={form} type="cookingNotes" />
-          </div>
-        );
+      try {
+        const { data, success } = await createNewRecipe(payload);
 
-      case 5:
-        return (
-          <div className="space-y-6">
-            <DynamicFields title="Adicione Imagens" className="w-full">
-              <ImageUploadArea form={form} className="flex h-full" />
-            </DynamicFields>
-          </div>
-        );
-
-      default:
-        return null;
+        if (success) {
+          router.push(`/recipes/${data.slug}`);
+          toast({
+            title: "Receita publicada com sucesso!",
+            variant: "success",
+          });
+          clearStorage();
+        }
+      } catch (error) {
+        console.error("Erro ao publicar receita:", error);
+        toast({
+          title: "Erro ao publicar receita",
+          description: "Tente novamente mais tarde.",
+          variant: "destructive",
+        });
+      }
     }
   };
+
+  const steps = [
+    {
+      label: "Informações Básicas",
+      icon: ChefHatIcon,
+    },
+    {
+      label: "Ingredientes",
+      icon: BasketIcon,
+    },
+    {
+      label: "Instruções",
+      icon: CookingPotIcon,
+    },
+    {
+      label: "Notas de Cozimento",
+      icon: NotePencilIcon,
+    },
+    {
+      label: "Imagens",
+      icon: ImagesSquareIcon,
+    },
+  ];
 
   return (
     <div>
@@ -330,41 +155,48 @@ export default function NewRecipeForm({}: Props) {
         <div className="md:py-6">
           <ScrollArea orientation="horizontal" className="w-full pb-4">
             <div className="flex w-full min-w-[600px] items-start justify-between gap-2 text-center md:min-w-0">
-              {stepTitles.map((stepTitle, index) => (
-                <div
-                  key={index}
-                  className="flex flex-1 items-center justify-center gap-2"
-                >
-                  <div className="flex flex-col items-center gap-1">
-                    <div
-                      className={`font-lora flex min-h-8 min-w-8 items-center justify-center rounded-full transition-colors ${
-                        currentStep > index + 1
-                          ? "bg-green-600 font-semibold text-white"
-                          : currentStep === index + 1
-                            ? "bg-green-500 text-green-50"
-                            : "bg-green-100 text-green-500"
-                      }`}
-                    >
-                      {currentStep > index + 1 ? (
-                        <SealCheckIcon size={16} />
-                      ) : (
-                        <span className="text-sm italic">{index + 1}</span>
-                      )}
+              {steps.map((step, index) => {
+                const label = step.label;
+                const Icon = step.icon as unknown as ElementType;
+
+                return (
+                  <div
+                    key={index}
+                    className="flex flex-1 items-center justify-center gap-2"
+                  >
+                    <div className="flex flex-col items-center gap-1">
+                      <div
+                        className={`font-lora flex min-h-8 min-w-8 items-center justify-center rounded-full transition-colors ${
+                          currentStep > index + 1
+                            ? "bg-green-600 font-semibold text-white"
+                            : currentStep === index + 1
+                              ? "bg-green-500 text-green-50"
+                              : "bg-green-100 text-green-500"
+                        }`}
+                      >
+                        {currentStep > index + 1 ? (
+                          <SealCheckIcon size={16} />
+                        ) : (
+                          <span className="text-sm italic">
+                            <Icon />
+                          </span>
+                        )}
+                      </div>
+                      <Text
+                        className={`font-lora text-xs ${
+                          currentStep === index + 1
+                            ? "text-green-600"
+                            : currentStep > index + 1
+                              ? "text-green-500"
+                              : "text-green-600"
+                        }`}
+                      >
+                        {label}
+                      </Text>
                     </div>
-                    <Text
-                      className={`font-lora text-xs ${
-                        currentStep === index + 1
-                          ? "text-green-600"
-                          : currentStep > index + 1
-                            ? "text-green-500"
-                            : "text-green-600"
-                      }`}
-                    >
-                      {stepTitle}
-                    </Text>
                   </div>
-                </div>
-              ))}
+                );
+              })}
             </div>
           </ScrollArea>
         </div>
@@ -374,7 +206,7 @@ export default function NewRecipeForm({}: Props) {
         <div className="mx-auto h-full max-w-4xl">
           <Form {...form}>
             <form className="block h-full w-full md:min-h-[420px]">
-              {renderStepContent()}
+              <RenderStepContent currentStep={currentStep} form={form} />
             </form>
           </Form>
 
@@ -401,8 +233,9 @@ export default function NewRecipeForm({}: Props) {
               <Button
                 onClick={handlePublish}
                 className="flex cursor-pointer items-center gap-2 bg-green-500 hover:bg-green-800"
+                disabled={isPending}
               >
-                Publicar Receita
+                {isPending ? "Publicando..." : "Publicar Receita"}
                 <SealCheckIcon size={16} />
               </Button>
             )}

@@ -57,7 +57,6 @@ export default function SortableImage({
     onRemove(image.id);
   };
 
-  console.log(isFirstImage);
   return (
     <Fragment>
       <TooltipTrigger asChild>
@@ -65,7 +64,7 @@ export default function SortableImage({
           ref={setNodeRef}
           style={style}
           {...attributes}
-          className={`group relative z-50 min-h-24 max-w-36 cursor-pointer overflow-hidden rounded-md lg:max-h-32 lg:min-h-32 lg:max-w-full ${
+          className={`group relative z-50 min-h-24 cursor-pointer overflow-hidden rounded-md lg:max-h-32 lg:min-h-32 lg:max-w-full ${
             isDragging ? "scale-105" : ""
           } `}
         >
@@ -78,11 +77,11 @@ export default function SortableImage({
             </div>
           )}
 
-          <div className="invisible absolute top-0 right-0 z-20 overflow-hidden rounded-l bg-white/80 opacity-0 transition-all duration-200 group-hover:visible group-hover:opacity-100">
+          <div className="invisible absolute top-0 right-0 z-20 overflow-hidden rounded-l bg-white/80 opacity-0 transition-all duration-200 group-hover:visible group-hover:opacity-100 hover:bg-green-50">
             <Button.Icon
               variant="outline"
               size="md"
-              className="p-1 hover:bg-green-50"
+              className="p-1"
               onClick={handleRemove}
               icon={<TrashIcon size={18} className="text-black-100 size-fit" />}
             />
@@ -104,7 +103,7 @@ export default function SortableImage({
             alt={image.name}
             width={200}
             height={128}
-            className="pointer-events-none aspect-square h-full min-h-24 w-full max-w-36 object-cover lg:max-h-32 lg:min-h-32 lg:max-w-full"
+            className="pointer-events-none aspect-square h-full max-h-56 min-h-24 w-full object-cover lg:max-h-32 lg:min-h-32 lg:max-w-full"
             draggable={false}
           />
 

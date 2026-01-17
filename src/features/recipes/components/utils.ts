@@ -245,11 +245,20 @@ export const newRecipeFormSchema = z.object({
     )
     .min(1, { message: "Pelo menos uma imagem ajuda bastante!" }),
 
-  new_recipe_ingredient_text: z.string(),
+  new_recipe_ingredient_text: z
+    .string()
+    .min(12, { message: "Pelo menos um ingrediente valida" })
+    .max(100, { message: "Esse ingrediente tá meio longo demais, hein? 🤔" }),
 
-  new_recipe_instruction_text: z.string(),
+  new_recipe_instruction_text: z
+    .string()
+    .min(12, { message: "Pelo menos uma instrução valida" })
+    .max(100, { message: "Esse instrução tá meio longo demais, hein? 🤔" }),
 
-  new_recipe_cookingNote_text: z.string(),
+  new_recipe_cookingNote_text: z
+    .string()
+    .min(12, { message: "Adicione uma nota valida" })
+    .max(100, { message: "Esse dica tá meio longo demais, hein? 🤔" }),
 });
 
 export const defaultValues = {

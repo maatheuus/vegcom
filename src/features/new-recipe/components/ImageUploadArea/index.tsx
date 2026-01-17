@@ -34,6 +34,8 @@ export interface Props extends ComponentProps<"div"> {
 
 export const MAX_IMAGES = 6;
 export const DURATION_TOAST_IN_SEG = 2000;
+export const MAX_IMAGE_SIZE_MB = 3;
+export const MAX_IMAGE_SIZE_BYTES = MAX_IMAGE_SIZE_MB * 1024 * 1024;
 
 export default function ImageUploadArea({ form, className }: Props) {
   const [uploadingImages, setUploadingImages] = useState<UploadingImage[]>([]);
@@ -62,6 +64,21 @@ export default function ImageUploadArea({ form, className }: Props) {
           : `Apenas as primeiras ${available} imagens foram selecionadas.`,
         variant: "destructive",
         duration: DURATION_TOAST_IN_SEG,
+      });
+    },
+    [toast],
+  );
+
+  const showFileSizeToast = useCallback(
+    (rejectedFiles: string[]) => {
+      toast({
+        title: "Arquivo(s) muito grande(s)",
+        description:
+          rejectedFiles.length === 1
+            ? `A imagem "${rejectedFiles[0]}" excede o limite de ${MAX_IMAGE_SIZE_MB}MB.`
+            : `${rejectedFiles.length} imagens excedem o limite de ${MAX_IMAGE_SIZE_MB}MB: ${rejectedFiles.join(", ")}.`,
+        variant: "destructive",
+        duration: DURATION_TOAST_IN_SEG + 1500,
       });
     },
     [toast],
@@ -100,9 +117,27 @@ export default function ImageUploadArea({ form, className }: Props) {
       }
 
       const newFiles = Array.from(files);
-      const filesToUpload = newFiles.slice(0, currentAvailableSlots);
 
-      if (filesToUpload.length < newFiles.length) {
+      const validSizeFiles: File[] = [];
+      const rejectedFileNames: string[] = [];
+
+      for (const file of newFiles) {
+        if (file.size > MAX_IMAGE_SIZE_BYTES) {
+          rejectedFileNames.push(file.name);
+        } else {
+          validSizeFiles.push(file);
+        }
+      }
+
+      if (rejectedFileNames.length > 0) {
+        showFileSizeToast(rejectedFileNames);
+      }
+
+      if (validSizeFiles.length === 0) return;
+
+      const filesToUpload = validSizeFiles.slice(0, currentAvailableSlots);
+
+      if (filesToUpload.length < validSizeFiles.length) {
         showLimitToast(currentAvailableSlots);
       }
 
@@ -130,6 +165,7 @@ export default function ImageUploadArea({ form, className }: Props) {
       images.length,
       uploadingImages.length,
       showLimitToast,
+      showFileSizeToast,
       processImageUpload,
       toast,
     ],
