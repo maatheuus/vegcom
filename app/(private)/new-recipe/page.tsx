@@ -1,6 +1,7 @@
 import NewRecipeForm from "@/features/new-recipe/components/NewRecipeForm";
 import Header from "@/features/recipe-details/Header";
 import Layout from "@/shared/ui/Layout";
+import { Suspense } from "react";
 
 export default function page() {
   return (
@@ -8,7 +9,9 @@ export default function page() {
       <section className="relative space-y-8 overflow-hidden">
         <Header title="Nova receita" />
 
-        <NewRecipeForm />
+        <Suspense fallback={<></>}>
+          <NewRecipeForm />
+        </Suspense>
       </section>
     </Layout.Default>
   );

@@ -30,6 +30,7 @@ export default async function page({ params }: Props) {
 
       permanentRedirect(`/recipes/${recipe.slug}`);
     } catch (error) {
+      console.log(error);
       notFound();
     }
   } else {
@@ -37,6 +38,7 @@ export default async function page({ params }: Props) {
       const response = await getRecipeBySlug(slug);
       recipe = response.data;
     } catch (error) {
+      console.log(error);
       notFound();
     }
   }

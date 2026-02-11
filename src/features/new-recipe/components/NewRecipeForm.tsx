@@ -53,7 +53,6 @@ export default function NewRecipeForm({}: Props) {
   const {
     mutateAsync: createNewRecipe,
     isPending,
-    isSuccess,
   } = useCreateNewRecipe();
 
   const { toast } = useToast();

@@ -1,11 +1,5 @@
 import type { Recipe } from "@/entities/recipe";
 
-interface Ingredient {
-  name: string;
-  quantity: string;
-  notes?: string;
-}
-
 export interface Metadata {
   recipes: Recipe[];
   error: null | string;

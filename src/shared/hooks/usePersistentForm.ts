@@ -7,7 +7,7 @@ interface PersistentFormOptions {
   excludeFields?: string[];
 }
 
-export function usePersistentForm<T extends Record<string, any>>(
+export function usePersistentForm<T extends Record<string, unknown>>(
   form: UseFormReturn<T>,
   { key, ttlSeconds = 1800, excludeFields = [] }: PersistentFormOptions,
 ) {

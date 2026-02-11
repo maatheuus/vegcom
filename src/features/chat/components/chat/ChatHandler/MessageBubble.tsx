@@ -17,7 +17,7 @@ import {
   ShareNetworkIcon,
 } from "@phosphor-icons/react";
 import { useEffect, useState } from "react";
-import RecipeEmbed from "../embeds/RecipeEmbed";
+import RecipeEmbed, { type GeneratedRecipe } from "../embeds/RecipeEmbed";
 import type { MessageGroup } from "../utils/groupMessages";
 
 interface MessageBubbleProps {
@@ -42,7 +42,7 @@ const MessageBubble: React.FC<MessageBubbleProps> = ({
   }, [group.versions.length]);
 
   const currentMessage = group.versions[currentIndex];
-  const generatedRecipes = currentMessage.metadata?.recipes;
+  const generatedRecipes = currentMessage.metadata?.recipes as GeneratedRecipe[] | undefined;
   const totalVersions = group.versions.length;
 
   const handleCopy = () => {
