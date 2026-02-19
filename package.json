@@ -39,11 +39,13 @@
     "@tanstack/react-query-devtools": "^5.66.9",
     "@tiptap/extension-character-count": "^3.13.0",
     "@tiptap/extension-image": "^2.12.0",
+    "@tiptap/extension-mention": "^2.12.0",
     "@tiptap/extension-placeholder": "^2.12.0",
     "@tiptap/extensions": "^3.13.0",
     "@tiptap/pm": "^2.12.0",
     "@tiptap/react": "^2.12.0",
     "@tiptap/starter-kit": "^2.12.0",
+    "@tiptap/suggestion": "^2.12.0",
     "@vercel/analytics": "^1.5.0",
     "@vercel/speed-insights": "^1.2.0",
     "axios": "^1.13.2",
@@ -81,5 +83,6 @@
     "tailwindcss": "4.0.0",
     "tailwindcss-motion": "^1.0.1",
     "typescript": "^5"
-  }
+  },
+  "packageManager": "yarn@4.5.0+sha512.837566d24eec14ec0f5f1411adb544e892b3454255e61fdef8fd05f3429480102806bac7446bc9daff3896b01ae4b62d00096c7e989f1596f2af10b927532f39"
 }

@@ -1,18 +1,26 @@
+import AuthenticatedBlocker from "@/shared/components/ui/AuthenticatedBlocker";
 import { usePostComposerEditor } from "@/shared/hooks/usePostComposerEditor";
 import { Input } from "@/shared/ui/Input";
 import Col from "@/shared/ui/Layout/Helpers/Col";
 import { EditorContent } from "@tiptap/react";
 import clsx from "clsx";
-import { useCallback, useRef, useState, type HTMLAttributes } from "react";
+import {
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+  type HTMLAttributes,
+} from "react";
 import type { PostImageAttachment } from "../Tiptap/Helpers/ImageContainer";
 import ImageContainer from "../Tiptap/Helpers/ImageContainer";
 import PostComposerActions from "./Actions";
 import PostComposerTextArea from "./PostComposerTextArea";
 
-export default function PostComposer({
-  className,
-  ...props
-}: HTMLAttributes<HTMLDivElement>) {
+interface Props extends HTMLAttributes<HTMLDivElement> {
+  disabled?: boolean;
+}
+
+export default function PostComposer({ className, disabled, ...props }: Props) {
   const { editor } = usePostComposerEditor();
   const imageInputRef = useRef<HTMLInputElement | null>(null);
   const postTitleRef = useRef<HTMLInputElement | null>(null);
@@ -20,6 +28,12 @@ export default function PostComposer({
   const [attachments, setAttachments] = useState<PostImageAttachment[]>([]);
 
   const isImageLimitReached = attachments.length >= 4;
+
+  useEffect(() => {
+    if (editor) {
+      editor.setEditable(!disabled);
+    }
+  }, [editor, disabled]);
 
   const handleImageUpload = useCallback(
     (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -74,7 +88,7 @@ export default function PostComposer({
   );
 
   const handleSubmit = () => {
-    if (!editor) return;
+    if (disabled || !editor) return;
 
     const payload = {
       title: postTitleRef.current?.value,
@@ -92,56 +106,71 @@ export default function PostComposer({
   };
 
   return (
-    <Col className={clsx(className)} {...props}>
-      <div className="relative">
-        <PostComposerTextArea editor={editor}>
-          <ImageContainer
-            images={attachments}
-            onRemoveImage={handleRemoveImage}
-          />
-          <Input
-            ref={postTitleRef}
-            type="text"
-            placeholder="Título do post"
-            className="font-lora border-none px-0 !text-xl leading-none font-medium tracking-tight text-green-500 italic placeholder:text-green-500/80 focus:!ring-0 sm:!text-2xl/tight"
-            maxLength={50}
-          />
+    <Col className={clsx("relative", className)} {...props}>
+      {disabled && (
+        <AuthenticatedBlocker className="absolute inset-0 z-50 m-auto h-fit w-[90%] md:w-[80%]" />
+      )}
+      <div
+        className={clsx(
+          "relative transition-all duration-300",
+          disabled &&
+            "pointer-events-none z-10 blur-sm grayscale-[0.5] select-none",
+        )}
+      >
+        <div className="relative">
+          <div className={clsx("relative transition-all duration-300")}>
+            <PostComposerTextArea editor={editor}>
+              <ImageContainer
+                images={attachments}
+                onRemoveImage={handleRemoveImage}
+              />
+              <Input
+                ref={postTitleRef}
+                disabled={disabled}
+                type="text"
+                placeholder="Título do post"
+                className="font-lora border-none px-0 !text-xl leading-none font-medium tracking-tight text-green-500 italic placeholder:text-green-500/80 focus:!ring-0 sm:!text-2xl/tight"
+                maxLength={50}
+              />
 
-          <EditorContent
-            editor={editor}
-            className={clsx(
-              "hidden-scrollbar h-auto max-h-[20rem] min-h-24 w-full overflow-y-auto py-2",
-              "[&_.is-editor-empty]:before:content-[attr(data-placeholder)]",
-              "[&_.is-editor-empty]:before:absolute",
-              "[&_.is-editor-empty]:before:text-green-500/80",
-              "[&_.is-editor-empty]:before:top-0 [&_.is-editor-empty]:before:left-0",
-              "[&_.is-editor-empty]:before:pointer-events-none",
-              "[&_.is-editor-empty]:before:text-base",
-              "[&_.ProseMirror]:pb-8",
-              "[&_.ProseMirror]:min-h-[100px]",
-            )}
-          />
-        </PostComposerTextArea>
+              <EditorContent
+                editor={editor}
+                className={clsx(
+                  "hidden-scrollbar h-auto max-h-[20rem] min-h-24 w-full overflow-y-auto py-2",
+                  "[&_.is-editor-empty]:before:content-[attr(data-placeholder)]",
+                  "[&_.is-editor-empty]:before:absolute",
+                  "[&_.is-editor-empty]:before:text-green-500/80",
+                  "[&_.is-editor-empty]:before:top-0 [&_.is-editor-empty]:before:left-0",
+                  "[&_.is-editor-empty]:before:pointer-events-none",
+                  "[&_.is-editor-empty]:before:text-base",
+                  "[&_.ProseMirror]:pb-8",
+                  "[&_.ProseMirror]:min-h-[100px]",
+                )}
+              />
+            </PostComposerTextArea>
+          </div>
+        </div>
+
+        <PostComposerActions
+          postTitleInputRef={postTitleRef}
+          editor={editor}
+          imageInputRef={imageInputRef}
+          addEmoji={addEmoji}
+          isImageLimitReached={isImageLimitReached}
+          handleSubmit={handleSubmit}
+          disabled={disabled}
+        />
+
+        <input
+          type="file"
+          ref={imageInputRef}
+          accept="image/*"
+          multiple
+          onChange={handleImageUpload}
+          className="hidden"
+          disabled={isImageLimitReached}
+        />
       </div>
-
-      <PostComposerActions
-        postTitleInputRef={postTitleRef}
-        editor={editor}
-        imageInputRef={imageInputRef}
-        addEmoji={addEmoji}
-        isImageLimitReached={isImageLimitReached}
-        handleSubmit={handleSubmit}
-      />
-
-      <input
-        type="file"
-        ref={imageInputRef}
-        accept="image/*"
-        multiple
-        onChange={handleImageUpload}
-        className="hidden"
-        disabled={isImageLimitReached}
-      />
     </Col>
   );
 }

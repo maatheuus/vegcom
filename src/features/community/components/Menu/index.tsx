@@ -1,6 +1,6 @@
 "use client";
 
-import { useGetUser } from "@/features/account/api/queries/getAuthApiClient";
+import { useGetUser } from "@/features/auth/api/queries/getAuthApiClient";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -24,7 +24,6 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import NotificationPopup from "./NotificationPopup";
-
 const sidebarLinks = {
   leftLinks: { label: "Vegom", href: "/" },
   centerLinks: [
@@ -87,7 +86,7 @@ export default function Menu() {
       >
         <div className="desktop:p-4 desktop:flex desktop:items-center h-full p-2">
           <motion.div layout="position" className="flex w-full items-center">
-            <Row className="group h-full w-full items-center gap-x-2 justify-between px-2 md:px-4">
+            <Row className="group h-full w-full items-center justify-between gap-x-3 px-2 md:px-4">
               <Link href={sidebarLinks.leftLinks.href} className="block flex-1">
                 <div className="flex items-center gap-x-2">
                   <Image
@@ -104,17 +103,15 @@ export default function Menu() {
               </Link>
 
               <Row className="desktop:flex hidden w-full flex-1 gap-x-4">
-                <Row className="items-center justify-center gap-x-2">
+                <Row className="items-center justify-center gap-x-3">
                   {sidebarLinks.centerLinks.map(
                     ({ href, icon: Icon, label }) => {
                       const isActive = pathname.startsWith(href);
                       return (
                         <Link key={href} href={href} className="contents">
                           <Row
-                            className={`relative flex w-full cursor-pointer gap-x-2 rounded-md px-2 py-1.5 transition-colors duration-300 ${
-                              isActive
-                                ? "bg-green-100 text-green-500"
-                                : "text-green-200 hover:bg-green-100 hover:text-green-500"
+                            className={`relative flex w-full cursor-pointer gap-x-2 py-1 ${
+                              isActive ? "text-green-500" : "text-green-200"
                             }`}
                             onMouseEnter={() => setHoveredItem(href)}
                             onMouseLeave={() => setHoveredItem("")}
@@ -142,7 +139,7 @@ export default function Menu() {
                 </Row>
               </Row>
 
-              <Row className="desktop:flex hidden items-center gap-x-2">
+              <Row className="desktop:flex hidden items-center gap-x-3">
                 <Link href="/account/subscription" className="contents">
                   <Row
                     className={`${baseButtonClasses} ${isPremium ? "p-2" : "px-2 py-1"} items-center justify-center rounded-lg bg-green-200 text-green-50`}
@@ -212,7 +209,7 @@ export default function Menu() {
                   </DropdownMenuContent>
                 </DropdownMenu>
 
-                <NotificationPopup />
+                {isLoggedIn && <NotificationPopup />}
               </Row>
 
               <div className="desktop:hidden flex items-center gap-x-2">
@@ -225,7 +222,7 @@ export default function Menu() {
                   </Row>
                 </Link>
 
-                <NotificationPopup />
+                {isLoggedIn && <NotificationPopup />}
 
                 <MotionConfig transition={{ duration: 0.4, ease: "easeInOut" }}>
                   <motion.button

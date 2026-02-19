@@ -1,5 +1,6 @@
 "use client";
 
+import { useGetUser } from "@/features/auth/api/queries/getAuthApiClient";
 import Button from "@/shared/ui/Button";
 import Col from "@/shared/ui/Layout/Helpers/Col";
 import {
@@ -24,7 +25,6 @@ import { type Tab } from "../Tabs";
 import Announcements from "../Tabs/Announcements";
 import Resources from "../Tabs/Resources";
 import TabsClient from "../Tabs/TabsClient";
-
 interface Props extends HtmlHTMLAttributes<HTMLDivElement> {
   className?: string;
 }
@@ -52,6 +52,8 @@ const tabs: Tab[] = [
 
 export default function CommunityLayout({ className, ...props }: Props) {
   const [isPending, startTransition] = useTransition();
+  const { data } = useGetUser();
+  const isAuthenticated = !!data?.id;
 
   const [selectedTab, setSelectedTab] = useState(() => {
     return "posts";
@@ -82,10 +84,16 @@ export default function CommunityLayout({ className, ...props }: Props) {
       className={`hidden-scrollbar z-40 h-full w-full overflow-x-hidden overflow-y-auto rounded-lg bg-green-50 p-0 ${className ?? ""}`}
       {...props}
     >
-      <Col className="relative gap-y-7 shadow-2xl">
-        <PostComposer className="sticky top-0 z-40 hidden rounded-[20px] border border-green-500 bg-green-50 transition-all duration-200 md:block" />
+      <Col className="relative gap-y-7">
+        <PostComposer
+          disabled={!isAuthenticated}
+          className={clsx(
+            "sticky top-0 z-40 hidden rounded-[20px] border border-green-500 bg-green-50 transition-all duration-200 md:block",
+            !isAuthenticated && "cursor-not-allowed",
+          )}
+        />
 
-        <MobilePostComposer />
+        <MobilePostComposer disabled={!isAuthenticated} />
 
         <Button.Icon
           variant="filled"

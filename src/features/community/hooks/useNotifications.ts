@@ -1,8 +1,14 @@
 import { notificationsApi } from "@/features/community/api/notificationsApi";
+import { getTokenFromCookies } from "@/shared/api/axios/axiosInstance";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useCallback } from "react";
 
-export type NotificationType = "COMMENT_REPLY" | "COMMENT_LIKE" | "RECIPE_LIKE" | "FOLLOW" | "SYSTEM";
+export type NotificationType =
+  | "COMMENT_REPLY"
+  | "COMMENT_LIKE"
+  | "RECIPE_LIKE"
+  | "FOLLOW"
+  | "SYSTEM";
 
 export interface Notification {
   id: string;
@@ -19,23 +25,30 @@ export interface Notification {
 
 export const notificationKeys = {
   all: ["notifications"] as const,
-  list: (page: number, limit: number) => ["notifications", "list", page, limit] as const,
+  list: (page: number, limit: number) =>
+    ["notifications", "list", page, limit] as const,
   unreadCount: ["notifications", "unread-count"] as const,
 };
 
 export function useNotifications(page = 1, limit = 10) {
   const queryClient = useQueryClient();
+  const isAuthenticated = !!getTokenFromCookies();
 
   const { data: notificationsData } = useQuery({
     queryKey: notificationKeys.list(page, limit),
     queryFn: () => notificationsApi.getNotifications(page, limit),
+    enabled: isAuthenticated,
     // Placeholder data to prevent crash if backend not ready, or remove if strict
-    placeholderData: { data: [], meta: { page: 1, limit: 10, total: 0, totalPages: 0 } }
+    placeholderData: {
+      data: [],
+      meta: { page: 1, limit: 10, total: 0, totalPages: 0 },
+    },
   });
 
   const { data: unreadCountData } = useQuery({
     queryKey: notificationKeys.unreadCount,
     queryFn: notificationsApi.getUnreadCount,
+    enabled: isAuthenticated,
     // Polling could be enabled here for real-time-ish updates
     // refetchInterval: 30000
   });
@@ -54,9 +67,12 @@ export function useNotifications(page = 1, limit = 10) {
     },
   });
 
-  const markAsRead = useCallback((id: string) => {
-    markAsReadMutation.mutate(id);
-  }, [markAsReadMutation]);
+  const markAsRead = useCallback(
+    (id: string) => {
+      markAsReadMutation.mutate(id);
+    },
+    [markAsReadMutation],
+  );
 
   const markAllAsRead = useCallback(() => {
     markAllAsReadMutation.mutate();
@@ -68,6 +84,6 @@ export function useNotifications(page = 1, limit = 10) {
     unreadCount: unreadCountData?.count || 0,
     markAsRead,
     markAllAsRead,
-    isLoading: markAsReadMutation.isPending || markAllAsReadMutation.isPending
+    isLoading: markAsReadMutation.isPending || markAllAsReadMutation.isPending,
   };
 }

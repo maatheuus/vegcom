@@ -8,6 +8,8 @@ const PUBLIC_ROUTES = [
   "/logout",
   "/forgot-password",
   "/community",
+  "/community/:id/",
+  "/community/:id/:slug",
   "/recipes",
   "/curiosities",
 ];
@@ -16,7 +18,17 @@ const AUTH_REDIRECT_ROUTES = ["/login", "/signup"];
 function isPublicRoute(pathname: string): boolean {
   if (PUBLIC_ROUTES.includes(pathname)) return true;
   if (pathname.startsWith("/recipes/")) return true;
-  return false;
+
+  return PUBLIC_ROUTES.some((route) => {
+    if (!route.includes(":")) return false;
+
+    const pattern = route
+      .replace(/\/$/, "")
+      .replace(/\//g, "\\/")
+      .replace(/:[^/]+/g, "[^/]+");
+
+    return new RegExp(`^${pattern}/?$`).test(pathname);
+  });
 }
 
 export async function middleware(request: NextRequest) {

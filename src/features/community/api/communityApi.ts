@@ -4,23 +4,32 @@
  */
 
 import { mockPosts, type Post, type PostComment } from "@/entities/post";
-import { mockDelay, generateMockId } from "@/shared/api/mock";
-import type { CreatePostData, UpdatePostData, CreateCommentData } from "../types";
+import type { PostCardDataProps } from "@/shared";
+import { generateMockId, mockDelay } from "@/shared/api/mock";
+import { mockPostCardData } from "../components/mockData";
+import type {
+  CreateCommentData,
+  CreatePostData,
+  UpdatePostData,
+} from "../types";
 
 /**
  * Get all posts
  */
-export const getPosts = async (): Promise<Post[]> => {
+export const getPosts = async (): Promise<PostCardDataProps[]> => {
   await mockDelay(800);
-  return mockPosts;
+  return mockPostCardData;
 };
 
 /**
  * Get post by ID
  */
-export const getPostById = async (id: string): Promise<Post | null> => {
+export const getPostById = async (
+  id: string,
+): Promise<PostCardDataProps | null> => {
   await mockDelay(600);
-  const post = mockPosts.find((p) => p.id === id);
+  const post = mockPostCardData.find((p) => p.id === Number(id));
+  console.log("post:", mockPostCardData, post, id);
   return post || null;
 };
 

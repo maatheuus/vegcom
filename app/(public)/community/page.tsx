@@ -1,7 +1,7 @@
 import CommunityLayout from "@/features/community/components/CommunityLayout";
 import Layout from "@/shared/ui/Layout/";
 
-export default function Page() {
+export default async function Page() {
   return (
     <Layout.Default
       className="hidden-scrollbar overflow-hidden"

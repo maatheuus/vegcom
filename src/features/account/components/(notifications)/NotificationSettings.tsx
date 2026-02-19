@@ -1,8 +1,8 @@
 "use client";
 
-import { useGetUser } from "@/features/account/api/queries/getAuthApiClient";
 import AccountLayout from "@/features/account/components/AccountLayout";
 import Header from "@/features/account/components/Header";
+import { useGetUser } from "@/features/auth/api/queries/getAuthApiClient";
 import Button from "@/shared/ui/Button";
 import {
   Form,
@@ -19,7 +19,6 @@ import clsx from "clsx";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-
 const notificationSettingsSchema = z.object({
   recipeLike: z.boolean().default(true),
   commentReply: z.boolean().default(true),

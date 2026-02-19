@@ -1,6 +1,6 @@
 "use client";
 
-import { useGetUser } from "@/features/account/api/queries/getAuthApiClient";
+import { useGetUser } from "@/features/auth/api/queries/getAuthApiClient";
 import {
   useCreateComment,
   useDeleteComment,
@@ -23,7 +23,6 @@ import Text from "@/shared/ui/Text";
 import { ChatTeardropTextIcon } from "@phosphor-icons/react";
 import clsx from "clsx";
 import { memo, useCallback, useState } from "react";
-
 import CommentCard from "./CommentCard";
 import CommentSkeleton from "./CommentSkeleton";
 import ReviewForm from "./ReviewForm";

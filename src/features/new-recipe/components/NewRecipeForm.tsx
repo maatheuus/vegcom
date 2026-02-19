@@ -1,6 +1,6 @@
 "use client";
 
-import { useGetUser } from "@/features/account/api/queries/getAuthApiClient";
+import { useGetUser } from "@/features/auth/api/queries/getAuthApiClient";
 import {
   defaultValues,
   newRecipeFormSchema,
@@ -35,7 +35,6 @@ import {
 } from "../utils";
 import FluctuantTip from "./FluctuantTip";
 import RenderStepContent from "./RenderStepContent";
-
 interface Props extends ComponentProps<"div"> {
   className?: string;
 }
@@ -50,10 +49,7 @@ export default function NewRecipeForm({}: Props) {
     resolver: zodResolver(newRecipeFormSchema),
     defaultValues: { ...defaultValues },
   });
-  const {
-    mutateAsync: createNewRecipe,
-    isPending,
-  } = useCreateNewRecipe();
+  const { mutateAsync: createNewRecipe, isPending } = useCreateNewRecipe();
 
   const { toast } = useToast();
 

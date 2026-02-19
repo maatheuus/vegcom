@@ -1,3 +1,4 @@
+import { getTokenFromCookies } from "@/shared/api/axios/axiosInstance";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import type { LoginCredentials, SignupData } from "../../types";
 import { authApi } from "../authApi";
@@ -11,6 +12,7 @@ export const useGetUser = () => {
   return useQuery({
     queryKey: authKeys.user,
     queryFn: authApi.getUser,
+    enabled: !!getTokenFromCookies(),
   });
 };
 

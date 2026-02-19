@@ -39,7 +39,7 @@ export default function Tabs({
   return (
     <Row
       className={clsx(
-        "w-full justify-between border-b border-b-black/10 px-4 py-2",
+        "w-full items-center justify-between border-b border-b-black/10 px-4 py-2",
         className,
       )}
       {...props}

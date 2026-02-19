@@ -31,6 +31,8 @@ export const mockExploreData: DataRecipeCard[] = [
 
 export const mockPostCardData: PostCardDataProps[] = [
   {
+    id: 1,
+    slug: "como-melhorar-sua-produtividade-com-typescript",
     user: {
       name: "João Silva",
       urlImage: "https://example.com/users/joao.jpg",
@@ -114,29 +116,8 @@ export const mockPostCardData: PostCardDataProps[] = [
     postTags: ["typescript", "produtividade", "desenvolvimento"],
   },
   {
-    user: {
-      name: "Ana Costa",
-      urlImage: "https://example.com/users/ana.jpg",
-    },
-    postTitle: "Entendendo React Hooks com exemplos práticos",
-    postContent: {
-      postResources: {
-        images: [],
-        links: [],
-        content:
-          "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.",
-      },
-    },
-    comments: {
-      haveComments: false,
-      commentsNumber: 0,
-      comments: [],
-    },
-    postLikes: 786,
-    postDate: "2025-04-28",
-    postTags: ["react", "hooks", "frontend"],
-  },
-  {
+    id: 2,
+    slug: "como-melhorar-sua-produtividade-com-typescript",
     user: {
       name: "João Silva",
       urlImage: "https://example.com/users/joao.jpg",
@@ -220,6 +201,8 @@ export const mockPostCardData: PostCardDataProps[] = [
     postTags: ["typescript", "produtividade", "desenvolvimento"],
   },
   {
+    id: 3,
+    slug: "como-melhorar-sua-produtividade-com-typescript",
     user: {
       name: "João Silva",
       urlImage: "https://example.com/users/joao.jpg",
@@ -303,6 +286,8 @@ export const mockPostCardData: PostCardDataProps[] = [
     postTags: ["typescript", "produtividade", "desenvolvimento"],
   },
   {
+    id: 4,
+    slug: "como-melhorar-sua-produtividade-com-typescript",
     user: {
       name: "João Silva",
       urlImage: "https://example.com/users/joao.jpg",
@@ -386,6 +371,8 @@ export const mockPostCardData: PostCardDataProps[] = [
     postTags: ["typescript", "produtividade", "desenvolvimento"],
   },
   {
+    id: 5,
+    slug: "como-melhorar-sua-produtividade-com-typescript",
     user: {
       name: "João Silva",
       urlImage: "https://example.com/users/joao.jpg",
@@ -469,172 +456,8 @@ export const mockPostCardData: PostCardDataProps[] = [
     postTags: ["typescript", "produtividade", "desenvolvimento"],
   },
   {
-    user: {
-      name: "João Silva",
-      urlImage: "https://example.com/users/joao.jpg",
-    },
-    postTitle: "Como melhorar sua produtividade com TypeScript",
-    postContent: {
-      postResources: {
-        images: [
-          {
-            src: "https://picsum.photos/seed/picsum/200/300",
-            alt: "Image from posts",
-            title: "Image from posts",
-          },
-          {
-            src: "https://picsum.photos/seed/picsum/200/300",
-            alt: "Image from posts",
-            title: "Image from posts",
-          },
-          {
-            src: "https://picsum.photos/seed/picsum/200/300",
-            alt: "Image from posts",
-            title: "Image from posts",
-          },
-        ],
-        links: [
-          "https://medium.com/artigo-produtividade-ts",
-          "https://medium.com/artigo-produtividade-ts",
-        ],
-        content:
-          "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.",
-      },
-    },
-    comments: {
-      haveComments: true,
-      commentsNumber: 2,
-      comments: [
-        {
-          user: {
-            name: "Maria Oliveira",
-            urlImage: "https://example.com/users/maria.jpg",
-          },
-          commentContent: "Excelente artigo, aprendi bastante!",
-          commentDate: "2025-05-01",
-        },
-        {
-          user: {
-            name: "Maria Oliveira",
-            urlImage: "https://example.com/users/maria.jpg",
-          },
-          commentContent: "Excelente artigo, aprendi bastante!",
-          commentDate: "2025-05-01",
-        },
-        {
-          user: {
-            name: "Maria Oliveira",
-            urlImage: "https://example.com/users/maria.jpg",
-          },
-          commentContent: "Excelente artigo, aprendi bastante!",
-          commentDate: "2025-05-01",
-        },
-        {
-          user: {
-            name: "Maria Oliveira",
-            urlImage: "https://example.com/users/maria.jpg",
-          },
-          commentContent: "Excelente artigo, aprendi bastante!",
-          commentDate: "2025-05-01",
-        },
-        {
-          user: {
-            name: "Carlos Souza",
-            urlImage: "https://example.com/users/carlos.jpg",
-          },
-          commentContent: "Gostei das dicas de produtividade!",
-          commentDate: "2025-05-02",
-        },
-      ],
-    },
-    postLikes: 1345,
-    postDate: "2025-05-12",
-    postTags: ["typescript", "produtividade", "desenvolvimento"],
-  },
-  {
-    user: {
-      name: "João Silva",
-      urlImage: "https://example.com/users/joao.jpg",
-    },
-    postTitle: "Como melhorar sua produtividade com TypeScript",
-    postContent: {
-      postResources: {
-        images: [
-          {
-            src: "https://picsum.photos/seed/picsum/200/300",
-            alt: "Image from posts",
-            title: "Image from posts",
-          },
-          {
-            src: "https://picsum.photos/seed/picsum/200/300",
-            alt: "Image from posts",
-            title: "Image from posts",
-          },
-          {
-            src: "https://picsum.photos/seed/picsum/200/300",
-            alt: "Image from posts",
-            title: "Image from posts",
-          },
-        ],
-        links: [
-          "https://medium.com/artigo-produtividade-ts",
-          "https://medium.com/artigo-produtividade-ts",
-        ],
-        content:
-          "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.",
-      },
-    },
-    comments: {
-      haveComments: true,
-      commentsNumber: 2,
-      comments: [
-        {
-          user: {
-            name: "Maria Oliveira",
-            urlImage: "https://example.com/users/maria.jpg",
-          },
-          commentContent: "Excelente artigo, aprendi bastante!",
-          commentDate: "2025-05-01",
-        },
-        {
-          user: {
-            name: "Maria Oliveira",
-            urlImage: "https://example.com/users/maria.jpg",
-          },
-          commentContent: "Excelente artigo, aprendi bastante!",
-          commentDate: "2025-05-01",
-        },
-        {
-          user: {
-            name: "Maria Oliveira",
-            urlImage: "https://example.com/users/maria.jpg",
-          },
-          commentContent: "Excelente artigo, aprendi bastante!",
-          commentDate: "2025-05-01",
-        },
-        {
-          user: {
-            name: "Maria Oliveira",
-            urlImage: "https://example.com/users/maria.jpg",
-          },
-          commentContent: "Excelente artigo, aprendi bastante!",
-          commentDate: "2025-05-01",
-        },
-        {
-          user: {
-            name: "Carlos Souza",
-            urlImage: "https://example.com/users/carlos.jpg",
-          },
-          commentContent: "Gostei das dicas de produtividade!",
-          commentDate: "2025-05-02",
-        },
-      ],
-    },
-    postLikes: 1345,
-    postDate: "2025-05-12",
-    postTags: ["typescript", "produtividade", "desenvolvimento"],
-  },
-  {
+    id: 6,
+    slug: "como-melhorar-sua-produtividade-com-typescript",
     user: {
       name: "João Silva",
       urlImage: "https://example.com/users/joao.jpg",

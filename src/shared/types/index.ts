@@ -30,7 +30,8 @@ export interface PostComment {
 }
 
 export interface PostCardDataProps {
-  id?: string;
+  id?: string | number;
+  slug?: string;
   user: UserData;
   postTitle: string;
   postContent: {

@@ -5,7 +5,7 @@ import axios from "axios";
  * Gets the authentication token from cookies
  * This works on client-side by reading document.cookie
  */
-function getTokenFromCookies(): string | null {
+export function getTokenFromCookies(): string | null {
   if (typeof window === "undefined") return null;
 
   const cookies = document.cookie.split("; ");

@@ -19,6 +19,7 @@ interface Props extends HTMLAttributes<HTMLDivElement> {
   editor: Editor | null;
   isImageLimitReached?: boolean;
   handleSubmit?: () => void;
+  disabled?: boolean;
 }
 
 export default function PostComposerActions({
@@ -29,10 +30,11 @@ export default function PostComposerActions({
   postTitleInputRef,
   imageInputRef,
   isImageLimitReached,
+  disabled,
   ...props
 }: Props) {
   const handleImageClick = () => {
-    if (!isImageLimitReached) {
+    if (!isImageLimitReached && !disabled) {
       imageInputRef.current?.click();
     }
   };
@@ -50,11 +52,11 @@ export default function PostComposerActions({
           variant="text"
           className={clsx(
             "p-0",
-            isImageLimitReached
+            isImageLimitReached || disabled
               ? "cursor-not-allowed text-gray-400 opacity-50"
               : "text-green-200 hover:text-green-500",
           )}
-          disabled={isImageLimitReached}
+          disabled={isImageLimitReached || disabled}
           leftIcon={<ImageIcon size={24} className="text-current" />}
           onClick={handleImageClick}
         />
@@ -63,7 +65,13 @@ export default function PostComposerActions({
           <PopoverTrigger asChild>
             <Button.Icon
               variant="text"
-              className="p-0 text-green-200 hover:text-green-500"
+              disabled={disabled}
+              className={clsx(
+                "p-0",
+                disabled
+                  ? "cursor-not-allowed text-gray-400 opacity-50"
+                  : "text-green-200 hover:text-green-500",
+              )}
               icon={<SmileyIcon size={24} className="text-current" />}
             />
           </PopoverTrigger>
@@ -98,7 +106,11 @@ export default function PostComposerActions({
       <Button.Icon
         variant="filled"
         rightIcon={<PaperPlaneTiltIcon size={24} />}
-        disabled={editor?.isEmpty || postTitleInputRef?.current?.value === ""}
+        disabled={
+          disabled ||
+          editor?.isEmpty ||
+          postTitleInputRef?.current?.value === ""
+        }
         className="rounded-full"
         title="Enviar mensagem"
         onClick={handleSubmit}
