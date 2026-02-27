@@ -52,7 +52,7 @@ export default function EmptyState({
       )}
       {...props}
     >
-      <div className="mb-1 flex h-16 w-16 items-center justify-center rounded-full bg-green-50">
+      <div className="flex h-fit w-fit items-center justify-center">
         {content.icon}
       </div>
       <Text
@@ -65,7 +65,7 @@ export default function EmptyState({
       <Text
         type={Text.Type.BodyFour}
         weight={Text.Weight.Normal}
-        className="font-allan max-w-xs text-black"
+        className="font-allan text-black-100 max-w-xs"
       >
         {content.description}
       </Text>

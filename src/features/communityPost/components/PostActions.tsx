@@ -16,12 +16,14 @@ interface Props {
   likesCount: number;
   commentsCount: number;
   post: PostCardDataProps;
+  hasHTMLTags?: boolean;
 }
 
 export default function PostActions({
   likesCount,
   commentsCount,
   post,
+  hasHTMLTags = true,
 }: Props) {
   const { setIsCommentOpen, commentInputRef } = usePostInteraction();
   const { data: user } = useGetUser();
@@ -87,23 +89,25 @@ export default function PostActions({
             </Text>
           </Button.Icon>
 
-          <Button.Icon
-            variant="text"
-            onClick={handleCommentClick}
-            className="flex cursor-pointer items-center gap-x-1.5 rounded-full p-2 transition-colors hover:bg-green-100"
-            leftIcon={
-              <ChatCircleTextIcon size={20} className="text-green-500" />
-            }
-          >
-            <Text
-              as="span"
-              type={Text.Type.BodyFive}
-              weight={Text.Weight.Medium}
-              className="text-green-500"
+          {!hasHTMLTags && (
+            <Button.Icon
+              variant="text"
+              onClick={handleCommentClick}
+              className="flex cursor-pointer items-center gap-x-1.5 rounded-full p-2 transition-colors hover:bg-green-100"
+              leftIcon={
+                <ChatCircleTextIcon size={20} className="text-green-500" />
+              }
             >
-              {commentsCount || 0} Comentários
-            </Text>
-          </Button.Icon>
+              <Text
+                as="span"
+                type={Text.Type.BodyFive}
+                weight={Text.Weight.Medium}
+                className="text-green-500"
+              >
+                {commentsCount || 0} Comentários
+              </Text>
+            </Button.Icon>
+          )}
         </div>
 
         <Button.Icon

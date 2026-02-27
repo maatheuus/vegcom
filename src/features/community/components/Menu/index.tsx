@@ -140,14 +140,18 @@ export default function Menu() {
               </Row>
 
               <Row className="desktop:flex hidden items-center gap-x-3">
-                <Link href="/account/subscription" className="contents">
-                  <Row
-                    className={`${baseButtonClasses} ${isPremium ? "p-2" : "px-2 py-1"} items-center justify-center rounded-lg bg-green-200 text-green-50`}
-                  >
-                    <PlantIcon size={20} className="size-5" />
-                    {!isPremium && <span className={textClasses}>Upgrade</span>}
-                  </Row>
-                </Link>
+                {isLoggedIn && (
+                  <Link href="/account/subscription" className="contents">
+                    <Row
+                      className={`${baseButtonClasses} ${isPremium ? "p-2" : "px-2 py-1"} items-center justify-center rounded-lg bg-green-200 text-green-50`}
+                    >
+                      <PlantIcon size={20} className="size-5" />
+                      {!isPremium && (
+                        <span className={textClasses}>Upgrade</span>
+                      )}
+                    </Row>
+                  </Link>
+                )}
 
                 <DropdownMenu>
                   <DropdownMenuTrigger className="flex cursor-pointer items-center gap-x-2 rounded-lg border-0 bg-green-100 p-2 outline-none">
@@ -213,14 +217,18 @@ export default function Menu() {
               </Row>
 
               <div className="desktop:hidden flex items-center gap-x-2">
-                <Link href="/account/subscription" className="contents">
-                  <Row
-                    className={`${baseButtonClasses} ${isPremium ? "p-2" : "px-2 py-1"} items-center justify-center rounded-lg bg-green-200 text-green-50`}
-                  >
-                    <PlantIcon size={20} className="size-5" />
-                    {!isPremium && <span className={textClasses}>Upgrade</span>}
-                  </Row>
-                </Link>
+                {isLoggedIn && (
+                  <Link href="/account/subscription" className="contents">
+                    <Row
+                      className={`${baseButtonClasses} ${isPremium ? "p-2" : "px-2 py-1"} items-center justify-center rounded-lg bg-green-200 text-green-50`}
+                    >
+                      <PlantIcon size={20} className="size-5" />
+                      {!isPremium && (
+                        <span className={textClasses}>Upgrade</span>
+                      )}
+                    </Row>
+                  </Link>
+                )}
 
                 {isLoggedIn && <NotificationPopup />}
 

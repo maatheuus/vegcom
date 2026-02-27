@@ -38,6 +38,7 @@ interface Props extends React.HTMLAttributes<HTMLDivElement> {
 export default function PostCardRoot({
   className,
   data,
+  variant,
   children,
   ...props
 }: Props) {
@@ -126,7 +127,10 @@ export default function PostCardRoot({
         </Row>
 
         <DropdownMenu>
-          <DropdownMenuTrigger asChild>
+          <DropdownMenuTrigger
+            asChild
+            className={variant === "announcement" ? "hidden" : ""}
+          >
             <Button.Icon
               variant="text"
               onClick={(e) => e.stopPropagation()}
@@ -160,35 +164,41 @@ export default function PostCardRoot({
       {children}
 
       <Row className="items-baseline justify-between">
-        <Row className="mt-3 items-center gap-x-3 px-1">
-          {data.comments.comments && data.comments.comments.length > 0 && (
+        <Row className="mt-3 items-center gap-x-3">
+          {data.comments.comments &&
+            data.comments.comments.length > 0 &&
+            variant !== "announcement" && (
+              <>
+                <AvatarGroup
+                  comments={data.comments.comments}
+                  className="max-md:hidden"
+                />
+                <span className="size-0.5 rounded-full bg-green-500 max-md:hidden"></span>
+              </>
+            )}
+
+          {variant !== "announcement" && (
             <>
-              <AvatarGroup
-                comments={data.comments.comments}
-                className="max-md:hidden"
-              />
-              <span className="size-0.5 rounded-full bg-green-500 max-md:hidden"></span>
+              <Button.Icon
+                variant="text"
+                className="cursor-pointer rounded-full !p-1 transition-colors hover:bg-green-100"
+                leftIcon={
+                  <ChatCircleTextIcon size={18} className="text-green-500" />
+                }
+              >
+                <Text
+                  as="span"
+                  type={Text.Type.BodyFive}
+                  weight={Text.Weight.Medium}
+                  className="text-green-500"
+                >
+                  {data.comments.commentsNumber || 0}
+                </Text>
+              </Button.Icon>
+              <span className="size-0.5 rounded-full bg-green-500"></span>
             </>
           )}
 
-          <Button.Icon
-            variant="text"
-            className="cursor-pointer rounded-full !p-1 transition-colors hover:bg-green-100"
-            leftIcon={
-              <ChatCircleTextIcon size={18} className="text-green-500" />
-            }
-          >
-            <Text
-              as="span"
-              type={Text.Type.BodyFive}
-              weight={Text.Weight.Medium}
-              className="text-green-500"
-            >
-              {data.comments.commentsNumber || 0}
-            </Text>
-          </Button.Icon>
-
-          <span className="size-0.5 rounded-full bg-green-500"></span>
           <Button.Icon
             onClick={handleLike}
             className="flex cursor-pointer items-center gap-x-1.5 rounded-full p-1 hover:bg-green-100"

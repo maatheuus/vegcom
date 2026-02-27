@@ -12,13 +12,20 @@ export default function PostCardAnnouncement({ data }: Props) {
     <PostCardRoot data={data} variant="announcement">
       <Col className="h-fit w-full gap-y-1 text-green-500">
         <Text
-          as="p"
-          type={Text.Type.BodyFour}
+          as="h2"
+          type={Text.Type.BodyTwo}
           weight={Text.Weight.Medium}
-          className="font-maitree text-base"
+          className="font-lora font-semibold italic"
         >
-          {data.postContent.postResources?.content}
+          {data.postTitle}
         </Text>
+
+        <div
+          className="font-maitree text-base break-words text-green-500"
+          dangerouslySetInnerHTML={{
+            __html: data.postContent.postResources?.content,
+          }}
+        />
       </Col>
     </PostCardRoot>
   );

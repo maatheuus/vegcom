@@ -18,35 +18,38 @@ import {
   useTransition,
   type HtmlHTMLAttributes,
 } from "react";
+import type { CommunityPostType } from "../../types";
 import PostComposer from "../Post/Composer";
 import MobilePostComposer from "../Post/Composer/MobileComposer";
 import PostList from "../Post/List";
-import { type Tab } from "../Tabs";
+import type { Tab } from "../Tabs";
 import Announcements from "../Tabs/Announcements";
 import Resources from "../Tabs/Resources";
 import TabsClient from "../Tabs/TabsClient";
+import CommunitySelectedTab from "./CommunitySelectedTab";
+
 interface Props extends HtmlHTMLAttributes<HTMLDivElement> {
   className?: string;
 }
 
-const tabs: Tab[] = [
+export const tabs: Tab[] = [
   {
-    key: "posts",
+    key: "POST",
     label: "Posts",
     icon: <ScrollIcon size={24} className="text-green-200" />,
-    component: <PostList />,
+    component: PostList,
   },
   {
-    key: "resources",
+    key: "RESOURCE",
     label: "Recursos",
     icon: <PaperclipIcon size={24} className="text-green-200" />,
-    component: <Resources />,
+    component: Resources,
   },
   {
-    key: "announcements",
-    label: "Anúncios",
+    key: "ANNOUNCEMENT",
+    label: "Comunicados",
     icon: <MegaphoneIcon size={24} className="-scale-x-100 text-green-200" />,
-    component: <Announcements />,
+    component: Announcements,
   },
 ];
 
@@ -55,8 +58,8 @@ export default function CommunityLayout({ className, ...props }: Props) {
   const { data } = useGetUser();
   const isAuthenticated = !!data?.id;
 
-  const [selectedTab, setSelectedTab] = useState(() => {
-    return "posts";
+  const [selectedTab, setSelectedTab] = useState<CommunityPostType>(() => {
+    return "POST";
   });
 
   const [showScrollTop, setShowScrollTop] = useState(false);
@@ -125,7 +128,7 @@ export default function CommunityLayout({ className, ...props }: Props) {
               isPending && "opacity-50",
             )}
           >
-            {tabs.find((tab) => tab.key === selectedTab)?.component}
+            <CommunitySelectedTab selectedTab={selectedTab} tabs={tabs} />
           </div>
         </Col>
       </Col>

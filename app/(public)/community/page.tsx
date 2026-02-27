@@ -8,7 +8,10 @@ export default async function Page() {
       gridClassName="overflow-auto"
     >
       <section className="hidden-scrollbar container mx-auto overflow-scroll scroll-auto">
-        <CommunityLayout className="col-start-1 col-end-16" />
+        <CommunityLayout
+          id="communityLayout"
+          className="col-start-1 col-end-16"
+        />
       </section>
     </Layout.Default>
   );

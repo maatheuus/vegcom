@@ -2,20 +2,22 @@ import Button from "@/shared/ui/Button";
 import Row from "@/shared/ui/Layout/Helpers/Row";
 import clsx from "clsx";
 import Link from "next/link";
-import { type JSX } from "react";
+import { type ElementType, type JSX } from "react";
+import type { CommunityPostType } from "../../types";
 
 export interface Tab {
-  key: string;
+  key: CommunityPostType;
   label: string;
   icon: JSX.Element;
-  component?: JSX.Element;
+  component?: ElementType<any>;
+  showNotification?: boolean;
 }
 
 interface Props {
   className?: string;
   tabs: Tab[];
-  selectedTab: string;
-  setSelectedTab: (tab: string) => void;
+  selectedTab: CommunityPostType;
+  setSelectedTab: (tab: CommunityPostType) => void;
   hasLink?: boolean;
   isChatLayout?: boolean;
   isTransitioning?: boolean;
@@ -31,7 +33,7 @@ export default function Tabs({
   isTransitioning = false,
   ...props
 }: Props) {
-  const handleTabClick = (tabKey: string) => {
+  const handleTabClick = (tabKey: CommunityPostType) => {
     if (isTransitioning || tabKey === selectedTab) return;
     setSelectedTab(tabKey);
   };
@@ -62,7 +64,12 @@ export default function Tabs({
               isTransitioning && "pointer-events-none opacity-70",
             )}
           >
-            {tab.icon}
+            <span className="relative">
+              {tab.icon}
+              {tab.showNotification && (
+                <span className="after:absolute after:top-1/2 after:-right-1 after:h-1.5 after:w-1.5 after:-translate-y-1/2 after:rounded-full after:bg-red-500 after:content-['']" />
+              )}
+            </span>
             <span
               className={clsx(
                 "font-lora hidden italic group-hover:text-green-500 md:inline",

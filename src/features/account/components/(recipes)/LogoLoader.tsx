@@ -14,7 +14,6 @@ export default function LogoLoader({
   ...props
 }: Props) {
   const svgRef = useRef<SVGSVGElement | null>(null);
-  const revealTl = useRef<GSAPTimeline | null>(null);
   const loopTl = useRef<GSAPTimeline | null>(null);
   const floatTween = useRef<gsap.core.Tween | null>(null);
   const hoverTween = useRef<gsap.core.Tween | null>(null);
@@ -30,6 +29,7 @@ export default function LogoLoader({
 
     const paths = Array.from(svg.querySelectorAll<SVGPathElement>("path"));
 
+    // Configuração inicial das propriedades CSS do SVG
     const pathLengths = paths.map((p) => {
       let len = 0;
       try {
@@ -50,100 +50,82 @@ export default function LogoLoader({
       return len;
     });
 
-    revealTl.current?.kill();
-    revealTl.current = gsap.timeline({ defaults: { ease: "power2.out" } });
+    // Animação contínua de flutuação (roda independente do desenho)
+    floatTween.current?.kill();
+    floatTween.current = gsap.to(svg, {
+      y: -6,
+      rotation: 0.15,
+      yoyo: true,
+      repeat: -1,
+      duration: 3.6,
+      ease: "sine.inOut",
+    });
+
+    // Criação da Timeline Infinita
+    loopTl.current?.kill();
+    loopTl.current = gsap.timeline({
+      repeat: -1,
+      repeatDelay: 0.5, // Pausa de meio segundo antes de recomeçar o desenho
+      defaults: { ease: "power2.out" },
+    });
 
     if (reduceMotion) {
-      revealTl.current
+      loopTl.current
         .to(paths, { strokeDashoffset: 0, duration: 0.22, stagger: 0.01 })
         .to(
           paths,
           { strokeOpacity: 0, fillOpacity: 1, duration: 0.18, stagger: 0.01 },
-          "+=0"
-        );
-    } else {
-      revealTl.current
-        .to(paths, { strokeDashoffset: 0, duration: 0.9, stagger: 0.035 })
-        .to(
-          paths,
-          { strokeOpacity: 0, duration: 0.35, stagger: 0.02 },
-          "-=0.25"
+          "+=0",
         )
-        .to(paths, { fillOpacity: 1, duration: 0.6, stagger: 0.035 }, "-=0.35");
-    }
-
-    const createLoop = () => {
-      loopTl.current?.kill();
-      loopTl.current = gsap.timeline({ repeat: -1, repeatDelay: 0.6 });
-
-      floatTween.current?.kill();
-      floatTween.current = gsap.to(svg, {
-        y: -6,
-        rotation: 0.15,
-        yoyo: true,
-        repeat: -1,
-        duration: 3.6,
-        ease: "sine.inOut",
+        .to(paths, { fillOpacity: 0, duration: 0.3 }, "+=1"); // Fade out para recomeçar
+    } else {
+      // 1. Reseta os valores para invisível no início do loop
+      loopTl.current.set(paths, {
+        strokeDashoffset: (i) => pathLengths[i] || 0,
+        strokeOpacity: 1,
+        fillOpacity: 0,
       });
 
+      // 2. Animação de ENTRADA: desenha as linhas
+      loopTl.current.to(paths, {
+        strokeDashoffset: 0,
+        duration: 0.9,
+        stagger: 0.035,
+      });
+
+      // 3. Some com a borda e preenche com cor
       loopTl.current.to(
         paths,
-        {
-          strokeDashoffset: (i) => {
-            return pathLengths[i] || 0;
-          },
-          duration: 0,
-        },
-        0
+        { strokeOpacity: 0, duration: 0.35, stagger: 0.02 },
+        "-=0.25",
       );
-
       loopTl.current.to(
         paths,
-        {
-          strokeOpacity: 1,
-          duration: 0.08,
-        },
-        0
+        { fillOpacity: 1, duration: 0.6, stagger: 0.035 },
+        "-=0.35",
       );
 
-      loopTl.current.to(
-        paths,
-        {
-          strokeDashoffset: 0,
-          duration: 0.9,
-          ease: "power1.inOut",
-          stagger: 0.02,
-        },
-        0.05
-      );
-
-      loopTl.current.to(
-        paths,
-        { strokeOpacity: 0, duration: 0.35, ease: "power1.out", stagger: 0.02 },
-        0.8
-      );
-
+      // 4. Aquele pulso suave no SVG inteiro (opcional, dá um toque premium)
       loopTl.current.to(
         svg,
-        {
-          scale: 1.03,
-          transformOrigin: "50% 50%",
-          duration: 0.35,
-          ease: "power2.out",
-        },
-        0.95
+        { scale: 1.03, transformOrigin: "50% 50%", duration: 0.35 },
+        "-=0.2",
       );
-      loopTl.current.to(
-        svg,
-        { scale: 1, duration: 0.6, ease: "elastic.out(1, 0.6)" },
-        1.3
-      );
-    };
+      loopTl.current.to(svg, {
+        scale: 1,
+        duration: 0.6,
+        ease: "elastic.out(1, 0.6)",
+      });
 
-    if (loading && !reduceMotion) {
-      revealTl.current.eventCallback("onComplete", createLoop);
+      // 5. Apaga tudo suavemente para que o próximo loop faça sentido visual
+      loopTl.current.to(
+        paths,
+        { fillOpacity: 0, duration: 0.5 },
+        "+=0.8", // A logo fica preenchida por 0.8s antes de apagar e reiniciar
+      );
     }
 
+    // Interações de Hover
     const onEnter = () => {
       if (hoverTween.current) hoverTween.current.kill();
       hoverTween.current = gsap.to(svg, {
@@ -166,7 +148,6 @@ export default function LogoLoader({
     svg.addEventListener("mouseleave", onLeave);
 
     return () => {
-      revealTl.current?.kill();
       loopTl.current?.kill();
       floatTween.current?.kill();
       hoverTween.current?.kill();
@@ -184,10 +165,11 @@ export default function LogoLoader({
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
       role="img"
-      aria-label="Logo"
+      aria-label="Logo Loading"
       {...props}
       style={{ display: "block", willChange: "transform, opacity" }}
     >
+      {/* SEUS PATHS AQUI (mantive os mesmos do seu código original) */}
       <path
         d="M41.5831 55.5468C41.5382 57.1877 41.7994 58.7788 41.7496 60.3816C41.734 60.8835 41.5411 61.2747 41.1837 61.6182C40.2826 62.4841 38.6669 61.7256 38.3976 60.8429C38.2213 60.2649 38.0986 59.6891 38.101 59.0825C38.1094 56.9876 38.2758 54.8952 38.1965 52.7988C38.1765 52.2691 38.1849 52.27 37.6410 52.2733C36.7819 52.2784 35.9228 52.287 35.0637 52.2845C33.5834 52.2803 32.1427 51.9929 30.7126 51.6479C27.9626 50.9844 25.4547 49.7637 23.0890 48.2461C21.4854 47.2174 20.1742 45.8782 19.0570 44.3264C17.5108 42.1786 16.2814 39.8689 15.3353 37.4052C14.7781 35.9541 14.4531 34.4443 14.2809 32.8995C14.0690 30.9974 14.1848 29.1091 14.4999 27.2289C14.5555 26.8970 14.6457 26.5693 14.7413 26.2460C14.9829 25.4277 15.5946 24.9590 16.3647 24.7555C18.8513 24.0984 21.3606 24.1151 23.8573 24.6912C25.8585 25.1530 27.7415 25.9092 29.4816 27.0303C31.7751 28.5080 33.9919 30.0710 35.8032 32.1396C37.3831 33.9440 38.6821 35.9244 39.5480 38.1726C39.5898 38.2811 39.6134 38.3986 39.8020 38.4681C40.0400 38.0081 40.2923 37.5467 40.5212 37.0738C41.4122 35.2325 42.5644 33.5829 44.0039 32.1214C45.2473 30.8590 46.5080 29.6205 47.9091 28.5329C49.2438 27.4968 50.7187 26.7025 52.2765 26.0620C53.9878 25.3583 55.7455 24.8043 57.5737 24.4893C58.9019 24.2604 60.2491 24.1624 61.5791 24.3069C63.4876 24.5144 64.8812 25.3728 65.1728 27.8347C65.3632 29.4422 65.4495 31.0583 65.3072 32.6632C65.1195 34.78 64.6595 36.8473 63.7682 38.8001C62.7764 40.9733 61.5344 43.0004 60.2 44.9736C59.5355 45.9564 58.6316 46.7102 57.6957 47.4148C56.1756 48.5592 54.5781 49.5921 52.8429 50.3793C51.7559 50.8724 50.6584 51.3669 49.4851 51.63C48.3692 51.8801 47.2455 52.1177 46.0950 52.1217C44.7184 52.1264 43.3355 52.2383 41.9734 51.9140C41.6473 51.8363 41.6577 52.0986 41.6527 52.3076C41.6271 53.3743 41.6058 54.4411 41.5831 55.5468ZM28.6742 41.9112C28.3967 41.6185 28.1284 41.3163 27.8399 41.0350C27.1508 40.3633 26.3841 39.7583 25.7716 39.0238C24.4797 37.4744 23.0166 36.0783 21.7815 34.4794C21.0979 33.5942 20.3501 32.7589 19.6575 31.8804C19.1707 31.2628 19.2676 30.9236 19.9694 30.5882C20.1214 30.5155 20.2886 30.4746 20.4407 30.4021C21.2077 30.0363 21.8065 30.2861 22.3555 30.8677C23.6054 32.1920 24.8657 33.5067 26.1380 34.8094C27.5835 36.2895 29.0649 37.7348 30.4972 39.2274C31.9832 40.776 33.3861 42.4048 34.9252 43.9023C35.9994 44.9475 37.0558 46.0028 37.9185 47.2359C37.9875 47.3346 38.0470 47.4720 38.2305 47.4473C38.4326 47.1588 38.3733 46.8247 38.3360 46.5130C38.2336 45.6585 38.2015 44.8018 38.1990 43.9432C38.1970 43.2459 38.0760 42.5703 37.8260 41.9226C37.2569 40.4485 36.5064 39.0612 35.6576 37.7368C33.5906 34.5119 30.7960 32.0155 27.5849 29.9874C24.9480 28.3218 22.0278 27.5626 18.9063 27.5941C18.2223 27.6010 18.0038 27.7588 17.82 28.4201C17.6870 28.8984 17.6816 29.3957 17.6485 29.8885C17.4927 32.2072 17.6613 34.4882 18.4345 36.6991C18.9011 38.0334 19.6016 39.2533 20.3171 40.4616C21.4664 42.4023 22.9325 44.0557 24.8477 45.2781C26.1641 46.1184 27.5166 46.8994 28.9159 47.5925C30.6271 48.4402 32.4149 49.0017 34.3578 48.8815C34.8004 48.8541 35.2412 48.7959 35.7356 48.5987C33.2548 46.4482 30.9647 44.2194 28.6742 41.9112ZM47.9982 33.0388C44.1093 36.3331 41.7782 40.3946 41.7740 45.6351C41.9514 45.6223 42.0275 45.5073 42.1191 45.4245C43.2849 44.3710 44.4605 43.3280 45.6110 42.2580C47.8219 40.2016 49.9165 38.0279 51.9997 35.8439C52.5194 35.2990 53.0284 34.7447 53.5838 34.2351C54.7436 33.1709 55.8133 32.0157 56.8963 30.8768C57.6640 30.0694 58.4564 29.4240 59.6537 29.5751C59.9713 29.6152 60.2683 29.6740 60.4298 30.0054C60.5938 30.3420 60.5235 30.6061 60.2898 30.8961C60.0303 31.2182 59.7908 31.5589 59.5394 31.8896C58.4121 33.3728 57.1915 34.7717 55.8737 36.0893C55.1012 36.8617 54.3532 37.6603 53.8545 38.6531C53.7737 38.8140 53.6959 39.0198 53.5244 39.0763C53.0710 39.2257 52.8102 39.6031 52.5279 39.9231C51.1671 41.4654 49.7466 42.9550 48.2402 44.3472C46.8853 45.5993 45.5006 46.8169 44.2288 48.1555C44.1278 48.2618 43.9652 48.3334 43.9817 48.5502C44.9765 48.8178 45.9759 49.0280 47.0151 48.8578C48.5317 48.6094 49.9380 48.0342 51.3123 47.3751C52.7477 46.6867 54.0356 45.7588 55.3224 44.8352C55.9025 44.4185 56.4723 43.9763 56.9885 43.4845C58.2777 42.2562 59.3368 40.8516 60.1433 39.2537C60.7833 37.9860 61.4193 36.7216 61.6668 35.3062C61.9546 33.6609 62.0896 32.0027 62.0024 30.3332C61.9596 29.5142 61.8526 28.7060 61.4221 27.9713C61.2215 27.6289 60.9807 27.5135 60.5904 27.5651C59.4024 27.7221 58.2396 28.0087 57.0684 28.2459C55.4972 28.5647 53.9599 29.0342 52.5430 29.7942C50.9105 30.6701 49.4170 31.7589 47.9982 33.0388Z"
         fill="#1C734A"

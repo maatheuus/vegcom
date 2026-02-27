@@ -1,5 +1,4 @@
-import { getPostById } from "@/features/community/api/communityApi";
-
+import { getPostById } from "@/features/community";
 import PostActions from "@/features/communityPost/components/PostActions";
 import PostComments from "@/features/communityPost/components/PostComments";
 import { PostInteractionProvider } from "@/features/communityPost/context/PostInteractionProvider";
@@ -22,6 +21,9 @@ interface Props {
 export default async function Page({ params }: Props) {
   const { id } = await params;
   const post = await getPostById(id);
+
+  const content = post?.postContent.postResources?.content;
+  const hasHTMLTags = /<[a-z][\s\S]*>/i.test(content || "");
 
   if (!post) {
     return notFound();
@@ -97,14 +99,23 @@ export default async function Page({ params }: Props) {
                 {post.postTitle}
               </Text>
 
-              <Text
-                as="p"
-                type={Text.Type.BodyFour}
-                weight={Text.Weight.Normal}
-                className="font-maitree mt-2 text-base whitespace-pre-wrap"
-              >
-                {post.postContent.postResources.content}
-              </Text>
+              {hasHTMLTags ? (
+                <div
+                  className="font-maitree text-base break-words text-green-500"
+                  dangerouslySetInnerHTML={{
+                    __html: post.postContent.postResources?.content,
+                  }}
+                />
+              ) : (
+                <Text
+                  as="p"
+                  type={Text.Type.BodyFour}
+                  weight={Text.Weight.Normal}
+                  className="font-maitree mt-2 text-base whitespace-pre-wrap"
+                >
+                  {post.postContent.postResources.content}
+                </Text>
+              )}
 
               {/* Images */}
               {post.postContent.postResources &&
@@ -132,11 +143,13 @@ export default async function Page({ params }: Props) {
               likesCount={post.postLikes || 0}
               commentsCount={post.comments.commentsNumber || 0}
               post={post}
+              hasHTMLTags={hasHTMLTags}
             />
           </Col>
           <PostComments
             comments={post.comments.comments}
             uniqueUsers={uniqueUsers}
+            hasHTMLTags={hasHTMLTags}
           />
         </section>
       </Layout.Default>

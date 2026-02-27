@@ -13,13 +13,17 @@ import ReplyButton from "./ReplyButton";
 interface PostCommentsProps {
   comments?: PostComment[];
   uniqueUsers: { name: string; urlImage?: string }[];
+  hasHTMLTags?: boolean;
 }
 
 export default function PostComments({
   comments,
   uniqueUsers,
+  hasHTMLTags,
 }: PostCommentsProps) {
   const { data: user } = useGetUser();
+
+  if (hasHTMLTags) return;
 
   return (
     <Col className="mt-6 w-full gap-y-6 pb-10 md:px-4">
