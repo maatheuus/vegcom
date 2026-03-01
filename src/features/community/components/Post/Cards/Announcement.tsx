@@ -8,6 +8,10 @@ interface Props {
 }
 
 export default function PostCardAnnouncement({ data }: Props) {
+  const isUserAdmin = data.user.role === "ADMIN";
+
+  if (!isUserAdmin) return null;
+
   return (
     <PostCardRoot data={data} variant="announcement">
       <Col className="h-fit w-full gap-y-1 text-green-500">

@@ -16,6 +16,9 @@ export default function PostCardImage({ data }: Props) {
   const [isOpen, setIsOpen] = useState(false);
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
 
+  const content = data.postContent.postResources?.content;
+  const contentHTML = data.postContent.postResources?.contentHTML;
+
   if (!images.length) return null;
 
   const openImage = (index: number) => {
@@ -36,14 +39,23 @@ export default function PostCardImage({ data }: Props) {
             {data.postTitle}
           </Text>
 
-          <Text
-            as="p"
-            type={Text.Type.BodyFour}
-            weight={Text.Weight.Normal}
-            className="font-maitree line-clamp-4 text-base md:line-clamp-6"
-          >
-            {data.postContent.postResources?.content}
-          </Text>
+          {contentHTML ? (
+            <div
+              className="font-maitree text-base break-words text-green-500"
+              dangerouslySetInnerHTML={{
+                __html: contentHTML,
+              }}
+            />
+          ) : (
+            <Text
+              as="p"
+              type={Text.Type.BodyFour}
+              weight={Text.Weight.Normal}
+              className="font-maitree mt-2 text-base whitespace-pre-wrap"
+            >
+              {content}
+            </Text>
+          )}
 
           <div className="mt-4 flex w-full gap-3 md:gap-4">
             {images.map((img, idx) => (

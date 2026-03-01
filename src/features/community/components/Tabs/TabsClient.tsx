@@ -31,12 +31,15 @@ export default function TabsClient({
     }
   }, [searchParams]);
 
+  const [hasCheckedAnnouncements, setHasCheckedAnnouncements] = useState(false);
+
   useEffect(() => {
     const checkUnreadAnnouncements = async () => {
-      if (selectedTab === "ANNOUNCEMENT") return;
+      if (selectedTab === "ANNOUNCEMENT" || hasCheckedAnnouncements) return;
 
       try {
-        const posts = await getPosts({ type: "ANNOUNCEMENT" });
+        const result = await getPosts({ type: "ANNOUNCEMENT" });
+        const posts = result.data;
         if (posts && posts.length > 0) {
           const latestPost = posts[0];
           const postDate = new Date(latestPost.postDate);
@@ -53,11 +56,13 @@ export default function TabsClient({
         }
       } catch (error) {
         console.error("Failed to fetch announcements:", error);
+      } finally {
+        setHasCheckedAnnouncements(true);
       }
     };
 
     checkUnreadAnnouncements();
-  }, [selectedTab]);
+  }, [selectedTab, hasCheckedAnnouncements]);
 
   const handleTabChange = (key: CommunityPostType) => {
     if (key === selectedTab) return;
@@ -87,7 +92,7 @@ export default function TabsClient({
     <Tabs
       tabs={tabsWithNotification}
       selectedTab={selectedTab}
-      setSelectedTab={handleTabChange}
+      setSelectedTab={handleTabChange as (tab: string) => void}
       isTransitioning={isPending}
       className="sticky -top-1 z-20 bg-green-50 pt-5 md:top-63"
     />

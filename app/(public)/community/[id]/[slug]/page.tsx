@@ -23,8 +23,7 @@ export default async function Page({ params }: Props) {
   const post = await getPostById(id);
 
   const content = post?.postContent.postResources?.content;
-  const hasHTMLTags = /<[a-z][\s\S]*>/i.test(content || "");
-
+  const contentHTML = post?.postContent.postResources?.contentHTML;
   if (!post) {
     return notFound();
   }
@@ -99,11 +98,11 @@ export default async function Page({ params }: Props) {
                 {post.postTitle}
               </Text>
 
-              {hasHTMLTags ? (
+              {contentHTML ? (
                 <div
                   className="font-maitree text-base break-words text-green-500"
                   dangerouslySetInnerHTML={{
-                    __html: post.postContent.postResources?.content,
+                    __html: contentHTML,
                   }}
                 />
               ) : (
@@ -113,7 +112,7 @@ export default async function Page({ params }: Props) {
                   weight={Text.Weight.Normal}
                   className="font-maitree mt-2 text-base whitespace-pre-wrap"
                 >
-                  {post.postContent.postResources.content}
+                  {content}
                 </Text>
               )}
 
@@ -143,13 +142,13 @@ export default async function Page({ params }: Props) {
               likesCount={post.postLikes || 0}
               commentsCount={post.comments.commentsNumber || 0}
               post={post}
-              hasHTMLTags={hasHTMLTags}
+              hasHTMLTags={!!contentHTML}
             />
           </Col>
           <PostComments
             comments={post.comments.comments}
             uniqueUsers={uniqueUsers}
-            hasHTMLTags={hasHTMLTags}
+            hasHTMLTags={!!contentHTML}
           />
         </section>
       </Layout.Default>

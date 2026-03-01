@@ -1,12 +1,12 @@
 "use client";
 
-import Tabs from "@/features/community/components/Tabs";
+import Tabs, { type ChatTab } from "@/features/community/components/Tabs";
 import { HistoryChatOutlinedIcon } from "@/shared/icons";
 import { ChatCircleIcon, HandWavingIcon } from "@phosphor-icons/react";
 import { usePathname, useRouter } from "next/navigation";
 import { useCallback, useEffect, useState } from "react";
 
-const tabs = [
+const tabs: ChatTab[] = [
   {
     key: "chat",
     label: "Chat",
@@ -28,11 +28,9 @@ export default function TabsLayout() {
   const router = useRouter();
   const pathname = usePathname();
 
-  // Determine active tab based on pathname
   const getActiveTab = () => {
     if (pathname.includes("/history")) return "history_chat";
     if (pathname.includes("/suggestions")) return "suggestions";
-    // Check strict match for root chat or chat with ID
     return "chat";
   };
 
@@ -55,7 +53,6 @@ export default function TabsLayout() {
 
       router.push(targetPath);
 
-      // Simple timeout to reset transition state after navigation starts
       setTimeout(() => {
         setIsTransitioning(false);
       }, 300);

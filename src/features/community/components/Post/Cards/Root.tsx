@@ -24,7 +24,7 @@ import {
   SparkleIcon,
 } from "@phosphor-icons/react";
 import clsx from "clsx";
-import { formatDistance, subDays } from "date-fns";
+import { formatDistance } from "date-fns";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { AvatarGroup } from "./AvatarGroup";
@@ -50,7 +50,7 @@ export default function PostCardRoot({
   const postUrl = `/community/${data.id}/${postSlug}`;
 
   const formattedPostDate = formatDistance(
-    subDays(new Date(data.postDate), 1),
+    new Date(data.postDate),
     new Date(),
     { addSuffix: true, includeSeconds: true, locale: dateFormatDistanceLocale },
   );

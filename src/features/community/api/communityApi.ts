@@ -6,11 +6,27 @@ import type {
   GetPostsParams,
 } from "../types";
 
+export interface PaginatedPosts {
+  data: PostCardDataProps[];
+  page: number;
+  limit: number;
+}
+
 export const getPosts = async (
   params?: GetPostsParams,
-): Promise<PostCardDataProps[]> => {
-  const { data } = await api.get<PostCardDataProps[]>("/community", { params });
-  return data;
+): Promise<PaginatedPosts> => {
+  const page = params?.page ?? 1;
+  const limit = params?.limit ?? 10;
+
+  const { data } = await api.get<PostCardDataProps[]>("/community", {
+    params: { ...params, page, limit },
+  });
+
+  return {
+    data: data ?? [],
+    page,
+    limit,
+  };
 };
 
 // export const getAnnouncements = async (
@@ -35,9 +51,15 @@ export const getPostById = async (
 };
 
 export const createPost = async (
-  payload: CreatePostData,
+  payload: CreatePostData | FormData,
 ): Promise<PostCardDataProps> => {
-  const { data } = await api.post<PostCardDataProps>("/community", payload);
+  const { data } = await api.post<PostCardDataProps>("/community", payload, {
+    headers:
+      payload instanceof FormData
+        ? { "Content-Type": "multipart/form-data" }
+        : undefined,
+  });
+
   return data;
 };
 

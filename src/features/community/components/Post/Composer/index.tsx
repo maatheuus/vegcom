@@ -1,3 +1,4 @@
+import { createPost } from "@/features/community/api/communityApi";
 import AuthenticatedBlocker from "@/shared/components/ui/AuthenticatedBlocker";
 import { usePostComposerEditor } from "@/shared/hooks/usePostComposerEditor";
 import { Input } from "@/shared/ui/Input";
@@ -9,6 +10,7 @@ import {
   useEffect,
   useRef,
   useState,
+  useTransition,
   type HTMLAttributes,
 } from "react";
 import type { PostImageAttachment } from "../Tiptap/Helpers/ImageContainer";
@@ -24,6 +26,7 @@ export default function PostComposer({ className, disabled, ...props }: Props) {
   const { editor } = usePostComposerEditor();
   const imageInputRef = useRef<HTMLInputElement | null>(null);
   const postTitleRef = useRef<HTMLInputElement | null>(null);
+  const [isTransitioning, startTransition] = useTransition();
 
   const [attachments, setAttachments] = useState<PostImageAttachment[]>([]);
 
@@ -87,17 +90,49 @@ export default function PostComposer({ className, disabled, ...props }: Props) {
     [editor],
   );
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     if (disabled || !editor) return;
 
-    const payload = {
-      title: postTitleRef.current?.value,
-      contentHTML: editor.getHTML(),
-      contentText: editor.getText(),
-      images: attachments.map((a) => a.file),
-    };
+    const title = postTitleRef.current?.value || "";
+    const type = attachments.length > 0 ? "RESOURCE" : "POST";
 
-    console.log("Enviando:", payload);
+    startTransition(async () => {
+      if (attachments.length > 0) {
+        const formData = new FormData();
+        formData.append("postTitle", title);
+        formData.append("type", type);
+        formData.append(
+          "postContent[postResources][content]",
+          editor.getText(),
+        );
+        formData.append(
+          "postContent[postResources][contentHTML]",
+          editor.getHTML(),
+        );
+
+        attachments.forEach((attachment) => {
+          formData.append("images", attachment.file);
+        });
+
+        await createPost(formData);
+      } else {
+        await createPost({
+          postTitle: title,
+          type,
+          postContent: {
+            postResources: {
+              content: editor.getText(),
+              contentHTML: editor.getHTML(),
+              images: [],
+              links: [],
+            },
+          },
+        });
+      }
+
+      window.dispatchEvent(new CustomEvent("community:post-created"));
+    });
+
     editor.commands.clearContent();
     setAttachments([]);
     if (postTitleRef.current) {
@@ -158,7 +193,8 @@ export default function PostComposer({ className, disabled, ...props }: Props) {
           addEmoji={addEmoji}
           isImageLimitReached={isImageLimitReached}
           handleSubmit={handleSubmit}
-          disabled={disabled}
+          disabled={disabled || isTransitioning}
+          isLoading={isTransitioning}
         />
 
         <input

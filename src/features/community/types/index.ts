@@ -10,10 +10,12 @@ export interface GetPostsParams {
 
 export interface CreatePostData {
   postTitle: string;
+  type?: "POST" | "RESOURCE";
   postContent: {
     postResources: {
       content: string;
-      images?: { src: string; alt?: string; title?: string }[];
+      contentHTML?: string;
+      images?: { src: File; alt?: string; title?: string }[];
       links?: string[];
     };
   };

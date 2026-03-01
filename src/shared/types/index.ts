@@ -15,6 +15,7 @@ export interface DataRecipeCard {
 export interface UserData {
   name: string;
   urlImage: string;
+  role?: "ADMIN" | "USER";
 }
 
 export interface PostImage {
@@ -39,6 +40,7 @@ export interface PostCardDataProps {
       images: PostImage[];
       links: string[];
       content: string;
+      contentHTML?: string;
     };
   };
   comments: {

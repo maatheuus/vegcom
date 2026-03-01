@@ -13,11 +13,17 @@ export interface Tab {
   showNotification?: boolean;
 }
 
+export interface ChatTab {
+  key: string;
+  label: string;
+  icon: JSX.Element;
+}
+
 interface Props {
   className?: string;
-  tabs: Tab[];
-  selectedTab: CommunityPostType;
-  setSelectedTab: (tab: CommunityPostType) => void;
+  tabs: Tab[] | ChatTab[];
+  selectedTab: CommunityPostType | string;
+  setSelectedTab: (tab: CommunityPostType | string) => void;
   hasLink?: boolean;
   isChatLayout?: boolean;
   isTransitioning?: boolean;
@@ -33,7 +39,7 @@ export default function Tabs({
   isTransitioning = false,
   ...props
 }: Props) {
-  const handleTabClick = (tabKey: CommunityPostType) => {
+  const handleTabClick = (tabKey: CommunityPostType | string) => {
     if (isTransitioning || tabKey === selectedTab) return;
     setSelectedTab(tabKey);
   };
@@ -66,7 +72,7 @@ export default function Tabs({
           >
             <span className="relative">
               {tab.icon}
-              {tab.showNotification && (
+              {(tab as Tab).showNotification && (
                 <span className="after:absolute after:top-1/2 after:-right-1 after:h-1.5 after:w-1.5 after:-translate-y-1/2 after:rounded-full after:bg-red-500 after:content-['']" />
               )}
             </span>

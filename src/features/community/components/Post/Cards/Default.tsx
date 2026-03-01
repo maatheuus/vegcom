@@ -8,6 +8,13 @@ interface Props {
 }
 
 export default function PostCardDefault({ data }: Props) {
+  const hasImages = data.postContent.postResources?.images?.length > 0;
+
+  if (hasImages) return null;
+
+  const content = data.postContent.postResources?.content;
+  const contentHTML = data.postContent.postResources?.contentHTML;
+
   return (
     <PostCardRoot data={data} variant="default">
       <Col className="h-fit w-full gap-y-1 text-green-500">
@@ -19,14 +26,24 @@ export default function PostCardDefault({ data }: Props) {
         >
           {data.postTitle}
         </Text>
-        <Text
-          as="p"
-          type={Text.Type.BodyFour}
-          weight={Text.Weight.Normal}
-          className="font-maitree line-clamp-6 text-base"
-        >
-          {data.postContent.postResources?.content}
-        </Text>
+
+        {contentHTML ? (
+          <div
+            className="font-maitree text-base break-words text-green-500"
+            dangerouslySetInnerHTML={{
+              __html: contentHTML,
+            }}
+          />
+        ) : (
+          <Text
+            as="p"
+            type={Text.Type.BodyFour}
+            weight={Text.Weight.Normal}
+            className="font-maitree mt-2 text-base whitespace-pre-wrap"
+          >
+            {content}
+          </Text>
+        )}
       </Col>
     </PostCardRoot>
   );
