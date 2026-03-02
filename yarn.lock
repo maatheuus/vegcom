@@ -6436,15 +6436,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"tailwindcss-motion@npm:^1.0.1":
-  version: 1.0.1
-  resolution: "tailwindcss-motion@npm:1.0.1"
-  peerDependencies:
-    tailwindcss: "*"
-  checksum: 10c0/067a7c21b8baddb021b07fae1f87e6298e76c263f648141c9c3cda14e8e9bd6594e8ec083f623fa24ea57f34e1af7571c990cab02e8d00c78f9b4c349a4c0a79
-  languageName: node
-  linkType: hard
-
 "tailwindcss@npm:4.0.0":
   version: 4.0.0
   resolution: "tailwindcss@npm:4.0.0"
@@ -6753,7 +6744,6 @@ __metadata:
     react-share: "npm:^5.2.2"
     tailwind-merge: "npm:^3.0.1"
     tailwindcss: "npm:4.0.0"
-    tailwindcss-motion: "npm:^1.0.1"
     typescript: "npm:^5"
     vaul: "npm:^1.1.2"
     zod: "npm:^3.24.1"
