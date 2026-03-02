@@ -1,47 +1,39 @@
 import {
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
+    FormControl,
+    FormField,
+    FormItem,
+    FormLabel,
+    FormMessage,
 } from "@/shared/ui/Form";
 import { Input } from "@/shared/ui/Input";
 import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
 } from "@/shared/ui/Select";
 import { Switch } from "@/shared/ui/Switch";
 import type { UseFormReturn } from "react-hook-form";
+import type { z } from "zod";
 
 import Text from "@/shared/ui/Text";
 import Textarea from "@/shared/ui/TextArea";
 import clsx from "clsx";
 import { useState } from "react";
 import {
-  bioTooLongMessages,
-  bioTooShortMessages,
-  culinaryLevelOptions,
-  dietOptions,
-  maxLengthForBio,
+    bioTooLongMessages,
+    bioTooShortMessages,
+    culinaryLevelOptions,
+    dietOptions,
+    maxLengthForBio,
+    personalInfoFormSchema,
 } from "../utils";
 
+type PersonalInfoFormValues = z.infer<typeof personalInfoFormSchema>;
+
 interface Props extends React.HTMLAttributes<HTMLFormElement> {
-  form: UseFormReturn<
-    {
-      fullName: string;
-      email: string;
-      location: string;
-      bio: string;
-      publicProfile: boolean;
-      dietType: string;
-      culinaryLevel: string;
-    },
-    unknown,
-    undefined
-  >;
+  form: UseFormReturn<PersonalInfoFormValues>;
   setBioLength: (length: number) => void;
   isEditing?: boolean;
 }

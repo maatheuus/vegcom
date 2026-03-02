@@ -1,42 +1,33 @@
 "use client";
 
 import type { UseFormReturn } from "react-hook-form";
+import type { z } from "zod";
 
 import Text from "@/shared/ui/Text";
 import { useRef, useState } from "react";
-import { messagesToDisplayForPremium } from "../utils";
+import { messagesToDisplayForPremium, personalInfoFormSchema } from "../utils";
+
+type PersonalInfoFormValues = z.infer<typeof personalInfoFormSchema>;
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/shared/ui/Avatar";
 import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogTitle,
-  DialogTrigger,
+    Dialog,
+    DialogContent,
+    DialogDescription,
+    DialogTitle,
+    DialogTrigger,
 } from "@/shared/ui/Dialog";
 import { Form } from "@/shared/ui/Form";
 import {
-  FloppyDiskIcon,
-  PencilSimpleIcon,
-  TrashIcon,
+    FloppyDiskIcon,
+    PencilSimpleIcon,
+    TrashIcon,
 } from "@phosphor-icons/react";
 import Image from "next/image";
 import FormInformation from "./FormInformation";
 
 interface Props extends React.HTMLAttributes<HTMLFormElement> {
-  form: UseFormReturn<
-    {
-      fullName: string;
-      email: string;
-      location: string;
-      bio: string;
-      publicProfile: boolean;
-      dietType: string;
-      culinaryLevel: string;
-    },
-    unknown,
-    undefined
-  >;
+  form: UseFormReturn<PersonalInfoFormValues>;
   setBioLength: (length: number) => void;
   isEditing?: boolean;
 }
