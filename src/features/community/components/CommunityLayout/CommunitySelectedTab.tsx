@@ -44,7 +44,7 @@ export default function CommunitySelectedTab({ selectedTab, tabs }: Props) {
             const hasImages =
               post.postContent?.postResources?.images &&
               post.postContent.postResources.images.length > 0;
-            return (post as any).type === "RESOURCE" || hasImages;
+            return (post as PostCardDataProps & { type?: string }).type === "RESOURCE" || hasImages;
           }),
         };
       }

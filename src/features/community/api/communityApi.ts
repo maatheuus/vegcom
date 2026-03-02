@@ -44,8 +44,8 @@ export const getPostById = async (
   try {
     const { data } = await api.get<PostCardDataProps>(`/community/${id}`);
     return data;
-  } catch (err: any) {
-    if (err?.status === 404) return null;
+  } catch (err) {
+    if ((err as { status?: number })?.status === 404) return null;
     throw err;
   }
 };

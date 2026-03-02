@@ -9,7 +9,7 @@ export interface Tab {
   key: CommunityPostType;
   label: string;
   icon: JSX.Element;
-  component?: ElementType<any>;
+  component?: ElementType;
   showNotification?: boolean;
 }
 
