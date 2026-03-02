@@ -3,7 +3,6 @@
 
 @import "tailwindcss";
 @plugin 'tailwindcss-motion';
-@plugin "tailwindcss-animate";
 
 @config "../tailwind.config.ts";
 
@@ -225,12 +224,15 @@ FFFDF4
   }
 }
 
+/* ============================================
+   Native keyframes (replaces tailwindcss-animate)
+   ============================================ */
+
 @keyframes fadeInSlideUp {
   from {
     opacity: 0;
     transform: translateY(1.5rem);
   }
-
   to {
     opacity: 1;
     transform: translateY(0);
@@ -242,7 +244,6 @@ FFFDF4
     opacity: 0;
     transform: translateY(10px);
   }
-
   to {
     opacity: 1;
     transform: translateY(0);
@@ -254,17 +255,178 @@ FFFDF4
     opacity: 0;
     transform: translateY(20px) scale(0.9);
   }
-
   to {
     opacity: 1;
     transform: translateY(0) scale(1);
   }
 }
 
-.animate-fadeIn {
-  animation: fadeIn 0.3s ease-out forwards;
+/* animate-in / animate-out base (replaces tailwindcss-animate) */
+@keyframes tw-enter {
+  from {
+    opacity: var(--tw-enter-opacity, 1);
+    transform: translate3d(
+        var(--tw-enter-translate-x, 0),
+        var(--tw-enter-translate-y, 0),
+        0
+      )
+      scale3d(
+        var(--tw-enter-scale, 1),
+        var(--tw-enter-scale, 1),
+        var(--tw-enter-scale, 1)
+      )
+      rotate(var(--tw-enter-rotate, 0));
+  }
 }
 
-.animate-slideUp {
-  animation: slideUp 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55) forwards;
+@keyframes tw-exit {
+  to {
+    opacity: var(--tw-exit-opacity, 1);
+    transform: translate3d(
+        var(--tw-exit-translate-x, 0),
+        var(--tw-exit-translate-y, 0),
+        0
+      )
+      scale3d(
+        var(--tw-exit-scale, 1),
+        var(--tw-exit-scale, 1),
+        var(--tw-exit-scale, 1)
+      )
+      rotate(var(--tw-exit-rotate, 0));
+  }
+}
+
+@keyframes tw-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes tw-ping {
+  75%, 100% {
+    transform: scale(2);
+    opacity: 0;
+  }
+}
+
+@keyframes tw-pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+@keyframes tw-bounce {
+  0%, 100% {
+    transform: translateY(-25%);
+    animation-timing-function: cubic-bezier(0.8, 0, 1, 1);
+  }
+  50% {
+    transform: translateY(0);
+    animation-timing-function: cubic-bezier(0, 0, 0.2, 1);
+  }
+}
+
+@keyframes caret-blink {
+  0%, 70%, 100% {
+    opacity: 1;
+  }
+  20%, 50% {
+    opacity: 0;
+  }
+}
+
+/* ============================================
+   @utility classes (TailwindCSS v4 native)
+   ============================================ */
+
+@layer utilities {
+  /* animate-in / animate-out */
+  .animate-in {
+    animation-name: tw-enter;
+    animation-duration: 150ms;
+    animation-fill-mode: both;
+    --tw-enter-opacity: initial;
+    --tw-enter-scale: initial;
+    --tw-enter-rotate: initial;
+    --tw-enter-translate-x: initial;
+    --tw-enter-translate-y: initial;
+  }
+
+  .animate-out {
+    animation-name: tw-exit;
+    animation-duration: 150ms;
+    animation-fill-mode: both;
+    --tw-exit-opacity: initial;
+    --tw-exit-scale: initial;
+    --tw-exit-rotate: initial;
+    --tw-exit-translate-x: initial;
+    --tw-exit-translate-y: initial;
+  }
+
+  /* fade */
+  .fade-in-0  { --tw-enter-opacity: 0; }
+  .fade-out-0 { --tw-exit-opacity: 0; }
+  .fade-in-80 { --tw-enter-opacity: 0.8; }
+  .fade-out-80 { --tw-exit-opacity: 0.8; }
+
+  /* zoom */
+  .zoom-in-95  { --tw-enter-scale: 0.95; }
+  .zoom-out-95 { --tw-exit-scale: 0.95; }
+
+  /* slide-in / slide-out */
+  .slide-in-from-top-2    { --tw-enter-translate-y: -0.5rem; }
+  .slide-in-from-bottom-2 { --tw-enter-translate-y: 0.5rem; }
+  .slide-in-from-left-2   { --tw-enter-translate-x: -0.5rem; }
+  .slide-in-from-right-2  { --tw-enter-translate-x: 0.5rem; }
+
+  .slide-in-from-top-\[48\%\]    { --tw-enter-translate-y: -48%; }
+  .slide-out-to-top-\[48\%\]     { --tw-exit-translate-y: -48%; }
+  .slide-in-from-top-full        { --tw-enter-translate-y: -100%; }
+  .slide-out-to-right-full       { --tw-exit-translate-x: 100%; }
+  .slide-in-from-bottom-full     { --tw-enter-translate-y: 100%; }
+
+  /* duration overrides for data-state animations */
+  [data-state=open].duration-200,
+  [data-state=closed].duration-300,
+  [data-state=open].duration-500 {
+    animation-duration: inherit;
+  }
+
+  /* core animation utilities */
+  .animate-spin {
+    animation: tw-spin 1s linear infinite;
+  }
+
+  .animate-ping {
+    animation: tw-ping 1s cubic-bezier(0, 0, 0.2, 1) infinite;
+  }
+
+  .animate-pulse {
+    animation: tw-pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  }
+
+  .animate-bounce {
+    animation: tw-bounce 1s infinite;
+  }
+
+  /* caret blink (used in OTP input) */
+  .animate-caret-blink {
+    animation: caret-blink 1.25s ease-out infinite;
+  }
+
+  /* custom project animations */
+  .animate-fadeIn {
+    animation: fadeIn 0.3s ease-out forwards;
+  }
+
+  .animate-slideUp {
+    animation: slideUp 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55) forwards;
+  }
+
+  .animate-fade-in {
+    animation: fadeIn 0.4s ease-out forwards;
+  }
 }
