@@ -6,7 +6,11 @@ import {
   FormMessage,
 } from "@/shared/ui/Form";
 import { Input } from "@/shared/ui/Input";
+import Row from "@/shared/ui/Layout/Helpers/Row";
+import { Switch } from "@/shared/ui/Switch";
+import Text from "@/shared/ui/Text";
 import Textarea from "@/shared/ui/TextArea";
+import { useState } from "react";
 import DynamicFields from "./DynamicFields";
 import GroupFields from "./GroupFields";
 import ImageUploadArea from "./ImageUploadArea";
@@ -19,6 +23,8 @@ export default function RenderStepContent({
   currentStep: number;
   form: NewRecipeForm;
 }) {
+  const [useDefaultImages, setUseDefaultImages] = useState(false);
+
   switch (currentStep) {
     case 1:
       return (
@@ -86,8 +92,26 @@ export default function RenderStepContent({
     case 5:
       return (
         <div className="space-y-6">
-          <DynamicFields title="Adicione Imagens" className="w-full">
-            <ImageUploadArea form={form} className="flex h-full" />
+          <DynamicFields
+            title="Adicione Imagens"
+            className="w-full"
+            rightContent={
+              <Row.Center className="gap-x-2">
+                <Text className="font-maitree !text-xs text-green-500/70">
+                  Usar imagens pré-selecionadas
+                </Text>
+                <Switch
+                  checked={useDefaultImages}
+                  onCheckedChange={setUseDefaultImages}
+                />
+              </Row.Center>
+            }
+          >
+            <ImageUploadArea
+              form={form}
+              className="flex h-full"
+              useDefaultTestingImages={useDefaultImages}
+            />
           </DynamicFields>
         </div>
       );

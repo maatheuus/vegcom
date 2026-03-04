@@ -16,7 +16,15 @@ import { useCallback, useMemo, useState } from "react";
 import type { UseFormReturn } from "react-hook-form";
 import type { z } from "zod";
 
-import { CloudArrowUpIcon, PlusCircleIcon } from "@phosphor-icons/react";
+import {
+  defaultTestingImages,
+  type DefaultTestingImage,
+} from "@/assets/images/defaultForTesting";
+import {
+  CheckCircleIcon,
+  CloudArrowUpIcon,
+  PlusCircleIcon,
+} from "@phosphor-icons/react";
 import type { newRecipeFormSchema } from "../../../recipes/components/utils";
 import ImageGallery from "./ImageGallery";
 
@@ -30,6 +38,7 @@ interface UploadingImage {
 
 export interface Props extends ComponentProps<"div"> {
   form: UseFormReturn<z.infer<typeof newRecipeFormSchema>>;
+  useDefaultTestingImages?: boolean;
 }
 
 export const MAX_IMAGES = 6;
@@ -37,8 +46,13 @@ export const DURATION_TOAST_IN_SEG = 2000;
 export const MAX_IMAGE_SIZE_MB = 3;
 export const MAX_IMAGE_SIZE_BYTES = MAX_IMAGE_SIZE_MB * 1024 * 1024;
 
-export default function ImageUploadArea({ form, className }: Props) {
+export default function ImageUploadArea({
+  form,
+  className,
+  useDefaultTestingImages = false,
+}: Props) {
   const [uploadingImages, setUploadingImages] = useState<UploadingImage[]>([]);
+  const [loadingTestImage, setLoadingTestImage] = useState<string | null>(null);
   const { toast } = useToast();
 
   const watchedImages = form.watch("recipe_images");
@@ -229,6 +243,142 @@ export default function ImageUploadArea({ form, className }: Props) {
     fileInput?.click();
   }, []);
 
+  const handleAddTestingImage = useCallback(
+    async (testImage: DefaultTestingImage) => {
+      const currentImages = form.getValues("recipe_images") || [];
+      const totalCurrentImages = currentImages.length + uploadingImages.length;
+
+      if (totalCurrentImages >= MAX_IMAGES) {
+        showLimitToast(0);
+        return;
+      }
+
+      const alreadyAdded = currentImages.some(
+        (img) => img.name === testImage.name,
+      );
+      if (alreadyAdded) {
+        toast({
+          title: "Imagem já adicionada",
+          description: `"${testImage.name}" já está na lista.`,
+          variant: "destructive",
+          duration: DURATION_TOAST_IN_SEG,
+        });
+        return;
+      }
+
+      setLoadingTestImage(testImage.name);
+
+      try {
+        const imageSrc =
+          typeof testImage.src === "string" ? testImage.src : testImage.src.src;
+
+        const response = await fetch(imageSrc);
+        const blob = await response.blob();
+        const file = new File([blob], testImage.name, { type: blob.type });
+
+        form.setValue("recipe_images", [
+          ...(form.getValues("recipe_images") || []),
+          {
+            id: `test-image-${Date.now()}`,
+            file,
+            preview: imageSrc,
+            name: testImage.name,
+          },
+        ]);
+
+        toast({
+          title: "Imagem adicionada",
+          description: `"${testImage.name}" foi adicionada com sucesso!`,
+          duration: DURATION_TOAST_IN_SEG,
+        });
+      } catch {
+        toast({
+          title: "Erro ao carregar imagem",
+          description: "Não foi possível adicionar a imagem de teste.",
+          variant: "destructive",
+          duration: DURATION_TOAST_IN_SEG,
+        });
+      } finally {
+        setLoadingTestImage(null);
+      }
+    },
+    [form, uploadingImages.length, showLimitToast, toast],
+  );
+
+  const TestingImagesGrid = useMemo(() => {
+    const currentImages = form.getValues("recipe_images") || [];
+    const addedNames = new Set(currentImages.map((img) => img.name));
+
+    return (
+      <div className="space-y-4">
+        {allImages.length > 0 && (
+          <Text
+            weight={Text.Weight.Medium}
+            className="font-maitree !text-sm text-green-500"
+          >
+            Imagens{" "}
+            <strong>
+              ({allImages.length}/{MAX_IMAGES})
+            </strong>
+          </Text>
+        )}
+        <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4">
+          {defaultTestingImages.map((testImage) => {
+            const isAdded = addedNames.has(testImage.name);
+            const isLoading = loadingTestImage === testImage.name;
+            const imageSrc =
+              typeof testImage.src === "string"
+                ? testImage.src
+                : testImage.src.src;
+
+            return (
+              <button
+                key={testImage.name}
+                type="button"
+                disabled={isLoading || isAdded}
+                onClick={() => handleAddTestingImage(testImage)}
+                className={`group relative aspect-square cursor-pointer overflow-hidden rounded-md border-2 transition-all duration-200 ${
+                  isAdded
+                    ? "border-green-500 opacity-70"
+                    : "border-green-200 hover:border-green-400 hover:shadow-md"
+                } ${isLoading ? "animate-pulse" : ""}`}
+              >
+                <img
+                  src={imageSrc}
+                  alt={testImage.name}
+                  className="h-full w-full object-cover transition-transform duration-200 group-hover:scale-105"
+                />
+                {isAdded && (
+                  <div className="absolute inset-0 flex items-center justify-center bg-green-500/30">
+                    <CheckCircleIcon
+                      size={32}
+                      weight="fill"
+                      className="text-green-700"
+                    />
+                  </div>
+                )}
+              </button>
+            );
+          })}
+        </div>
+        {allImages.length > 0 && (
+          <ImageGallery
+            images={allImages}
+            onRemove={handleRemoveImage}
+            onDragEnd={handleDragEnd}
+          />
+        )}
+      </div>
+    );
+  }, [
+    form,
+    loadingTestImage,
+    handleAddTestingImage,
+    allImages,
+    handleRemoveImage,
+    handleDragEnd,
+  ]);
+
   const EmptyArea = useMemo(
     () => (
       <>
@@ -315,7 +465,11 @@ export default function ImageUploadArea({ form, className }: Props) {
           <FormItem className={`flex h-full ${className || ""}`}>
             <FormControl>
               <div className="relative min-h-[9.3rem] w-full rounded-sm border border-dashed border-green-200 p-4">
-                {allImages.length === 0 ? EmptyArea : FilledArea}
+                {useDefaultTestingImages
+                  ? TestingImagesGrid
+                  : allImages.length === 0
+                    ? EmptyArea
+                    : FilledArea}
               </div>
             </FormControl>
           </FormItem>
