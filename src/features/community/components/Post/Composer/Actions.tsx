@@ -6,7 +6,7 @@ import EmojiPicker from "@emoji-mart/react";
 import {
   CircleNotchIcon,
   ImageIcon,
-  PaperPlaneTiltIcon,
+  PaperPlaneRightIcon,
   SmileyIcon,
   TextBIcon,
   TextItalicIcon,
@@ -149,7 +149,7 @@ export default function PostComposerActions({
           isLoading ? (
             <CircleNotchIcon size={24} className="animate-spin" />
           ) : (
-            <PaperPlaneTiltIcon size={24} />
+            <PaperPlaneRightIcon size={24} />
           )
         }
         disabled={

@@ -1,5 +1,11 @@
 "use client";
 
+import { useGetUser } from "@/features/auth/api/queries/getAuthApiClient";
+import {
+  deletePost,
+  toggleLike,
+  toggleSave,
+} from "@/features/community/api/communityApi";
 import { dateFormatDistanceLocale } from "@/shared/lib/utils";
 import type { PostCardDataProps } from "@/shared/types";
 import { Avatar, AvatarFallback, AvatarImage } from "@/shared/ui/Avatar";
@@ -18,17 +24,15 @@ import {
   BookmarkIcon,
   ChatCircleTextIcon,
   DotsThreeIcon,
-  EyeSlashIcon,
-  FlagIcon,
   ShareFatIcon,
   SparkleIcon,
+  TrashIcon,
 } from "@phosphor-icons/react";
 import clsx from "clsx";
 import { formatDistance } from "date-fns";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { AvatarGroup } from "./AvatarGroup";
-
 interface Props extends React.HTMLAttributes<HTMLDivElement> {
   data: PostCardDataProps;
   children: React.ReactNode;
@@ -43,9 +47,31 @@ export default function PostCardRoot({
   ...props
 }: Props) {
   const router = useRouter();
-  const [isLiked, setIsLiked] = useState(false);
+  const { data: currentUser } = useGetUser();
+
+  const [isLiked, setIsLiked] = useState(() => {
+    if (data.likes && currentUser?.id) {
+      return data.likes.some(
+        (like) => String(like.userId) === String(currentUser.id),
+      );
+    }
+    return false;
+  });
+
+  useEffect(() => {
+    if (data.likes && currentUser?.id) {
+      setIsLiked(
+        data.likes.some(
+          (like) => String(like.userId) === String(currentUser.id),
+        ),
+      );
+    }
+  }, [data.likes, currentUser?.id]);
+
   const [likesCount, setLikesCount] = useState(data.postLikes);
-  const [isSaved, setIsSaved] = useState(false);
+  const [isSaved, setIsSaved] = useState(
+    data.savedBy.includes(Number(currentUser?.id)),
+  );
   const postSlug = slugify(data.postTitle);
   const postUrl = `/community/${data.id}/${postSlug}`;
 
@@ -59,15 +85,26 @@ export default function PostCardRoot({
     router.push(postUrl);
   };
 
-  const handleLike = (e: React.MouseEvent) => {
+  const handleLike = async (e: React.MouseEvent) => {
     e.stopPropagation();
+    if (!data) return;
+
+    const { postLikes } = await toggleLike(String(data.id));
     setIsLiked(!isLiked);
-    setLikesCount(isLiked ? (likesCount || 0) - 1 : (likesCount || 0) + 1);
+    setLikesCount(postLikes);
   };
 
-  const handleSave = (e: React.MouseEvent) => {
+  const handleSave = async (e: React.MouseEvent) => {
     e.stopPropagation();
-    setIsSaved(!isSaved);
+    if (!data || !currentUser?.id) return;
+
+    const { saved } = await toggleSave(Number(data.id), Number(currentUser.id));
+    setIsSaved(saved);
+  };
+
+  const handleDelete = async (e: React.MouseEvent) => {
+    e.stopPropagation();
+    await deletePost(String(data.id));
   };
 
   const handleShare = (e: React.MouseEvent) => {
@@ -149,14 +186,24 @@ export default function PostCardRoot({
               <BookmarkIcon size={18} weight={isSaved ? "fill" : "regular"} />
               Salvar post
             </DropdownMenuItem>
-            <DropdownMenuItem className="cursor-pointer gap-x-3 py-2.5 hover:!bg-green-200/80 focus:!bg-green-200/80 focus:!text-green-50">
+
+            {data.user.id === currentUser?.id && (
+              <DropdownMenuItem
+                onClick={handleDelete}
+                className="cursor-pointer gap-x-3 py-2.5 text-red-400 hover:!bg-green-200/80 focus:!text-red-400"
+              >
+                <TrashIcon size={18} />
+                Deletar post
+              </DropdownMenuItem>
+            )}
+            {/* <DropdownMenuItem className="cursor-pointer gap-x-3 py-2.5 hover:!bg-green-200/80 focus:!bg-green-200/80 focus:!text-green-50">
               <EyeSlashIcon size={18} />
               Ocultar
             </DropdownMenuItem>
             <DropdownMenuItem className="cursor-pointer gap-x-3 py-2.5 text-red-400 hover:!bg-green-200/80 focus:!bg-green-200/80 focus:!text-red-400">
               <FlagIcon size={18} />
               Denunciar
-            </DropdownMenuItem>
+            </DropdownMenuItem> */}
           </DropdownMenuContent>
         </DropdownMenu>
       </Row>

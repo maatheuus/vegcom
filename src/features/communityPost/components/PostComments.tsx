@@ -13,22 +13,24 @@ import ReplyButton from "./ReplyButton";
 interface PostCommentsProps {
   comments?: PostComment[];
   uniqueUsers: { name: string; urlImage?: string }[];
-  hasHTMLTags?: boolean;
+  postByAdmin?: boolean;
+  postId: string;
 }
 
 export default function PostComments({
   comments,
   uniqueUsers,
-  hasHTMLTags,
+  postByAdmin,
+  postId,
 }: PostCommentsProps) {
   const { data: user } = useGetUser();
 
-  if (hasHTMLTags) return;
+  if (postByAdmin) return;
 
   return (
     <Col className="mt-6 w-full gap-y-6 pb-10 md:px-4">
       <Col className="gap-y-4">
-        <CommentComposer users={uniqueUsers} user={user} />
+        <CommentComposer users={uniqueUsers} user={user} postId={postId} />
 
         <Col className="mt-4 gap-y-6">
           {comments && comments.length > 0 ? (

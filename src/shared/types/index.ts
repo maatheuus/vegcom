@@ -13,6 +13,7 @@ export interface DataRecipeCard {
 }
 
 export interface UserData {
+  id: number;
   name: string;
   urlImage: string;
   role?: "ADMIN" | "USER";
@@ -35,6 +36,7 @@ export interface PostCardDataProps {
   slug?: string;
   user: UserData;
   postTitle: string;
+  savedBy: number[];
   postContent: {
     postResources: {
       images: PostImage[];
@@ -49,6 +51,7 @@ export interface PostCardDataProps {
     comments: PostComment[];
   };
   postLikes: number;
+  likes?: { userId?: number | string; id?: number | string }[];
   postDate: string;
   postTags: string[];
 }

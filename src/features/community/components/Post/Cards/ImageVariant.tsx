@@ -1,6 +1,7 @@
 import type { PostCardDataProps } from "@/shared/types";
 import Col from "@/shared/ui/Layout/Helpers/Col";
 import Text from "@/shared/ui/Text";
+import { linkifyHtml } from "@/shared/utils";
 import Image from "next/image";
 import PostCardRoot from "./Root";
 
@@ -41,9 +42,9 @@ export default function PostCardImage({ data }: Props) {
 
           {contentHTML ? (
             <div
-              className="font-maitree text-base break-words text-green-500"
+              className={`font-maitree line-clamp-3 text-base break-words text-green-500`}
               dangerouslySetInnerHTML={{
-                __html: contentHTML,
+                __html: linkifyHtml(contentHTML),
               }}
             />
           ) : (

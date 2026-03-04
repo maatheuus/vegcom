@@ -18,6 +18,7 @@ import {
   useTransition,
   type HtmlHTMLAttributes,
 } from "react";
+import useFetchPosts from "../../hooks/useFetchPosts";
 import type { CommunityPostType } from "../../types";
 import PostComposer from "../Post/Composer";
 import MobilePostComposer from "../Post/Composer/MobileComposer";
@@ -55,30 +56,48 @@ export const tabs: Tab[] = [
 
 export default function CommunityLayout({ className, ...props }: Props) {
   const [isPending, startTransition] = useTransition();
-  const { data } = useGetUser();
-  const isAuthenticated = !!data?.id;
-
+  const [isRefreshing, setIsRefreshing] = useState(false);
+  const [showScrollTop, setShowScrollTop] = useState(false);
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
   const [selectedTab, setSelectedTab] = useState<CommunityPostType>(() => {
     return "POST";
   });
 
-  const [showScrollTop, setShowScrollTop] = useState(false);
-  const scrollContainerRef = useRef<HTMLDivElement>(null);
+  const { data } = useGetUser();
+  const isAuthenticated = !!data?.id;
+  const { queryClient, queryKey } = useFetchPosts(
+    selectedTab as CommunityPostType,
+  );
 
   useEffect(() => {
     const container = scrollContainerRef.current;
     if (!container) return;
 
     const handleScroll = () => {
-      setShowScrollTop(container.scrollTop > 600);
+      const currentScrollTop = container.scrollTop;
+      setShowScrollTop(currentScrollTop > 600);
+
+      if (isRefreshing && currentScrollTop <= 10) {
+        setIsRefreshing(false);
+        queryClient.resetQueries({ queryKey });
+      }
     };
 
     container.addEventListener("scroll", handleScroll);
     return () => container.removeEventListener("scroll", handleScroll);
-  }, []);
+  }, [isRefreshing, queryClient, queryKey]);
 
-  const scrollToTop = () => {
-    scrollContainerRef.current?.scrollTo({ top: 0, behavior: "smooth" });
+  const handleRefresh = async () => {
+    const container = scrollContainerRef.current;
+    if (!container) return;
+
+    if (container.scrollTop === 0) {
+      queryClient.resetQueries({ queryKey });
+      return;
+    }
+
+    setIsRefreshing(true);
+    container.scrollTo({ top: 0, behavior: "smooth" });
   };
 
   return (
@@ -100,7 +119,7 @@ export default function CommunityLayout({ className, ...props }: Props) {
 
         <Button.Icon
           variant="filled"
-          onClick={scrollToTop}
+          onClick={handleRefresh}
           icon={<ArrowUpIcon size={24} weight="bold" />}
           className={clsx(
             "fixed bottom-6 z-50 h-14 w-14 rounded-full shadow-xl transition-all duration-300",

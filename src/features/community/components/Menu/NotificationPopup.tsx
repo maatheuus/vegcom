@@ -2,13 +2,13 @@ import {
   useNotifications,
   type NotificationType,
 } from "@/features/community/hooks/useNotifications";
-import { formatDistanceToNow } from "date-fns";
-import { ptBR } from "date-fns/locale";
 import Col from "@/shared/ui/Layout/Helpers/Col";
 import Row from "@/shared/ui/Layout/Helpers/Row";
 import Text from "@/shared/ui/Text";
 import { BellIcon } from "@phosphor-icons/react";
 import clsx from "clsx";
+import { formatDistanceToNow } from "date-fns";
+import { ptBR } from "date-fns/locale";
 import { AnimatePresence, motion } from "framer-motion";
 import {
   memo,
@@ -77,21 +77,24 @@ const NotificationPopup = memo(function NotificationPopup({
 
   return (
     <div
-      className={`relative ${className || ""}`}
+      className={`group/bell relative ${className || ""}`}
       {...props}
       onKeyDown={handleKeyDown}
     >
       <Row
         ref={buttonRef}
         onClick={handleToggle}
-        className="relative flex w-full cursor-pointer gap-x-2 rounded-lg bg-green-100 p-2 transition-all duration-300"
+        className="relative flex w-full cursor-pointer gap-x-2 rounded-lg bg-green-100 p-2 transition-all duration-300 group-hover/bell:bg-green-200"
         aria-label="Notificações"
         aria-expanded={isOpen}
         aria-haspopup="true"
       >
-        <BellIcon size={20} className="size-5 text-green-200" />
+        <BellIcon
+          size={20}
+          className="size-5 text-green-200 group-hover/bell:text-green-50"
+        />
         {unreadCount > 0 && (
-          <span className="absolute -top-1 -right-1 flex h-5 w-5 items-center justify-center rounded-full bg-green-500 text-xs font-bold text-white">
+          <span className="absolute -top-1 -right-1 flex h-5 w-5 items-center justify-center rounded-full bg-green-500 text-xs font-bold text-white group-hover/bell:text-green-50">
             {unreadCount}
           </span>
         )}
@@ -188,10 +191,13 @@ const NotificationPopup = memo(function NotificationPopup({
                             type={Text.Type.BodySix}
                             className="font-maitree text-green-200"
                           >
-                            {formatDistanceToNow(new Date(notification.createdAt), {
-                              addSuffix: true,
-                              locale: ptBR,
-                            })}
+                            {formatDistanceToNow(
+                              new Date(notification.createdAt),
+                              {
+                                addSuffix: true,
+                                locale: ptBR,
+                              },
+                            )}
                           </Text>
                         </Col>
 

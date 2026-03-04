@@ -43,7 +43,7 @@ const sidebarLinks = {
   ],
 };
 const baseButtonClasses =
-  "flex w-full cursor-pointer gap-x-2 transition-all duration-300";
+  "flex w-full cursor-pointer gap-x-1 transition-all duration-300";
 const textClasses = "font-lora text-base font-medium text-nowrap italic";
 
 export default function Menu() {
@@ -79,16 +79,16 @@ export default function Menu() {
           mass: 0.8,
         }}
         className={clsx(
-          "absolute top-0 right-0 left-0 w-full rounded-4xl border border-green-500/50 bg-green-50/90 backdrop-blur-sm",
+          "absolute top-0 right-0 left-0 w-full bg-green-50/90 backdrop-blur-sm",
           isMenuOpen || hasScrolled ? "shadow-xl" : "",
         )}
         style={{ left: 0, right: 0 }}
       >
-        <div className="desktop:p-4 desktop:flex desktop:items-center h-full p-2">
+        <div className="desktop:p-3 desktop:flex desktop:items-center h-full p-2">
           <motion.div layout="position" className="flex w-full items-center">
-            <Row className="group h-full w-full items-center justify-between gap-x-3 px-2 md:px-4">
+            <Row className="group h-full w-full items-center justify-between gap-x-4 px-2 md:px-4">
               <Link href={sidebarLinks.leftLinks.href} className="block flex-1">
-                <div className="flex items-center gap-x-2">
+                <div className="flex items-center gap-x-1">
                   <Image
                     src="/favicon-leaf-fork.png"
                     alt="VegCom Logo"
@@ -103,20 +103,20 @@ export default function Menu() {
               </Link>
 
               <Row className="desktop:flex hidden w-full flex-1 gap-x-4">
-                <Row className="items-center justify-center gap-x-3">
+                <Row className="items-center justify-center gap-x-4">
                   {sidebarLinks.centerLinks.map(
                     ({ href, icon: Icon, label }) => {
                       const isActive = pathname.startsWith(href);
                       return (
                         <Link key={href} href={href} className="contents">
-                          <Row
-                            className={`relative flex w-full cursor-pointer gap-x-2 py-1 ${
+                          <div
+                            className={`relative w-full cursor-pointer py-1 ${
                               isActive ? "text-green-500" : "text-green-200"
                             }`}
                             onMouseEnter={() => setHoveredItem(href)}
                             onMouseLeave={() => setHoveredItem("")}
                           >
-                            <div className="relative z-[1] flex items-center gap-x-2">
+                            <div className="relative z-[1] flex items-center gap-x-1">
                               <Icon size={20} className="size-5" />
                               <span className="font-lora text-base font-medium text-nowrap text-current italic">
                                 {label}
@@ -131,7 +131,7 @@ export default function Menu() {
                               }}
                               transition={{ duration: 0.3 }}
                             />
-                          </Row>
+                          </div>
                         </Link>
                       );
                     },
@@ -139,29 +139,43 @@ export default function Menu() {
                 </Row>
               </Row>
 
-              <Row className="desktop:flex hidden items-center gap-x-3">
+              <Row className="desktop:flex hidden items-center gap-x-2">
                 {isLoggedIn && (
-                  <Link href="/account/subscription" className="contents">
+                  <Link
+                    href="/account/subscription"
+                    className="group/plant contents"
+                  >
                     <Row
-                      className={`${baseButtonClasses} ${isPremium ? "p-2" : "px-2 py-1"} items-center justify-center rounded-lg bg-green-200 text-green-50`}
+                      className={`${baseButtonClasses} items-center justify-center rounded-lg bg-green-200 px-2 py-1 text-green-50 group-hover/plant:bg-green-100`}
                     >
-                      <PlantIcon size={20} className="size-5" />
+                      <PlantIcon
+                        size={20}
+                        className="size-5 group-hover/plant:text-green-200"
+                      />
                       {!isPremium && (
-                        <span className={textClasses}>Upgrade</span>
+                        <span
+                          className={`${textClasses} group-hover/plant:text-green-200`}
+                        >
+                          Upgrade
+                        </span>
                       )}
                     </Row>
                   </Link>
                 )}
 
                 <DropdownMenu>
-                  <DropdownMenuTrigger className="flex cursor-pointer items-center gap-x-2 rounded-lg border-0 bg-green-100 p-2 outline-none">
+                  <DropdownMenuTrigger
+                    className={`group/user flex cursor-pointer items-center gap-x-2 rounded-lg border-0 bg-green-100 px-2 py-1 transition-colors duration-300 outline-none hover:bg-green-200`}
+                  >
                     <UserCircleIcon
                       size={20}
-                      className="size-5 text-green-200"
+                      className="size-5 text-green-200 group-hover/user:text-green-50"
                     />
 
                     {isLoggedIn && (
-                      <span className={`${textClasses} text-green-500`}>
+                      <span
+                        className={`${textClasses} text-green-200 group-hover/user:text-green-50`}
+                      >
                         {user?.name}
                       </span>
                     )}
@@ -213,24 +227,34 @@ export default function Menu() {
                   </DropdownMenuContent>
                 </DropdownMenu>
 
-                {isLoggedIn && <NotificationPopup />}
+                {isLoggedIn && <NotificationPopup className="[&_div]:p-2" />}
               </Row>
 
               <div className="desktop:hidden flex items-center gap-x-2">
                 {isLoggedIn && (
-                  <Link href="/account/subscription" className="contents">
+                  <Link
+                    href="/account/subscription"
+                    className="group/plant contents"
+                  >
                     <Row
-                      className={`${baseButtonClasses} ${isPremium ? "p-2" : "px-2 py-1"} items-center justify-center rounded-lg bg-green-200 text-green-50`}
+                      className={`${baseButtonClasses} items-center justify-center rounded-lg bg-green-200 px-2 py-1 text-green-50 group-hover/plant:bg-green-100`}
                     >
-                      <PlantIcon size={20} className="size-5" />
+                      <PlantIcon
+                        size={20}
+                        className="size-5 group-hover/plant:text-green-200"
+                      />
                       {!isPremium && (
-                        <span className={textClasses}>Upgrade</span>
+                        <span
+                          className={`${textClasses} group-hover/plant:text-green-200`}
+                        >
+                          Upgrade
+                        </span>
                       )}
                     </Row>
                   </Link>
                 )}
 
-                {isLoggedIn && <NotificationPopup />}
+                {isLoggedIn && <NotificationPopup className="[&_div]:p-2" />}
 
                 <MotionConfig transition={{ duration: 0.4, ease: "easeInOut" }}>
                   <motion.button
@@ -238,10 +262,10 @@ export default function Menu() {
                     initial={false}
                     animate={isMenuOpen ? "open" : "closed"}
                     onClick={toggleMenu}
-                    className="relative flex min-h-9 min-w-9 flex-col items-center justify-center rounded-lg bg-green-100"
+                    className="group/menu relative flex min-h-9 min-w-9 flex-col items-center justify-center rounded-lg bg-green-100 transition-colors duration-300 hover:bg-green-200"
                   >
                     <motion.span
-                      className="absolute h-0.5 w-5 rounded-full bg-green-600"
+                      className="absolute h-0.5 w-5 rounded-full bg-green-600 group-hover/menu:bg-green-50"
                       style={{ top: "35%", left: "50%", x: "-50%", y: "-50%" }}
                       variants={{
                         open: { rotate: 45, top: "50%" },
@@ -249,7 +273,7 @@ export default function Menu() {
                       }}
                     />
                     <motion.span
-                      className="absolute h-0.5 w-5 rounded-full bg-green-600"
+                      className="absolute h-0.5 w-5 rounded-full bg-green-600 group-hover/menu:bg-green-50"
                       style={{ top: "50%", left: "50%", x: "-50%", y: "-50%" }}
                       variants={{
                         open: { opacity: 0 },
@@ -257,7 +281,7 @@ export default function Menu() {
                       }}
                     />
                     <motion.span
-                      className="absolute h-0.5 w-5 rounded-full bg-green-600"
+                      className="absolute h-0.5 w-5 rounded-full bg-green-600 group-hover/menu:bg-green-50"
                       style={{
                         bottom: "35%",
                         left: "50%",
@@ -295,7 +319,7 @@ export default function Menu() {
                       <Link
                         href={link.href}
                         onClick={() => setIsMenuOpen(false)}
-                        className="flex items-center gap-3 rounded-xl p-3 text-green-800 hover:bg-green-100"
+                        className="flex items-center gap-2 rounded-lg p-3 text-green-800 hover:bg-green-100"
                       >
                         <link.icon size={22} className="text-green-600" />
                         <span className="font-lora text-lg italic">
@@ -310,7 +334,7 @@ export default function Menu() {
                   <Link
                     href={isLoggedIn ? "/account" : "/login"}
                     onClick={() => setIsMenuOpen(false)}
-                    className="flex items-center gap-3 rounded-xl p-3 text-green-800 hover:bg-green-100"
+                    className="flex items-center gap-2 rounded-lg p-3 text-green-800 hover:bg-green-100"
                   >
                     <UserCircleIcon size={22} className="text-green-600" />
                     <span className="font-lora text-lg italic">

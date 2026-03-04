@@ -1,4 +1,5 @@
 import { getPostById } from "@/features/community";
+import BackToCommunityButton from "@/features/communityPost/components/BackToCommunityButton";
 import PostActions from "@/features/communityPost/components/PostActions";
 import PostComments from "@/features/communityPost/components/PostComments";
 import { PostInteractionProvider } from "@/features/communityPost/context/PostInteractionProvider";
@@ -9,10 +10,10 @@ import Layout from "@/shared/ui/Layout";
 import Col from "@/shared/ui/Layout/Helpers/Col";
 import Row from "@/shared/ui/Layout/Helpers/Row";
 import Text from "@/shared/ui/Text";
+import { linkifyHtml } from "@/shared/utils";
 import { formatDistance } from "date-fns";
 import Image from "next/image";
 import { notFound } from "next/navigation";
-import BackToCommunityButton from "../../../../../src/features/communityPost/components/BackToCommunityButton";
 
 interface Props {
   params: Promise<{ id: string; slug: string }>;
@@ -24,6 +25,8 @@ export default async function Page({ params }: Props) {
 
   const content = post?.postContent.postResources?.content;
   const contentHTML = post?.postContent.postResources?.contentHTML;
+  const postByAdmin = post?.user?.role === "ADMIN";
+
   if (!post) {
     return notFound();
   }
@@ -102,7 +105,7 @@ export default async function Page({ params }: Props) {
                 <div
                   className="font-maitree text-base break-words text-green-500"
                   dangerouslySetInnerHTML={{
-                    __html: contentHTML,
+                    __html: linkifyHtml(contentHTML),
                   }}
                 />
               ) : (
@@ -139,16 +142,16 @@ export default async function Page({ params }: Props) {
             </Col>
 
             <PostActions
-              likesCount={post.postLikes || 0}
               commentsCount={post.comments.commentsNumber || 0}
               post={post}
-              hasHTMLTags={!!contentHTML}
+              postByAdmin={postByAdmin}
             />
           </Col>
           <PostComments
             comments={post.comments.comments}
             uniqueUsers={uniqueUsers}
-            hasHTMLTags={!!contentHTML}
+            postByAdmin={postByAdmin}
+            postId={String(post.id)}
           />
         </section>
       </Layout.Default>

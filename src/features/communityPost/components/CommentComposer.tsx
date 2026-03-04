@@ -1,6 +1,7 @@
 "use client";
 
 import type { User } from "@/features/auth/api/types";
+import { createComment } from "@/features/community/api/communityApi";
 import { usePostInteraction } from "@/features/communityPost/context/PostInteractionContext";
 import { MAX_LENGTH_FOR_INPUT } from "@/shared/lib/globalVariables";
 import Button from "@/shared/ui/Button";
@@ -11,6 +12,7 @@ import {
   TextItalicIcon,
   TextStrikethroughIcon,
 } from "@phosphor-icons/react";
+import { useQueryClient } from "@tanstack/react-query";
 import Mention from "@tiptap/extension-mention";
 import Placeholder from "@tiptap/extension-placeholder";
 import { EditorContent, ReactRenderer, useEditor } from "@tiptap/react";
@@ -18,7 +20,7 @@ import StarterKit from "@tiptap/starter-kit";
 import type { SuggestionKeyDownProps } from "@tiptap/suggestion";
 import clsx from "clsx";
 import { useRouter } from "next/navigation";
-import { useImperativeHandle, useState } from "react";
+import { useImperativeHandle, useState, useTransition } from "react";
 import tippy, { type GetReferenceClientRect, type Instance } from "tippy.js";
 import "tippy.js/dist/tippy.css";
 import MentionList from "./MentionList";
@@ -26,16 +28,20 @@ import MentionList from "./MentionList";
 interface CommentComposerProps {
   users?: { name: string }[];
   user?: User;
+  postId: string;
 }
 
 export default function CommentComposer({
   users = [],
   user,
+  postId,
 }: CommentComposerProps) {
   const { isCommentOpen, setIsCommentOpen, commentInputRef } =
     usePostInteraction();
   const router = useRouter();
+  const queryClient = useQueryClient();
   const [comment, setComment] = useState("");
+  const [isPending, startTransition] = useTransition();
 
   const editor = useEditor({
     extensions: [
@@ -162,6 +168,32 @@ export default function CommentComposer({
     setComment("");
   };
 
+  const handleComment = async () => {
+    if (!comment.trim() || isPending) return;
+
+    startTransition(async () => {
+      try {
+        await createComment(postId, { commentContent: comment });
+        setIsCommentOpen(false);
+        editor?.commands.clearContent();
+        setComment("");
+
+        queryClient.invalidateQueries({ queryKey: ["community-posts"] });
+
+        router.refresh();
+      } catch (error: any) {
+        if (
+          error?.message === "Usuário não está autenticado" ||
+          error?.status === 401
+        ) {
+          router.push("/login");
+        } else {
+          console.error("Failed to post comment", error);
+        }
+      }
+    });
+  };
+
   if (!isCommentOpen) {
     return (
       <div
@@ -219,24 +251,43 @@ export default function CommentComposer({
         </Row>
 
         <Row className="items-center gap-x-3">
-          <div className="font-lora text-xs text-green-500 italic">
-            {comment.length}/{MAX_LENGTH_FOR_INPUT}
+          <div
+            className={clsx(
+              "font-lora text-[10px] tracking-wider uppercase italic opacity-60 transition-colors duration-300",
+              comment.length > MAX_LENGTH_FOR_INPUT * 0.9
+                ? "font-bold text-red-500 opacity-100"
+                : "text-green-600",
+            )}
+          >
+            {comment.length} / {MAX_LENGTH_FOR_INPUT}
           </div>
           <Button
             variant="text"
             size="sm"
             onClick={handleCancel}
-            className="h-9 rounded-full px-5 text-sm font-bold text-green-500 hover:bg-green-50"
+            className="h-10 rounded-full px-6 text-sm font-semibold text-green-500 transition-all hover:bg-green-100 hover:text-green-500 active:scale-95"
           >
             Cancelar
           </Button>
           <Button
             variant="default"
             size="sm"
-            disabled={!comment.trim()}
-            className="h-9 rounded-full bg-green-600 px-5 text-sm font-bold text-white transition-all hover:bg-green-700 disabled:bg-green-500/40 disabled:text-green-500"
+            disabled={!comment.trim() || isPending}
+            onClick={handleComment}
+            className={clsx(
+              "h-10 min-w-[120px] rounded-full px-8 text-sm font-bold text-white transition-all duration-300 active:scale-95",
+              "bg-green-200 hover:bg-green-500",
+              "disabled:translate-y-0 disabled:cursor-not-allowed disabled:opacity-50",
+            )}
           >
-            Comentar
+            {isPending ? (
+              <div className="flex items-center justify-center gap-2">
+                <div className="h-3.5 w-3.5 animate-spin rounded-full border-2 border-white/20 border-t-white" />
+                <span className="animate-pulse">Postando...</span>
+              </div>
+            ) : (
+              "Comentar"
+            )}
           </Button>
         </Row>
       </Row>

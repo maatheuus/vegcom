@@ -1,14 +1,10 @@
 "use client";
 
 import LogoLoader from "@/features/account/components/(recipes)/LogoLoader";
-import type { PostCardDataProps } from "@/shared";
-import { useInfiniteQuery, useQueryClient } from "@tanstack/react-query";
 import { useEffect, useRef } from "react";
-import { getPosts } from "../../api/communityApi";
+import useFetchPosts from "../../hooks/useFetchPosts";
 import type { CommunityPostType } from "../../types";
 import type { Tab } from "../Tabs";
-
-const LIMIT = 10;
 
 interface Props {
   selectedTab: CommunityPostType;
@@ -16,47 +12,18 @@ interface Props {
 }
 
 export default function CommunitySelectedTab({ selectedTab, tabs }: Props) {
-  const queryClient = useQueryClient();
   const sentinelRef = useRef<HTMLDivElement>(null);
-
-  const queryKey = ["community-posts", selectedTab];
-
   const {
+    queryKey,
+    refetch,
+    queryClient,
     data,
     isLoading,
     isFetchingNextPage,
+    isFetching,
     hasNextPage,
     fetchNextPage,
-    refetch,
-  } = useInfiniteQuery({
-    queryKey,
-    queryFn: async ({ pageParam = 1 }) => {
-      const result = await getPosts({
-        page: pageParam as number,
-        limit: LIMIT,
-        type: selectedTab === "RESOURCE" ? undefined : selectedTab,
-      });
-
-      if (selectedTab === "RESOURCE") {
-        return {
-          ...result,
-          data: result.data.filter((post: PostCardDataProps) => {
-            const hasImages =
-              post.postContent?.postResources?.images &&
-              post.postContent.postResources.images.length > 0;
-            return (post as PostCardDataProps & { type?: string }).type === "RESOURCE" || hasImages;
-          }),
-        };
-      }
-
-      return result;
-    },
-    initialPageParam: 1,
-    getNextPageParam: (lastPage) => {
-      if (lastPage.data.length < LIMIT) return undefined;
-      return lastPage.page + 1;
-    },
-  });
+  } = useFetchPosts(selectedTab);
 
   useEffect(() => {
     const handleNewPost = () => {
@@ -107,7 +74,7 @@ export default function CommunitySelectedTab({ selectedTab, tabs }: Props) {
 
       <div ref={sentinelRef} className="h-4 w-full" />
 
-      {isFetchingNextPage && (
+      {(isFetchingNextPage || isFetching) && (
         <div className="flex justify-center py-6">
           <LogoLoader loading={true} />
         </div>

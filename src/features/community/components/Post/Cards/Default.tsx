@@ -1,6 +1,7 @@
 import type { PostCardDataProps } from "@/shared/types";
 import Col from "@/shared/ui/Layout/Helpers/Col";
 import Text from "@/shared/ui/Text";
+import { linkifyHtml } from "@/shared/utils";
 import PostCardRoot from "./Root";
 
 interface Props {
@@ -31,7 +32,7 @@ export default function PostCardDefault({ data }: Props) {
           <div
             className="font-maitree text-base break-words text-green-500"
             dangerouslySetInnerHTML={{
-              __html: contentHTML,
+              __html: linkifyHtml(contentHTML),
             }}
           />
         ) : (
