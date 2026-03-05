@@ -70,13 +70,7 @@ export const validateStep = (
         return false;
       }
 
-      if (!values.recipe_preparationHours) {
-        toast({
-          title: "Informe as horas, mesmo que seja zero",
-          variant: "destructive",
-        });
-        return false;
-      } else if (!values.recipe_preparationMinutes) {
+      if (!values.recipe_preparationMinutes) {
         toast({
           title: "Quantos minutinhos?",
           variant: "destructive",
@@ -102,7 +96,7 @@ export const validateStep = (
 
       if (!values.recipe_difficulty) {
         toast({
-          title: "Qual o nível de dificuldade da receita?",
+          title: "Por favor, selecione uma dificuldade",
           variant: "destructive",
         });
         return false;
@@ -133,22 +127,11 @@ export const validateStep = (
       }
       return true;
 
-    case 4:
-      // Cooking Notes
-      if (values.recipe_cookingNotes.length === 0) {
-        toast({
-          title: "Por favor, deixe pelo menos uma dica",
-          variant: "destructive",
-        });
-        return false;
-      }
-      return true;
-
     case 5:
       // Images
       if (values.recipe_images.length === 0) {
         toast({
-          title: "Pelo menos uma imagem ajuda bastante!",
+          title: "Adicione pelo menos uma imagem",
           variant: "destructive",
         });
         return false;
@@ -192,7 +175,9 @@ export const transformFormToApiPayload = (
     steps: {
       ingredients: formData.recipe_ingredients.map((item) => item.label),
       instructions: formData.recipe_instructions.map((item) => item.label),
-      cookingNotes: formData.recipe_cookingNotes.map((item) => item.label),
+      cookingNotes: (formData.recipe_cookingNotes ?? []).map(
+        (item) => item.label,
+      ),
     },
   };
 

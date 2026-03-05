@@ -57,10 +57,11 @@ export default function GroupFields({
       control: form.control,
       name: "recipe_instructions",
     }),
-    cookingNotes: useWatch({
-      control: form.control,
-      name: "recipe_cookingNotes",
-    }),
+    cookingNotes:
+      useWatch({
+        control: form.control,
+        name: "recipe_cookingNotes",
+      }) ?? [],
   };
 
   const handleDragEnd = (event: DragEndEvent, type: RecipeType) => {
@@ -135,7 +136,7 @@ export default function GroupFields({
           break;
         case "cookingNotes":
           form.setValue("recipe_cookingNotes", [
-            ...currentCookingNotes,
+            ...(currentCookingNotes ?? []),
             newRecipeObject,
           ]);
           form.resetField("new_recipe_cookingNote_text");
@@ -165,7 +166,7 @@ export default function GroupFields({
         case "cookingNotes":
           form.setValue(
             "recipe_cookingNotes",
-            currentCookingNotes.filter((item: Item) => item.id !== id),
+            (currentCookingNotes ?? []).filter((item: Item) => item.id !== id),
           );
           break;
         default:
@@ -189,7 +190,7 @@ export default function GroupFields({
               ? "Ingredientes"
               : type === "instructions"
                 ? "Instruções"
-                : "Notas de Cozimento"
+                : "Dicas do Chef"
           }
           className="flex flex-1 flex-col"
         >
@@ -209,10 +210,10 @@ export default function GroupFields({
                     <Button.Icon
                       onClick={(e) => {
                         e.preventDefault();
-                        handleAddItemToList(field.value, type);
+                        handleAddItemToList(field.value || "", type);
                       }}
                       disabled={isAddDisabled(
-                        field.value,
+                        field.value || "",
                         current[type].length,
                       )}
                       variant="text"

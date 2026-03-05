@@ -22,6 +22,8 @@ const simpleCategories = [
   { value: "lunch", label: "Almoço" },
   { value: "dinner", label: "Jantar" },
   { value: "desserts", label: "Sobremesas" },
+  { value: "snacks", label: "Lanches" },
+  { value: "general", label: "Geral" },
 ];
 
 const simpleDifficulty = [

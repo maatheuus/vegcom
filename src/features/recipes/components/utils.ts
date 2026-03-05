@@ -168,7 +168,14 @@ export const recipes = [
 ];
 
 export const categories = {
-  "Tipo de Refeição": ["Café da manhã", "Almoço", "Jantar", "Sobremesas"],
+  "Tipo de Refeição": [
+    "Café da manhã",
+    "Almoço",
+    "Jantar",
+    "Sobremesas",
+    "Lanches",
+    "Geral",
+  ],
   "Tempo de Preparo": ["Rápidas (≤ 30min)", "Elaboradas"],
   "Destaques da Comunidade": [
     "Mais populares",
@@ -204,17 +211,18 @@ export const newRecipeFormSchema = z.object({
     }),
   ),
 
-  recipe_cookingNotes: z.array(
-    z.object({
-      id: z.string(),
-      label: z.string(),
-      value: z.string(),
-    }),
-  ),
+  recipe_cookingNotes: z
+    .array(
+      z.object({
+        id: z.string(),
+        label: z.string(),
+        value: z.string(),
+      }),
+    )
+    .optional()
+    .default([]),
 
-  recipe_preparationHours: z
-    .string()
-    .min(1, { message: "Informe as horas, mesmo que seja zero." }),
+  recipe_preparationHours: z.string().optional().default("0"),
 
   recipe_preparationMinutes: z
     .string()
@@ -247,25 +255,22 @@ export const newRecipeFormSchema = z.object({
 
   new_recipe_ingredient_text: z
     .string()
-    .min(12, { message: "Pelo menos um ingrediente valida" })
+    .min(12, { message: "Pelo menos um ingrediente válido" })
     .max(100, { message: "Esse ingrediente tá meio longo demais, hein? 🤔" }),
 
   new_recipe_instruction_text: z
     .string()
-    .min(12, { message: "Pelo menos uma instrução valida" })
+    .min(12, { message: "Pelo menos uma instrução válida" })
     .max(100, { message: "Esse instrução tá meio longo demais, hein? 🤔" }),
 
-  new_recipe_cookingNote_text: z
-    .string()
-    .min(12, { message: "Adicione uma nota valida" })
-    .max(100, { message: "Esse dica tá meio longo demais, hein? 🤔" }),
+  new_recipe_cookingNote_text: z.string().optional(),
 });
 
 export const defaultValues = {
   recipe_title: "",
   recipe_description: "",
   recipe_preparationTime: "",
-  recipe_preparationHours: "",
+  recipe_preparationHours: "0",
   recipe_preparationMinutes: "",
   recipe_servings: "",
   recipe_category: "",

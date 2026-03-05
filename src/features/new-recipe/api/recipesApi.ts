@@ -13,7 +13,7 @@ export interface CreateRecipeFormData {
   steps: {
     ingredients: string[];
     instructions: string[];
-    cookingNotes: string[];
+    cookingNotes?: string[];
   };
 }
 
