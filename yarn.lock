@@ -2471,6 +2471,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@tiptap/core@npm:^3.20.1":
+  version: 3.20.1
+  resolution: "@tiptap/core@npm:3.20.1"
+  peerDependencies:
+    "@tiptap/pm": ^3.20.1
+  checksum: 10c0/9b6062d1e9c5f9780578745eb338e167d53de1a6160a6a1aadba201438775a4dc49555f5c04ef92ef440c5aafae78ea6d40091fce1f56183eacb202045a45378
+  languageName: node
+  linkType: hard
+
 "@tiptap/extension-blockquote@npm:^2.12.0":
   version: 2.12.0
   resolution: "@tiptap/extension-blockquote@npm:2.12.0"
@@ -2644,14 +2653,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@tiptap/extension-mention@npm:^2.12.0":
-  version: 2.27.2
-  resolution: "@tiptap/extension-mention@npm:2.27.2"
+"@tiptap/extension-mention@npm:^3.20.1":
+  version: 3.20.1
+  resolution: "@tiptap/extension-mention@npm:3.20.1"
   peerDependencies:
-    "@tiptap/core": ^2.7.0
-    "@tiptap/pm": ^2.7.0
-    "@tiptap/suggestion": ^2.7.0
-  checksum: 10c0/eb8ed89fca0855582834a6f5d28fd3d01cad7d2fc4012a8753b21aef87ad56e574d49e13e2eda901049c7b56364c6f5b6d0e7f594bddbec219bc91bc0f937683
+    "@tiptap/core": ^3.20.1
+    "@tiptap/pm": ^3.20.1
+    "@tiptap/suggestion": ^3.20.1
+  checksum: 10c0/17136f0bb6d88da3fbc1cf658b38c1f186779ed0eb0188562513b44592cae828c45a74b39525a2e4168249f596d6342cbfb46c9ad053a776ac9feb30246f704c
   languageName: node
   linkType: hard
 
@@ -2743,6 +2752,32 @@ __metadata:
     prosemirror-transform: "npm:^1.10.2"
     prosemirror-view: "npm:^1.37.0"
   checksum: 10c0/b64b19a627a74901c5c397d36c04162b8e223835f4d8ea1ce71be4b222337434e6553699189d1e0ae856ba60a06c8b28bb30ff9e21cfc05dac8a3ec2f6376fde
+  languageName: node
+  linkType: hard
+
+"@tiptap/pm@npm:^3.20.1":
+  version: 3.20.1
+  resolution: "@tiptap/pm@npm:3.20.1"
+  dependencies:
+    prosemirror-changeset: "npm:^2.3.0"
+    prosemirror-collab: "npm:^1.3.1"
+    prosemirror-commands: "npm:^1.6.2"
+    prosemirror-dropcursor: "npm:^1.8.1"
+    prosemirror-gapcursor: "npm:^1.3.2"
+    prosemirror-history: "npm:^1.4.1"
+    prosemirror-inputrules: "npm:^1.4.0"
+    prosemirror-keymap: "npm:^1.2.2"
+    prosemirror-markdown: "npm:^1.13.1"
+    prosemirror-menu: "npm:^1.2.4"
+    prosemirror-model: "npm:^1.24.1"
+    prosemirror-schema-basic: "npm:^1.2.3"
+    prosemirror-schema-list: "npm:^1.5.0"
+    prosemirror-state: "npm:^1.4.3"
+    prosemirror-tables: "npm:^1.6.4"
+    prosemirror-trailing-node: "npm:^3.0.0"
+    prosemirror-transform: "npm:^1.10.2"
+    prosemirror-view: "npm:^1.38.1"
+  checksum: 10c0/eebce5805ee5861a0bc675470d829dde5eb7337fe28f789522a07e670d60f3640a93bf414f3916c7274ed1e417321f351ea7412dbb0eab29a3a78ae4aaab3615
   languageName: node
   linkType: hard
 
@@ -5707,6 +5742,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"prosemirror-model@npm:^1.24.1":
+  version: 1.25.4
+  resolution: "prosemirror-model@npm:1.25.4"
+  dependencies:
+    orderedmap: "npm:^2.0.0"
+  checksum: 10c0/5ba99a235497df3452c0e2dfb71ee05d898fb9cb539c2a92583524fc4f337d8abab5c6b49b3af242c86327ea27cce41c7169a1e0c7bb4f7ef1502b311bd00cfc
+  languageName: node
+  linkType: hard
+
 "prosemirror-schema-basic@npm:^1.2.3":
   version: 1.2.4
   resolution: "prosemirror-schema-basic@npm:1.2.4"
@@ -5716,7 +5760,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"prosemirror-schema-list@npm:^1.4.1":
+"prosemirror-schema-list@npm:^1.4.1, prosemirror-schema-list@npm:^1.5.0":
   version: 1.5.1
   resolution: "prosemirror-schema-list@npm:1.5.1"
   dependencies:
@@ -5782,6 +5826,17 @@ __metadata:
     prosemirror-state: "npm:^1.0.0"
     prosemirror-transform: "npm:^1.1.0"
   checksum: 10c0/b175284082a3ab1be223ba1860931d094f996c0eabf046a78271fc8136c4e9b63de2c9a51c09a1fe73a9618d269402e30a611d260f153fba595fe465f0a94cee
+  languageName: node
+  linkType: hard
+
+"prosemirror-view@npm:^1.38.1":
+  version: 1.41.6
+  resolution: "prosemirror-view@npm:1.41.6"
+  dependencies:
+    prosemirror-model: "npm:^1.20.0"
+    prosemirror-state: "npm:^1.0.0"
+    prosemirror-transform: "npm:^1.1.0"
+  checksum: 10c0/a0dd304cabf11deb5b396c3568cf0ea39dcddc71b1834924a9a08bca73ce148779a8d66859f90acdeb8d5e68b3aaf1c0adbbc343af80840683c27f43596bdade
   languageName: node
   linkType: hard
 
@@ -6709,12 +6764,13 @@ __metadata:
     "@tanstack/eslint-plugin-query": "npm:^5.66.1"
     "@tanstack/react-query": "npm:^5.66.9"
     "@tanstack/react-query-devtools": "npm:^5.66.9"
+    "@tiptap/core": "npm:^3.20.1"
     "@tiptap/extension-character-count": "npm:^3.13.0"
     "@tiptap/extension-image": "npm:^2.12.0"
-    "@tiptap/extension-mention": "npm:^2.12.0"
+    "@tiptap/extension-mention": "npm:^3.20.1"
     "@tiptap/extension-placeholder": "npm:^2.12.0"
     "@tiptap/extensions": "npm:^3.13.0"
-    "@tiptap/pm": "npm:^2.12.0"
+    "@tiptap/pm": "npm:^3.20.1"
     "@tiptap/react": "npm:^2.12.0"
     "@tiptap/starter-kit": "npm:^2.12.0"
     "@tiptap/suggestion": "npm:^2.12.0"
@@ -6744,6 +6800,7 @@ __metadata:
     react-share: "npm:^5.2.2"
     tailwind-merge: "npm:^3.0.1"
     tailwindcss: "npm:4.0.0"
+    tippy.js: "npm:^6.3.7"
     typescript: "npm:^5"
     vaul: "npm:^1.1.2"
     zod: "npm:^3.24.1"
