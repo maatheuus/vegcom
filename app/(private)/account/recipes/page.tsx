@@ -1,7 +1,9 @@
+"use client";
+
 import RecipeActions from "@/features/account/components/(recipes)/RecipeActions";
 import AccountLayout from "@/features/account/components/AccountLayout";
 import Header from "@/features/account/components/Header";
-import { PlusCircleIcon } from "@phosphor-icons/react/ssr";
+import { PlusCircleIcon } from "@phosphor-icons/react";
 
 export default function Page() {
   return (
