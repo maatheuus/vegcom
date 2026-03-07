@@ -23,6 +23,8 @@ interface TypeConfig {
 }
 
 export const formatCategoryLabel = (category: MealType) => {
+  if (!category) return;
+
   const categoryLabel = category.toUpperCase();
 
   switch (categoryLabel) {
@@ -50,6 +52,8 @@ export const formatTimeLabel = (time: string) => {
 };
 
 export const formatDifficultyLabel = (difficulty: Difficulty) => {
+  if (!difficulty) return;
+
   const difficultyLabel = difficulty.toUpperCase();
 
   switch (difficultyLabel) {

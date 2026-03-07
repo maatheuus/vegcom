@@ -18,7 +18,7 @@ export function UserProfileTabs({
         className={`rounded-t-lg rounded-b-none px-6 py-2 ${
           activeTab === "recipes"
             ? "bg-green-500 text-white"
-            : "text-gray-600 hover:bg-gray-100"
+            : "text-green-200 hover:bg-green-100"
         }`}
       >
         Receitas Publicadas
@@ -29,7 +29,7 @@ export function UserProfileTabs({
         className={`rounded-t-lg rounded-b-none px-6 py-2 ${
           activeTab === "posts"
             ? "bg-green-500 text-white"
-            : "text-gray-600 hover:bg-gray-100"
+            : "text-green-200 hover:bg-green-100"
         }`}
       >
         Posts na Comunidade

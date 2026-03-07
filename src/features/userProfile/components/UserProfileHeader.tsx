@@ -2,7 +2,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/shared/ui/Avatar";
 import Col from "@/shared/ui/Layout/Helpers/Col";
 import Row from "@/shared/ui/Layout/Helpers/Row";
 import Text from "@/shared/ui/Text";
-import { UserProfileDetails } from "../types";
+import type { UserProfileDetails } from "../types";
 
 interface UserProfileHeaderProps {
   user: UserProfileDetails;
@@ -10,12 +10,12 @@ interface UserProfileHeaderProps {
 
 export function UserProfileHeader({ user }: UserProfileHeaderProps) {
   return (
-    <Col className="w-full gap-y-4 rounded-2xl bg-white p-6 shadow-sm">
+    <Col className="w-full gap-y-4">
       <Row className="items-center gap-x-6">
         <Avatar className="h-24 w-24 border-2 border-green-500">
           <AvatarImage src={user.avatarUrl} alt={user.name} />
           <AvatarFallback className="text-2xl">
-            {user.name?.slice(0, 2).toUpperCase()}
+            {user.name?.slice(0, 2)}
           </AvatarFallback>
         </Avatar>
         <Col className="gap-y-1">
@@ -23,7 +23,7 @@ export function UserProfileHeader({ user }: UserProfileHeaderProps) {
             as="h1"
             type={Text.Type.HeadingThree}
             weight={Text.Weight.Bold}
-            className="text-gray-900"
+            className="font-lora text-green-500"
           >
             {user.name}
           </Text>
@@ -31,7 +31,7 @@ export function UserProfileHeader({ user }: UserProfileHeaderProps) {
             <Text
               as="p"
               type={Text.Type.BodyThree}
-              className="max-w-2xl text-gray-600"
+              className="text-black-100 font-maitree max-w-2xl"
             >
               {user.bio}
             </Text>

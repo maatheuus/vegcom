@@ -1,31 +1,30 @@
-"use client";
-
-import { mockUserProfileData } from "@/features/userProfile/api/mockData";
-import { UserProfileContent } from "@/features/userProfile/components/UserProfileContent";
+import { getUserDetails } from "@/features/userProfile/api/userApi";
 import { UserProfileHeader } from "@/features/userProfile/components/UserProfileHeader";
-import { UserProfileTabs } from "@/features/userProfile/components/UserProfileTabs";
+import UserProfileTabsClient from "@/features/userProfile/components/UserProfileTabsClient";
 import Layout from "@/shared/ui/Layout/";
-import { useState } from "react";
+import { notFound } from "next/navigation";
 
 interface Props {
   params: Promise<{ id: string }>;
 }
 
-export default function UserProfilePage({ params: _params }: Props) {
-  const [activeTab, setActiveTab] = useState<"recipes" | "posts">("recipes");
+export default async function Page({ params }: Props) {
+  const { id } = await params;
+  const response = await getUserDetails(Number(id)).catch(() => null);
 
-  const user = mockUserProfileData;
+  if (!response?.data) notFound();
 
+  const user = response.data;
+  console.log(user);
   return (
     <Layout.Default
       className="hidden-scrollbar overflow-hidden"
-      gridClassName="overflow-auto bg-green-50"
+      gridClassName="overflow-auto"
     >
       <section className="hidden-scrollbar container mx-auto overflow-scroll scroll-auto px-4 py-8">
         <div className="mx-auto flex max-w-5xl flex-col gap-y-4">
           <UserProfileHeader user={user} />
-          <UserProfileTabs activeTab={activeTab} onTabChange={setActiveTab} />
-          <UserProfileContent user={user} activeTab={activeTab} />
+          <UserProfileTabsClient user={user} />
         </div>
       </section>
     </Layout.Default>

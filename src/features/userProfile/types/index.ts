@@ -1,5 +1,5 @@
-import { PostCardDataProps } from "@/shared/types";
 import { RecipeCard } from "@/entities/recipe/types";
+import { PostCardDataProps } from "@/shared/types";
 
 export interface UserProfileDetails {
   id: string;
