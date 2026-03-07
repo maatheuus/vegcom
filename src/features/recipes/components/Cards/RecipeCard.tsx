@@ -1,6 +1,7 @@
 import type { Recipe } from "@/entities/recipe/types";
 import { useGetUser } from "@/features/auth/api/queries/getAuthApiClient";
 import StarRating from "@/features/community/components/AsideContent/StarRating";
+import { formatCategoryLabel } from "@/features/recipe-details/ContentRecipe/utils";
 import Button from "@/shared/ui/Button";
 import ImageCarouselModal, {
   type CarouselImage,
@@ -101,53 +102,83 @@ export default function RecipeCard({ recipe, className }: Props) {
             </button>
           )}
 
-          <div className="absolute top-0 right-0 p-2">
+          <div className="absolute top-0 right-0 flex w-full items-center justify-between p-2">
             {isUserRecipe ? (
-              <Button.Icon
-                className="flex items-center justify-center rounded-full bg-green-500/80 p-2 backdrop-blur-sm transition-colors hover:bg-green-500"
-                aria-label="User recipe"
-                aria-disabled
-                role="div"
-                icon={
-                  <ChefHatIcon weight="fill" className="size-6 text-green-50" />
-                }
-              />
+              <>
+                <div className="flex h-6 items-center justify-center rounded-full bg-green-500 px-3">
+                  <Text
+                    as="span"
+                    type={Text.Type.BodyFive}
+                    weight={Text.Weight.SemiBold}
+                    className="font-maitree rounded-full text-green-50"
+                  >
+                    {formatCategoryLabel(recipe.category)}
+                  </Text>
+                </div>
+                <Button.Icon
+                  className="flex items-center justify-center rounded-full bg-green-500/80 p-2 backdrop-blur-sm transition-colors hover:bg-green-500"
+                  aria-label="User recipe"
+                  aria-disabled
+                  role="div"
+                  icon={
+                    <ChefHatIcon
+                      weight="fill"
+                      className="size-6 text-green-50"
+                    />
+                  }
+                />
+              </>
             ) : (
-              <Button.Icon
-                aria-label={
-                  isSaved ? "Desfavoritar receita" : "Favoritar receita"
-                }
-                className="flex items-center justify-center rounded-full bg-green-500/80 p-2 transition-colors hover:bg-green-500"
-                onClick={handleFavorite}
-                icon={
-                  !isMounted ? (
-                    <HeartIcon
-                      weight="regular"
-                      className="size-6 text-green-50"
-                    />
-                  ) : isSaved ? (
-                    <HeartIcon weight="fill" className="size-6 text-green-50" />
-                  ) : (
-                    <HeartIcon
-                      weight="regular"
-                      className="size-6 text-green-50"
-                    />
-                  )
-                }
-              />
+              <>
+                <div className="z-10 flex h-6 items-center justify-center rounded-full bg-green-500 px-3">
+                  <Text
+                    as="span"
+                    type={Text.Type.BodyFive}
+                    weight={Text.Weight.SemiBold}
+                    className="font-maitree rounded-full text-green-50"
+                  >
+                    {formatCategoryLabel(recipe.category)}
+                  </Text>
+                </div>
+                <Button.Icon
+                  aria-label={
+                    isSaved ? "Desfavoritar receita" : "Favoritar receita"
+                  }
+                  className="flex items-center justify-center rounded-full bg-green-500/80 p-2 transition-colors hover:bg-green-500"
+                  onClick={handleFavorite}
+                  icon={
+                    !isMounted ? (
+                      <HeartIcon
+                        weight="regular"
+                        className="size-6 text-green-50"
+                      />
+                    ) : isSaved ? (
+                      <HeartIcon
+                        weight="fill"
+                        className="size-6 text-green-50"
+                      />
+                    ) : (
+                      <HeartIcon
+                        weight="regular"
+                        className="size-6 text-green-50"
+                      />
+                    )
+                  }
+                />
+              </>
             )}
           </div>
         </div>
 
         <Link
           href={`/recipes/${recipe?.slug}`}
-          className="grid h-full flex-[1] space-y-2 p-4"
+          className="grid h-full flex-[1] space-y-2 p-4 md:space-y-4"
         >
           <div className="space-y-2">
             <Text
               as="h3"
               weight={Text.Weight.SemiBold}
-              className="font-lora line-clamp-2 text-lg font-semibold text-green-500"
+              className="font-lora line-clamp-1 text-lg font-semibold text-green-500"
             >
               {recipe?.title}
             </Text>

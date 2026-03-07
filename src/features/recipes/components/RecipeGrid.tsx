@@ -7,15 +7,15 @@ interface Props {
   recipesLenght?: number;
 }
 
-export function RecipeGrid({ recipes, recipesLenght }: Props) {
-  const getColumnsCount = (length?: number) => {
-    if (!length) return "1fr";
-    if (length === 1) return "1fr";
-    if (length === 2) return "repeat(2, minmax(0, 1fr))";
-    if (length === 3) return "repeat(3, minmax(0, 1fr))";
-    return "repeat(4, minmax(0, 1fr))";
-  };
+export const getColumnsCount = (length?: number) => {
+  if (!length) return "1fr";
+  if (length === 1) return "1fr";
+  if (length === 2) return "repeat(2, minmax(0, 1fr))";
+  if (length === 3) return "repeat(3, minmax(0, 1fr))";
+  return "repeat(4, minmax(0, 1fr))";
+};
 
+export function RecipeGrid({ recipes, recipesLenght }: Props) {
   return (
     <Grid
       className="grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 md:gap-6 lg:grid-cols-4 lg:gap-8"

@@ -41,6 +41,14 @@ export const formatCategoryLabel = (category: MealType) => {
   }
 };
 
+export const formatTimeLabel = (time: string) => {
+  const timeLabel = "minutos";
+
+  if (time.includes(timeLabel)) return time.replace(timeLabel, "min");
+
+  return time;
+};
+
 export const formatDifficultyLabel = (difficulty: Difficulty) => {
   const difficultyLabel = difficulty.toUpperCase();
 

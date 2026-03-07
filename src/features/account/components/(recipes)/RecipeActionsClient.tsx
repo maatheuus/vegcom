@@ -4,8 +4,10 @@ import RecipeCard from "@/features/account/components/(recipes)/RecipeCard";
 import { useGetUser } from "@/features/auth/api/queries/getAuthApiClient";
 import { recipeApi } from "@/features/recipes/api/recipesApi";
 import type { DetailedRecipe } from "@/features/recipes/api/types";
+import { getColumnsCount } from "@/features/recipes/components/RecipeGrid";
 import { RecipeGridSkeleton } from "@/features/recipes/components/RecipeGridSkeleton";
 import { usePagination } from "@/shared/hooks/usePagination";
+import Grid from "@/shared/ui/Layout/Helpers/Grid";
 import {
   Pagination,
   PaginationContent,
@@ -159,7 +161,12 @@ export default function RecipeActions({ isFavorites }: Props) {
             <RecipeFilter />
           </div>
 
-          <div className="grid w-full grid-cols-1 items-center justify-start gap-4 md:grid-cols-2 lg:grid-cols-3">
+          <Grid
+            className="grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 md:gap-6 lg:grid-cols-4 lg:gap-8"
+            style={{
+              gridTemplateColumns: getColumnsCount(currentItemsRecipe.length),
+            }}
+          >
             {currentItemsRecipe.map((recipe) => (
               <RecipeCard
                 key={recipe.id}
@@ -167,7 +174,7 @@ export default function RecipeActions({ isFavorites }: Props) {
                 isFavorites={isFavorites}
               />
             ))}
-          </div>
+          </Grid>
         </>
       ) : (
         <RecipeEmptyState
