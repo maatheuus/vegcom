@@ -11,7 +11,7 @@ interface Props {
   params: Promise<{ id: string }>;
 }
 
-export default function UserProfilePage({ params }: Props) {
+export default function UserProfilePage({ params: _params }: Props) {
   const [activeTab, setActiveTab] = useState<"recipes" | "posts">("recipes");
 
   const user = mockUserProfileData;

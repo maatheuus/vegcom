@@ -181,10 +181,11 @@ export default function CommentComposer({
         queryClient.invalidateQueries({ queryKey: ["community-posts"] });
 
         router.refresh();
-      } catch (error: any) {
+      } catch (error) {
+        const err = error as { message?: string; status?: number };
         if (
-          error?.message === "Usuário não está autenticado" ||
-          error?.status === 401
+          err?.message === "Usuário não está autenticado" ||
+          err?.status === 401
         ) {
           router.push("/login");
         } else {

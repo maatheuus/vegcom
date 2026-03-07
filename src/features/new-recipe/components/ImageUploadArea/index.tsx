@@ -343,6 +343,7 @@ export default function ImageUploadArea({
                     : "border-green-200 hover:border-green-400 hover:shadow-md"
                 } ${isLoading ? "animate-pulse" : ""}`}
               >
+                {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
                   src={imageSrc}
                   alt={testImage.name}

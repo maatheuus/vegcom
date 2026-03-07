@@ -29,14 +29,14 @@ export default async function page({ params }: Props) {
       recipe = response.data;
 
       permanentRedirect(`/recipes/${recipe.slug}`);
-    } catch (error) {
+    } catch (_error) {
       notFound();
     }
   } else {
     try {
       const response = await getRecipeBySlug(slug);
       recipe = response.data;
-    } catch (error) {
+    } catch (_error) {
       notFound();
     }
   }

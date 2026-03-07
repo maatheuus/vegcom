@@ -72,7 +72,7 @@ export function UserProfileContent({
         <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {user.recipes.length > 0 ? (
             user.recipes.map((recipe) => (
-              <RecipeCard key={recipe.id} recipe={recipe as any} />
+              <RecipeCard key={recipe.id} recipe={recipe as unknown as React.ComponentProps<typeof RecipeCard>["recipe"]} />
             ))
           ) : (
             <Col className="col-span-full items-center py-12 text-center text-gray-500">
