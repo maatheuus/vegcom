@@ -4,48 +4,63 @@ import type { UseFormReturn } from "react-hook-form";
 import type { z } from "zod";
 
 import Text from "@/shared/ui/Text";
-import { useRef, useState } from "react";
-import { messagesToDisplayForPremium, personalInfoFormSchema } from "../utils";
+import { useEffect, useRef, useState } from "react";
+import {
+  getInitials,
+  messagesToDisplayForPremium,
+  personalInfoFormSchema,
+} from "../utils";
 
-type PersonalInfoFormValues = z.infer<typeof personalInfoFormSchema>;
+import { toast } from "@/shared/hooks/use-toast";
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/shared/ui/Avatar";
 import {
-    Dialog,
-    DialogContent,
-    DialogDescription,
-    DialogTitle,
-    DialogTrigger,
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogTitle,
+  DialogTrigger,
 } from "@/shared/ui/Dialog";
 import { Form } from "@/shared/ui/Form";
 import {
-    FloppyDiskIcon,
-    PencilSimpleIcon,
-    TrashIcon,
+  FloppyDiskIcon,
+  PencilSimpleIcon,
+  TrashIcon,
 } from "@phosphor-icons/react";
 import Image from "next/image";
 import FormInformation from "./FormInformation";
 
+type PersonalInfoFormValues = z.infer<typeof personalInfoFormSchema>;
 interface Props extends React.HTMLAttributes<HTMLFormElement> {
   form: UseFormReturn<PersonalInfoFormValues>;
   setBioLength: (length: number) => void;
   isEditing?: boolean;
+  avatarUrl?: string;
+  onImageChange: (file: File | null) => void;
 }
 
 export default function UserInformations({
   form,
   isEditing,
   setBioLength,
+  avatarUrl,
+  onImageChange,
 }: Props) {
   const [selectedImage, setSelectedImage] = useState<File | null>(null);
+  const { fullName, email } = form.getValues();
   const [imagePreview, setImagePreview] = useState<string>(
-    "https://github.com/shadcn.png",
+    avatarUrl || "https://github.com/shadcn.png",
   );
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [isDialogShowImageOpen, setIsDialogShowImageOpen] = useState(false);
   const [isDragging, setIsDragging] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const { fullName, email } = form.getValues();
+
+  useEffect(() => {
+    if (avatarUrl && !selectedImage) {
+      setImagePreview(avatarUrl);
+    }
+  }, [avatarUrl, selectedImage]);
 
   const _randomMessage =
     messagesToDisplayForPremium[
@@ -53,16 +68,36 @@ export default function UserInformations({
     ];
 
   const handleImageSelect = (file: File) => {
-    if (file && file.type.startsWith("image/")) {
-      setSelectedImage(file);
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        if (e.target?.result) {
-          setImagePreview(e.target.result as string);
-        }
-      };
-      reader.readAsDataURL(file);
+    const MAX_FILE_SIZE = 2 * 1024 * 1024;
+    const ALLOWED_TYPES = ["image/png", "image/jpeg", "image/jpg"];
+
+    if (!ALLOWED_TYPES.includes(file.type)) {
+      toast({
+        title: "Formato inválido",
+        description: "Por favor, selecione uma imagem PNG, JPG ou JPEG.",
+        variant: "destructive",
+      });
+      return;
     }
+
+    if (file.size > MAX_FILE_SIZE) {
+      toast({
+        title: "Arquivo muito grande",
+        description:
+          "Essa imagem está mais pesada que uma jaca inteira! Tente algo até 2MB.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    setSelectedImage(file);
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      if (e.target?.result) {
+        setImagePreview(e.target.result as string);
+      }
+    };
+    reader.readAsDataURL(file);
   };
 
   const handleFileInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -92,13 +127,17 @@ export default function UserInformations({
   };
 
   const handleImageSave = () => {
-    console.log("Salvando imagem:", selectedImage);
+    onImageChange(selectedImage);
     setIsDialogOpen(false);
+    setTimeout(() => {
+      setIsDialogShowImageOpen(false);
+    }, 500);
   };
 
   const handleImageRemove = () => {
     setSelectedImage(null);
-    setImagePreview("https://github.com/shadcn.png");
+    setImagePreview("");
+    onImageChange(null);
     if (fileInputRef.current) {
       fileInputRef.current.value = "";
     }
@@ -121,8 +160,8 @@ export default function UserInformations({
             <DialogTrigger asChild>
               <Avatar className="size-24 border-4 border-green-500">
                 <AvatarImage src={imagePreview} alt="Avatar do usuário" />
-                <AvatarFallback>
-                  {fullName.split(" ")[0][0] + fullName.split(" ")[1][0]}
+                <AvatarFallback className="text-2xl">
+                  {fullName ? getInitials(fullName) : "U"}
                 </AvatarFallback>
               </Avatar>
             </DialogTrigger>
@@ -239,7 +278,7 @@ export default function UserInformations({
                 <input
                   ref={fileInputRef}
                   type="file"
-                  accept="image/*"
+                  accept=".png, .jpg, .jpeg"
                   onChange={handleFileInputChange}
                   className="hidden"
                 />
@@ -247,7 +286,7 @@ export default function UserInformations({
                   type={Text.Type.BodyFive}
                   className="font-maitree mt-2 text-green-200"
                 >
-                  PNG, JPG ou JPEG até 5MB
+                  PNG, JPG ou JPEG até 2MB
                 </Text>
               </div>
 
@@ -268,7 +307,7 @@ export default function UserInformations({
                   disabled={!selectedImage}
                 >
                   <FloppyDiskIcon size={18} />
-                  Salvar
+                  Aplicar
                 </button>
               </div>
             </div>

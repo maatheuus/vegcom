@@ -18,9 +18,7 @@ const benefits = [
   "Acesso ilimitado a todas as receitas",
   "Crie e compartilhe receitas sem limites",
   "Salve quantas receitas favoritas quiser",
-  "Suporte prioritário via chat",
-  "Experiência sem anúncios",
-  "Acesso antecipado a novos recursos",
+  "Mais liberdade ao falar no nosso Chat",
 ];
 
 export default function SubscribedView({ className, user, ...props }: Props) {

@@ -5,7 +5,10 @@ import {
   maxLengthForBio,
   personalInfoFormSchema,
 } from "@/features/account/components/utils";
+import { useUpdateProfile } from "@/features/account/hooks/mutations/useUpdateProfile";
+import { useUploadAvatar } from "@/features/account/hooks/mutations/useUploadAvatar";
 import type { User } from "@/features/auth/api/types";
+import { toast } from "@/shared/hooks/use-toast";
 import Button from "@/shared/ui/Button";
 import Row from "@/shared/ui/Layout/Helpers/Row";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -24,6 +27,14 @@ interface InformationWrapperProps {
 }
 export default function InformationWrapper({ user }: InformationWrapperProps) {
   const [isEditing, setIsEditing] = useState(false);
+  const [selectedImage, setSelectedImage] = useState<File | null>(null);
+
+  const { mutateAsync: updateProfile, isPending: isUpdatingProfile } =
+    useUpdateProfile();
+  const { mutateAsync: uploadAvatar, isPending: isUploadingAvatar } =
+    useUploadAvatar();
+
+  const isPending = isUpdatingProfile || isUploadingAvatar;
 
   const form = useForm<z.infer<typeof personalInfoFormSchema>>({
     resolver: zodResolver(personalInfoFormSchema),
@@ -31,7 +42,7 @@ export default function InformationWrapper({ user }: InformationWrapperProps) {
       fullName: user.name,
       email: user.email,
       bio: user.informations.aboutInfo,
-      dietType: user.informations.preference,
+      preference: user.informations.preference,
       culinaryLevel: user.informations.culinaryLevel,
       location: user.informations.location,
       publicProfile: true,
@@ -46,16 +57,61 @@ export default function InformationWrapper({ user }: InformationWrapperProps) {
     form.formState.errors.bio ||
     form.formState.errors.fullName ||
     form.formState.errors.email ||
-    form.formState.errors.dietType ||
+    form.formState.errors.preference ||
     form.formState.errors.culinaryLevel ||
     form.formState.errors.location ||
     bioLength > maxLengthForBio;
 
-  const _onSubmit = (values: z.infer<typeof personalInfoFormSchema>) => {
-    if (form.formState.errors) return;
+  const _onSubmit = async (values: z.infer<typeof personalInfoFormSchema>) => {
+    if (form.formState.errors && Object.keys(form.formState.errors).length > 0)
+      return;
 
-    console.log("Salvo com sucesso:", values);
-    setIsEditing(false);
+    const payload: any = {};
+    const infoPayload: any = {};
+
+    if (values.fullName !== user.name) payload.name = values.fullName;
+
+    if (values.bio !== user.informations?.aboutInfo)
+      infoPayload.aboutInfo = values.bio;
+    if (values.preference !== user.informations?.preference)
+      infoPayload.preference = values.preference;
+    if (values.culinaryLevel !== user.informations?.culinaryLevel)
+      infoPayload.culinaryLevel = values.culinaryLevel;
+    if (values.location !== user.informations?.location)
+      infoPayload.location = values.location;
+
+    if (Object.keys(infoPayload).length > 0) {
+      payload.informations = infoPayload;
+    }
+
+    if (Object.keys(payload).length === 0 && !selectedImage) {
+      setIsEditing(false);
+      return;
+    }
+
+    try {
+      if (Object.keys(payload).length > 0) {
+        await updateProfile(payload);
+      }
+
+      if (selectedImage) {
+        await uploadAvatar(selectedImage);
+      }
+
+      toast({
+        title: "Sucesso!",
+        description: "Suas informações foram atualizadas com sucesso.",
+        variant: "success",
+      });
+      setIsEditing(false);
+      setSelectedImage(null);
+    } catch (err) {
+      toast({
+        title: "Erro ao atualizar",
+        description: "Não foi possível atualizar as informações no momento.",
+        variant: "destructive",
+      });
+    }
   };
 
   const _onCancel = () => {
@@ -95,10 +151,20 @@ export default function InformationWrapper({ user }: InformationWrapperProps) {
             }
             variant="filled"
             size="default"
-            onClick={() => setIsEditing(!isEditing)}
+            type={isEditing ? "button" : "button"}
+            onClick={
+              isEditing
+                ? form.handleSubmit(_onSubmit)
+                : () => setIsEditing(true)
+            }
+            disabled={isPending}
             className="font-maitree cursor-pointer bg-green-200 py-2"
           >
-            {isEditing ? "Salvar Perfil" : "Editar Perfil"}
+            {isPending
+              ? "Salvando..."
+              : isEditing
+                ? "Salvar Perfil"
+                : "Editar Perfil"}
           </Button.Icon>
         </Row>
       </Header>
@@ -107,6 +173,8 @@ export default function InformationWrapper({ user }: InformationWrapperProps) {
         isEditing={!isEditing}
         form={form}
         setBioLength={setBioLength}
+        avatarUrl={user.informations.avatarUrl}
+        onImageChange={setSelectedImage}
       />
       <Row className="ml-auto flex justify-end gap-x-2 md:hidden">
         <Button
@@ -133,10 +201,18 @@ export default function InformationWrapper({ user }: InformationWrapperProps) {
           }
           variant="filled"
           size="default"
-          onClick={() => setIsEditing(!isEditing)}
+          type={isEditing ? "button" : "button"}
+          onClick={
+            isEditing ? form.handleSubmit(_onSubmit) : () => setIsEditing(true)
+          }
+          disabled={isPending}
           className="font-maitree cursor-pointer bg-green-200 py-2"
         >
-          {isEditing ? "Salvar Perfil" : "Editar Perfil"}
+          {isPending
+            ? "Salvando..."
+            : isEditing
+              ? "Salvar Perfil"
+              : "Editar Perfil"}
         </Button.Icon>
       </Row>
     </>

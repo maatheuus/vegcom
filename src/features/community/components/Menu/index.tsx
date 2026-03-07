@@ -14,6 +14,7 @@ import {
   LightbulbFilamentIcon,
   PlantIcon,
   PlusCircleIcon,
+  SignOutIcon,
   UserCircleIcon,
   UsersFourIcon,
 } from "@phosphor-icons/react";
@@ -341,6 +342,16 @@ export default function Menu() {
                       {isLoggedIn ? "Minha Conta" : "Entrar"}
                     </span>
                   </Link>
+
+                  {isLoggedIn && (
+                    <Link
+                      href="/logout"
+                      className="flex items-center gap-2 rounded-lg p-3 text-green-800 hover:bg-green-100"
+                    >
+                      <SignOutIcon size={22} className="text-green-600" />
+                      <span className="font-lora text-lg italic">Sair</span>
+                    </Link>
+                  )}
                 </div>
               </motion.div>
             )}

@@ -3,7 +3,7 @@
 import { serverFetch } from "@/shared/api/axios/serverFetch";
 import { revalidatePath } from "next/cache";
 import { cookies } from "next/headers";
-import type { AuthResponse, LoginCredentials } from "../../types";
+import type { AuthResponse, LoginCredentials, SignupData } from "../../types";
 import type { ApiResponse, User } from "../types";
 
 export const getUser = async () => {
@@ -32,6 +32,16 @@ export const getSignin = async (credentials: LoginCredentials) => {
   });
 
   revalidatePath("/auth/me");
+  return responseData;
+};
+
+export const getSignup = async (data: SignupData) => {
+  const responseData = await serverFetch<AuthResponse>("/auth/signup", {
+    method: "POST",
+    next: { tags: ["signup"] },
+    body: data,
+  });
+
   return responseData;
 };
 

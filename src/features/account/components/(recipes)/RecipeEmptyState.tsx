@@ -59,11 +59,6 @@ export default function RecipeEmptyState({
           textRef.current,
           { opacity: 1, y: 0, duration: 0.6, ease: "power2.out" },
           "-=0.8",
-        )
-        .to(
-          buttonRef.current,
-          { opacity: 1, y: 0, duration: 0.6, ease: "power2.out" },
-          "-=0.5",
         );
 
       gsap.to(potRef.current, {
@@ -111,7 +106,7 @@ export default function RecipeEmptyState({
               : " não está na despensa. Será que vale improvisar?"}
           </Text>
         </div>
-        <div ref={buttonRef} className="mt-6 opacity-0">
+        <div ref={buttonRef} className="mt-6 md:hidden">
           <Button.Icon
             onClick={onClearFilters}
             leftIcon={<BroomIcon />}
@@ -141,7 +136,7 @@ export default function RecipeEmptyState({
             : "Vamos encher essa panela! Adicione sua primeira receita e comece a criar seu livro de sabores."}
         </Text>
       </div>
-      <div ref={buttonRef} className="mt-6 opacity-0">
+      <div ref={buttonRef} className="mt-6 md:hidden">
         <Button.Link
           href={isFavorites ? "/recipes" : "/recipes/new"}
           leftIcon={isFavorites ? <HeartIcon /> : <PlusIcon />}

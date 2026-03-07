@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { CulinaryLevel, Preference } from "../types";
 
 export const messagesToDisplayForPremium = [
   {
@@ -79,7 +80,7 @@ export const personalInfoFormSchema = z
       .min(6, "A senha deve ter pelo menos 6 caracteres")
       .optional(),
     confirmPassword: z.string().optional(),
-    dietType: z.string().min(1, "Escolha seu tipo de dieta"),
+    preference: z.string().min(1, "Escolha seu tipo de dieta"),
     culinaryLevel: z.string().min(1, "Qual seu nível culinário?"),
     location: z.string().min(2, "Nos conte onde você está"),
     publicProfile: z.boolean(),
@@ -104,16 +105,16 @@ export const personalInfoFormSchema = z
     },
   );
 
-export const dietOptions = [
-  { value: "vegetarian", label: "Vegetariano" },
-  { value: "vegan", label: "Vegano" },
-  { value: "plant-based", label: "Plant-based" },
+export const preferenceOptions = [
+  { value: Preference.VEGAN, label: "Vegano (a)" },
+  { value: Preference.VEGETARIAN, label: "Vegetariano (a)" },
+  { value: Preference.OTHER, label: "Outro" },
 ];
 
 export const culinaryLevelOptions = [
-  { value: "beginner", label: "Queima tudo" },
-  { value: "intermediate", label: "Sabe fritar um ovo" },
-  { value: "advanced", label: "MasterChef não é nada" },
+  { value: CulinaryLevel.BEGINNER, label: "Queima tudo" },
+  { value: CulinaryLevel.INTERMEDIATE, label: "Acerta o arroz soltinho" },
+  { value: CulinaryLevel.ADVANCED, label: "MasterChef não é nada" },
 ];
 
 export const bioTooShortMessages = [
@@ -130,3 +131,10 @@ export const bioTooLongMessages = [
   "Você é incrível, mas precisamos que você se descreva em menos palavras 📝🤏",
   "Lembra daquele resumo de 4 linhas do colégio? É tipo isso aqui. 📄😬",
 ];
+
+export const getInitials = (name: string) => {
+  const parts = name.trim().split(" ");
+  const first = parts[0]?.[0] || "";
+  const last = parts.length > 1 ? parts[parts.length - 1]?.[0] : "";
+  return (first + last).toUpperCase();
+};

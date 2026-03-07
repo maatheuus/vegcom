@@ -27,7 +27,7 @@ import { useState, type ComponentProps, type FC } from "react";
 import SubmitButton from "../SubmitButton/SubmitButton";
 
 const formSchema = z.object({
-  username: z.string().min(4, { message: "Deve conter no mínimo 4 letras." }),
+  name: z.string().min(4, { message: "Deve conter no mínimo 4 letras." }),
   email: z.string().email({ message: "Endereço de email inválido." }),
   password: z
     .string()
@@ -41,7 +41,7 @@ const SignupForm: FC<ComponentProps<"form">> = ({ className, ...props }) => {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      username: formData.username || "",
+      name: formData.name || "",
       email: formData.email || "",
       password: formData.password || "",
     },
@@ -82,7 +82,7 @@ const SignupForm: FC<ComponentProps<"form">> = ({ className, ...props }) => {
         <Col className="items-center gap-3">
           <FormField
             control={form.control}
-            name="username"
+            name="name"
             render={({ field }) => (
               <FormItem className="w-full">
                 <FormControl>

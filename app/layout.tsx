@@ -28,7 +28,7 @@ export const metadata: Metadata = {
     "veganismo",
     "gastronomia vegana",
   ],
-  authors: [{ name: "VegCom Team" }],
+  authors: [{ name: "Maat" }],
   creator: "VegCom",
   publisher: "VegCom",
   metadataBase: new URL("https://vegcom.life"),

@@ -31,6 +31,7 @@ interface Props {
     onClick: () => void;
   };
   actions?: HeaderAction[];
+  hideMobileActions?: boolean;
 }
 
 export default function Header({
@@ -41,6 +42,7 @@ export default function Header({
   children,
   className,
   actions,
+  hideMobileActions,
   ...props
 }: Props) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -115,7 +117,7 @@ export default function Header({
             </div>
           )}
 
-          {actions && actions.length > 0 && (
+          {!hideMobileActions && actions && actions.length > 0 && (
             <Button.Icon
               onClick={() => setIsMenuOpen(true)}
               className="rounded p-2 text-green-500 hover:bg-green-50 md:hidden"
@@ -138,7 +140,7 @@ export default function Header({
         </div>
       </div>
 
-      {actions && actions.length > 0 && (
+      {!hideMobileActions && actions && actions.length > 0 && (
         <Sheet open={isMenuOpen} onOpenChange={setIsMenuOpen}>
           <SheetContent side="bottom" className="rounded-t-2xl">
             <SheetHeader className="mb-4 text-left">

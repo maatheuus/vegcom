@@ -20,7 +20,7 @@ const features = [
   "Acesso ilimitado a todas as receitas",
   "Crie e compartilhe receitas sem limites",
   "Salve quantas receitas favoritas quiser",
-  "Suporte prioritário via chat",
+  "Mais liberdade ao falar no nosso Chat",
 ];
 
 export default function NotSubscribedView({

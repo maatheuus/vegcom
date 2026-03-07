@@ -38,7 +38,6 @@ export async function middleware(request: NextRequest) {
 
   const tokenCookie = request.cookies.get("token");
   const tokenValue = tokenCookie?.value;
-
   const isTokenValid =
     tokenValue && !isTokenExpired(tokenValue) && !isServerExpired;
 

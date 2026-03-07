@@ -5,7 +5,6 @@ import Text from "@/shared/ui/Text";
 
 export default async function AccountHeader() {
   const user = await getUser();
-  console.log("user", user);
   return (
     <>
       <div>

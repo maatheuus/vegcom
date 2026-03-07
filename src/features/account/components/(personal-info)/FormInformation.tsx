@@ -1,17 +1,17 @@
 import {
-    FormControl,
-    FormField,
-    FormItem,
-    FormLabel,
-    FormMessage,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
 } from "@/shared/ui/Form";
 import { Input } from "@/shared/ui/Input";
 import {
-    Select,
-    SelectContent,
-    SelectItem,
-    SelectTrigger,
-    SelectValue,
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
 } from "@/shared/ui/Select";
 import { Switch } from "@/shared/ui/Switch";
 import type { UseFormReturn } from "react-hook-form";
@@ -22,12 +22,12 @@ import Textarea from "@/shared/ui/TextArea";
 import clsx from "clsx";
 import { useState } from "react";
 import {
-    bioTooLongMessages,
-    bioTooShortMessages,
-    culinaryLevelOptions,
-    dietOptions,
-    maxLengthForBio,
-    personalInfoFormSchema,
+  bioTooLongMessages,
+  bioTooShortMessages,
+  culinaryLevelOptions,
+  maxLengthForBio,
+  personalInfoFormSchema,
+  preferenceOptions,
 } from "../utils";
 
 type PersonalInfoFormValues = z.infer<typeof personalInfoFormSchema>;
@@ -49,7 +49,7 @@ export default function FormInformation({
     null,
   );
 
-  const { email, location, publicProfile, culinaryLevel } = form.getValues();
+  const { email, location, publicProfile } = form.getValues();
 
   return (
     <form className={`space-y-6 ${className || ""}`}>
@@ -80,19 +80,19 @@ export default function FormInformation({
           <FormField
             control={form.control}
             name="email"
-            render={({ field }) => (
+            render={() => (
               <FormItem>
                 <FormLabel className="font-maitree text-base font-semibold text-green-500">
                   Email
                 </FormLabel>
-                <FormControl className="rounded-lg">
-                  <Input
-                    type="email"
-                    placeholder={email || "email@gmail.com"}
-                    disabled={isEditing}
-                    {...field}
-                  />
-                </FormControl>
+                <div
+                  className="font-maitree flex w-full cursor-not-allowed rounded-lg border border-green-500 bg-transparent px-3.5 py-2 text-sm text-green-500 opacity-50 transition-colors focus-visible:ring-1 md:text-base"
+                  aria-disabled
+                >
+                  <Text className="font-maitree text-sm text-green-500">
+                    {email || "email@gmail.com"}
+                  </Text>
+                </div>
                 <FormMessage />
               </FormItem>
             )}
@@ -162,7 +162,7 @@ export default function FormInformation({
         <div className="w-full">
           <FormField
             control={form.control}
-            name="dietType"
+            name="preference"
             render={({ field }) => (
               <FormItem>
                 <FormLabel className="font-maitree text-base font-semibold text-green-500">
@@ -178,7 +178,7 @@ export default function FormInformation({
                       <SelectValue placeholder="Selecione seu estilo de vida" />
                     </SelectTrigger>
                     <SelectContent>
-                      {dietOptions.map((option) => (
+                      {preferenceOptions.map((option) => (
                         <SelectItem
                           key={option.value}
                           value={option.value}
@@ -215,21 +215,15 @@ export default function FormInformation({
                       <SelectValue placeholder="Qual seu nível culinário?" />
                     </SelectTrigger>
                     <SelectContent>
-                      {culinaryLevelOptions.map((option) => {
-                        const level = culinaryLevelOptions.find(
-                          (level) => level.value === culinaryLevel,
-                        );
-
-                        return (
-                          <SelectItem
-                            key={option.value}
-                            value={level?.value || option.value}
-                            className="font-maitree"
-                          >
-                            {option.label}
-                          </SelectItem>
-                        );
-                      })}
+                      {culinaryLevelOptions.map((option) => (
+                        <SelectItem
+                          key={option.value}
+                          value={String(option.value)}
+                          className="font-maitree"
+                        >
+                          {option.label}
+                        </SelectItem>
+                      ))}
                     </SelectContent>
                   </Select>
                 </FormControl>
@@ -252,7 +246,7 @@ export default function FormInformation({
               <Textarea
                 placeholder="Ex: Gosto de criar receitas veganas rápidas."
                 disabled={isEditing}
-                showCharacterCount
+                showCharacterCount={!isEditing}
                 maxLength={maxLengthForBio}
                 className="w-full max-w-full"
                 {...field}

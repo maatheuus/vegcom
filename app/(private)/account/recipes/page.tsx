@@ -11,6 +11,7 @@ export default function Page() {
       <Header
         title="Minhas Receitas"
         subTitle="Gerencie e organize suas receitas criadas"
+        hideMobileActions
         actions={[
           {
             text: "Nova Receita",

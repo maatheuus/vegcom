@@ -1,10 +1,12 @@
+import type { CulinaryLevel, Preference } from "@/features/account";
+
 export interface LoginCredentials {
   email: string;
   password: string;
 }
 
 export interface SignupData {
-  username: string;
+  name: string;
   email: string;
   password: string;
   informations: SignupInformationsFormData;
@@ -12,9 +14,9 @@ export interface SignupData {
 
 export interface SignupInformationsFormData {
   aboutInfo: string;
-  culinaryLevel: string;
+  culinaryLevel: CulinaryLevel;
   location: string;
-  preferences: "vegan" | "vegetarian";
+  preference: Preference;
   meetUs?: string;
 }
 

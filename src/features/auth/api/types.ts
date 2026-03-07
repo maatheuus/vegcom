@@ -50,6 +50,7 @@ export interface UserInformations {
   aboutInfo: string;
   preference: string;
   culinaryLevel: string;
+  avatarUrl?: string;
 }
 
 export interface Chat {

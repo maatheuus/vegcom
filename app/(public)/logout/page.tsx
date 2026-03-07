@@ -3,9 +3,6 @@
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 
-/**
- * Logout page that clears the authentication cookie and redirects to login
- */
 export default function LogoutPage() {
   const router = useRouter();
 
@@ -17,8 +14,12 @@ export default function LogoutPage() {
   return (
     <div className="flex min-h-screen items-center justify-center">
       <div className="text-center">
-        <h1 className="mb-2 text-2xl font-semibold">Saindo...</h1>
-        <p className="text-gray-600">Você será redirecionado em instantes.</p>
+        <h1 className="font-lora mb-2 text-2xl font-semibold text-green-500">
+          Saindo...
+        </h1>
+        <p className="font-maitree text-green-200">
+          Você será redirecionado em instantes.
+        </p>
       </div>
     </div>
   );

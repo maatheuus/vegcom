@@ -30,29 +30,40 @@ import {
 import Text from "@/shared/ui/Text";
 import Textarea from "@/shared/ui/TextArea";
 
+import { CulinaryLevel, Preference } from "@/features/account";
 import type { CitySearchResult } from "@/shared/lib/api/cities";
 import { CircleNotchIcon } from "@phosphor-icons/react";
 import { type FC } from "react";
 import SubmitButton from "../SubmitButton/SubmitButton";
 
 const formSchema = z.object({
-  userInfo: z.string().min(10, {
+  aboutInfo: z.string().min(10, {
     message:
       "Não precisa escrever sua biografia... mas um parágrafozinho ajuda!",
   }),
   location: z.string().min(2, { message: "Prometemos: sem stalker, só amor!" }),
 
   culinaryLevel: z
-    .union([z.enum(["beginner", "intermediate", "advanced"]), z.literal("")])
+    .union([
+      z.enum([
+        CulinaryLevel.BEGINNER,
+        CulinaryLevel.INTERMEDIATE,
+        CulinaryLevel.ADVANCED,
+      ]),
+      z.literal(""),
+    ])
     .refine((v) => v !== "", {
       message:
         "Seja sincero: você queima água ou já faz até fermentação natural?",
     }),
 
-  meetUsInfo: z.string().optional(),
+  meetUs: z.string().optional(),
 
   preference: z
-    .union([z.enum(["vegan", "vegetarian"]), z.literal("")])
+    .union([
+      z.enum([Preference.VEGAN, Preference.VEGETARIAN, Preference.OTHER]),
+      z.literal(""),
+    ])
     .refine((v) => v !== "", {
       message: "Sem carne por amor, estilo ou ranço mesmo?",
     }),
@@ -68,8 +79,8 @@ const UserInformation: FC<React.ComponentProps<"form">> = ({
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      userInfo: formData.userInfo || "",
-      meetUsInfo: formData.meetUsInfo || "",
+      aboutInfo: formData.aboutInfo || "",
+      meetUs: formData.meetUs || "",
       preference: (formData.preference || "") as z.infer<
         typeof formSchema
       >["preference"],
@@ -83,7 +94,6 @@ const UserInformation: FC<React.ComponentProps<"form">> = ({
   function onSubmit(data: z.infer<typeof formSchema>) {
     const finalData = { ...formData, ...data };
     const { ...payload } = finalData;
-    console.log(payload);
 
     updateFormData(payload);
     nextStep();
@@ -99,7 +109,7 @@ const UserInformation: FC<React.ComponentProps<"form">> = ({
         <Col className="items-center gap-4">
           <FormField
             control={form.control}
-            name="userInfo"
+            name="aboutInfo"
             render={({ field }) => (
               <FormItem className="w-full">
                 <FormControl>
@@ -132,21 +142,33 @@ const UserInformation: FC<React.ComponentProps<"form">> = ({
                         className="flex items-center gap-8"
                       >
                         <div className="flex items-center space-x-2">
-                          <RadioGroupItem value="vegetarian" id="vegetarian" />
+                          <RadioGroupItem
+                            value={Preference.VEGETARIAN}
+                            id="vegetarian"
+                          />
                           <Label
                             htmlFor="vegetarian"
-                            className="font-maitree font-bold text-green-500"
+                            className="font-maitree cursor-pointer font-bold text-green-500"
                           >
                             Vegetariano(a)
                           </Label>
                         </div>
                         <div className="flex items-center space-x-2">
-                          <RadioGroupItem value="vegan" id="vegan" />
+                          <RadioGroupItem value={Preference.VEGAN} id="vegan" />
                           <Label
                             htmlFor="vegan"
-                            className="font-maitree font-bold text-green-500"
+                            className="font-maitree cursor-pointer font-bold text-green-500"
                           >
                             Vegano(a)
+                          </Label>
+                        </div>
+                        <div className="flex items-center space-x-2">
+                          <RadioGroupItem value={Preference.OTHER} id="other" />
+                          <Label
+                            htmlFor="other"
+                            className="font-maitree cursor-pointer font-bold text-green-500"
+                          >
+                            Outro
                           </Label>
                         </div>
                       </RadioGroup>
@@ -224,7 +246,7 @@ const UserInformation: FC<React.ComponentProps<"form">> = ({
           {/* 
           <FormField
             control={form.control}
-            name="meetUsInfo"
+            name="meetUs"
             render={({ field }) => (
               <FormItem className="w-full">
                 <FormControl>

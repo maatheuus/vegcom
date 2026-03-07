@@ -1,6 +1,11 @@
 import { api } from "@/shared/api/axios/axiosInstance";
 import type { AuthResponse, LoginCredentials, SignupData } from "../types";
-import type { ApiResponse, User } from "./types";
+import type { ApiResponse, User, UserInformations } from "./types";
+
+export interface UpdateProfilePayload {
+  name?: string;
+  informations?: Partial<UserInformations>;
+}
 
 export const authApi = {
   getUser: async () => {
@@ -26,8 +31,25 @@ export const authApi = {
     return responseData;
   },
 
-  // loginWithGoogle: async () => {
-  //   const { data: responseData } = await api.post<ApiResponse<User>>("/auth/login/google");
-  //   return responseData;
-  // },
+  updateProfile: async (payload: UpdateProfilePayload) => {
+    const { data: responseData } = await api.put<{
+      success: boolean;
+      message: string;
+    }>("/auth/me", payload);
+    return responseData;
+  },
+
+  uploadAvatar: async (file: File) => {
+    const formData = new FormData();
+    formData.append("file", file);
+
+    const { data: responseData } = await api.post<{
+      success: boolean;
+      message: string;
+      avatarUrl: string;
+    }>("/auth/avatar", formData, {
+      headers: { "Content-Type": "multipart/form-data" },
+    });
+    return responseData;
+  },
 };

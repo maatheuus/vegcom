@@ -102,7 +102,7 @@ export default function LoginForm() {
                       placeholder="Digite seu email"
                       autoComplete="email"
                       {...field}
-                      icon={<AtIcon size={18} />}
+                      icon={<AtIcon size={18} className="text-green-500" />}
                     />
                   </FormControl>
                   <FormMessage className="!mb-0">
@@ -127,13 +127,13 @@ export default function LoginForm() {
                           <EyesIcon
                             size={18}
                             onClick={togglePasswordVisibility}
-                            className="cursor-pointer"
+                            className="cursor-pointer text-green-500"
                           />
                         ) : (
                           <EyeClosedIcon
                             size={18}
                             onClick={togglePasswordVisibility}
-                            className="cursor-pointer"
+                            className="cursor-pointer text-green-500"
                           />
                         )
                       }
@@ -149,7 +149,7 @@ export default function LoginForm() {
           <div className="w-full text-right">
             <Link
               href="/forgot-password"
-              className="font-lora text-black-100 text-sm"
+              className="font-lora text-sm font-medium text-green-500"
             >
               Esqueceu sua senha?
             </Link>

@@ -1,25 +1,40 @@
+import type { CulinaryLevel, Preference } from "@/features/account";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { getSignup } from "../../api/queries/getAuthApiServer";
+import type { SignupData } from "../../types";
 
 export type Step = "signupForm" | "userInformation" | "success";
 
 export type SignupFormData = {
   currentStep: Step;
-  username?: string;
+  name?: string;
   email?: string;
   password?: string;
-  userInfo?: string;
-  meetUsInfo?: string;
-  preference?: "vegan" | "vegetarian" | "";
+  aboutInfo?: string;
+  meetUs?: string;
+  preference?: Preference;
   location?: string;
-  culinaryLevel?: "beginner" | "intermediate" | "advanced" | "";
+  culinaryLevel?: CulinaryLevel;
 };
 
 const stepsOrder: Step[] = ["signupForm", "userInformation", "success"];
 const queryKey = ["signupFormData"];
 
 async function submitSignupForm(data: Omit<SignupFormData, "currentStep">) {
-  console.log("dados backend:", data);
-  await new Promise((resolve) => setTimeout(resolve, 1000));
+  const payload: SignupData = {
+    name: data.name!,
+    email: data.email!,
+    password: data.password!,
+    informations: {
+      aboutInfo: data.aboutInfo!,
+      preference: data.preference!,
+      culinaryLevel: data.culinaryLevel!,
+      location: data.location!,
+      meetUs: data.meetUs,
+    },
+  };
+  const response = await getSignup(payload);
+  console.log("response", response);
   return {
     success: true,
     message: "Cadastro finalizado com sucesso!",
@@ -39,9 +54,6 @@ export function useSignupFormState() {
 
   const submitFormMutation = useMutation({
     mutationFn: submitSignupForm,
-    onSuccess: (result) => {
-      console.log("useMutation", result.message);
-    },
     onError: (error) => {
       console.error("Erro ao submeter o formulário:", error);
     },
