@@ -5,6 +5,7 @@ import type { UpdateRecipePayload } from "../types";
 export const recipeKeys = {
   all: ["recipes"] as const,
   lists: () => [...recipeKeys.all, "list"] as const,
+  myRecipes: () => [...recipeKeys.all, "my"] as const,
   detail: (id: number) => [...recipeKeys.all, "detail", id] as const,
   detailBySlug: (slug: string) =>
     [...recipeKeys.all, "detail", "slug", slug] as const,
@@ -14,6 +15,13 @@ export const useGetRecipes = () => {
   return useQuery({
     queryKey: recipeKeys.lists(),
     queryFn: recipeApi.getRecipes,
+  });
+};
+
+export const useGetMyRecipes = () => {
+  return useQuery({
+    queryKey: recipeKeys.myRecipes(),
+    queryFn: recipeApi.getMyRecipes,
   });
 };
 

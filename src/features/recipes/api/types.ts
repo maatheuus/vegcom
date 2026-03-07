@@ -5,11 +5,25 @@ export enum MealType {
   LUNCH = "LUNCH",
   DINNER = "DINNER",
   DESSERT = "DESSERT",
+  SNACKS = "SNACKS",
   GENERAL = "GENERAL",
 }
+
+export enum Difficulty {
+  EASY = "EASY",
+  MEDIUM = "MEDIUM",
+  HARD = "HARD",
+}
+
 export enum PrepTimeCategory {
   QUICK = "QUICK",
   ELABORATE = "ELABORATE",
+}
+
+export enum ReviewStatus {
+  IN_REVIEW = "IN_REVIEW",
+  PUBLISHED = "PUBLISHED",
+  REJECTED = "REJECTED",
 }
 
 export interface RecipeSteps {
@@ -74,6 +88,7 @@ export interface CreateRecipeResponse {
     images: string[];
     steps: RecipeSteps;
     createdAt: string;
+    reviewStatus: ReviewStatus;
   };
 }
 export interface GetRecipesResponse {

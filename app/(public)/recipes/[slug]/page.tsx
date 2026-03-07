@@ -30,7 +30,6 @@ export default async function page({ params }: Props) {
 
       permanentRedirect(`/recipes/${recipe.slug}`);
     } catch (error) {
-      console.log(error);
       notFound();
     }
   } else {
@@ -38,7 +37,6 @@ export default async function page({ params }: Props) {
       const response = await getRecipeBySlug(slug);
       recipe = response.data;
     } catch (error) {
-      console.log(error);
       notFound();
     }
   }
@@ -51,7 +49,7 @@ export default async function page({ params }: Props) {
   return (
     <Layout.Default className="style-scrollbar h-auto">
       <ViewTracker recipeId={recipe.id} />
-      <div className="mx-auto space-y-6 md:space-y-8">
+      <section className="space-y-6 md:space-y-8">
         <BackButton />
         <Header
           isRecipePage
@@ -62,9 +60,10 @@ export default async function page({ params }: Props) {
           rating={recipe.averageRating || 0}
           timeAgo={timeAgo}
           title={recipe.title}
+          reviewStatus={recipe.reviewStatus}
         />
         <ContentRecipe recipe={recipe} />
-      </div>
+      </section>
     </Layout.Default>
   );
 }

@@ -60,7 +60,7 @@ export default function ChecklistSection({
   }
 
   return (
-    <Col className={clsx("gap-y-4", className)} {...props}>
+    <Col className={clsx("relative gap-y-4", className)} {...props}>
       <Text
         type={Text.Type.BodyTwo}
         weight={Text.Weight.Bold}
@@ -68,6 +68,22 @@ export default function ChecklistSection({
       >
         {title}
       </Text>
+
+      {config.interactive && (
+        <div className="flex items-center gap-2 text-sm text-green-200">
+          <div className="h-1 flex-1 overflow-hidden rounded-full bg-green-100">
+            <div
+              className="h-full bg-green-500 transition-all duration-300"
+              style={{
+                width: `${(checkedItems.length / items.length) * 100}%`,
+              }}
+            />
+          </div>
+          <span className="text-xs font-medium">
+            {checkedItems.length}/{items.length}
+          </span>
+        </div>
+      )}
 
       <Col className="w-fit gap-2">
         {items.map((item, idx) => {

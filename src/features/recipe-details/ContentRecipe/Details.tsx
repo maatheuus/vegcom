@@ -1,3 +1,4 @@
+import { MealType, type Difficulty } from "@/features/recipes/api/types";
 import Col from "@/shared/ui/Layout/Helpers/Col";
 import Text from "@/shared/ui/Text";
 import {
@@ -7,13 +8,14 @@ import {
   TargetIcon,
 } from "@phosphor-icons/react/ssr";
 import { memo } from "react";
+import { formatCategoryLabel, formatDifficultyLabel } from "./utils";
 
 interface Props extends React.HTMLAttributes<HTMLDivElement> {
   className?: string;
   cookTime: string;
   quantity: string;
-  difficulty: string;
-  category: string;
+  difficulty: Difficulty;
+  category: MealType;
 }
 
 const Details = memo(function Details({
@@ -40,13 +42,13 @@ const Details = memo(function Details({
     {
       icon: <TargetIcon className="h-5 w-5 text-green-500" />,
       label: "Dificuldade",
-      value: difficulty,
+      value: formatDifficultyLabel(difficulty),
       ariaLabel: `Nível de dificuldade: ${difficulty}`,
     },
     {
       icon: <ChefHatIcon className="h-5 w-5 text-green-500" />,
       label: "Categoria",
-      value: category,
+      value: formatCategoryLabel(category),
       ariaLabel: `Categoria: ${category}`,
     },
   ];
@@ -63,7 +65,7 @@ const Details = memo(function Details({
           key={index}
           icon={detail.icon}
           label={detail.label}
-          value={detail.value}
+          value={String(detail.value)}
           ariaLabel={detail.ariaLabel}
         />
       ))}
@@ -91,17 +93,21 @@ const Detail = memo(function Detail({
       aria-label={ariaLabel}
     >
       {icon && <span aria-hidden="true">{icon}</span>}
-      <Text type={Text.Type.BodyFive} className="text-green-500">
-        {label}
-      </Text>
-      <Text
-        as="span"
-        type={Text.Type.BodyThree}
-        weight={Text.Weight.Medium}
-        className="text-green-900"
-      >
-        {value}
-      </Text>
+      {label && (
+        <Text type={Text.Type.BodyFive} className="font-maitree text-green-500">
+          {label}
+        </Text>
+      )}
+      {value && (
+        <Text
+          as="span"
+          type={Text.Type.BodyThree}
+          weight={Text.Weight.Bold}
+          className="font-maitree text-green-900"
+        >
+          {value}
+        </Text>
+      )}
     </Col>
   );
 });

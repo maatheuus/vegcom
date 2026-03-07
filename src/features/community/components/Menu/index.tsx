@@ -79,7 +79,7 @@ export default function Menu() {
           mass: 0.8,
         }}
         className={clsx(
-          "absolute top-0 right-0 left-0 w-full bg-green-50/90 backdrop-blur-sm",
+          "absolute top-0 right-0 left-0 w-full rounded-2xl bg-green-50/90 backdrop-blur-sm",
           isMenuOpen || hasScrolled ? "shadow-xl" : "",
         )}
         style={{ left: 0, right: 0 }}

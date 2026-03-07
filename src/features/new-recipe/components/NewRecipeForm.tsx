@@ -96,23 +96,23 @@ export default function NewRecipeForm({}: Props) {
       const userId = user?.id;
       const payload = transformFormToApiPayload(formData, Number(userId));
 
-      console.log("Payload para API:", payload);
-
       try {
         const { data, success } = await createNewRecipe(payload);
 
         if (success) {
-          router.push(`/recipes/${data.slug}`);
+          clearStorage();
           toast({
-            title: "Receita publicada com sucesso!",
+            title: "Receita criada com sucesso!",
+            description:
+              "Sua receita está em análise e será publicada após aprovação.",
             variant: "success",
           });
-          clearStorage();
+          router.push(`/recipes/${data.slug}`);
         }
       } catch (error) {
-        console.error("Erro ao publicar receita:", error);
+        console.error("Erro ao criar receita:", error);
         toast({
-          title: "Erro ao publicar receita",
+          title: "Erro ao criar receita",
           description: "Tente novamente mais tarde.",
           variant: "destructive",
         });
@@ -134,7 +134,7 @@ export default function NewRecipeForm({}: Props) {
       icon: CookingPotIcon,
     },
     {
-      label: "Notas de Cozimento",
+      label: "Dicas do Chef",
       icon: NotePencilIcon,
     },
     {
@@ -230,7 +230,7 @@ export default function NewRecipeForm({}: Props) {
                 className="flex cursor-pointer items-center gap-2 bg-green-500 hover:bg-green-800"
                 disabled={isPending}
               >
-                {isPending ? "Publicando..." : "Publicar Receita"}
+                {isPending ? "Criando..." : "Criar Receita"}
                 <SealCheckIcon size={16} />
               </Button>
             )}

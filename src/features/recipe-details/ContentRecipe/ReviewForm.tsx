@@ -40,7 +40,7 @@ const ReviewForm = memo(function ReviewForm({
     [onPost],
   );
 
-  const isFormValid = review.trim().length > 0 && rating > 0;
+  const isFormValid = !error && rating > 0;
 
   return (
     <form
