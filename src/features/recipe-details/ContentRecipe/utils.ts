@@ -1,5 +1,6 @@
 import { jorgeTest } from "@/assets";
 import type { Comment } from "@/features/recipes";
+import { Difficulty, MealType } from "@/features/recipes/api/types";
 
 type RecipeType = "ingredients" | "instructions" | "cookingNotes";
 
@@ -20,6 +21,38 @@ interface TypeConfig {
   };
   interactive: boolean;
 }
+
+export const formatCategoryLabel = (category: MealType) => {
+  const categoryLabel = category.toUpperCase();
+
+  switch (categoryLabel) {
+    case MealType.BREAKFAST:
+      return "Café da manhã";
+    case MealType.LUNCH:
+      return "Almoço";
+    case MealType.DINNER:
+      return "Jantar";
+    case MealType.DESSERT:
+      return "Sobremesas";
+    case MealType.SNACKS:
+      return "Lanches";
+    case MealType.GENERAL:
+      return "Geral";
+  }
+};
+
+export const formatDifficultyLabel = (difficulty: Difficulty) => {
+  const difficultyLabel = difficulty.toUpperCase();
+
+  switch (difficultyLabel) {
+    case Difficulty.EASY:
+      return "Fácil";
+    case Difficulty.MEDIUM:
+      return "Média";
+    case Difficulty.HARD:
+      return "Difícil";
+  }
+};
 
 export const typeConfig: Record<RecipeType, TypeConfig> = {
   ingredients: {
@@ -65,48 +98,6 @@ export const typeConfig: Record<RecipeType, TypeConfig> = {
     interactive: false,
   },
 };
-
-export const mockIngredients = [
-  {
-    id: 1,
-    label: "1 xícara de folhas verdes mistas (alface, rúcula, espinafre)",
-  },
-  {
-    id: 2,
-    label: "1/2 xícara de tomate-cereja cortado ao meio",
-  },
-  { id: 3, label: "1/4 de xícara de milho cozido" },
-  { id: 4, label: "1/4 de pepino japonês fatiado" },
-  { id: 5, label: "1/4 de cebola roxa fatiada" },
-  { id: 6, label: "1 colher de sopa de sementes de girassol" },
-  { id: 7, label: "1 colher de sopa de azeite de oliva" },
-  { id: 8, label: "1 colher de sopa de suco de limão" },
-  { id: 9, label: "1 pitada de sal e pimenta-do-reino a gosto" },
-];
-
-export const mockInstructions = [
-  { id: 1, label: "Soak tomatoes in soy milk for 1 hour." },
-  { id: 2, label: "Blend and serve." },
-  { id: 3, label: "Add the tofu and mix well." },
-  { id: 4, label: "Serve with a drizzle of olive oil." },
-  { id: 5, label: "Garnish with fresh herbs." },
-  { id: 6, label: "Enjoy your meal!" },
-];
-
-export const mockCookingNotes = [
-  {
-    id: 1,
-    label: "Deixe o molho descansar por 10 minutos antes de servir.",
-  },
-  {
-    id: 2,
-    label: "Se preferir mais cremoso, adicione 1 colher de sopa de tahine.",
-  },
-  {
-    id: 3,
-    label: "Experimente adicionar outros legumes de sua preferência.",
-  },
-];
 
 export const mockComments: Comment[] = [
   {
@@ -179,5 +170,47 @@ export const mockComments: Comment[] = [
       "The combination of fresh greens and the zesty sun-dried tomato dressing is a total game-changer. It’s become a staple in my weekly menu. So easy to make and so incredibly delicious!",
     timeAgo: "1hr ago",
     likes: 46,
+  },
+];
+
+export const mockIngredients = [
+  {
+    id: 1,
+    label: "1 xícara de folhas verdes mistas (alface, rúcula, espinafre)",
+  },
+  {
+    id: 2,
+    label: "1/2 xícara de tomate-cereja cortado ao meio",
+  },
+  { id: 3, label: "1/4 de xícara de milho cozido" },
+  { id: 4, label: "1/4 de pepino japonês fatiado" },
+  { id: 5, label: "1/4 de cebola roxa fatiada" },
+  { id: 6, label: "1 colher de sopa de sementes de girassol" },
+  { id: 7, label: "1 colher de sopa de azeite de oliva" },
+  { id: 8, label: "1 colher de sopa de suco de limão" },
+  { id: 9, label: "1 pitada de sal e pimenta-do-reino a gosto" },
+];
+
+export const mockInstructions = [
+  { id: 1, label: "Soak tomatoes in soy milk for 1 hour." },
+  { id: 2, label: "Blend and serve." },
+  { id: 3, label: "Add the tofu and mix well." },
+  { id: 4, label: "Serve with a drizzle of olive oil." },
+  { id: 5, label: "Garnish with fresh herbs." },
+  { id: 6, label: "Enjoy your meal!" },
+];
+
+export const mockCookingNotes = [
+  {
+    id: 1,
+    label: "Deixe o molho descansar por 10 minutos antes de servir.",
+  },
+  {
+    id: 2,
+    label: "Se preferir mais cremoso, adicione 1 colher de sopa de tahine.",
+  },
+  {
+    id: 3,
+    label: "Experimente adicionar outros legumes de sua preferência.",
   },
 ];

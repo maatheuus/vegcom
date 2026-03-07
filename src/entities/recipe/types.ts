@@ -3,9 +3,11 @@
  */
 
 import type {
+  Difficulty,
   MealType,
   PrepTimeCategory,
   RecipeSteps,
+  ReviewStatus,
 } from "@/features/recipes/api/types";
 import type { StaticImageData } from "next/image";
 
@@ -18,14 +20,16 @@ export interface Recipe {
   cookTime: string;
   prepTimeCategory?: PrepTimeCategory;
   quantity: string;
-  category: string;
-  difficulty: string;
+  category: MealType;
+  difficulty: Difficulty;
   images: string[];
   steps: RecipeSteps;
   mealType?: MealType;
   isPublished: boolean;
+  reviewStatus?: ReviewStatus;
   views: number;
   rating: number;
+  likes: { id: number; userId: number }[];
   createdAt: string;
   updatedAt: string;
 }

@@ -52,7 +52,7 @@ export default async function Page({ searchParams }: PageProps) {
 
   return (
     <Layout.Default className="style-scrollbar h-auto">
-      <section className="space-y-8 md:space-y-12">
+      <section className="space-y-6 md:space-y-8 lg:space-y-11">
         <Row className="items-center justify-between">
           <HeaderComponent>
             <Header title="Receitas" className="border-0 p-0" />

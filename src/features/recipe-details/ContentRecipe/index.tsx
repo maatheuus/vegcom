@@ -18,6 +18,7 @@ export default function ContentRecipe({ recipe }: Props) {
     alt: recipe.title,
   }));
 
+  console.log(recipe);
   return (
     <div className="flex w-full flex-col gap-y-8">
       <Col className="gap-y-6">
@@ -34,26 +35,34 @@ export default function ContentRecipe({ recipe }: Props) {
           category={recipe.category}
         />
       </Col>
-      <Grid className="grid-cols-1 gap-6 md:grid-cols-2 md:gap-10 lg:grid-cols-3">
-        <ChecklistSection
-          title="Ingredients"
-          type="ingredients"
-          storageKey="checklist-ingredients"
-          items={recipe.steps.ingredients}
-        />
+      <Grid
+        className={`grid-cols-1 gap-6 md:grid-cols-2 md:gap-10 ${recipe.steps.cookingNotes.length > 0 ? "lg:grid-cols-3" : "lg:grid-cols-2"}`}
+      >
+        {recipe.steps.ingredients && recipe.steps.ingredients.length > 0 && (
+          <ChecklistSection
+            title="Ingredients"
+            type="ingredients"
+            storageKey="checklist-ingredients"
+            items={recipe.steps.ingredients}
+          />
+        )}
 
-        <ChecklistSection
-          title="Instructions"
-          type="instructions"
-          storageKey="checklist-instructions"
-          items={recipe.steps.instructions}
-        />
+        {recipe.steps.instructions && recipe.steps.instructions.length > 0 && (
+          <ChecklistSection
+            title="Instructions"
+            type="instructions"
+            storageKey="checklist-instructions"
+            items={recipe.steps.instructions}
+          />
+        )}
 
-        <ChecklistSection
-          title="Cooking Notes"
-          type="cookingNotes"
-          items={recipe.steps.cookingNotes}
-        />
+        {recipe.steps.cookingNotes && recipe.steps.cookingNotes.length > 0 && (
+          <ChecklistSection
+            title="Cooking Notes"
+            type="cookingNotes"
+            items={recipe.steps.cookingNotes}
+          />
+        )}
       </Grid>
 
       <CommentsSection recipeId={recipe.id} />

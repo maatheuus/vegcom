@@ -64,5 +64,9 @@ const recipeApi = {
     );
     return data;
   },
+  getMyRecipes: async () => {
+    const { data } = await api.get<GetRecipesResponse>("/recipes/my");
+    return data;
+  },
 };
 export { recipeApi };

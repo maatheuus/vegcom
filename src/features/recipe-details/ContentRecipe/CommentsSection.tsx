@@ -80,7 +80,8 @@ const CommentsSection = memo(function CommentsSection({
   const isLoading = isLoadingComments || isPaginationLoading;
 
   const handlePostReview = useCallback(() => {
-    if (!newReview.trim() || newRating === 0) return;
+    if (newRating === 0) return;
+    if (newReview.trim().length > 0 && newReview.trim().length < 3) return;
 
     if (!currentUserId) {
       toast({
@@ -95,7 +96,9 @@ const CommentsSection = memo(function CommentsSection({
       {
         recipeId,
         userId: currentUserId,
-        text: newReview.trim(),
+        text:
+          newReview.trim() ||
+          `Avaliação de ${newRating} estrela${newRating > 1 ? "s" : ""}`,
         rating: newRating,
       },
       {
@@ -184,27 +187,29 @@ const CommentsSection = memo(function CommentsSection({
           onPost={handlePostReview}
           isSubmitting={isCreating}
           error={
-            newReview.length > 0 && newReview.length < 3
+            newReview.trim().length > 0 && newReview.trim().length < 3
               ? "O comentário deve ter pelo menos 3 caracteres."
               : undefined
           }
         />
       ) : (
         <Col className="w-full items-center rounded-md border border-green-200 py-4">
-          <Text type={Text.Type.BodyThree} className="text-green-600">
+          <Text type={Text.Type.BodyThree} className="text-green-500">
             Faça login para deixar um comentário
           </Text>
         </Col>
       )}
 
-      <Text
-        type={Text.Type.HeadingFive}
-        weight={Text.Weight.Medium}
-        className="text-green-500"
-        as="h2"
-      >
-        Comentários
-      </Text>
+      {currentItems.length > 0 && (
+        <Text
+          type={Text.Type.HeadingFive}
+          weight={Text.Weight.Medium}
+          className="text-green-500"
+          as="h2"
+        >
+          Comentários
+        </Text>
+      )}
 
       {commentsError && (
         <Col className="w-full items-center py-4">
@@ -241,7 +246,7 @@ const CommentsSection = memo(function CommentsSection({
             <ChatTeardropTextIcon size={48} className="text-green-500" />
             <Text
               type={Text.Type.BodyThree}
-              className="mt-2 text-center text-green-900"
+              className="mt-2 text-center text-green-500"
             >
               Nenhum comentário ainda. <br /> Seja o primeiro a comentar!
             </Text>

@@ -1,5 +1,5 @@
-import { UserProfileDetails } from "../types";
 import { food } from "@/assets";
+import { UserProfileDetails } from "../types";
 
 export const mockUserProfileData: UserProfileDetails = {
   id: "1",
@@ -37,34 +37,38 @@ export const mockUserProfileData: UserProfileDetails = {
       id: 201,
       postTitle: "Dicas para o risoto perfeito!",
       postContent: {
-        type: "TEXT",
         postResources: {
-          content: "A dica de ouro é nunca lavar o arroz arbório. O amido é o que dá a cremosidade perfeita ao prato. Além disso, sempre adicione o caldo aos poucos, sempre quente!",
+          images: [],
+          links: [],
+          content:
+            "A dica de ouro é nunca lavar o arroz arbório. O amido é o que dá a cremosidade perfeita ao prato. Além disso, sempre adicione o caldo aos poucos, sempre quente!",
         },
       },
       postDate: new Date().toISOString(),
       user: {
-        id: "1",
+        id: 1,
         name: "Chef Emma",
         urlImage: "https://randomuser.me/api/portraits/women/68.jpg",
       },
       likes: [],
       savedBy: [],
       postLikes: 42,
+      postTags: [],
       comments: {
+        haveComments: true,
         commentsNumber: 5,
         comments: [
           {
-            id: 1,
-            date: new Date().toISOString(),
-            comment: "Ótima dica!",
+            commentDate: new Date().toISOString(),
+            commentContent: "Ótima dica!",
             user: {
+              id: 1,
               name: "John Doe",
-              urlImage: "https://randomuser.me/api/portraits/men/32.jpg"
-            }
-          }
-        ]
-      }
-    }
-  ]
+              urlImage: "https://randomuser.me/api/portraits/men/32.jpg",
+            },
+          },
+        ],
+      },
+    },
+  ],
 };

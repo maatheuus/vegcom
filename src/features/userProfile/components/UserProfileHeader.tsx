@@ -1,8 +1,8 @@
-import { UserProfileDetails } from "../types";
 import { Avatar, AvatarFallback, AvatarImage } from "@/shared/ui/Avatar";
-import Text from "@/shared/ui/Text";
-import Row from "@/shared/ui/Layout/Helpers/Row";
 import Col from "@/shared/ui/Layout/Helpers/Col";
+import Row from "@/shared/ui/Layout/Helpers/Row";
+import Text from "@/shared/ui/Text";
+import { UserProfileDetails } from "../types";
 
 interface UserProfileHeaderProps {
   user: UserProfileDetails;
@@ -21,7 +21,7 @@ export function UserProfileHeader({ user }: UserProfileHeaderProps) {
         <Col className="gap-y-1">
           <Text
             as="h1"
-            type={Text.Type.H3}
+            type={Text.Type.HeadingThree}
             weight={Text.Weight.Bold}
             className="text-gray-900"
           >
@@ -31,7 +31,7 @@ export function UserProfileHeader({ user }: UserProfileHeaderProps) {
             <Text
               as="p"
               type={Text.Type.BodyThree}
-              className="text-gray-600 max-w-2xl"
+              className="max-w-2xl text-gray-600"
             >
               {user.bio}
             </Text>
