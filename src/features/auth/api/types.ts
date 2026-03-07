@@ -1,3 +1,5 @@
+import type { CulinaryLevel, Preference } from "@/features/account";
+
 export interface ApiResponse<T> {
   success: boolean;
   data: T;
@@ -48,8 +50,8 @@ export interface UserInformations {
   meetUs: string;
   location: string;
   aboutInfo: string;
-  preference: string;
-  culinaryLevel: string;
+  preference: Preference;
+  culinaryLevel: CulinaryLevel;
   avatarUrl?: string;
 }
 

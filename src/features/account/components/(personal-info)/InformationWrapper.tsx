@@ -7,7 +7,9 @@ import {
 } from "@/features/account/components/utils";
 import { useUpdateProfile } from "@/features/account/hooks/mutations/useUpdateProfile";
 import { useUploadAvatar } from "@/features/account/hooks/mutations/useUploadAvatar";
+import type { UpdateProfilePayload } from "@/features/auth/api/authApi";
 import type { User } from "@/features/auth/api/types";
+import { type CulinaryLevel, type Preference } from "@/features/account";
 import { toast } from "@/shared/hooks/use-toast";
 import Button from "@/shared/ui/Button";
 import Row from "@/shared/ui/Layout/Helpers/Row";
@@ -25,6 +27,7 @@ import Header from "../Header";
 interface InformationWrapperProps {
   user: User;
 }
+
 export default function InformationWrapper({ user }: InformationWrapperProps) {
   const [isEditing, setIsEditing] = useState(false);
   const [selectedImage, setSelectedImage] = useState<File | null>(null);
@@ -66,17 +69,17 @@ export default function InformationWrapper({ user }: InformationWrapperProps) {
     if (form.formState.errors && Object.keys(form.formState.errors).length > 0)
       return;
 
-    const payload: any = {};
-    const infoPayload: any = {};
+    const payload: UpdateProfilePayload = {};
+    const infoPayload: UpdateProfilePayload["informations"] = {};
 
     if (values.fullName !== user.name) payload.name = values.fullName;
 
     if (values.bio !== user.informations?.aboutInfo)
       infoPayload.aboutInfo = values.bio;
     if (values.preference !== user.informations?.preference)
-      infoPayload.preference = values.preference;
+      infoPayload.preference = values.preference as Preference;
     if (values.culinaryLevel !== user.informations?.culinaryLevel)
-      infoPayload.culinaryLevel = values.culinaryLevel;
+      infoPayload.culinaryLevel = values.culinaryLevel as CulinaryLevel;
     if (values.location !== user.informations?.location)
       infoPayload.location = values.location;
 
@@ -105,7 +108,7 @@ export default function InformationWrapper({ user }: InformationWrapperProps) {
       });
       setIsEditing(false);
       setSelectedImage(null);
-    } catch (err) {
+    } catch (_err) {
       toast({
         title: "Erro ao atualizar",
         description: "Não foi possível atualizar as informações no momento.",
