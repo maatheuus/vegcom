@@ -12,7 +12,7 @@ import CommentComposer from "./CommentComposer";
 import ReplyButton from "./ReplyButton";
 interface PostCommentsProps {
   comments?: PostComment[];
-  uniqueUsers: { name: string; urlImage?: string }[];
+  uniqueUsers: { name: string; avatarUrl?: string }[];
   postByAdmin?: boolean;
   postId: string;
 }
@@ -37,9 +37,9 @@ export default function PostComments({
             comments.map((comment, index) => (
               <Row key={index} className="w-full items-start gap-x-3">
                 <Avatar className="h-10 w-10">
-                  <AvatarImage src={comment.user.urlImage} />
-                  <AvatarFallback className="bg-green-100 text-xs text-green-500">
-                    {comment.user.name.slice(0, 2).toUpperCase()}
+                  <AvatarImage src={comment.user.avatarUrl || ""} />
+                  <AvatarFallback className="bg-green-100 text-xs capitalize text-green-500">
+                    {comment.user.name.slice(0, 2)}
                   </AvatarFallback>
                 </Avatar>
 

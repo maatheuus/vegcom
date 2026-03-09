@@ -15,7 +15,7 @@ import {
 import { useQueryClient } from "@tanstack/react-query";
 import Mention from "@tiptap/extension-mention";
 import Placeholder from "@tiptap/extension-placeholder";
-import { EditorContent, ReactRenderer, useEditor } from "@tiptap/react";
+import { EditorContent, ReactRenderer, useEditor, type Editor } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 import type { SuggestionKeyDownProps } from "@tiptap/suggestion";
 import clsx from "clsx";
@@ -35,21 +35,21 @@ const FORMATTING_BUTTONS = [
   {
     icon: TextBIcon,
     label: "Negrito",
-    isActive: (editor: any) => editor?.isActive("bold"),
-    action: (editor: any) => editor?.chain().focus().toggleBold().run(),
+    isActive: (editor: Editor | null) => editor?.isActive("bold"),
+    action: (editor: Editor | null) => editor?.chain().focus().toggleBold().run(),
     iconProps: { weight: "bold" as const },
   },
   {
     icon: TextItalicIcon,
     label: "Itálico",
-    isActive: (editor: any) => editor?.isActive("italic"),
-    action: (editor: any) => editor?.chain().focus().toggleItalic().run(),
+    isActive: (editor: Editor | null) => editor?.isActive("italic"),
+    action: (editor: Editor | null) => editor?.chain().focus().toggleItalic().run(),
   },
   {
     icon: TextStrikethroughIcon,
     label: "Tachado",
-    isActive: (editor: any) => editor?.isActive("strike"),
-    action: (editor: any) => editor?.chain().focus().toggleStrike().run(),
+    isActive: (editor: Editor | null) => editor?.isActive("strike"),
+    action: (editor: Editor | null) => editor?.chain().focus().toggleStrike().run(),
   },
 ];
 
