@@ -25,3 +25,19 @@ export function linkifyHtml(htmlContent: string) {
     '<a href="$1" target="_blank" rel="noopener noreferrer" class="text-green-600 underline hover:text-green-700 transition-colors">$1</a>',
   );
 }
+
+export function sanitizeContent(html: string): string {
+  return html.replace(/&nbsp;/g, " ");
+}
+
+export function prepareHtmlContent(html: string): string {
+  if (!html) return "";
+
+  const sanitized = html.replace(/&nbsp;/g, " ");
+
+  const urlRegex = /(?<!href="|href='|src="|src=')(https?:\/\/[^\s<]+)/g;
+  return sanitized.replace(
+    urlRegex,
+    '<a href="$1" target="_blank" rel="noopener noreferrer" class="text-green-600 underline hover:text-green-700 transition-colors">$1</a>',
+  );
+}

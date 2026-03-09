@@ -1,7 +1,7 @@
 import type { PostCardDataProps } from "@/shared/types";
 import Col from "@/shared/ui/Layout/Helpers/Col";
 import Text from "@/shared/ui/Text";
-import { linkifyHtml } from "@/shared/utils";
+import { prepareHtmlContent } from "@/shared/utils";
 import PostCardRoot from "./Root";
 
 interface Props {
@@ -30,9 +30,10 @@ export default function PostCardDefault({ data }: Props) {
 
         {contentHTML ? (
           <div
-            className="font-maitree text-base break-words text-green-500"
+            className="font-maitree text-base break-words text-green-500 [&>p]:text-justify [&>p]:hyphens-auto"
+            lang="pt-BR"
             dangerouslySetInnerHTML={{
-              __html: linkifyHtml(contentHTML),
+              __html: prepareHtmlContent(contentHTML),
             }}
           />
         ) : (
@@ -40,7 +41,7 @@ export default function PostCardDefault({ data }: Props) {
             as="p"
             type={Text.Type.BodyFour}
             weight={Text.Weight.Normal}
-            className="font-maitree mt-2 text-base whitespace-pre-wrap"
+            className="font-maitree mt-2 text-justify text-base hyphens-auto whitespace-pre-wrap"
           >
             {content}
           </Text>

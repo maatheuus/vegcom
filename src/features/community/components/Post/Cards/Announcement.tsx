@@ -1,11 +1,15 @@
 import type { PostCardDataProps } from "@/shared/types";
 import Col from "@/shared/ui/Layout/Helpers/Col";
 import Text from "@/shared/ui/Text";
+import { prepareHtmlContent } from "@/shared/utils";
 import PostCardRoot from "./Root";
 
 interface Props {
   data: PostCardDataProps;
 }
+
+
+ 
 
 export default function PostCardAnnouncement({ data }: Props) {
   const isUserAdmin = data.user.role === "ADMIN";
@@ -25,9 +29,12 @@ export default function PostCardAnnouncement({ data }: Props) {
         </Text>
 
         <div
-          className="font-maitree text-base break-words text-green-500"
+          className="font-maitree text-base break-words text-green-500 [&>p]:text-justify [&>p]:hyphens-auto"
+          lang="pt-BR"
           dangerouslySetInnerHTML={{
-            __html: data.postContent.postResources?.content,
+            __html: prepareHtmlContent(
+              data.postContent.postResources?.content ?? "",
+            ),
           }}
         />
       </Col>

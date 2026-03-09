@@ -31,6 +31,28 @@ interface CommentComposerProps {
   postId: string;
 }
 
+const FORMATTING_BUTTONS = [
+  {
+    icon: TextBIcon,
+    label: "Negrito",
+    isActive: (editor: any) => editor?.isActive("bold"),
+    action: (editor: any) => editor?.chain().focus().toggleBold().run(),
+    iconProps: { weight: "bold" as const },
+  },
+  {
+    icon: TextItalicIcon,
+    label: "Itálico",
+    isActive: (editor: any) => editor?.isActive("italic"),
+    action: (editor: any) => editor?.chain().focus().toggleItalic().run(),
+  },
+  {
+    icon: TextStrikethroughIcon,
+    label: "Tachado",
+    isActive: (editor: any) => editor?.isActive("strike"),
+    action: (editor: any) => editor?.chain().focus().toggleStrike().run(),
+  },
+];
+
 export default function CommentComposer({
   users = [],
   user,
@@ -42,6 +64,8 @@ export default function CommentComposer({
   const queryClient = useQueryClient();
   const [comment, setComment] = useState("");
   const [isPending, startTransition] = useTransition();
+
+  const isNearLimit = comment.length > MAX_LENGTH_FOR_INPUT * 0.8;
 
   const editor = useEditor({
     extensions: [
@@ -62,29 +86,23 @@ export default function CommentComposer({
             "font-semibold text-green-600 bg-green-50 px-1 py-0.5 rounded-sm decoration-clone",
         },
         suggestion: {
-          items: ({ query }) => {
-            return users
+          items: ({ query }) =>
+            users
               .map((u) => u.name)
               .filter((item) =>
                 item.toLowerCase().startsWith(query.toLowerCase()),
               )
-              .slice(0, 5);
-          },
+              .slice(0, 5),
           render: () => {
             let component: ReactRenderer;
             let popup: Instance[];
-
             return {
               onStart: (props) => {
                 component = new ReactRenderer(MentionList, {
                   props,
                   editor: props.editor,
                 });
-
-                if (!props.clientRect) {
-                  return;
-                }
-
+                if (!props.clientRect) return;
                 popup = tippy("body", {
                   getReferenceClientRect:
                     props.clientRect as unknown as GetReferenceClientRect,
@@ -98,11 +116,7 @@ export default function CommentComposer({
               },
               onUpdate(props) {
                 component.updateProps(props);
-
-                if (!props.clientRect) {
-                  return;
-                }
-
+                if (!props.clientRect) return;
                 popup[0].setProps({
                   getReferenceClientRect:
                     props.clientRect as unknown as GetReferenceClientRect,
@@ -113,7 +127,6 @@ export default function CommentComposer({
                   popup[0].hide();
                   return true;
                 }
-
                 return (
                   component.ref as {
                     onKeyDown: (props: SuggestionKeyDownProps) => boolean;
@@ -132,7 +145,7 @@ export default function CommentComposer({
     editorProps: {
       attributes: {
         class:
-          "prose prose-sm focus:outline-none min-h-[120px] max-w-none text-gray-800 font-maitree px-0 py-0",
+          "prose prose-sm focus:outline-none min-h-[110px] max-w-none text-gray-800 font-maitree px-4 pt-4 pb-2",
       },
     },
     onUpdate: ({ editor }) => {
@@ -141,22 +154,14 @@ export default function CommentComposer({
   });
 
   useImperativeHandle(commentInputRef, () => ({
-    focus: () => {
-      editor?.commands.focus();
-    },
+    focus: () => editor?.commands.focus(),
     insertMention: (username: string) => {
       editor
         ?.chain()
         .focus()
         .insertContent([
-          {
-            type: "mention",
-            attrs: { id: username },
-          },
-          {
-            type: "text",
-            text: " ",
-          },
+          { type: "mention", attrs: { id: username } },
+          { type: "text", text: " " },
         ])
         .run();
     },
@@ -170,16 +175,13 @@ export default function CommentComposer({
 
   const handleComment = async () => {
     if (!comment.trim() || isPending) return;
-
     startTransition(async () => {
       try {
         await createComment(postId, { commentContent: comment });
         setIsCommentOpen(false);
         editor?.commands.clearContent();
         setComment("");
-
         queryClient.invalidateQueries({ queryKey: ["community-posts"] });
-
         router.refresh();
       } catch (error) {
         const err = error as { message?: string; status?: number };
@@ -205,7 +207,7 @@ export default function CommentComposer({
           }
           setIsCommentOpen(true);
         }}
-        className="flex w-full cursor-text items-center justify-between rounded-full border border-green-500/20 bg-transparent px-4 py-3 text-sm text-gray-400 opacity-80 shadow-sm transition-all hover:border-green-500/40 hover:bg-green-50"
+        className="flex w-full cursor-text items-center rounded-full border border-green-500/20 bg-transparent px-4 py-3 text-sm text-gray-400 opacity-80 shadow-sm transition-all hover:border-green-500/40 hover:bg-green-50"
       >
         <span className="font-medium">Participe da conversa</span>
       </div>
@@ -213,85 +215,76 @@ export default function CommentComposer({
   }
 
   return (
-    <Col className="gap-y-2 rounded-2xl border border-green-500/20 bg-transparent p-4 ring-1 shadow-sm ring-green-50 transition-all">
+    <Col className="gap-y-0 overflow-hidden rounded-2xl border border-green-500/20 bg-green-50/30 ring-1 shadow-sm ring-green-100 transition-all">
+      <div className="flex items-center gap-x-0.5 border-b border-green-500/15 bg-green-50/70 px-3 py-2">
+        {FORMATTING_BUTTONS.map(
+          ({ icon: Icon, label, isActive, action, iconProps }) => (
+            <Button.Icon
+              key={label}
+              variant="text"
+              size="md"
+              aria-label={label}
+              className={clsx(
+                "h-7 w-7 p-0 text-gray-400 transition-colors hover:bg-green-100 hover:text-green-600",
+                isActive(editor) && "bg-green-100 text-green-600",
+              )}
+              onClick={() => action(editor)}
+              icon={<Icon size={16} {...(iconProps ?? {})} />}
+            />
+          ),
+        )}
+
+        <span
+          className={clsx(
+            "font-lora ml-auto text-[10px] tracking-wider uppercase italic transition-colors duration-300",
+            isNearLimit
+              ? "font-bold text-red-400 opacity-100"
+              : "text-green-500 opacity-60",
+          )}
+        >
+          {comment.length}/{MAX_LENGTH_FOR_INPUT}
+        </span>
+      </div>
+
       <EditorContent editor={editor} className="w-full" />
 
-      <Row className="mt-2 justify-between border-t border-green-500/20 pt-2">
-        {/* Formatting Toolbar */}
-        <Row className="gap-x-1">
-          <Button.Icon
-            variant="text"
-            size="md"
-            className={clsx(
-              "font-maitree h-8 w-8 p-0 text-gray-500 hover:bg-green-50 hover:text-green-500",
-              editor?.isActive("bold") && "bg-green-100 text-green-500",
-            )}
-            onClick={() => editor?.chain().focus().toggleBold().run()}
-            icon={<TextBIcon size={20} weight="bold" />}
-          />
-          <Button.Icon
-            variant="text"
-            size="md"
-            className={clsx(
-              "font-maitree h-8 w-8 p-0 text-gray-500 hover:bg-green-50 hover:text-green-500",
-              editor?.isActive("italic") && "bg-green-100 text-green-500",
-            )}
-            onClick={() => editor?.chain().focus().toggleItalic().run()}
-            icon={<TextItalicIcon size={20} />}
-          />
-          <Button.Icon
-            variant="text"
-            size="md"
-            className={clsx(
-              "font-maitree h-8 w-8 p-0 text-gray-500 hover:bg-green-50 hover:text-green-500",
-              editor?.isActive("strike") && "bg-green-100 text-green-500",
-            )}
-            onClick={() => editor?.chain().focus().toggleStrike().run()}
-            icon={<TextStrikethroughIcon size={20} />}
-          />
-        </Row>
+      <div className="flex items-center justify-between gap-x-2 border-t border-green-500/15 bg-green-50/70 px-3 py-2">
+        <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-green-200 text-xs font-bold text-green-50">
+          {user?.name?.slice(0, 2).toUpperCase() ?? "Aa"}
+        </div>
 
-        <Row className="items-center gap-x-3">
-          <div
-            className={clsx(
-              "font-lora text-[10px] tracking-wider uppercase italic opacity-60 transition-colors duration-300",
-              comment.length > MAX_LENGTH_FOR_INPUT * 0.9
-                ? "font-bold text-red-500 opacity-100"
-                : "text-green-600",
-            )}
-          >
-            {comment.length} / {MAX_LENGTH_FOR_INPUT}
-          </div>
+        <Row className="items-center gap-x-2">
           <Button
             variant="text"
             size="sm"
             onClick={handleCancel}
-            className="h-10 rounded-full px-6 text-sm font-semibold text-green-500 transition-all hover:bg-green-100 hover:text-green-500 active:scale-95"
+            className="h-8 rounded-full px-4 text-sm font-semibold text-green-600 transition-all hover:bg-green-100 active:scale-95"
           >
             Cancelar
           </Button>
+
           <Button
             variant="default"
             size="sm"
             disabled={!comment.trim() || isPending}
             onClick={handleComment}
             className={clsx(
-              "h-10 min-w-[120px] rounded-full px-8 text-sm font-bold text-white transition-all duration-300 active:scale-95",
+              "h-8 min-w-[100px] rounded-full px-5 text-sm font-bold text-white transition-all duration-300 active:scale-95",
               "bg-green-200 hover:bg-green-500",
-              "disabled:translate-y-0 disabled:cursor-not-allowed disabled:opacity-50",
+              "disabled:cursor-not-allowed disabled:opacity-50",
             )}
           >
             {isPending ? (
-              <div className="flex items-center justify-center gap-2">
-                <div className="h-3.5 w-3.5 animate-spin rounded-full border-2 border-white/20 border-t-white" />
+              <Row className="items-center justify-center gap-x-2">
+                <div className="h-3 w-3 animate-spin rounded-full border-2 border-white/20 border-t-white" />
                 <span className="animate-pulse">Postando...</span>
-              </div>
+              </Row>
             ) : (
               "Comentar"
             )}
           </Button>
         </Row>
-      </Row>
+      </div>
     </Col>
   );
 }

@@ -1,7 +1,7 @@
 import type { PostCardDataProps } from "@/shared/types";
 import Col from "@/shared/ui/Layout/Helpers/Col";
 import Text from "@/shared/ui/Text";
-import { linkifyHtml } from "@/shared/utils";
+import { prepareHtmlContent } from "@/shared/utils";
 import Image from "next/image";
 import PostCardRoot from "./Root";
 
@@ -42,9 +42,10 @@ export default function PostCardImage({ data }: Props) {
 
           {contentHTML ? (
             <div
-              className={`font-maitree line-clamp-3 text-base break-words text-green-500`}
+              className={`font-maitree line-clamp-3 text-base break-words text-green-500 [&>p]:text-justify [&>p]:hyphens-auto`}
+              lang="pt-BR"
               dangerouslySetInnerHTML={{
-                __html: linkifyHtml(contentHTML),
+                __html: prepareHtmlContent(contentHTML),
               }}
             />
           ) : (
@@ -52,7 +53,7 @@ export default function PostCardImage({ data }: Props) {
               as="p"
               type={Text.Type.BodyFour}
               weight={Text.Weight.Normal}
-              className="font-maitree mt-2 text-base whitespace-pre-wrap"
+              className="font-maitree mt-2 text-justify text-base hyphens-auto whitespace-pre-wrap"
             >
               {content}
             </Text>
@@ -62,7 +63,10 @@ export default function PostCardImage({ data }: Props) {
             {images.map((img, idx) => (
               <div
                 key={idx}
-                onClick={() => openImage(idx)}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  openImage(idx);
+                }}
                 className="size-full max-h-[5rem] max-w-[5rem] cursor-pointer overflow-hidden rounded-sm md:max-h-[12rem] md:max-w-[12rem]"
               >
                 <Image

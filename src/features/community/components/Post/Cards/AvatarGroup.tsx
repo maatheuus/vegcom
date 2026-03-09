@@ -22,8 +22,11 @@ export function AvatarGroup({
       <div className="flex -space-x-3">
         {visibleComments.map((comment, index) => (
           <Avatar key={index}>
-            <AvatarImage src="https://github.com/shadcn.png" alt="@shadcn" />
-            <AvatarFallback>
+            <AvatarImage
+              src={comment.user.avatarUrl}
+              alt={comment.user.name || "user image"}
+            />
+            <AvatarFallback className="capitalize !text-xs">
               {comment.user?.name?.substring(0, 2)}
             </AvatarFallback>
           </Avatar>

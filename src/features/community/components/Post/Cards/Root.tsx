@@ -137,9 +137,12 @@ export default function PostCardRoot({
       <Row className="mb-4 w-full justify-between">
         <Row className="items-center gap-x-3">
           <Avatar className="h-10 w-10">
-            <AvatarImage src="https://github.com/shadcn.png" alt="@shadcn" />
-            <AvatarFallback>
-              {data.user.name?.slice(0, 2).toUpperCase()}
+            <AvatarImage
+              src={data.user.avatarUrl || ""}
+              alt={data.user.name || "user image"}
+            />
+            <AvatarFallback className="bg-green-500 capitalize">
+              {data.user.name?.slice(0, 2)}
             </AvatarFallback>
           </Avatar>
           <Row className="items-center gap-x-2">

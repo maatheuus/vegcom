@@ -48,9 +48,7 @@ export default function UserInformations({
 }: Props) {
   const [selectedImage, setSelectedImage] = useState<File | null>(null);
   const { fullName, email } = form.getValues();
-  const [imagePreview, setImagePreview] = useState<string>(
-    avatarUrl || "https://github.com/shadcn.png",
-  );
+  const [imagePreview, setImagePreview] = useState<string>(avatarUrl || "");
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [isDialogShowImageOpen, setIsDialogShowImageOpen] = useState(false);
   const [isDragging, setIsDragging] = useState(false);

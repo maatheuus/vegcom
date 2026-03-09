@@ -170,9 +170,9 @@ export default function NewRecipeForm({}: Props) {
                         }`}
                       >
                         {currentStep > index + 1 ? (
-                          <SealCheckIcon size={16} />
+                          <SealCheckIcon size={20} />
                         ) : (
-                          <span className="text-sm italic">
+                          <span className="text-xl">
                             <Icon />
                           </span>
                         )}

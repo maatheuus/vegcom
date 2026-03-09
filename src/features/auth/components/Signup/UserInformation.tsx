@@ -139,7 +139,7 @@ const UserInformation: FC<React.ComponentProps<"form">> = ({
                       <RadioGroup
                         onValueChange={field.onChange}
                         defaultValue={field.value}
-                        className="flex items-center gap-8"
+                        className="flex flex-wrap items-center gap-2 md:gap-8"
                       >
                         <div className="flex items-center space-x-2">
                           <RadioGroupItem

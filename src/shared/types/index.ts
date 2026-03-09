@@ -7,7 +7,7 @@ export interface DataRecipeCard {
   recipeImageUrl: string | StaticImport;
   user: {
     name: string;
-    urlImage: string;
+    avatarUrl: string;
   };
   views: number;
 }
@@ -15,7 +15,7 @@ export interface DataRecipeCard {
 export interface UserData {
   id: number;
   name: string;
-  urlImage: string;
+  avatarUrl: string;
   role?: "ADMIN" | "USER";
 }
 

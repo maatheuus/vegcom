@@ -10,7 +10,7 @@ import Layout from "@/shared/ui/Layout";
 import Col from "@/shared/ui/Layout/Helpers/Col";
 import Row from "@/shared/ui/Layout/Helpers/Row";
 import Text from "@/shared/ui/Text";
-import { linkifyHtml } from "@/shared/utils";
+import { prepareHtmlContent } from "@/shared/utils";
 import { formatDistance } from "date-fns";
 import Image from "next/image";
 import { notFound } from "next/navigation";
@@ -63,9 +63,12 @@ export default async function Page({ params }: Props) {
             <Row className="mb-4 w-full justify-between">
               <Row className="w-full items-center gap-x-3">
                 <Avatar className="h-10 w-10">
-                  <AvatarImage src={post.user.urlImage} alt={post.user.name} />
-                  <AvatarFallback>
-                    {post.user.name?.slice(0, 2).toUpperCase()}
+                  <AvatarImage
+                    src={post.user.avatarUrl || ""}
+                    alt={post.user.name || "user image"}
+                  />
+                  <AvatarFallback className="text-xs capitalize">
+                    {post.user.name?.slice(0, 2)}
                   </AvatarFallback>
                 </Avatar>
                 <Row className="items-center gap-x-2">
@@ -103,9 +106,10 @@ export default async function Page({ params }: Props) {
 
               {contentHTML ? (
                 <div
-                  className="font-maitree text-base break-words text-green-500"
+                  className="font-maitree text-base break-words text-green-500 [&>p]:text-justify [&>p]:hyphens-auto"
+                  lang="pt-BR"
                   dangerouslySetInnerHTML={{
-                    __html: linkifyHtml(contentHTML),
+                    __html: prepareHtmlContent(contentHTML),
                   }}
                 />
               ) : (
@@ -113,7 +117,7 @@ export default async function Page({ params }: Props) {
                   as="p"
                   type={Text.Type.BodyFour}
                   weight={Text.Weight.Normal}
-                  className="font-maitree mt-2 text-base whitespace-pre-wrap"
+                  className="font-maitree mt-2 text-justify text-base hyphens-auto whitespace-pre-wrap"
                 >
                   {content}
                 </Text>

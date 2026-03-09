@@ -14,6 +14,7 @@ import {
 } from "@phosphor-icons/react/ssr";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+
 interface Props {
   commentsCount: number;
   post: PostCardDataProps;
@@ -91,58 +92,67 @@ export default function PostActions({
   }, [post.likes, user?.id]);
 
   return (
-    <div className="mt-6 flex items-center justify-between border-t border-gray-100 pt-4">
-      <div className="flex w-full flex-col items-center gap-x-3 md:flex-row">
-        <div className="flex w-full items-center justify-around gap-x-3 md:w-fit">
-          <Button.Icon
-            variant="text"
-            onClick={handleLike}
-            className="flex cursor-pointer items-center gap-x-1.5 rounded-full p-2 transition-colors hover:bg-green-100"
-            leftIcon={
-              <SparkleIcon size={16} weight={isLiked ? "fill" : "regular"} />
-            }
+    <div className="mt-6 border-t border-gray-100 pt-4">
+      <div className="grid grid-cols-3 md:flex md:items-center md:gap-x-1">
+        <Button.Icon
+          variant="text"
+          onClick={handleLike}
+          className="flex cursor-pointer flex-col items-center gap-y-1 rounded-xl p-2 transition-colors hover:bg-green-100 md:flex-row md:gap-x-1.5 md:gap-y-0 md:rounded-full"
+          leftIcon={
+            <SparkleIcon
+              size={18}
+              weight={isLiked ? "fill" : "regular"}
+              className="text-green-500"
+            />
+          }
+        >
+          <Text
+            as="p"
+            type={Text.Type.BodyFive}
+            weight={Text.Weight.Medium}
+            className="font-lora font-bold text-green-500 italic"
           >
-            <Text
-              as="span"
-              type={Text.Type.BodyFive}
-              weight={Text.Weight.Medium}
-              className="font-lora font-bold text-green-500 italic"
+            <span className="md:hidden">
+              {likesCount} {likesCount === 1 ? "Curtida" : "Curtidas"}
+            </span>
+            <span className="hidden md:inline">{likesCount}</span>
+          </Text>
+        </Button.Icon>
+
+        <span className="hidden size-0.5 rounded-full bg-green-500 md:block" />
+
+        {!postByAdmin && (
+          <>
+            <Button.Icon
+              variant="text"
+              onClick={handleCommentClick}
+              className="flex cursor-pointer flex-col items-center gap-y-1 rounded-xl p-2 transition-colors hover:bg-green-100 md:flex-row md:gap-x-1.5 md:gap-y-0 md:rounded-full"
+              leftIcon={
+                <ChatCircleTextIcon size={18} className="text-green-500" />
+              }
             >
-              {likesCount}
-            </Text>
-          </Button.Icon>
-
-          <span className="size-0.5 rounded-full bg-green-500"></span>
-
-          {!postByAdmin && (
-            <>
-              <Button.Icon
-                variant="text"
-                onClick={handleCommentClick}
-                className="flex cursor-pointer items-center gap-x-1.5 rounded-full p-2 transition-colors hover:bg-green-100"
-                leftIcon={
-                  <ChatCircleTextIcon size={20} className="text-green-500" />
-                }
+              <Text
+                as="p"
+                type={Text.Type.BodyFive}
+                weight={Text.Weight.Medium}
+                className="text-green-500"
               >
-                <Text
-                  as="span"
-                  type={Text.Type.BodyFive}
-                  weight={Text.Weight.Medium}
-                  className="text-green-500"
-                >
-                  {commentsCount}
-                </Text>
-              </Button.Icon>
-              <span className="size-0.5 rounded-full bg-green-500"></span>
-            </>
-          )}
-        </div>
+                <span className="md:hidden">
+                  {commentsCount}{" "}
+                  {commentsCount === 1 ? "Comentário" : "Comentários"}
+                </span>
+                <span className="hidden md:inline">{commentsCount}</span>
+              </Text>
+            </Button.Icon>
+            <span className="hidden size-0.5 rounded-full bg-green-500 md:block" />
+          </>
+        )}
 
         <Button.Icon
           variant="text"
           onClick={handleShare}
-          className="flex w-full cursor-pointer items-center gap-x-1.5 rounded-full p-2 transition-colors hover:bg-green-100 md:w-fit"
-          leftIcon={<ShareFatIcon size={20} className="text-green-500" />}
+          className="flex cursor-pointer flex-col items-center gap-y-1 rounded-xl p-2 transition-colors hover:bg-green-100 md:flex-row md:gap-x-1.5 md:gap-y-0 md:rounded-full"
+          leftIcon={<ShareFatIcon size={18} className="text-green-500" />}
         >
           <Text
             as="span"

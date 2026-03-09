@@ -114,7 +114,7 @@ export const preferenceOptions = [
 export const culinaryLevelOptions = [
   { value: CulinaryLevel.BEGINNER, label: "Queima tudo" },
   { value: CulinaryLevel.INTERMEDIATE, label: "Acerta o arroz soltinho" },
-  { value: CulinaryLevel.ADVANCED, label: "MasterChef não é nada" },
+  { value: CulinaryLevel.ADVANCED, label: "Todo mundo pede a receita" },
 ];
 
 export const bioTooShortMessages = [

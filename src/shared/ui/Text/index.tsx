@@ -62,7 +62,7 @@ const typeToAsMap = {
 const typeToClassNameMap = {
   [Type.HeadingOne]: "text-3xl md:text-[2.5rem]/tight md:tracking-px",
   [Type.HeadingTwo]: "text-[1.75rem]/9 md:text-4xl/tight",
-  [Type.HeadingThree]: "text-2xl md:text-[1.75rem]/none",
+  [Type.HeadingThree]: "text-xl md:text-[1.75rem]/none",
   [Type.HeadingFour]: "text-xl md:text-2xl/tight",
   [Type.HeadingFive]: "text-base md:text-xl/tight",
   [Type.HeadingSix]: "text-xs/2xl",

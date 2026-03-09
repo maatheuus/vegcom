@@ -88,7 +88,8 @@ export default function ImageCarouselModal({
               e.stopPropagation();
               handlePrev();
             }}
-            className="absolute top-1/2 left-2 -translate-y-1/2 cursor-pointer rounded-full bg-green-500/20 p-2 text-green-50 backdrop-blur-sm transition-colors hover:bg-green-500/40"
+            className="absolute top-1/2 left-2 -translate-y-1/2 cursor-pointer rounded-full bg-green-500/20 p-2 text-green-50 backdrop-blur-sm transition-colors hover:bg-green-500/40 disabled:hidden"
+            disabled={images.length === 1}
           >
             <ArrowBendUpLeftIcon size={24} />
           </button>
@@ -98,7 +99,8 @@ export default function ImageCarouselModal({
               e.stopPropagation();
               handleNext();
             }}
-            className="absolute top-1/2 right-2 -translate-y-1/2 cursor-pointer rounded-full bg-green-500/20 p-2 text-green-50 backdrop-blur-sm transition-colors hover:bg-green-500/40"
+            className="absolute top-1/2 right-2 -translate-y-1/2 cursor-pointer rounded-full bg-green-500/20 p-2 text-green-50 backdrop-blur-sm transition-colors hover:bg-green-500/40 disabled:hidden"
+            disabled={images.length === 1}
           >
             <ArrowBendUpRightIcon size={24} />
           </button>
