@@ -60,7 +60,7 @@ export default function Sidebar({ items }: SidebarProps) {
 
   return (
     <nav className="mx-auto w-fit rounded-xl border border-green-200 bg-green-50 p-2 lg:w-full">
-      <ul className="flex flex-row flex-wrap gap-1 lg:flex-col">
+      <ul className="flex flex-row md:flex-wrap gap-1 lg:flex-col">
         {(items || sidebarItems).map((item) => {
           const isActive = pathname === item.href;
 

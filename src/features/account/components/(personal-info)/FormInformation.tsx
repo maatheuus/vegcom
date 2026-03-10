@@ -13,13 +13,13 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/shared/ui/Select";
-import { Switch } from "@/shared/ui/Switch";
+// import { Switch } from "@/shared/ui/Switch";
 import type { UseFormReturn } from "react-hook-form";
 import type { z } from "zod";
 
 import Text from "@/shared/ui/Text";
 import Textarea from "@/shared/ui/TextArea";
-import clsx from "clsx";
+// import clsx from "clsx";
 import { useState } from "react";
 import {
   bioTooLongMessages,
@@ -53,7 +53,7 @@ export default function FormInformation({
 
   return (
     <form className={`space-y-6 ${className || ""}`}>
-      <div className="flex w-full flex-col items-start gap-x-4 md:flex-row">
+      <div className="flex w-full flex-col items-start gap-x-4 gap-y-4 md:flex-row">
         <div className="w-full">
           <FormField
             control={form.control}
@@ -80,19 +80,18 @@ export default function FormInformation({
           <FormField
             control={form.control}
             name="email"
-            render={() => (
+            render={({ field }) => (
               <FormItem>
                 <FormLabel className="font-maitree text-base font-semibold text-green-500">
                   Email
                 </FormLabel>
-                <div
-                  className="font-maitree flex w-full cursor-not-allowed rounded-lg border border-green-500 bg-transparent px-3.5 py-2 text-sm text-green-500 opacity-50 transition-colors focus-visible:ring-1 md:text-base"
-                  aria-disabled
-                >
-                  <Text className="font-maitree text-sm text-green-500">
-                    {email || "email@gmail.com"}
-                  </Text>
-                </div>
+                <FormControl className="rounded-lg">
+                  <Input
+                    placeholder="Digite seu email"
+                    disabled={isEditing}
+                    {...field}
+                  />
+                </FormControl>
                 <FormMessage />
               </FormItem>
             )}
@@ -100,7 +99,7 @@ export default function FormInformation({
         </div>
       </div>
 
-      <div className="flex w-full flex-col items-start gap-x-4 md:flex-row">
+      <div className="flex w-full flex-col items-start gap-x-4 gap-y-4 md:flex-row">
         <div className="w-full">
           <FormField
             control={form.control}
@@ -123,7 +122,7 @@ export default function FormInformation({
           />
         </div>
 
-        <div className="w-full">
+        {/* <div className="w-full">
           <FormField
             control={form.control}
             name="publicProfile"
@@ -155,10 +154,10 @@ export default function FormInformation({
               </FormItem>
             )}
           />
-        </div>
+        </div> */}
       </div>
 
-      <div className="flex w-full flex-col items-start gap-x-4 md:flex-row">
+      <div className="flex w-full flex-col items-start gap-x-4 gap-y-4 md:flex-row">
         <div className="w-full">
           <FormField
             control={form.control}

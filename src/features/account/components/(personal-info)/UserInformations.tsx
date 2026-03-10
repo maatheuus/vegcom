@@ -156,23 +156,23 @@ export default function UserInformations({
         <div className="flex items-center gap-4 border-b border-green-100 pb-6">
           <div className="relative">
             <DialogTrigger asChild>
-              <Avatar className="size-24 border-4 border-green-500">
+              <Avatar className="size-10 border-4 border-green-500 md:size-20 lg:size-24">
                 <AvatarImage src={imagePreview} alt="Avatar do usuário" />
-                <AvatarFallback className="text-2xl">
+                <AvatarFallback className="text-lg md:text-2xl">
                   {fullName ? getInitials(fullName) : "U"}
                 </AvatarFallback>
               </Avatar>
             </DialogTrigger>
             <DialogTrigger asChild>
               {!isEditing && (
-                <button className="absolute top-1.5 right-0 z-20 flex size-7 cursor-pointer items-center justify-center rounded-full border-2 border-green-50 bg-green-500 transition-colors hover:bg-green-600">
+                <button className="absolute top-0 right-0 z-20 flex size-10 cursor-pointer items-center justify-center rounded-full border-2 border-green-50 bg-green-500 transition-colors hover:bg-green-600 md:top-1.5 md:size-7">
                   <PencilSimpleIcon size={14} className="text-green-50" />
                 </button>
               )}
             </DialogTrigger>
           </div>
 
-          <div className="space-y-1">
+          <div className="md:space-y-1">
             <Text
               as="h3"
               type={Text.Type.HeadingFour}
