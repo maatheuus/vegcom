@@ -11,10 +11,10 @@ interface UserProfileHeaderProps {
 export function UserProfileHeader({ user }: UserProfileHeaderProps) {
   return (
     <Col className="w-full gap-y-4">
-      <Row className="items-center gap-x-6">
-        <Avatar className="h-24 w-24 border-2 border-green-500">
+      <Row className="items-start gap-x-4 md:gap-x-6">
+        <Avatar className="size-12 md:size-16">
           <AvatarImage src={user.avatarUrl} alt={user.name} />
-          <AvatarFallback className="text-2xl">
+          <AvatarFallback className="text-lg capitalize md:text-2xl">
             {user.name?.slice(0, 2)}
           </AvatarFallback>
         </Avatar>
@@ -23,7 +23,7 @@ export function UserProfileHeader({ user }: UserProfileHeaderProps) {
             as="h1"
             type={Text.Type.HeadingThree}
             weight={Text.Weight.Bold}
-            className="font-lora text-green-500"
+            className="font-maitree text-green-500"
           >
             {user.name}
           </Text>
@@ -31,7 +31,7 @@ export function UserProfileHeader({ user }: UserProfileHeaderProps) {
             <Text
               as="p"
               type={Text.Type.BodyThree}
-              className="text-black-100 font-maitree max-w-2xl"
+              className="text-black-100 font-lora max-w-2xl"
             >
               {user.bio}
             </Text>

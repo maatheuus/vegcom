@@ -10,6 +10,8 @@ import Text from "@/shared/ui/Text";
 import { formatDistance } from "date-fns";
 import CommentComposer from "./CommentComposer";
 import ReplyButton from "./ReplyButton";
+import EmptyState from "@/shared/ui/EmptyState";
+import Link from "next/link";
 interface PostCommentsProps {
   comments?: PostComment[];
   uniqueUsers: { name: string; avatarUrl?: string }[];
@@ -35,25 +37,38 @@ export default function PostComments({
         <Col className="mt-4 gap-y-6">
           {comments && comments.length > 0 ? (
             comments.map((comment, index) => (
-              <Row key={index} className="w-full items-start gap-x-3">
-                <Avatar className="h-10 w-10">
-                  <AvatarImage src={comment.user.avatarUrl || ""} />
-                  <AvatarFallback className="bg-green-100 text-xs capitalize text-green-500">
-                    {comment.user.name.slice(0, 2)}
-                  </AvatarFallback>
-                </Avatar>
+              <Row
+                key={index}
+                className="w-full items-start gap-x-2 md:gap-x-3"
+              >
+                <Link href={`/user/${comment.user.id}`} className="contents">
+                  <Avatar className="size-8 md:size-10">
+                    <AvatarImage src={comment.user.avatarUrl || ""} />
+                    <AvatarFallback className="text-xs capitalize md:text-base">
+                      {comment.user.name.slice(0, 2)}
+                    </AvatarFallback>
+                  </Avatar>
+                </Link>
 
                 <Col className="flex-1 gap-y-1">
                   <Row className="w-full items-baseline justify-between gap-x-2">
-                    <Text
-                      weight={Text.Weight.Medium}
-                      className="text-sm font-semibold text-green-500"
+                    <Link
+                      href={`/user/${comment.user.id}`}
+                      className="contents"
                     >
-                      {comment.user.name}
-                    </Text>
+                      <Text
+                        as="span"
+                        weight={Text.Weight.Bold}
+                        className="font-maitree text-xs text-green-500 md:text-base"
+                      >
+                        {comment.user.name}
+                      </Text>
+                    </Link>
                     <Text
-                      type={Text.Type.BodySix}
-                      className="font-lora text-black-100 text-xs opacity-60"
+                      as="span"
+                      type={Text.Type.BodyFive}
+                      weight={Text.Weight.Medium}
+                      className="text-black-100 font-lora opacity-60"
                     >
                       {formatDistance(
                         new Date(comment.commentDate),
@@ -68,24 +83,25 @@ export default function PostComments({
 
                   <Text
                     type={Text.Type.BodyFour}
-                    className="text-black-100 mt-1 leading-relaxed font-medium break-all"
+                    className="font-maitree text-base leading-relaxed font-medium break-words break-all text-green-500"
                   >
                     {comment.commentContent}
                   </Text>
 
-                  <Row className="mt-2 items-center gap-x-3">
-                    <ReplyButton
-                      username={comment.user.name}
-                      isAuthenticated={!!user}
-                    />
-                  </Row>
+                  <ReplyButton
+                    username={comment.user.name}
+                    isAuthenticated={!!user}
+                    className="w-fit"
+                  />
                 </Col>
               </Row>
             ))
           ) : (
-            <Text className="py-8 text-center text-gray-500">
-              Nenhum comentário ainda. Seja o primeiro a comentar!
-            </Text>
+            <EmptyState
+              title="Nenhum comentário ainda"
+              description="Seja o primeiro a comentar algo!"
+              size="compact"
+            />
           )}
         </Col>
       </Col>

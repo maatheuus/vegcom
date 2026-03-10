@@ -29,6 +29,7 @@ import {
 } from "@phosphor-icons/react";
 import Image from "next/image";
 import FormInformation from "./FormInformation";
+import type { User } from "@/features/auth/api/types";
 
 type PersonalInfoFormValues = z.infer<typeof personalInfoFormSchema>;
 interface Props extends React.HTMLAttributes<HTMLFormElement> {
@@ -36,6 +37,7 @@ interface Props extends React.HTMLAttributes<HTMLFormElement> {
   setBioLength: (length: number) => void;
   isEditing?: boolean;
   avatarUrl?: string;
+  user: User;
   onImageChange: (file: File | null) => void;
 }
 
@@ -44,6 +46,7 @@ export default function UserInformations({
   isEditing,
   setBioLength,
   avatarUrl,
+  user,
   onImageChange,
 }: Props) {
   const [selectedImage, setSelectedImage] = useState<File | null>(null);
@@ -64,6 +67,14 @@ export default function UserInformations({
     messagesToDisplayForPremium[
       Math.floor(Math.random() * messagesToDisplayForPremium.length)
     ];
+
+  const lastProfileUpdate = user.updatedAt
+    ? new Date(user.updatedAt).toLocaleDateString("pt-BR", {
+        day: "2-digit",
+        month: "2-digit",
+        year: "numeric",
+      })
+    : "";
 
   const handleImageSelect = (file: File) => {
     const MAX_FILE_SIZE = 2 * 1024 * 1024;
@@ -156,16 +167,16 @@ export default function UserInformations({
         <div className="flex items-center gap-4 border-b border-green-100 pb-6">
           <div className="relative">
             <DialogTrigger asChild>
-              <Avatar className="size-10 border-4 border-green-500 md:size-20 lg:size-24">
+              <Avatar className="size-12 border-4 border-green-500 md:size-16">
                 <AvatarImage src={imagePreview} alt="Avatar do usuário" />
-                <AvatarFallback className="text-lg md:text-2xl">
+                <AvatarFallback className="text-base capitalize md:text-lg">
                   {fullName ? getInitials(fullName) : "U"}
                 </AvatarFallback>
               </Avatar>
             </DialogTrigger>
             <DialogTrigger asChild>
               {!isEditing && (
-                <button className="absolute top-0 right-0 z-20 flex size-10 cursor-pointer items-center justify-center rounded-full border-2 border-green-50 bg-green-500 transition-colors hover:bg-green-600 md:top-1.5 md:size-7">
+                <button className="absolute top-0 right-0 z-20 flex size-12 cursor-pointer items-center justify-center rounded-full border-2 border-green-50 bg-green-500 transition-colors hover:bg-green-600 md:-top-1.5 md:size-7">
                   <PencilSimpleIcon size={14} className="text-green-50" />
                 </button>
               )}
@@ -177,17 +188,17 @@ export default function UserInformations({
               as="h3"
               type={Text.Type.HeadingFour}
               weight={Text.Weight.Bold}
-              className="font-lora text-green-500"
+              className="font-lora text-base text-green-500 md:text-xl"
             >
               {fullName}
             </Text>
             <Text
-              as="p"
+              as="span"
               type={Text.Type.BodyThree}
               weight={Text.Weight.Medium}
-              className="font-maitree text-green-200"
+              className="font-maitree !text-xs text-green-200"
             >
-              {email}
+              Última vez atualizado: {lastProfileUpdate}
             </Text>
           </div>
         </div>
@@ -239,10 +250,12 @@ export default function UserInformations({
                 <Avatar className="size-32 border-4 border-green-500">
                   <AvatarImage
                     src={imagePreview}
-                    alt="Preview"
+                    alt={`Image preview from ${fullName}`}
                     className="object-cover"
                   />
-                  <AvatarFallback>CN</AvatarFallback>
+                  <AvatarFallback className="text-lg capitalize md:text-2xl">
+                    {fullName ? getInitials(fullName) : "U"}
+                  </AvatarFallback>
                 </Avatar>
               </div>
 

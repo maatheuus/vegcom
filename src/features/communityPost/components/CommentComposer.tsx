@@ -15,7 +15,12 @@ import {
 import { useQueryClient } from "@tanstack/react-query";
 import Mention from "@tiptap/extension-mention";
 import Placeholder from "@tiptap/extension-placeholder";
-import { EditorContent, ReactRenderer, useEditor, type Editor } from "@tiptap/react";
+import {
+  EditorContent,
+  ReactRenderer,
+  useEditor,
+  type Editor,
+} from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 import type { SuggestionKeyDownProps } from "@tiptap/suggestion";
 import clsx from "clsx";
@@ -36,20 +41,23 @@ const FORMATTING_BUTTONS = [
     icon: TextBIcon,
     label: "Negrito",
     isActive: (editor: Editor | null) => editor?.isActive("bold"),
-    action: (editor: Editor | null) => editor?.chain().focus().toggleBold().run(),
+    action: (editor: Editor | null) =>
+      editor?.chain().focus().toggleBold().run(),
     iconProps: { weight: "bold" as const },
   },
   {
     icon: TextItalicIcon,
     label: "Itálico",
     isActive: (editor: Editor | null) => editor?.isActive("italic"),
-    action: (editor: Editor | null) => editor?.chain().focus().toggleItalic().run(),
+    action: (editor: Editor | null) =>
+      editor?.chain().focus().toggleItalic().run(),
   },
   {
     icon: TextStrikethroughIcon,
     label: "Tachado",
     isActive: (editor: Editor | null) => editor?.isActive("strike"),
-    action: (editor: Editor | null) => editor?.chain().focus().toggleStrike().run(),
+    action: (editor: Editor | null) =>
+      editor?.chain().focus().toggleStrike().run(),
   },
 ];
 
@@ -64,6 +72,7 @@ export default function CommentComposer({
   const queryClient = useQueryClient();
   const [comment, setComment] = useState("");
   const [isPending, startTransition] = useTransition();
+  const [isMarkdownOpen, setIsMarkdownOpen] = useState(false);
 
   const isNearLimit = comment.length > MAX_LENGTH_FOR_INPUT * 0.8;
 
@@ -216,7 +225,12 @@ export default function CommentComposer({
 
   return (
     <Col className="gap-y-0 overflow-hidden rounded-2xl border border-green-500/20 bg-green-50/30 ring-1 shadow-sm ring-green-100 transition-all">
-      <div className="flex items-center gap-x-0.5 border-b border-green-500/15 bg-green-50/70 px-3 py-2">
+      <div
+        className={clsx(
+          "flex items-center gap-x-0.5 border-b border-green-500/15 bg-green-50/70 px-3 py-2 transition-all duration-300",
+          isMarkdownOpen ? "visible opacity-100" : "invisible opacity-0",
+        )}
+      >
         {FORMATTING_BUTTONS.map(
           ({ icon: Icon, label, isActive, action, iconProps }) => (
             <Button.Icon
@@ -225,8 +239,8 @@ export default function CommentComposer({
               size="md"
               aria-label={label}
               className={clsx(
-                "h-7 w-7 p-0 text-gray-400 transition-colors hover:bg-green-100 hover:text-green-600",
-                isActive(editor) && "bg-green-100 text-green-600",
+                "h-7 w-7 p-0 text-gray-400 transition-colors hover:bg-green-100 hover:text-green-500",
+                isActive(editor) && "bg-green-100 text-green-500",
               )}
               onClick={() => action(editor)}
               icon={<Icon size={16} {...(iconProps ?? {})} />}
@@ -249,8 +263,14 @@ export default function CommentComposer({
       <EditorContent editor={editor} className="w-full" />
 
       <div className="flex items-center justify-between gap-x-2 border-t border-green-500/15 bg-green-50/70 px-3 py-2">
-        <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-green-200 text-xs font-bold text-green-50">
-          {user?.name?.slice(0, 2).toUpperCase() ?? "Aa"}
+        <div
+          className={clsx(
+            "flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-green-100 text-xs font-bold text-green-500 transition-colors duration-200 hover:cursor-pointer hover:bg-green-100 hover:text-green-500 active:bg-green-100 active:text-green-500",
+            isMarkdownOpen ? "bg-green-100" : "bg-transparent",
+          )}
+          onClick={() => setIsMarkdownOpen(!isMarkdownOpen)}
+        >
+          Aa
         </div>
 
         <Row className="items-center gap-x-2">
