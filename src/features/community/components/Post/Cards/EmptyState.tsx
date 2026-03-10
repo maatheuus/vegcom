@@ -1,11 +1,9 @@
-import Col from "@/shared/ui/Layout/Helpers/Col";
-import Text from "@/shared/ui/Text";
+import EmptyState from "@/shared/ui/EmptyState";
 import {
   MegaphoneIcon,
   PaperclipIcon,
   ScrollIcon,
 } from "@phosphor-icons/react";
-import clsx from "clsx";
 
 type TabKey = "posts" | "resources" | "announcements";
 
@@ -21,23 +19,23 @@ const emptyStateContent: Record<
     title: "Nenhum post por aqui ainda",
     description:
       "Seja o primeiro a compartilhar algo com a comunidade. Sua contribuição pode inspirar outros!",
-    icon: <ScrollIcon size={36} className="text-green-200" />,
+    icon: <ScrollIcon size={32} />,
   },
   resources: {
     title: "Nenhum recurso disponível",
     description:
       "Ainda não há recursos compartilhados. Fique de olho, novidades podem aparecer a qualquer momento!",
-    icon: <PaperclipIcon size={36} className="text-green-200" />,
+    icon: <PaperclipIcon size={32} />,
   },
   announcements: {
     title: "Nenhum anúncio no momento",
     description:
       "Não há anúncios recentes. Volte mais tarde para conferir as novidades da comunidade.",
-    icon: <MegaphoneIcon size={36} className="-scale-x-100 text-green-200" />,
+    icon: <MegaphoneIcon size={32} className="-scale-x-100" />,
   },
 };
 
-export default function EmptyState({
+export default function EmptyStateComponent({
   tab = "posts",
   className,
   ...props
@@ -45,30 +43,12 @@ export default function EmptyState({
   const content = emptyStateContent[tab];
 
   return (
-    <Col
-      className={clsx(
-        "items-center justify-center gap-y-3 py-16 text-center",
-        className,
-      )}
+    <EmptyState
+      icon={content.icon}
+      title={content.title}
+      description={content.description}
+      className={className}
       {...props}
-    >
-      <div className="flex h-fit w-fit items-center justify-center">
-        {content.icon}
-      </div>
-      <Text
-        type={Text.Type.BodyThree}
-        weight={Text.Weight.Medium}
-        className="font-lora text-black-100"
-      >
-        {content.title}
-      </Text>
-      <Text
-        type={Text.Type.BodyFour}
-        weight={Text.Weight.Normal}
-        className="font-allan text-black-100 max-w-xs"
-      >
-        {content.description}
-      </Text>
-    </Col>
+    />
   );
 }

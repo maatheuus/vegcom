@@ -135,8 +135,8 @@ export default function PostCardRoot({
     >
       {/* Header */}
       <Row className="mb-4 w-full justify-between">
-        <Row className="items-center gap-x-3">
-          <Avatar className="h-10 w-10">
+        <Row className="min-w-0 flex-1 items-center gap-x-3">
+          <Avatar className="h-10 w-10 shrink-0">
             <AvatarImage
               src={data.user.avatarUrl || ""}
               alt={data.user.name || "user image"}
@@ -145,21 +145,21 @@ export default function PostCardRoot({
               {data.user.name?.slice(0, 2)}
             </AvatarFallback>
           </Avatar>
-          <Row className="items-center gap-x-2">
+          <Row className="min-w-0 flex-1 items-center gap-x-2">
             <Text
               as="span"
               type={Text.Type.BodyFive}
               weight={Text.Weight.Medium}
-              className="text-gray-900"
+              className="text-black-100 truncate"
             >
               {data.user.name}
             </Text>
-            <span className="size-0.5 rounded-full bg-green-500"></span>
+            <span className="size-0.5 shrink-0 rounded-full bg-green-500"></span>
             <Text
               as="span"
               type={Text.Type.BodyFive}
               weight={Text.Weight.Normal}
-              className="text-black-100 font-lora opacity-60"
+              className="font-lora text-black-100 shrink-0 opacity-60"
             >
               {formattedPostDate}
             </Text>
@@ -174,7 +174,7 @@ export default function PostCardRoot({
             <Button.Icon
               variant="text"
               onClick={(e) => e.stopPropagation()}
-              className="z-50 cursor-pointer rounded-full border border-transparent px-3 transition-colors hover:border-green-100 hover:bg-green-100 data-[state=open]:bg-green-100"
+              className="cursor-pointer rounded-full border border-transparent px-3 transition-colors hover:border-green-100 hover:bg-green-100 data-[state=open]:bg-green-100"
               icon={<DotsThreeIcon size={22} />}
             />
           </DropdownMenuTrigger>

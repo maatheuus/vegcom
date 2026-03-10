@@ -2,7 +2,13 @@
 
 import Button from "@/shared/ui/Button";
 import Text from "@/shared/ui/Text";
-import { ArrowClockwiseIcon, SparkleIcon } from "@phosphor-icons/react";
+import {
+  ArrowClockwiseIcon,
+  LeafIcon,
+  PlantIcon,
+  SparkleIcon,
+  UsersThreeIcon,
+} from "@phosphor-icons/react";
 import { useEffect, useState } from "react";
 import { defaultCuriosities, didYouKnowPhrases } from "../curiosites/utils";
 
@@ -22,6 +28,110 @@ export interface Curiosity {
   source?: string;
 }
 
+// ── Dados da seção histórica ──────────────────────────────────
+
+const historyTimeline = [
+  {
+    year: "~700 a.C.",
+    title: "Primeiras raízes",
+    description:
+      "Filósofos gregos como Pitágoras defendiam uma dieta sem carne por razões éticas e espirituais. Na Índia, o Jainismo já pregava a não-violência (ahimsa) com todos os seres.",
+    icon: LeafIcon,
+  },
+  {
+    year: "1806",
+    title: "O primeiro vegano registrado",
+    description:
+      "Percy Bysshe Shelley e outros pensadores britânicos começaram a defender publicamente a abstinência de todos os produtos animais, indo além do vegetarianismo da época.",
+    icon: PlantIcon,
+  },
+  {
+    year: "1944",
+    title: "Nasce o termo 'Vegano'",
+    description:
+      "Donald Watson fundou a Vegan Society no Reino Unido e cunhou a palavra 'vegan', separando quem excluía apenas carne de quem excluía todos os produtos de origem animal.",
+    icon: UsersThreeIcon,
+  },
+  {
+    year: "1990s",
+    title: "Crescimento global",
+    description:
+      "Com o avanço da internet e de documentários como 'Earthlings', o movimento vegano ganhou tração mundial. Supermercados começaram a oferecer as primeiras alternativas plant-based.",
+    icon: SparkleIcon,
+  },
+  {
+    year: "Hoje",
+    title: "Uma revolução alimentar",
+    description:
+      "Estima-se que mais de 88 milhões de pessoas no mundo sigam uma dieta vegana. A indústria plant-based movimenta bilhões e cresce acima de 10% ao ano globalmente.",
+    icon: LeafIcon,
+  },
+];
+
+const fastFacts = [
+  { value: "88M+", label: "veganos no mundo" },
+  { value: "1944", label: "ano da fundação da Vegan Society" },
+  { value: "10%", label: "crescimento anual do mercado plant-based" },
+  { value: "75%", label: "redução na pegada de carbono com dieta vegana" },
+];
+
+// ── Componentes internos ──────────────────────────────────────
+
+function FastFacts() {
+  return (
+    <div className="grid grid-cols-2 gap-3 md:grid-cols-4">
+      {fastFacts.map(({ value, label }) => (
+        <div
+          key={label}
+          className="flex flex-col items-center justify-center rounded-2xl border border-green-500/10 bg-green-50/60 px-4 py-5 text-center"
+        >
+          <span className="font-lora text-2xl font-bold text-green-600">
+            {value}
+          </span>
+          <span className="font-maitree mt-1 text-xs text-green-500/70">
+            {label}
+          </span>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+function HistoryTimeline() {
+  return (
+    <div className="space-y-0">
+      {historyTimeline.map(({ year, title, description, icon: Icon }, i) => (
+        <div key={year} className="flex gap-x-4">
+          {/* Linha do tempo */}
+          <div className="flex flex-col items-center">
+            <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full border-2 border-green-200 bg-green-50 text-green-500">
+              <Icon size={16} weight="duotone" />
+            </div>
+            {i < historyTimeline.length - 1 && (
+              <div className="my-1 w-px flex-1 bg-green-200/50" />
+            )}
+          </div>
+
+          {/* Conteúdo */}
+          <div className="pb-8">
+            <span className="font-lora text-xs font-semibold tracking-widest text-green-400 uppercase italic">
+              {year}
+            </span>
+            <h3 className="font-lora mt-0.5 text-base font-semibold text-green-700">
+              {title}
+            </h3>
+            <p className="font-maitree mt-1 text-sm leading-relaxed text-gray-600">
+              {description}
+            </p>
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+// ── Página principal ──────────────────────────────────────────
+
 export default function CuriositiesPage() {
   const [currentCuriosity, setCurrentCuriosity] = useState<Curiosity | null>(
     null,
@@ -34,17 +144,15 @@ export default function CuriositiesPage() {
   const generateCuriosity = () => {
     setIsAnimating(true);
 
-    if (usedIds.size >= defaultCuriosities.length) {
-      setUsedIds(new Set());
-    }
+    if (usedIds.size >= defaultCuriosities.length) setUsedIds(new Set());
 
     const availableCuriosities = defaultCuriosities.filter(
       (c) => !usedIds.has(c.id),
     );
-
-    const randomIndex = Math.floor(Math.random() * availableCuriosities.length);
-    const selected = availableCuriosities[randomIndex];
-
+    const selected =
+      availableCuriosities[
+        Math.floor(Math.random() * availableCuriosities.length)
+      ];
     const nextPhraseIndex = (currentPhraseIndex + 1) % didYouKnowPhrases.length;
 
     setTimeout(() => {
@@ -62,11 +170,75 @@ export default function CuriositiesPage() {
 
   return (
     <div className="mt-12 h-full overflow-auto md:mt-0">
-      <main className="my-auto flex h-full flex-1 items-center justify-center">
-        <div className="w-full max-w-3xl space-y-6">
+      <main className="mx-auto w-full max-w-3xl space-y-16 px-4 py-12">
+        {/* ── HERO ───────────────────────────────────────────── */}
+        <section className="space-y-3 text-center">
+          <span className="inline-flex items-center gap-x-1.5 rounded-full bg-green-100 px-3 py-1 text-xs font-semibold tracking-wider text-green-600 uppercase">
+            <LeafIcon size={12} weight="fill" />
+            Veganismo
+          </span>
+          <Text
+            as="h1"
+            type={Text.Type.HeadingTwo}
+            weight={Text.Weight.Bold}
+            className="font-lora text-3xl text-green-700 md:text-4xl"
+          >
+            Curiosidades & História
+          </Text>
+          <Text
+            type={Text.Type.BodyThree}
+            className="font-maitree mx-auto max-w-xl text-gray-500"
+          >
+            Explore fatos surpreendentes, marcos históricos e dados sobre o
+            movimento que está transformando a forma como o mundo se alimenta.
+          </Text>
+        </section>
+
+        {/* ── NÚMEROS RÁPIDOS ────────────────────────────────── */}
+        <section className="space-y-4">
+          <Text
+            as="h2"
+            type={Text.Type.HeadingFour}
+            weight={Text.Weight.Bold}
+            className="font-lora text-xl text-green-700"
+          >
+            Em números
+          </Text>
+          <FastFacts />
+        </section>
+
+        {/* ── LINHA DO TEMPO ─────────────────────────────────── */}
+        <section className="space-y-6">
+          <div className="space-y-1">
+            <Text
+              as="h2"
+              type={Text.Type.HeadingFour}
+              weight={Text.Weight.Bold}
+              className="font-lora text-xl text-green-700"
+            >
+              Uma breve história
+            </Text>
+            <p className="font-maitree text-sm text-gray-500">
+              Do pensamento filosófico antigo até o movimento global de hoje.
+            </p>
+          </div>
+          <HistoryTimeline />
+        </section>
+
+        {/* ── DIVISOR ────────────────────────────────────────── */}
+        <div className="flex items-center gap-x-4">
+          <div className="h-px flex-1 bg-green-200/50" />
+          <span className="font-lora text-xs tracking-widest text-green-400 uppercase italic">
+            Curiosidade do dia
+          </span>
+          <div className="h-px flex-1 bg-green-200/50" />
+        </div>
+
+        {/* ── CURIOSIDADE ALEATÓRIA ──────────────────────────── */}
+        <section className="space-y-6">
           {currentCuriosity && (
             <div
-              className={`space-y-8 overflow-hidden px-8 transition-all duration-500 ${
+              className={`space-y-8 overflow-hidden transition-all duration-500 ${
                 isAnimating
                   ? "scale-95 opacity-0 blur-sm"
                   : "blur-0 scale-100 opacity-100"
@@ -145,7 +317,7 @@ export default function CuriositiesPage() {
               {didYouKnowPhrases[currentPhraseIndex]}
             </Text>
           </div>
-        </div>
+        </section>
       </main>
     </div>
   );

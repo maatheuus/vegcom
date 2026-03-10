@@ -2,6 +2,7 @@ import {
   useNotifications,
   type NotificationType,
 } from "@/features/community/hooks/useNotifications";
+import EmptyState from "@/shared/ui/EmptyState";
 import Col from "@/shared/ui/Layout/Helpers/Col";
 import Row from "@/shared/ui/Layout/Helpers/Row";
 import Text from "@/shared/ui/Text";
@@ -10,6 +11,7 @@ import clsx from "clsx";
 import { formatDistanceToNow } from "date-fns";
 import { ptBR } from "date-fns/locale";
 import { AnimatePresence, motion } from "framer-motion";
+import { useRouter } from "next/navigation";
 import {
   memo,
   useCallback,
@@ -38,8 +40,34 @@ const NotificationPopup = memo(function NotificationPopup({
   ...props
 }: ComponentProps<"div">) {
   const [isOpen, setIsOpen] = useState(false);
+  const router = useRouter();
   const { notifications, unreadCount, markAsRead, markAllAsRead } =
     useNotifications();
+
+  const handleNotificationClick = useCallback(
+    (notification: (typeof notifications)[0]) => {
+      if (!notification.isRead) {
+        markAsRead(notification.id);
+      }
+      setIsOpen(false);
+
+      if (
+        notification.type === "COMMENT_REPLY" ||
+        notification.type === "COMMENT_LIKE" ||
+        notification.type === "POST_LIKE"
+      ) {
+        if (notification.entityId) {
+          router.push(`/community/${notification.entityId}/post`);
+        }
+      } else if (notification.type === "RECIPE_LIKE") {
+        if (notification.entityId) {
+          router.push(`/recipes/${notification.entityId}/recipe`);
+        }
+      }
+      // Handle FOLLOW or SYSTEM if needed in the future
+    },
+    [markAsRead, router],
+  );
 
   const popupRef = useRef<HTMLDivElement>(null);
   const buttonRef = useRef<HTMLDivElement>(null);
@@ -138,14 +166,11 @@ const NotificationPopup = memo(function NotificationPopup({
               data-lenis-prevent
             >
               {notifications.length === 0 ? (
-                <div className="px-4 py-8 text-center">
-                  <Text
-                    type={Text.Type.BodyFour}
-                    className="font-maitree text-green-200"
-                  >
-                    Nenhuma notificação
-                  </Text>
-                </div>
+                <EmptyState
+                  size="compact"
+                  title="Nenhuma notificação"
+                  className="py-8"
+                />
               ) : (
                 <AnimatePresence mode="popLayout">
                   {notifications.map((notification, index) => (
@@ -155,7 +180,7 @@ const NotificationPopup = memo(function NotificationPopup({
                       animate={{ opacity: 1, x: 0 }}
                       exit={{ opacity: 0, x: 20 }}
                       transition={{ delay: index * 0.05 }}
-                      onClick={() => markAsRead(notification.id)}
+                      onClick={() => handleNotificationClick(notification)}
                       className={clsx(
                         "cursor-pointer border-b border-green-100 px-4 py-3 transition-colors duration-200",
                         notification.isRead
@@ -177,15 +202,10 @@ const NotificationPopup = memo(function NotificationPopup({
                             }
                             className="font-maitree text-green-500"
                           >
-                            <span className="font-bold">
-                              {notification.actorName}
-                            </span>{" "}
+                            {/* <span className="font-bold">
+                              {notification.actor?.name}
+                            </span>{" "} */}
                             {notification.message}
-                            {notification.entityName && (
-                              <span className="italic">
-                                &quot;{notification.entityName}&quot;
-                              </span>
-                            )}
                           </Text>
                           <Text
                             type={Text.Type.BodySix}
@@ -210,23 +230,6 @@ const NotificationPopup = memo(function NotificationPopup({
                 </AnimatePresence>
               )}
             </Col>
-
-            {notifications.length > 0 && (
-              <Row className="border-t border-green-100 px-4 py-3">
-                {unreadCount > 0 && (
-                  <button
-                    onClick={markAllAsRead}
-                    className="font-maitree block flex-1 cursor-pointer text-sm text-green-200 transition-colors duration-200 hover:text-green-500 md:hidden"
-                  >
-                    Marcar todas como lidas
-                  </button>
-                )}
-
-                <button className="font-maitree w-full flex-1 text-center text-sm text-green-200 transition-colors duration-200 hover:text-green-500">
-                  Ver todas as notificações
-                </button>
-              </Row>
-            )}
           </motion.div>
         )}
       </AnimatePresence>

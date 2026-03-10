@@ -1,30 +1,27 @@
+"use client";
+
 import Button from "@/shared/ui/Button";
+import EmptyState from "@/shared/ui/EmptyState";
 import Text from "@/shared/ui/Text";
-import { useGSAP } from "@gsap/react";
 import { HeartIcon, PlusIcon } from "@phosphor-icons/react";
 import { BroomIcon } from "@phosphor-icons/react/dist/ssr";
-import gsap from "gsap";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback } from "react";
 
 interface Props {
-  isEmpty: boolean;
+  isEmpty?: boolean;
   searchQuery?: string;
   isFavorites?: boolean;
+  title?: string;
+  description?: string;
 }
 
 export default function RecipeEmptyState({
   isFavorites,
-  isEmpty,
   searchQuery,
+  title,
+  description,
 }: Props) {
-  const containerRef = useRef<HTMLDivElement>(null);
-  const textRef = useRef<HTMLDivElement>(null);
-  const buttonRef = useRef<HTMLDivElement>(null);
-  const potRef = useRef<HTMLDivElement>(null);
-  const tearRef = useRef<HTMLDivElement>(null);
-
-  const [shouldAnimate, setShouldAnimate] = useState(false);
   const router = useRouter();
   const searchParams = useSearchParams();
 
@@ -36,59 +33,21 @@ export default function RecipeEmptyState({
     router.push(`?${params.toString()}`, { scroll: false });
   }, [searchParams, router]);
 
-  useGSAP(
-    () => {
-      if (!shouldAnimate) return;
-
-      const tl = gsap.timeline();
-
-      tl.to(potRef.current, {
-        opacity: 1,
-        y: 0,
-        scale: 1,
-        duration: 1,
-        ease: "bounce.out",
-      })
-        .to(
-          tearRef.current,
-          { opacity: 1, y: 20, duration: 0.5, ease: "power2.out" },
-          "-=0.5",
-        )
-        .to(tearRef.current, { opacity: 0, duration: 0.5 }, "-=0.2")
-        .to(
-          textRef.current,
-          { opacity: 1, y: 0, duration: 0.6, ease: "power2.out" },
-          "-=0.8",
-        );
-
-      gsap.to(potRef.current, {
-        rotate: -1.5,
-        yoyo: true,
-        repeat: -1,
-        duration: 2.5,
-        ease: "sine.inOut",
-        delay: 1,
-      });
-    },
-    { dependencies: [shouldAnimate], scope: containerRef },
-  );
-
-  useEffect(() => {
-    if (isEmpty) {
-      const timer = setTimeout(() => setShouldAnimate(true), 100);
-      return () => clearTimeout(timer);
-    } else {
-      setShouldAnimate(false);
-    }
-  }, [isEmpty]);
+  if (title) {
+    return (
+      <EmptyState
+        title={title}
+        description={description}
+        animated
+        className="min-h-[300px] rounded-2xl border border-dashed border-green-200 bg-green-50/50"
+      />
+    );
+  }
 
   if (searchQuery && searchQuery.length > 0) {
     return (
-      <div
-        ref={containerRef}
-        className="col-span-full flex min-h-[250px] flex-col items-center justify-center p-8 text-center"
-      >
-        <div ref={textRef} className="opacity-0">
+      <div className="flex min-h-[250px] w-full flex-col items-center justify-center p-8 text-center">
+        <div>
           <Text
             as="h3"
             type={Text.Type.HeadingFour}
@@ -98,7 +57,7 @@ export default function RecipeEmptyState({
           </Text>
           <Text
             as="p"
-            className="font-maitree max-w-md text-sm font-semibold text-green-500/80"
+            className="font-maitree max-w-md text-sm font-semibold text-green-500 opacity-80"
           >
             <strong>&quot;{searchQuery}&quot;</strong>
             {isFavorites
@@ -106,7 +65,7 @@ export default function RecipeEmptyState({
               : " não está na despensa. Será que vale improvisar?"}
           </Text>
         </div>
-        <div ref={buttonRef} className="mt-6 md:hidden">
+        <div className="mt-6 md:hidden">
           <Button.Icon
             onClick={onClearFilters}
             leftIcon={<BroomIcon />}
@@ -120,30 +79,27 @@ export default function RecipeEmptyState({
   }
 
   return (
-    <div
-      ref={containerRef}
-      className="col-span-full flex min-h-[400px] flex-col items-center justify-center p-8 text-center"
-    >
-      <div ref={textRef} className="opacity-0">
-        <Text as="h3" className="mb-2 text-xl font-semibold text-green-500">
-          {isFavorites
-            ? "Sua coleção de delícias está vazia"
-            : "Sua cozinha parece um pouco solitária"}
-        </Text>
-        <Text as="p" className="max-w-md text-sm text-green-500/80">
-          {isFavorites
-            ? "Explore as receitas e clique no coração para guardar suas favoritas aqui."
-            : "Vamos encher essa panela! Adicione sua primeira receita e comece a criar seu livro de sabores."}
-        </Text>
-      </div>
-      <div ref={buttonRef} className="mt-6 md:hidden">
+    <EmptyState
+      title={
+        isFavorites
+          ? "Sua coleção de delícias está vazia"
+          : "Sua cozinha parece um pouco solitária"
+      }
+      description={
+        isFavorites
+          ? "Explore as receitas e clique no coração para guardar suas favoritas aqui."
+          : "Vamos encher essa panela! Adicione sua primeira receita e comece a criar seu livro de sabores."
+      }
+      action={
         <Button.Link
           href={isFavorites ? "/recipes" : "/recipes/new"}
           leftIcon={isFavorites ? <HeartIcon /> : <PlusIcon />}
         >
           {isFavorites ? "Explorar receitas" : "Adicionar Receita"}
         </Button.Link>
-      </div>
-    </div>
+      }
+      animated
+      className="min-h-[300px] rounded-2xl border border-dashed border-green-200 bg-green-50/50"
+    />
   );
 }

@@ -1,6 +1,7 @@
 "use client";
 
 import useDebounce from "@/shared/hooks/useDebounce";
+import EmptyState from "@/shared/ui/EmptyState";
 import { Input } from "@/shared/ui/Input";
 import Text from "@/shared/ui/Text";
 import { AlienIcon, PlusCircleIcon } from "@phosphor-icons/react";
@@ -83,15 +84,12 @@ export default function HistoryChatPage({ chats: { data } }: Props) {
 
       <div className="min-h-0 flex-1 overflow-y-auto py-2">
         {visibleChats.length === 0 ? (
-          <div className="mt-8 px-4 text-center text-gray-500">
-            <AlienIcon
-              size={32}
-              className="mx-auto mb-3 text-green-500 opacity-50"
-            />
-            <p className="font-lora text-sm">
-              Perdido? Não há nada aqui, humano.
-            </p>
-          </div>
+          <EmptyState
+            icon={<AlienIcon size={28} />}
+            title="Perdido? Não há nada aqui, humano."
+            size="compact"
+            className="mt-8"
+          />
         ) : (
           <div className="space-y-1">
             <ChatsCard

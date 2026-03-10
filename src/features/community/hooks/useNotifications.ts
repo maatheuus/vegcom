@@ -7,20 +7,25 @@ export type NotificationType =
   | "COMMENT_REPLY"
   | "COMMENT_LIKE"
   | "RECIPE_LIKE"
+  | "POST_LIKE"
   | "FOLLOW"
   | "SYSTEM";
 
 export interface Notification {
-  id: string;
+  id: number;
   type: NotificationType;
-  actorId: string;
-  actorName: string;
-  actorAvatar?: string;
-  entityId?: string;
-  entityName?: string;
+  userId: number;
+  actorId: number;
+  entityId?: number;
+  entityType?: string;
   message: string;
   createdAt: string;
   isRead: boolean;
+  actor: {
+    id: number;
+    name: string;
+    avatarUrl?: string;
+  };
 }
 
 export const notificationKeys = {
@@ -38,7 +43,6 @@ export function useNotifications(page = 1, limit = 10) {
     queryKey: notificationKeys.list(page, limit),
     queryFn: () => notificationsApi.getNotifications(page, limit),
     enabled: isAuthenticated,
-    // Placeholder data to prevent crash if backend not ready, or remove if strict
     placeholderData: {
       data: [],
       meta: { page: 1, limit: 10, total: 0, totalPages: 0 },
@@ -49,8 +53,6 @@ export function useNotifications(page = 1, limit = 10) {
     queryKey: notificationKeys.unreadCount,
     queryFn: notificationsApi.getUnreadCount,
     enabled: isAuthenticated,
-    // Polling could be enabled here for real-time-ish updates
-    // refetchInterval: 30000
   });
 
   const markAsReadMutation = useMutation({
@@ -68,8 +70,8 @@ export function useNotifications(page = 1, limit = 10) {
   });
 
   const markAsRead = useCallback(
-    (id: string) => {
-      markAsReadMutation.mutate(id);
+    (id: number) => {
+      markAsReadMutation.mutate(String(id));
     },
     [markAsReadMutation],
   );

@@ -1,100 +1,107 @@
 "use client";
 
 import Button from "@/shared/ui/Button";
+import EmptyState from "@/shared/ui/EmptyState";
 import Text from "@/shared/ui/Text";
-import { useGSAP } from "@gsap/react";
-import { CookingPotIcon } from "@phosphor-icons/react/dist/ssr";
-import gsap from "gsap";
-import { useRef } from "react";
+import { HeartIcon, PlusIcon } from "@phosphor-icons/react";
+import { BroomIcon } from "@phosphor-icons/react/dist/ssr";
+import { useRouter, useSearchParams } from "next/navigation";
+import { useCallback } from "react";
 
 interface Props {
+  isEmpty?: boolean;
+  searchQuery?: string;
+  isFavorites?: boolean;
   title?: string;
   description?: string;
-  actionLabel?: string;
-  actionLink?: string;
 }
 
 export default function RecipeEmptyState({
-  title = "Nenhuma receita encontrada",
-  description = "Parece que ainda não temos receitas nesta categoria.",
-  actionLabel,
-  actionLink,
+  isFavorites,
+  searchQuery,
+  title,
+  description,
 }: Props) {
-  const containerRef = useRef<HTMLDivElement>(null);
-  const iconRef = useRef<HTMLDivElement>(null);
-  const contentRef = useRef<HTMLDivElement>(null);
+  const router = useRouter();
+  const searchParams = useSearchParams();
 
-  useGSAP(
-    () => {
-      const tl = gsap.timeline();
+  const onClearFilters = useCallback(() => {
+    const params = new URLSearchParams(searchParams.toString());
+    params.delete("q");
+    params.set("clear_search", "true");
 
-      tl.fromTo(
-        iconRef.current,
-        {
-          y: -20,
-          opacity: 0,
-          scale: 0.8,
-        },
-        {
-          y: 0,
-          opacity: 1,
-          scale: 1,
-          duration: 0.8,
-          ease: "elastic.out(1, 0.5)",
-        },
-      ).fromTo(
-        contentRef.current,
-        {
-          y: 20,
-          opacity: 0,
-        },
-        {
-          y: 0,
-          opacity: 1,
-          duration: 0.5,
-          ease: "power2.out",
-        },
-        "-=0.4",
-      );
-    },
-    { scope: containerRef },
-  );
+    router.push(`?${params.toString()}`, { scroll: false });
+  }, [searchParams, router]);
+
+  if (title) {
+    return (
+      <EmptyState
+        title={title}
+        description={description}
+        animated
+        className="min-h-[400px]"
+      />
+    );
+  }
+
+  if (searchQuery && searchQuery.length > 0) {
+    return (
+      <div className="col-span-full flex min-h-[250px] flex-col items-center justify-center p-8 text-center">
+        <div>
+          <Text
+            as="h3"
+            type={Text.Type.HeadingFour}
+            className="font-lora mb-2 font-semibold text-green-500"
+          >
+            Nenhum ingrediente encontrado
+          </Text>
+          <Text
+            as="p"
+            className="font-maitree max-w-md text-sm font-semibold text-green-500 opacity-80"
+          >
+            <strong>&quot;{searchQuery}&quot;</strong>
+            {isFavorites
+              ? "? Hmmm… Parece que essa receita ainda não foi descoberta!"
+              : " não está na despensa. Será que vale improvisar?"}
+          </Text>
+        </div>
+        <div className="mt-6 md:hidden">
+          <Button.Icon
+            onClick={onClearFilters}
+            leftIcon={<BroomIcon />}
+            className="font-lora"
+          >
+            Limpar busca
+          </Button.Icon>
+        </div>
+      </div>
+    );
+  }
 
   return (
-    <div
-      ref={containerRef}
-      className="flex min-h-[300px] w-full flex-col items-center justify-center gap-6 rounded-2xl border border-dashed border-green-200 bg-green-50/50 p-8 text-center"
-    >
-      <div
-        ref={iconRef}
-        className="flex h-20 w-20 items-center justify-center rounded-full bg-green-100/80 text-green-600 shadow-sm"
-      >
-        <CookingPotIcon size={40} weight="duotone" />
-      </div>
-
-      <div ref={contentRef} className="max-w-md space-y-2 opacity-0">
-        <Text
-          as="h3"
-          className="font-lora text-xl font-semibold text-green-800"
-        >
-          {title}
-        </Text>
-        <Text as="p" className="text-green-600/80">
-          {description}
-        </Text>
-
-        {actionLabel && actionLink && (
-          <div className="pt-4">
-            <Button.Link
-              href={actionLink}
-              // variant="outline"
-              className="border-green-200 text-green-700 hover:bg-green-100 hover:text-green-800"
-            >
-              {actionLabel}
-            </Button.Link>
-          </div>
-        )}
-      </div>
+    <div className="col-span-full">
+      <EmptyState
+        title={
+          isFavorites
+            ? "Sua coleção de delícias está vazia"
+            : "Sua cozinha parece um pouco solitária"
+        }
+        description={
+          isFavorites
+            ? "Explore as receitas e clique no coração para guardar suas favoritas aqui."
+            : "Vamos encher essa panela! Adicione sua primeira receita e comece a criar seu livro de sabores."
+        }
+        action={
+          <Button.Link
+            href={isFavorites ? "/recipes" : "/recipes/new"}
+            leftIcon={isFavorites ? <HeartIcon /> : <PlusIcon />}
+          >
+            {isFavorites ? "Explorar receitas" : "Adicionar Receita"}
+          </Button.Link>
+        }
+        animated
+        className="min-h-[400px]"
+      />
     </div>
   );
 }

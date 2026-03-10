@@ -1,5 +1,6 @@
 "use client";
 
+import EmptyState from "@/shared/ui/EmptyState";
 import { ScrollArea } from "@/shared/ui/scroll-area";
 import Text from "@/shared/ui/Text";
 import { useGSAP } from "@gsap/react";
@@ -158,15 +159,11 @@ export default function SuggestionsPage() {
         </div>
 
         {displayedSuggestions.length === 0 && (
-          <div className="py-20 text-center">
-            <LightbulbFilamentIcon
-              size={48}
-              className="mx-auto mb-2 text-green-200/30"
-            />
-            <Text as="p" className="font-maitree text-gray-500">
-              Nenhuma sugestão encontrada nesta categoria
-            </Text>
-          </div>
+          <EmptyState
+            icon={<LightbulbFilamentIcon size={36} />}
+            title="Nenhuma sugestão encontrada nesta categoria"
+            className="py-20"
+          />
         )}
       </main>
     </div>
