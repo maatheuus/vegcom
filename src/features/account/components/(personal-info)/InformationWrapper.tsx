@@ -178,6 +178,7 @@ export default function InformationWrapper({ user }: InformationWrapperProps) {
         setBioLength={setBioLength}
         avatarUrl={user.informations.avatarUrl}
         onImageChange={setSelectedImage}
+        user={user}
       />
       <Row className="ml-auto flex justify-end gap-x-2 md:hidden">
         <Button

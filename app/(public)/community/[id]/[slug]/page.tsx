@@ -14,6 +14,7 @@ import { prepareHtmlContent } from "@/shared/utils";
 import { formatDistance } from "date-fns";
 import { Metadata } from "next";
 import Image from "next/image";
+import Link from "next/link";
 import { notFound } from "next/navigation";
 
 interface Props {
@@ -85,8 +86,7 @@ export default async function Page({ params }: Props) {
     },
     datePublished: post.postDate,
     description: content || "Post de discussão na comunidade.",
-    image:
-      post.postContent.postResources?.images?.map((img) => img.src) || [],
+    image: post.postContent.postResources?.images?.map((img) => img.src) || [],
     interactionStatistic: {
       "@type": "InteractionCounter",
       interactionType: "https://schema.org/CommentAction",
@@ -109,30 +109,34 @@ export default async function Page({ params }: Props) {
           <Col className="w-full rounded-2xl border-b border-b-gray-100 py-5 transition-colors md:px-4">
             {/* Header */}
             <Row className="mb-4 w-full justify-between">
-              <Row className="w-full items-center gap-x-3">
-                <Avatar className="h-10 w-10">
-                  <AvatarImage
-                    src={post.user.avatarUrl || ""}
-                    alt={post.user.name || "user image"}
-                  />
-                  <AvatarFallback className="text-xs capitalize">
-                    {post.user.name?.slice(0, 2)}
-                  </AvatarFallback>
-                </Avatar>
+              <Row className="w-full items-center gap-x-2 md:gap-x-3">
+                <Link href={`/user/${post.user.id}`} className="contents">
+                  <Avatar className="size-8 md:size-10">
+                    <AvatarImage
+                      src={post.user.avatarUrl || ""}
+                      alt={post.user.name || "user image"}
+                    />
+                    <AvatarFallback className="text-xs capitalize md:text-base">
+                      {post.user.name?.slice(0, 2)}
+                    </AvatarFallback>
+                  </Avatar>
+                </Link>
                 <Row className="items-center gap-x-2">
-                  <Text
-                    as="span"
-                    type={Text.Type.BodyFive}
-                    weight={Text.Weight.Medium}
-                    className="text-gray-900"
-                  >
-                    {post.user.name}
-                  </Text>
+                  <Link href={`/user/${post.user.id}`} className="contents">
+                    <Text
+                      as="span"
+                      type={Text.Type.BodyFive}
+                      weight={Text.Weight.Bold}
+                      className="font-maitree text-xs text-green-500 md:text-base"
+                    >
+                      {post.user.name}
+                    </Text>
+                  </Link>
                   <span className="size-0.5 rounded-full bg-green-500"></span>
                   <Text
                     as="span"
                     type={Text.Type.BodyFive}
-                    weight={Text.Weight.Normal}
+                    weight={Text.Weight.Medium}
                     className="text-black-100 font-lora opacity-60"
                   >
                     {formattedPostDate}
@@ -144,17 +148,17 @@ export default async function Page({ params }: Props) {
             {/* Content */}
             <Col className="h-fit w-full gap-y-1 text-green-500">
               <Text
-                as="h2"
+                as="h1"
                 type={Text.Type.BodyTwo}
                 weight={Text.Weight.Medium}
-                className="font-lora font-semibold italic"
+                className="font-lora font-semibold"
               >
                 {post.postTitle}
               </Text>
 
               {contentHTML ? (
                 <div
-                  className="font-maitree text-base break-words text-green-500 [&>p]:text-justify [&>p]:hyphens-auto"
+                  className="font-maitree mt-2 text-base break-words text-green-500 [&>p]:text-justify [&>p]:hyphens-auto"
                   lang="pt-BR"
                   dangerouslySetInnerHTML={{
                     __html: prepareHtmlContent(contentHTML),

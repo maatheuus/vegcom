@@ -34,6 +34,7 @@ import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { AvatarGroup } from "./AvatarGroup";
 import { toast } from "@/shared/hooks/use-toast";
+import Link from "next/link";
 interface Props extends React.HTMLAttributes<HTMLDivElement> {
   data: PostCardDataProps;
   children: React.ReactNode;
@@ -180,30 +181,34 @@ export default function PostCardRoot({
     >
       {/* Header */}
       <Row className="mb-4 w-full justify-between">
-        <Row className="min-w-0 flex-1 items-center gap-x-3">
-          <Avatar className="h-10 w-10 shrink-0">
-            <AvatarImage
-              src={data.user.avatarUrl || ""}
-              alt={data.user.name || "user image"}
-            />
-            <AvatarFallback className="bg-green-500 capitalize">
-              {data.user.name?.slice(0, 2)}
-            </AvatarFallback>
-          </Avatar>
+        <Row className="min-w-0 flex-1 items-center gap-x-2 md:gap-x-3">
+          <Link href={`/user/${data.user.id}`} className="contents">
+            <Avatar className="h-10 w-10 shrink-0">
+              <AvatarImage
+                src={data.user.avatarUrl || ""}
+                alt={data.user.name || "user image"}
+              />
+              <AvatarFallback className="text-xs capitalize md:text-base">
+                {data.user.name?.slice(0, 2)}
+              </AvatarFallback>
+            </Avatar>
+          </Link>
           <Row className="min-w-0 flex-1 items-center gap-x-2">
-            <Text
-              as="span"
-              type={Text.Type.BodyFive}
-              weight={Text.Weight.Medium}
-              className="text-black-100 truncate"
-            >
-              {data.user.name}
-            </Text>
+            <Link href={`/user/${data.user.id}`} className="contents">
+              <Text
+                as="span"
+                type={Text.Type.BodyFive}
+                weight={Text.Weight.Bold}
+                className="font-maitree truncate text-xs text-green-500 md:text-base"
+              >
+                {data.user.name}
+              </Text>
+            </Link>
             <span className="size-0.5 shrink-0 rounded-full bg-green-500"></span>
             <Text
               as="span"
               type={Text.Type.BodyFive}
-              weight={Text.Weight.Normal}
+              weight={Text.Weight.Medium}
               className="font-lora text-black-100 shrink-0 opacity-60"
             >
               {formattedPostDate}
