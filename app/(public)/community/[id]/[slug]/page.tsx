@@ -15,8 +15,30 @@ import { formatDistance } from "date-fns";
 import Image from "next/image";
 import { notFound } from "next/navigation";
 
+import { Metadata, ResolvingMetadata } from "next";
+
 interface Props {
   params: Promise<{ id: string; slug: string }>;
+}
+
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const { id, slug } = await params;
+  const post = await getPostById(id);
+
+  if (!post) return { title: "Post não encontrado" };
+
+  const excerpt = post.postContent.postResources?.content?.substring(0, 160) || "Leia este post na nossa comunidade.";
+
+  return {
+    title: post.postTitle,
+    description: excerpt,
+    openGraph: {
+      title: `${post.postTitle} | VegCom Community`,
+      description: excerpt,
+      url: `https://vegcom.life/community/${id}/${slug}`,
+      images: post.postContent.postResources?.images?.length ? [{ url: post.postContent.postResources.images[0].src }] : [],
+    },
+  };
 }
 
 export default async function Page({ params }: Props) {
@@ -50,12 +72,34 @@ export default async function Page({ params }: Props) {
     },
   );
 
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "DiscussionForumPosting",
+    headline: post.postTitle,
+    author: {
+      "@type": "Person",
+      name: post.user.name,
+    },
+    datePublished: post.postDate,
+    description: content || "Post de discussão na comunidade.",
+    image: post.postContent.postResources?.images?.map((img: any) => img.src) || [],
+    interactionStatistic: {
+      "@type": "InteractionCounter",
+      interactionType: "https://schema.org/CommentAction",
+      userInteractionCount: post.comments?.commentsNumber || 0,
+    },
+  };
+
   return (
     <PostInteractionProvider>
       <Layout.Default
         className="hidden-scrollbar overflow-hidden"
         gridClassName="overflow-auto"
       >
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        />
         <section className="hidden-scrollbar col-span-full container mx-auto overflow-scroll scroll-auto">
           <BackToCommunityButton />
           <Col className="w-full rounded-2xl border-b border-b-gray-100 py-5 transition-colors md:px-4">

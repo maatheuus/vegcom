@@ -1,3 +1,20 @@
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Receitas",
+  description:
+    "Explore nossa coleção de receitas veganas, desde pratos principais até sobremesas incríveis.",
+  openGraph: {
+    title: "Receitas | VegCom",
+    description:
+      "Explore nossa coleção de receitas veganas, desde pratos principais até sobremesas incríveis.",
+    url: "https://vegcom.life/recipes",
+  },
+  alternates: {
+    canonical: "/recipes",
+  },
+};
+
 import {
   getFeaturedRecipe,
   getRecipes,
@@ -50,8 +67,21 @@ export default async function Page({ searchParams }: PageProps) {
   let recipes = filterRecipes(recipesData, params.q, params.category);
   recipes = sortRecipes(recipes, params.sort);
 
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "CollectionPage",
+    name: "Receitas Veganas | VegCom",
+    description:
+      "Explore nossa coleção de receitas veganas, desde pratos principais até sobremesas incríveis.",
+    url: "https://vegcom.life/recipes",
+  };
+
   return (
     <Layout.Default className="style-scrollbar h-auto">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
       <section className="space-y-6 md:space-y-8 lg:space-y-11">
         <Row className="items-center justify-between">
           <HeaderComponent>
