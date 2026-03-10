@@ -12,10 +12,9 @@ import Row from "@/shared/ui/Layout/Helpers/Row";
 import Text from "@/shared/ui/Text";
 import { prepareHtmlContent } from "@/shared/utils";
 import { formatDistance } from "date-fns";
+import { Metadata } from "next";
 import Image from "next/image";
 import { notFound } from "next/navigation";
-
-import { Metadata, ResolvingMetadata } from "next";
 
 interface Props {
   params: Promise<{ id: string; slug: string }>;
@@ -27,7 +26,9 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
   if (!post) return { title: "Post não encontrado" };
 
-  const excerpt = post.postContent.postResources?.content?.substring(0, 160) || "Leia este post na nossa comunidade.";
+  const excerpt =
+    post.postContent.postResources?.content?.substring(0, 160) ||
+    "Leia este post na nossa comunidade.";
 
   return {
     title: post.postTitle,
@@ -36,7 +37,9 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       title: `${post.postTitle} | VegCom Community`,
       description: excerpt,
       url: `https://vegcom.life/community/${id}/${slug}`,
-      images: post.postContent.postResources?.images?.length ? [{ url: post.postContent.postResources.images[0].src }] : [],
+      images: post.postContent.postResources?.images?.length
+        ? [{ url: post.postContent.postResources.images[0].src }]
+        : [],
     },
   };
 }
@@ -82,7 +85,8 @@ export default async function Page({ params }: Props) {
     },
     datePublished: post.postDate,
     description: content || "Post de discussão na comunidade.",
-    image: post.postContent.postResources?.images?.map((img: any) => img.src) || [],
+    image:
+      post.postContent.postResources?.images?.map((img) => img.src) || [],
     interactionStatistic: {
       "@type": "InteractionCounter",
       interactionType: "https://schema.org/CommentAction",

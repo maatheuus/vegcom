@@ -30,7 +30,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       const response = await getRecipeBySlug(slug);
       recipe = response.data;
     }
-  } catch (error) {
+  } catch (_error) {
+    console.error("Error fetching recipe metadata: ", _error);
     return { title: "Receita não encontrada" };
   }
 
@@ -38,10 +39,14 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
   return {
     title: recipe.title,
-    description: recipe.description || `Veja como preparar ${recipe.title} de forma simples e deliciosa.`,
+    description:
+      recipe.description ||
+      `Veja como preparar ${recipe.title} de forma simples e deliciosa.`,
     openGraph: {
       title: `${recipe.title} | VegCom`,
-      description: recipe.description || `Aprenda a fazer ${recipe.title} na comunidade VegCom.`,
+      description:
+        recipe.description ||
+        `Aprenda a fazer ${recipe.title} na comunidade VegCom.`,
       url: `https://vegcom.life/recipes/${recipe.slug || slug}`,
       images: recipe.images?.length ? [{ url: recipe.images[0] }] : [],
     },
@@ -94,11 +99,12 @@ export default async function page({ params }: Props) {
     datePublished: recipe.createdAt,
     description: recipe.description || `Como preparar ${recipe.title}.`,
     recipeIngredient: recipe?.steps?.ingredients || [],
-    recipeInstructions: recipe?.steps?.instructions?.map((inst: string, index: number) => ({
-      "@type": "HowToStep",
-      name: `Passo ${index + 1}`,
-      text: inst,
-    })) || [],
+    recipeInstructions:
+      recipe?.steps?.instructions?.map((inst: string, index: number) => ({
+        "@type": "HowToStep",
+        name: `Passo ${index + 1}`,
+        text: inst,
+      })) || [],
   };
 
   return (
