@@ -3,7 +3,7 @@
  */
 
 export interface PostComment {
-  id: string;
+  id: number | string;
   content: string;
   userId: string;
   user: {
@@ -15,7 +15,7 @@ export interface PostComment {
 }
 
 export interface Post {
-  id: string;
+  id: number | string;
   title: string;
   content: string;
   images?: {

@@ -1,24 +1,33 @@
-import { signup } from "../../api/authApi";
-import type { AuthResponse } from "../../types";
+import type { CulinaryLevel, Preference } from "@/features/account";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { authApi } from "../../api/authApi";
+import type { AuthResponse } from "../../types";
 
-type SignupData = {
-  username: string;
+type SignupDataPayload = {
+  name: string;
   email: string;
   password: string;
   singupData?: AuthResponse;
 };
 
-const signupUser = async (payload: SignupData): Promise<SignupData> => {
-  const { singupData } = await signup({
+const signupUser = async (
+  payload: SignupDataPayload,
+): Promise<SignupDataPayload> => {
+  const singupData = await authApi.signup({
     email: payload.email,
     password: payload.password,
-    username: payload.username,
+    name: payload.name,
+    informations: {
+      aboutInfo: "",
+      culinaryLevel: "BEGINNER" as CulinaryLevel.BEGINNER,
+      location: "",
+      preference: "VEGAN" as Preference.VEGAN,
+    },
   });
 
   return {
-    singupData,
-    username: payload.username,
+    singupData: singupData as unknown as AuthResponse,
+    name: payload.name,
     email: payload.email,
     password: payload.password,
   };
@@ -27,7 +36,7 @@ const signupUser = async (payload: SignupData): Promise<SignupData> => {
 const useSignupData = () => {
   const queryClient = useQueryClient();
 
-  return useMutation<SignupData, Error, SignupData>({
+  return useMutation<SignupDataPayload, Error, SignupDataPayload>({
     mutationKey: ["mutation_signup_user"],
     mutationFn: signupUser,
     onSuccess: (newData) => {

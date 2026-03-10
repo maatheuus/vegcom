@@ -1,6 +1,7 @@
 import type { PostCardDataProps } from "@/shared/types";
 import Col from "@/shared/ui/Layout/Helpers/Col";
 import Text from "@/shared/ui/Text";
+import { prepareHtmlContent } from "@/shared/utils";
 import Image from "next/image";
 import PostCardRoot from "./Root";
 
@@ -15,6 +16,9 @@ export default function PostCardImage({ data }: Props) {
   const images = data.postContent.postResources?.images ?? [];
   const [isOpen, setIsOpen] = useState(false);
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
+
+  const content = data.postContent.postResources?.content;
+  const contentHTML = data.postContent.postResources?.contentHTML;
 
   if (!images.length) return null;
 
@@ -36,20 +40,33 @@ export default function PostCardImage({ data }: Props) {
             {data.postTitle}
           </Text>
 
-          <Text
-            as="p"
-            type={Text.Type.BodyFour}
-            weight={Text.Weight.Normal}
-            className="font-maitree line-clamp-4 text-base md:line-clamp-6"
-          >
-            {data.postContent.postResources?.content}
-          </Text>
+          {contentHTML ? (
+            <div
+              className={`font-maitree line-clamp-3 text-base break-words text-green-500 [&>p]:text-justify [&>p]:hyphens-auto`}
+              lang="pt-BR"
+              dangerouslySetInnerHTML={{
+                __html: prepareHtmlContent(contentHTML),
+              }}
+            />
+          ) : (
+            <Text
+              as="p"
+              type={Text.Type.BodyFour}
+              weight={Text.Weight.Normal}
+              className="font-maitree mt-2 text-justify text-base hyphens-auto whitespace-pre-wrap"
+            >
+              {content}
+            </Text>
+          )}
 
           <div className="mt-4 flex w-full gap-3 md:gap-4">
             {images.map((img, idx) => (
               <div
                 key={idx}
-                onClick={() => openImage(idx)}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  openImage(idx);
+                }}
                 className="size-full max-h-[5rem] max-w-[5rem] cursor-pointer overflow-hidden rounded-sm md:max-h-[12rem] md:max-w-[12rem]"
               >
                 <Image

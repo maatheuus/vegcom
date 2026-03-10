@@ -1,6 +1,4 @@
-/**
- * Auth feature types
- */
+import type { CulinaryLevel, Preference } from "@/features/account";
 
 export interface LoginCredentials {
   email: string;
@@ -8,21 +6,23 @@ export interface LoginCredentials {
 }
 
 export interface SignupData {
-  username: string;
+  name: string;
   email: string;
   password: string;
+  informations: SignupInformationsFormData;
+}
+
+export interface SignupInformationsFormData {
+  aboutInfo: string;
+  culinaryLevel: CulinaryLevel;
+  location: string;
+  preference: Preference;
+  meetUs?: string;
 }
 
 export interface AuthResponse {
-  user: {
-    id: string;
-    email: string;
-    username: string;
-  } | null;
-  session: {
-    access_token: string;
-    refresh_token: string;
-  } | null;
+  success: boolean;
+  accessToken: string;
 }
 
 export interface AuthError {

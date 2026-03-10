@@ -7,14 +7,16 @@ export interface DataRecipeCard {
   recipeImageUrl: string | StaticImport;
   user: {
     name: string;
-    urlImage: string;
+    avatarUrl: string;
   };
   views: number;
 }
 
 export interface UserData {
+  id: number;
   name: string;
-  urlImage: string;
+  avatarUrl: string;
+  role?: "ADMIN" | "USER";
 }
 
 export interface PostImage {
@@ -30,14 +32,17 @@ export interface PostComment {
 }
 
 export interface PostCardDataProps {
-  id?: string;
+  id?: string | number;
+  slug?: string;
   user: UserData;
   postTitle: string;
+  savedBy: number[];
   postContent: {
     postResources: {
       images: PostImage[];
       links: string[];
       content: string;
+      contentHTML?: string;
     };
   };
   comments: {
@@ -46,13 +51,7 @@ export interface PostCardDataProps {
     comments: PostComment[];
   };
   postLikes: number;
+  likes?: { userId?: number | string; id?: number | string }[];
   postDate: string;
   postTags: string[];
-}
-
-export interface Comment {
-  user: {
-    name: string;
-    urlImage?: string;
-  };
 }

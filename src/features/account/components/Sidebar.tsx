@@ -2,6 +2,7 @@
 
 import { cn } from "@/shared/lib/utils";
 import {
+  BellIcon,
   ChefHatIcon,
   GearIcon,
   HeartIcon,
@@ -43,6 +44,11 @@ const sidebarItems = [
     icon: <ScrollIcon size={20} />,
   },
   {
+    label: "Notificações",
+    href: "/account/notifications",
+    icon: <BellIcon size={20} />,
+  },
+  {
     label: "Configurações",
     href: "/account/settings",
     icon: <GearIcon size={20} />,
@@ -54,7 +60,7 @@ export default function Sidebar({ items }: SidebarProps) {
 
   return (
     <nav className="mx-auto w-fit rounded-xl border border-green-200 bg-green-50 p-2 lg:w-full">
-      <ul className="flex flex-row gap-1 lg:flex-col">
+      <ul className="flex flex-row md:flex-wrap gap-1 lg:flex-col">
         {(items || sidebarItems).map((item) => {
           const isActive = pathname === item.href;
 

@@ -1,26 +1,27 @@
-/**
- * Community feature types
- */
-
 export * from "@/entities/post";
 
-export interface CreatePostData {
-  title: string;
-  content: string;
-  images?: {
-    src: string;
-    alt: string;
-    title: string;
-  }[];
-  links?: string[];
-  tags?: string[];
+export type CommunityPostType = "POST" | "RESOURCE" | "ANNOUNCEMENT";
+
+export interface GetPostsParams {
+  page?: number;
+  limit?: number;
+  type?: CommunityPostType;
 }
 
-export interface UpdatePostData extends Partial<CreatePostData> {
-  id: string;
+export interface CreatePostData {
+  postTitle: string;
+  type?: "POST" | "RESOURCE";
+  postContent: {
+    postResources: {
+      content: string;
+      contentHTML?: string;
+      images?: { src: File; alt?: string; title?: string }[];
+      links?: string[];
+    };
+  };
+  postTags?: string[];
 }
 
 export interface CreateCommentData {
-  postId: string;
-  content: string;
+  commentContent: string;
 }

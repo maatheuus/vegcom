@@ -13,35 +13,27 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/shared/ui/Select";
-import { Switch } from "@/shared/ui/Switch";
+// import { Switch } from "@/shared/ui/Switch";
 import type { UseFormReturn } from "react-hook-form";
+import type { z } from "zod";
 
 import Text from "@/shared/ui/Text";
 import Textarea from "@/shared/ui/TextArea";
-import clsx from "clsx";
+// import clsx from "clsx";
 import { useState } from "react";
 import {
   bioTooLongMessages,
   bioTooShortMessages,
   culinaryLevelOptions,
-  dietOptions,
   maxLengthForBio,
+  personalInfoFormSchema,
+  preferenceOptions,
 } from "../utils";
 
+type PersonalInfoFormValues = z.infer<typeof personalInfoFormSchema>;
+
 interface Props extends React.HTMLAttributes<HTMLFormElement> {
-  form: UseFormReturn<
-    {
-      fullName: string;
-      email: string;
-      location: string;
-      bio: string;
-      publicProfile: boolean;
-      dietType: string;
-      culinaryLevel: string;
-    },
-    unknown,
-    undefined
-  >;
+  form: UseFormReturn<PersonalInfoFormValues>;
   setBioLength: (length: number) => void;
   isEditing?: boolean;
 }
@@ -57,9 +49,11 @@ export default function FormInformation({
     null,
   );
 
+  const { email, location, publicProfile } = form.getValues();
+
   return (
     <form className={`space-y-6 ${className || ""}`}>
-      <div className="flex w-full flex-col items-start gap-x-4 md:flex-row">
+      <div className="flex w-full flex-col items-start gap-x-4 gap-y-4 md:flex-row">
         <div className="w-full">
           <FormField
             control={form.control}
@@ -93,8 +87,7 @@ export default function FormInformation({
                 </FormLabel>
                 <FormControl className="rounded-lg">
                   <Input
-                    type="email"
-                    placeholder="julio@email.com"
+                    placeholder="Digite seu email"
                     disabled={isEditing}
                     {...field}
                   />
@@ -106,7 +99,7 @@ export default function FormInformation({
         </div>
       </div>
 
-      <div className="flex w-full flex-col items-start gap-x-4 md:flex-row">
+      <div className="flex w-full flex-col items-start gap-x-4 gap-y-4 md:flex-row">
         <div className="w-full">
           <FormField
             control={form.control}
@@ -118,7 +111,7 @@ export default function FormInformation({
                 </FormLabel>
                 <FormControl className="rounded-lg">
                   <Input
-                    placeholder="Ex: São Paulo, SP"
+                    placeholder={location || "Ex: São Paulo, SP"}
                     disabled={isEditing}
                     {...field}
                   />
@@ -129,7 +122,7 @@ export default function FormInformation({
           />
         </div>
 
-        <div className="w-full">
+        {/* <div className="w-full">
           <FormField
             control={form.control}
             name="publicProfile"
@@ -152,7 +145,7 @@ export default function FormInformation({
                   </Text>
                   <FormControl>
                     <Switch
-                      checked={field.value}
+                      checked={publicProfile}
                       onCheckedChange={field.onChange}
                       disabled={isEditing}
                     />
@@ -161,18 +154,18 @@ export default function FormInformation({
               </FormItem>
             )}
           />
-        </div>
+        </div> */}
       </div>
 
-      <div className="flex w-full flex-col items-start gap-x-4 md:flex-row">
+      <div className="flex w-full flex-col items-start gap-x-4 gap-y-4 md:flex-row">
         <div className="w-full">
           <FormField
             control={form.control}
-            name="dietType"
+            name="preference"
             render={({ field }) => (
               <FormItem>
                 <FormLabel className="font-maitree text-base font-semibold text-green-500">
-                  Tipo de dieta
+                  Estilo de vida
                 </FormLabel>
                 <FormControl>
                   <Select
@@ -181,10 +174,10 @@ export default function FormInformation({
                     onValueChange={field.onChange}
                   >
                     <SelectTrigger className="font-lora min-h-[2.875rem] rounded-lg">
-                      <SelectValue placeholder="Selecione seu tipo de dieta" />
+                      <SelectValue placeholder="Selecione seu estilo de vida" />
                     </SelectTrigger>
                     <SelectContent>
-                      {dietOptions.map((option) => (
+                      {preferenceOptions.map((option) => (
                         <SelectItem
                           key={option.value}
                           value={option.value}
@@ -224,7 +217,7 @@ export default function FormInformation({
                       {culinaryLevelOptions.map((option) => (
                         <SelectItem
                           key={option.value}
-                          value={option.value}
+                          value={String(option.value)}
                           className="font-maitree"
                         >
                           {option.label}
@@ -252,9 +245,9 @@ export default function FormInformation({
               <Textarea
                 placeholder="Ex: Gosto de criar receitas veganas rápidas."
                 disabled={isEditing}
-                showCharacterCount
+                showCharacterCount={!isEditing}
                 maxLength={maxLengthForBio}
-                className="max-w-fit"
+                className="w-full max-w-full"
                 {...field}
                 onChange={(e) => {
                   const value = e.target.value;

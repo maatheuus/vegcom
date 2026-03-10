@@ -2,20 +2,28 @@ import Button from "@/shared/ui/Button";
 import Row from "@/shared/ui/Layout/Helpers/Row";
 import clsx from "clsx";
 import Link from "next/link";
-import { type JSX } from "react";
+import { type ElementType, type JSX } from "react";
+import type { CommunityPostType } from "../../types";
 
 export interface Tab {
+  key: CommunityPostType;
+  label: string;
+  icon: JSX.Element;
+  component?: ElementType;
+  showNotification?: boolean;
+}
+
+export interface ChatTab {
   key: string;
   label: string;
   icon: JSX.Element;
-  component: JSX.Element;
 }
 
 interface Props {
   className?: string;
-  tabs: Tab[];
-  selectedTab: string;
-  setSelectedTab: (tab: string) => void;
+  tabs: Tab[] | ChatTab[];
+  selectedTab: CommunityPostType | string;
+  setSelectedTab: (tab: CommunityPostType | string) => void;
   hasLink?: boolean;
   isChatLayout?: boolean;
   isTransitioning?: boolean;
@@ -31,7 +39,7 @@ export default function Tabs({
   isTransitioning = false,
   ...props
 }: Props) {
-  const handleTabClick = (tabKey: string) => {
+  const handleTabClick = (tabKey: CommunityPostType | string) => {
     if (isTransitioning || tabKey === selectedTab) return;
     setSelectedTab(tabKey);
   };
@@ -39,7 +47,7 @@ export default function Tabs({
   return (
     <Row
       className={clsx(
-        "w-full justify-between border-b border-b-black/10 px-4 py-2",
+        "w-full items-center justify-between border-b border-b-black/10 px-4 py-2",
         className,
       )}
       {...props}
@@ -62,7 +70,12 @@ export default function Tabs({
               isTransitioning && "pointer-events-none opacity-70",
             )}
           >
-            {tab.icon}
+            <span className="relative">
+              {tab.icon}
+              {(tab as Tab).showNotification && (
+                <span className="after:absolute after:top-1/2 after:-right-1 after:h-1.5 after:w-1.5 after:-translate-y-1/2 after:rounded-full after:bg-red-500 after:content-['']" />
+              )}
+            </span>
             <span
               className={clsx(
                 "font-lora hidden italic group-hover:text-green-500 md:inline",

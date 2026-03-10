@@ -31,7 +31,7 @@ export const mockComments: PostComment[] = [
 
 export const mockPosts: Post[] = [
   {
-    id: "post_1",
+    id: 1,
     title: "Como melhorar sua produtividade com TypeScript",
     content:
       "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.",
@@ -56,7 +56,7 @@ export const mockPosts: Post[] = [
     updatedAt: "2024-05-12T14:00:00Z",
   },
   {
-    id: "post_2",
+    id: 2,
     title: "Entendendo React Hooks com exemplos práticos",
     content:
       "Lorem Ipsum is simply dummy text of the printing and typesetting industry. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged.",

@@ -1,34 +1,103 @@
+"use client";
+
 import StarRating from "@/features/community/components/AsideContent/StarRating";
+import {
+  getAvailableFiltersClient,
+  getFeaturedRecipeClient,
+  type GetAvailableFiltersResponse,
+} from "@/features/recipes/api/queries/getFeaturedRecipe";
 import Button from "@/shared/ui/Button";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/shared/ui/Select";
 import Text from "@/shared/ui/Text";
-import { ClockIcon, EyeIcon, UsersIcon } from "@phosphor-icons/react/ssr";
+import { ClockIcon, EyeIcon, UsersIcon } from "@phosphor-icons/react";
 import clsx from "clsx";
 import Image from "next/image";
 import Link from "next/link";
-import type { Recipe } from "./types";
+import { useEffect, useState } from "react";
+import type { Recipe } from "../types";
 
 interface RecipeHeroProps extends React.HTMLAttributes<HTMLLinkElement> {
   hightlightedRecipe: Recipe;
 }
 
-// featured recipe need to be the most viewed and rated
-export function RecipeHero({ className, hightlightedRecipe }: RecipeHeroProps) {
-  const { title, description, prepTime, servings, rating, image, views } =
-    hightlightedRecipe;
+const filterOptions = [
+  { label: "Mais vista do mês", value: "most_viewed_month" },
+  { label: "Mais vista da semana", value: "most_viewed_week" },
+  { label: "Mais avaliada do mês", value: "best_rated_month" },
+  { label: "Mais avaliada da semana", value: "best_rated_week" },
+];
 
-  const slug = title.trim().split(" ").join("-").toLowerCase();
+export function RecipeHero({ className, hightlightedRecipe }: RecipeHeroProps) {
+  const [recipe, setRecipe] = useState<Recipe>(hightlightedRecipe);
+  const [isLoading, setIsLoading] = useState(false);
+  const [selectedFilter, setSelectedFilter] = useState(filterOptions[0].value);
+  const [availableFilters, setAvailableFilters] =
+    useState<GetAvailableFiltersResponse["data"]>();
+
+  const {
+    title,
+    description,
+    cookTime,
+    quantity,
+    rating,
+    images,
+    views,
+    slug,
+  } = recipe;
+
+  const image = images[0];
+
+  useEffect(() => {
+    const fetchAvailableFilters = async () => {
+      try {
+        const data = await getAvailableFiltersClient();
+        setAvailableFilters(data?.data);
+      } catch (error) {
+        console.error("Failed to fetch available filters:", error);
+      }
+    };
+    fetchAvailableFilters();
+  }, []);
+
+  const handleFilterChange = async (filterValue: string) => {
+    setSelectedFilter(filterValue);
+    setIsLoading(true);
+    try {
+      const data = await getFeaturedRecipeClient(filterValue);
+
+      if (data && data.data) {
+        setRecipe(data.data);
+      } else if (data) {
+        setRecipe(data as unknown as Recipe);
+      }
+    } catch (error) {
+      console.error("Failed to fetch featured recipe:", error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   return (
-    <Link href={`/recipes/${slug}`} className={clsx("contents", className)}>
-      <span className="sr-only">{title}</span>
-
-      <div className="group relative min-h-[340px] overflow-hidden rounded-xl shadow-md transition-all duration-500 hover:shadow-lg md:min-h-auto">
+    <div className={clsx("relative w-full", className)}>
+      <Link
+        href={`/recipes/${slug}`}
+        className="group relative block min-h-[340px] overflow-hidden rounded-xl shadow-md transition-all duration-500 hover:shadow-lg md:min-h-auto"
+      >
         <div className="relative min-h-[340px] md:aspect-[21/9] md:min-h-auto">
           <Image
             src={image}
             fill
             alt={title}
-            className="h-full w-full object-cover transition-transform duration-700 ease-out group-hover:scale-110"
+            className={clsx(
+              "h-full w-full object-cover transition-transform duration-700 ease-out group-hover:scale-110",
+              isLoading && "scale-105 blur-sm grayscale",
+            )}
           />
           <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/60 to-transparent opacity-100 transition-opacity duration-500 ease-out lg:opacity-0 lg:group-hover:opacity-100" />
         </div>
@@ -66,16 +135,16 @@ export function RecipeHero({ className, hightlightedRecipe }: RecipeHeroProps) {
               )}
               <div className="flex items-center gap-1 text-sm sm:text-sm">
                 <ClockIcon className="h-4 w-4 sm:h-5 sm:w-5" />
-                <span>{prepTime}</span>
+                <span>{cookTime}</span>
               </div>
               <div className="flex items-center gap-1 text-sm sm:text-sm">
                 <UsersIcon className="h-4 w-4 sm:h-5 sm:w-5" />
-                <span>{servings} porções</span>
+                <span>{quantity} porções</span>
               </div>
               {views && (
                 <div className="flex items-center gap-1 text-sm sm:text-sm">
                   <EyeIcon className="h-4 w-4 sm:h-5 sm:w-5" />
-                  <span>{views || 0}</span>
+                  <span>{views || 0} visualizações</span>
                 </div>
               )}
             </div>
@@ -88,7 +157,44 @@ export function RecipeHero({ className, hightlightedRecipe }: RecipeHeroProps) {
             </Button>
           </div>
         </div>
+      </Link>
+
+      {/* Filter Select */}
+      <div className="absolute top-4 right-4 z-10 md:top-8 md:right-8">
+        <Select
+          value={selectedFilter || "Filtrar"}
+          onValueChange={handleFilterChange}
+        >
+          <SelectTrigger className="w-auto gap-2 rounded-lg border-0 bg-black/40 px-3 py-1.5 text-sm font-medium backdrop-blur-md transition-colors hover:bg-black/50 [&_span]:data-[slot=select-value]:!text-white [&_svg]:!text-white">
+            {availableFilters && (
+              <SelectValue
+                placeholder="Filtrar"
+                defaultValue={selectedFilter || "Filtrar"}
+              />
+            )}
+          </SelectTrigger>
+          <SelectContent className="w-56 rounded-lg border-0 bg-green-50 ring-1 shadow-xl ring-black/5">
+            {filterOptions.map((option) => {
+              const isAvailable =
+                availableFilters?.[
+                  option.value as keyof GetAvailableFiltersResponse["data"]
+                ];
+
+              if (!isAvailable) return null;
+
+              return (
+                <SelectItem
+                  key={option.value}
+                  value={option.value}
+                  className="my-2 cursor-pointer px-4 py-2 text-sm text-green-500 last:my-0 focus:bg-green-200/60 focus:text-green-50 data-[state=checked]:bg-green-500 data-[state=checked]:font-medium data-[state=checked]:text-green-50"
+                >
+                  {option.label}
+                </SelectItem>
+              );
+            })}
+          </SelectContent>
+        </Select>
       </div>
-    </Link>
+    </div>
   );
 }

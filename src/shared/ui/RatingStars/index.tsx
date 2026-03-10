@@ -15,7 +15,7 @@ import {
 interface Props extends React.HTMLAttributes<HTMLDivElement> {
   initialRating?: number;
   value?: number;
-  onRatingChange: (rating: number) => void;
+  onRatingChange?: (rating: number) => void;
 }
 
 const labelStars = [
@@ -75,7 +75,7 @@ export default function RatingStars({
                   type="button"
                   variant="none"
                   size="lg"
-                  className="size-6 p-0 [&_svg]:!size-fit"
+                  className="size-6 p-0 text-green-500 [&_svg]:!size-fit"
                   onClick={() => {
                     if (value === starValue) {
                       onRatingChange?.(0);

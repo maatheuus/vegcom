@@ -1,6 +1,6 @@
 "use client";
 
-import { login } from "@/features/auth/api/authApi";
+import { AUTH_ERRORS } from "@/shared/api/errors/codes";
 import { toast } from "@/shared/hooks/use-toast";
 import {
   Form,
@@ -12,11 +12,18 @@ import {
 import { InputIcon } from "@/shared/ui/Input";
 import Col from "@/shared/ui/Layout/Helpers/Col";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { AtIcon, EyeClosedIcon, EyesIcon } from "@phosphor-icons/react";
+import {
+  AtIcon,
+  CircleNotchIcon,
+  EyeClosedIcon,
+  EyesIcon,
+} from "@phosphor-icons/react";
 import Link from "next/link";
-import { useState } from "react";
+import { useRouter } from "next/navigation";
+import { useState, useTransition } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
+import { getSignin } from "../../api/queries/getAuthApiServer";
 import SubmitButton from "../SubmitButton/SubmitButton";
 
 const formSchema = z.object({
@@ -25,9 +32,16 @@ const formSchema = z.object({
     .string()
     .min(6, { message: "A senha deve ter pelo menos 6 caracteres." }),
 });
+const loginErrorMessages: Partial<Record<keyof typeof AUTH_ERRORS, string>> = {
+  [AUTH_ERRORS.USER_NOT_FOUND]: "Usuário não encontrado.",
+  [AUTH_ERRORS.AUTH_INVALID_CREDENTIALS]: "E-mail ou senha incorretos.",
+  [AUTH_ERRORS.INVALID_CURRENT_PASSWORD]: "Senha atual incorreta.",
+};
 
 export default function LoginForm() {
   const [showingPassword, setShowingPassword] = useState<boolean>(false);
+  const [isPending, startTransition] = useTransition();
+  const router = useRouter();
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -40,43 +54,37 @@ export default function LoginForm() {
     setShowingPassword((prev) => !prev);
   }
 
-  async function handleLogin(data: z.infer<typeof formSchema>) {
-    const { error } = await login(data);
-
-    if (error) {
-      toast({
-        title: "Erro ao fazer login",
-        description: error || "Verifique suas credenciais e tente novamente.",
-        variant: "destructive",
-      });
-    } else {
-      toast({
-        title: "Sucesso!",
-        description: "Você foi logado com sucesso.",
-        variant: "success",
-      });
-    }
+  async function handleLogin(credentials: z.infer<typeof formSchema>) {
+    startTransition(async () => {
+      try {
+        await getSignin(credentials);
+        toast({
+          title: "Sucesso!",
+          description: "Você será redirecionado.",
+          variant: "success",
+        });
+        router.push("/community/");
+      } catch (error: unknown) {
+        console.error("Login error:", error);
+        const err = error as { message?: string; code?: string };
+        if (err.message) {
+          toast({
+            title: "Erro ao fazer login",
+            description:
+              loginErrorMessages[err.code as keyof typeof AUTH_ERRORS] ||
+              "Verifique suas credenciais e tente novamente.",
+            variant: "destructive",
+          });
+        } else {
+          toast({
+            title: "Erro inesperado",
+            description: "Ocorreu um erro ao tentar fazer login.",
+            variant: "destructive",
+          });
+        }
+      }
+    });
   }
-
-  // async function handleLoginWithGoogle() {
-  //   const { error } = await loginWithGoogle();
-
-  //   if (error) {
-  //     toast({
-  //       title: "Erro ao fazer login",
-  //       description:
-  //         error.message || "Verifique suas credenciais e tente novamente.",
-  //       variant: "destructive",
-  //       duration: 8000,
-  //     });
-  //   } else {
-  //     toast({
-  //       title: "Sucesso!",
-  //       description: " Vocé foi logado com sucesso.",
-  //       variant: "success",
-  //     });
-  //   }
-  // }
 
   return (
     <Form {...form}>
@@ -94,7 +102,7 @@ export default function LoginForm() {
                       placeholder="Digite seu email"
                       autoComplete="email"
                       {...field}
-                      icon={<AtIcon size={18} />}
+                      icon={<AtIcon size={18} className="text-green-500" />}
                     />
                   </FormControl>
                   <FormMessage className="!mb-0">
@@ -119,13 +127,13 @@ export default function LoginForm() {
                           <EyesIcon
                             size={18}
                             onClick={togglePasswordVisibility}
-                            className="cursor-pointer"
+                            className="cursor-pointer text-green-500"
                           />
                         ) : (
                           <EyeClosedIcon
                             size={18}
                             onClick={togglePasswordVisibility}
-                            className="cursor-pointer"
+                            className="cursor-pointer text-green-500"
                           />
                         )
                       }
@@ -141,32 +149,16 @@ export default function LoginForm() {
           <div className="w-full text-right">
             <Link
               href="/forgot-password"
-              className="font-lora text-black-100 text-sm"
+              className="font-lora text-sm font-medium text-green-500"
             >
               Esqueceu sua senha?
             </Link>
           </div>
         </Col>
-        <SubmitButton text="Entrar" />
+        <SubmitButton text="Entrar" isLoading={isPending}>
+          <CircleNotchIcon size={24} className="animate-spin" />
+        </SubmitButton>
       </form>
     </Form>
   );
-}
-
-{
-  /* <Text
-  as="span"
-  className="text-green-500 text-xs"
-  weight={Text.Weight.SemiBold}
->
-  ou
-</Text>
-<Button.Icon
-  type="button"
-  onClick={handleLoginWithGoogle}
-  variant="text"
-  leftIcon={<GoogleOutlinedIcon size={24} />}
-  text="Continue com Google"
-  className="w-full sm:max-w-3xs hover:text-green-700"
-/> */
 }

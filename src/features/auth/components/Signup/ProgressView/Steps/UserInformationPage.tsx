@@ -4,11 +4,11 @@ import UserInformation from "../../UserInformation";
 
 export default function UserInformationPage() {
   const {
-    formData: { username },
+    formData: { name },
   } = useSignupFormState();
 
   return (
-    <SignupCard title={`Agora, ${username}, nos conte um pouco sobre você`}>
+    <SignupCard title={`Agora, ${name}, nos conte um pouco sobre você`}>
       <UserInformation />
     </SignupCard>
   );

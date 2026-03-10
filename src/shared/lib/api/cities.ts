@@ -52,21 +52,25 @@ export class CitiesAPI {
 
     try {
       const response = await fetch(
-        `${IBGE_BASE_URL}/localidades/municipios?view=nivelado&orderBy=nome&q=${encodeURIComponent(query)}`,
+        `https://brasilapi.com.br/api/cptec/v1/cidade/${encodeURIComponent(query)}`,
       );
+
+      if (response.status === 404) {
+        return [];
+      }
 
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
 
-      const cities: City[] = await response.json();
+      const cities: { id: number; nome: string; estado: string }[] = await response.json();
 
       const results: CitySearchResult[] = cities.map((city) => ({
-        id: city["municipio-id"],
-        nome: city["municipio-nome"],
-        estado: city["UF-nome"],
-        sigla: city["UF-sigla"],
-        displayName: `${city["municipio-nome"]}, ${city["UF-sigla"]}`,
+        id: city.id,
+        nome: city.nome,
+        estado: city.estado,
+        sigla: city.estado,
+        displayName: `${city.nome}, ${city.estado}`,
       }));
 
       this.cache.set(cacheKey, results);

@@ -1,7 +1,7 @@
 "use client";
 
+import type { Recipe } from "@/entities/recipe";
 import { RecipeGrid } from "@/features/recipes/components/RecipeGrid";
-import type { Recipe } from "@/features/recipes/components/types";
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";

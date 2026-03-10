@@ -5,6 +5,12 @@ import {
   maxLengthForBio,
   personalInfoFormSchema,
 } from "@/features/account/components/utils";
+import { useUpdateProfile } from "@/features/account/hooks/mutations/useUpdateProfile";
+import { useUploadAvatar } from "@/features/account/hooks/mutations/useUploadAvatar";
+import type { UpdateProfilePayload } from "@/features/auth/api/authApi";
+import type { User } from "@/features/auth/api/types";
+import { type CulinaryLevel, type Preference } from "@/features/account";
+import { toast } from "@/shared/hooks/use-toast";
 import Button from "@/shared/ui/Button";
 import Row from "@/shared/ui/Layout/Helpers/Row";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -18,18 +24,30 @@ import { useForm } from "react-hook-form";
 import type { z } from "zod";
 import Header from "../Header";
 
-export default function InformationWrapper() {
+interface InformationWrapperProps {
+  user: User;
+}
+
+export default function InformationWrapper({ user }: InformationWrapperProps) {
   const [isEditing, setIsEditing] = useState(false);
+  const [selectedImage, setSelectedImage] = useState<File | null>(null);
+
+  const { mutateAsync: updateProfile, isPending: isUpdatingProfile } =
+    useUpdateProfile();
+  const { mutateAsync: uploadAvatar, isPending: isUploadingAvatar } =
+    useUploadAvatar();
+
+  const isPending = isUpdatingProfile || isUploadingAvatar;
 
   const form = useForm<z.infer<typeof personalInfoFormSchema>>({
     resolver: zodResolver(personalInfoFormSchema),
     defaultValues: {
-      fullName: "Julio do Grau",
-      email: "juliog@me.com",
-      bio: "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, nknown printer took a galley of type and scrambled it to make a type specimen book.",
-      dietType: "vegan",
-      culinaryLevel: "intermediate",
-      location: "São Paulo, SP",
+      fullName: user.name,
+      email: user.email,
+      bio: user.informations.aboutInfo,
+      preference: user.informations.preference,
+      culinaryLevel: user.informations.culinaryLevel,
+      location: user.informations.location,
       publicProfile: true,
     },
   });
@@ -38,23 +56,68 @@ export default function InformationWrapper() {
     form.getValues().bio.length,
   );
 
-  const formErros =
+  const _formErros =
     form.formState.errors.bio ||
     form.formState.errors.fullName ||
     form.formState.errors.email ||
-    form.formState.errors.dietType ||
+    form.formState.errors.preference ||
     form.formState.errors.culinaryLevel ||
     form.formState.errors.location ||
     bioLength > maxLengthForBio;
 
-  const onSubmit = (values: z.infer<typeof personalInfoFormSchema>) => {
-    if (form.formState.errors) return;
+  const _onSubmit = async (values: z.infer<typeof personalInfoFormSchema>) => {
+    if (form.formState.errors && Object.keys(form.formState.errors).length > 0)
+      return;
 
-    console.log("Salvo com sucesso:", values);
-    setIsEditing(false);
+    const payload: UpdateProfilePayload = {};
+    const infoPayload: UpdateProfilePayload["informations"] = {};
+
+    if (values.fullName !== user.name) payload.name = values.fullName;
+
+    if (values.bio !== user.informations?.aboutInfo)
+      infoPayload.aboutInfo = values.bio;
+    if (values.preference !== user.informations?.preference)
+      infoPayload.preference = values.preference as Preference;
+    if (values.culinaryLevel !== user.informations?.culinaryLevel)
+      infoPayload.culinaryLevel = values.culinaryLevel as CulinaryLevel;
+    if (values.location !== user.informations?.location)
+      infoPayload.location = values.location;
+
+    if (Object.keys(infoPayload).length > 0) {
+      payload.informations = infoPayload;
+    }
+
+    if (Object.keys(payload).length === 0 && !selectedImage) {
+      setIsEditing(false);
+      return;
+    }
+
+    try {
+      if (Object.keys(payload).length > 0) {
+        await updateProfile(payload);
+      }
+
+      if (selectedImage) {
+        await uploadAvatar(selectedImage);
+      }
+
+      toast({
+        title: "Sucesso!",
+        description: "Suas informações foram atualizadas com sucesso.",
+        variant: "success",
+      });
+      setIsEditing(false);
+      setSelectedImage(null);
+    } catch (_err) {
+      toast({
+        title: "Erro ao atualizar",
+        description: "Não foi possível atualizar as informações no momento.",
+        variant: "destructive",
+      });
+    }
   };
 
-  const onCancel = () => {
+  const _onCancel = () => {
     form.reset();
     setIsEditing(false);
   };
@@ -91,10 +154,20 @@ export default function InformationWrapper() {
             }
             variant="filled"
             size="default"
-            onClick={() => setIsEditing(!isEditing)}
-            className="font-maitree cursor-pointer bg-green-500 py-2"
+            type={isEditing ? "button" : "button"}
+            onClick={
+              isEditing
+                ? form.handleSubmit(_onSubmit)
+                : () => setIsEditing(true)
+            }
+            disabled={isPending}
+            className="font-maitree cursor-pointer bg-green-200 py-2"
           >
-            {isEditing ? "Salvar Perfil" : "Editar Perfil"}
+            {isPending
+              ? "Salvando..."
+              : isEditing
+                ? "Salvar Perfil"
+                : "Editar Perfil"}
           </Button.Icon>
         </Row>
       </Header>
@@ -103,6 +176,8 @@ export default function InformationWrapper() {
         isEditing={!isEditing}
         form={form}
         setBioLength={setBioLength}
+        avatarUrl={user.informations.avatarUrl}
+        onImageChange={setSelectedImage}
       />
       <Row className="ml-auto flex justify-end gap-x-2 md:hidden">
         <Button
@@ -129,10 +204,18 @@ export default function InformationWrapper() {
           }
           variant="filled"
           size="default"
-          onClick={() => setIsEditing(!isEditing)}
-          className="font-maitree cursor-pointer bg-green-500 py-2"
+          type={isEditing ? "button" : "button"}
+          onClick={
+            isEditing ? form.handleSubmit(_onSubmit) : () => setIsEditing(true)
+          }
+          disabled={isPending}
+          className="font-maitree cursor-pointer bg-green-200 py-2"
         >
-          {isEditing ? "Salvar Perfil" : "Editar Perfil"}
+          {isPending
+            ? "Salvando..."
+            : isEditing
+              ? "Salvar Perfil"
+              : "Editar Perfil"}
         </Button.Icon>
       </Row>
     </>

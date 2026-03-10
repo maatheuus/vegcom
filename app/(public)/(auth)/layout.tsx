@@ -1,5 +1,14 @@
 import "@/assets/css/login.css";
 import BackgroundItems from "@/features/auth/components/Login/BackgroundItems";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Acesso | VegCom",
+  robots: {
+    index: false,
+    follow: false,
+  },
+};
 
 export default function AuthLayout({
   children,

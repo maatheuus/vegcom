@@ -1,17 +1,33 @@
+import RecipeEmptyState from "@/features/recipes/components/RecipeEmptyState";
 import { RecipeGridSkeleton } from "@/features/recipes/components/RecipeGridSkeleton";
-import { RecipeHero } from "@/features/recipes/components/RecipeHero";
 import Col from "@/shared/ui/Layout/Helpers/Col";
 import { Suspense } from "react";
-import { recipes } from "../utils";
 import RecipeContent from "./RecipeContent";
+
+import type { Recipe } from "@/entities/recipe";
+import { RecipeHero } from "@/features/recipes/components/RecipeHero";
 
 export const ITEMS_PER_PAGE = 8;
 
-export default function RecipeParent() {
-  // featured recipe need to be the most viewed and rated
+export default function RecipeParent({
+  recipes,
+  featuredRecipe,
+}: {
+  recipes: Recipe[];
+  featuredRecipe?: Recipe;
+}) {
+  if (!recipes || recipes.length === 0) {
+    return (
+      <RecipeEmptyState
+        title="Nenhuma receita adicionada"
+        description="Seja o primeiro a adicionar uma receita à plataforma!"
+      />
+    );
+  }
+
   return (
     <Col as="section" className="gap-y-10 md:gap-y-12">
-      <RecipeHero hightlightedRecipe={recipes[0]} />
+      {featuredRecipe && <RecipeHero hightlightedRecipe={featuredRecipe} />}
       <Suspense fallback={<RecipeGridSkeleton count={ITEMS_PER_PAGE} />}>
         <RecipeContent
           recipes={recipes}

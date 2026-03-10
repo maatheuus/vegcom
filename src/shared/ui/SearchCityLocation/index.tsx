@@ -31,7 +31,6 @@ export function SearchCityLocation({
   const inputRef = useRef<HTMLInputElement>(null);
   const listRef = useRef<HTMLUListElement>(null);
 
-  // FIX 1: Memoize options to prevent the hook from resetting on every render
   const searchOptions = useMemo(
     () => ({
       debounceMs: 300,
@@ -43,12 +42,11 @@ export function SearchCityLocation({
   const { cities, isLoading, searchCities, clearSearch, hasResults } =
     useCitiesSearch(searchOptions);
 
-  // FIX 2: Only sync value if it actually differs to prevent cursor jumping
   useEffect(() => {
     if (value !== inputValue) {
       setInputValue(value);
     }
-  }, [value]); // Removing inputValue from deps to avoid loops
+  }, [value]);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const newValue = e.target.value;
@@ -66,14 +64,13 @@ export function SearchCityLocation({
   };
 
   const handleCitySelect = (city: CitySearchResult) => {
-    const displayValue = city.displayName || city.nome; // Fallback
+    const displayValue = city.displayName || city.nome;
 
     setInputValue(displayValue);
     setIsOpen(false);
     setSelectedIndex(-1);
     inputRef.current?.blur();
 
-    // FIX 3: Prevent double-calling onChange if onSelect handles the update
     if (onSelect) {
       onSelect(city);
     } else {
@@ -82,10 +79,9 @@ export function SearchCityLocation({
   };
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
-    // If not open, allow opening with down arrow
     if (!isOpen) {
       if (e.key === "ArrowDown" && inputValue.length >= 2) {
-        e.preventDefault(); // Prevent cursor moving
+        e.preventDefault();
         setIsOpen(true);
         if (hasResults) setSelectedIndex(0);
       }
@@ -122,7 +118,6 @@ export function SearchCityLocation({
   };
 
   const handleBlur = () => {
-    // Small delay to allow click event on list items to fire before closing
     setTimeout(() => {
       if (
         document.activeElement !== inputRef.current &&
@@ -155,7 +150,7 @@ export function SearchCityLocation({
           ref={inputRef}
           type="text"
           id="searchCitiesInput"
-          autoComplete="off" // Changed to 'off' to prevent browser native autocomplete overlap
+          autoComplete="off"
           value={inputValue}
           onChange={handleInputChange}
           onFocus={handleFocus}
@@ -199,9 +194,8 @@ export function SearchCityLocation({
                     "group focus:bg-accent focus:text-accent-foreground relative flex cursor-pointer items-center gap-2 rounded-md px-3 py-2 text-sm transition-colors outline-none select-none hover:bg-green-200 hover:text-green-50",
                     selectedIndex === index && "bg-green-600 text-green-50",
                   )}
-                  // Use onMouseDown instead of onClick to fire before Input onBlur
                   onMouseDown={(e) => {
-                    e.preventDefault(); // Prevents input blur
+                    e.preventDefault();
                     handleCitySelect(city);
                   }}
                 >
@@ -218,6 +212,8 @@ export function SearchCityLocation({
                           {city.estado && city.estado}{" "}
                           {city.sigla && city.sigla}
                         </>
+                      ) : city.estado === city.sigla ? (
+                        city.estado
                       ) : (
                         <>
                           {city.estado}, {city.sigla}

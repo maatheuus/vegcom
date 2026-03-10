@@ -1,6 +1,7 @@
 import type { PostCardDataProps } from "@/shared/types";
 import Col from "@/shared/ui/Layout/Helpers/Col";
 import Text from "@/shared/ui/Text";
+import { prepareHtmlContent } from "@/shared/utils";
 import PostCardRoot from "./Root";
 
 interface Props {
@@ -8,6 +9,13 @@ interface Props {
 }
 
 export default function PostCardDefault({ data }: Props) {
+  const hasImages = data.postContent.postResources?.images?.length > 0;
+
+  if (hasImages) return null;
+
+  const content = data.postContent.postResources?.content;
+  const contentHTML = data.postContent.postResources?.contentHTML;
+
   return (
     <PostCardRoot data={data} variant="default">
       <Col className="h-fit w-full gap-y-1 text-green-500">
@@ -19,14 +27,25 @@ export default function PostCardDefault({ data }: Props) {
         >
           {data.postTitle}
         </Text>
-        <Text
-          as="p"
-          type={Text.Type.BodyFour}
-          weight={Text.Weight.Normal}
-          className="font-maitree text-base"
-        >
-          {data.postContent.postResources?.content}
-        </Text>
+
+        {contentHTML ? (
+          <div
+            className="font-maitree text-base break-words text-green-500 [&>p]:text-justify [&>p]:hyphens-auto"
+            lang="pt-BR"
+            dangerouslySetInnerHTML={{
+              __html: prepareHtmlContent(contentHTML),
+            }}
+          />
+        ) : (
+          <Text
+            as="p"
+            type={Text.Type.BodyFour}
+            weight={Text.Weight.Normal}
+            className="font-maitree mt-2 text-justify text-base hyphens-auto whitespace-pre-wrap"
+          >
+            {content}
+          </Text>
+        )}
       </Col>
     </PostCardRoot>
   );

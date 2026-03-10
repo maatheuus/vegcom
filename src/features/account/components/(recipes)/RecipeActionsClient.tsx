@@ -1,9 +1,13 @@
 "use client";
 
-import { food } from "@/assets";
 import RecipeCard from "@/features/account/components/(recipes)/RecipeCard";
+import { useGetUser } from "@/features/auth/api/queries/getAuthApiClient";
+import { recipeApi } from "@/features/recipes/api/recipesApi";
+import type { DetailedRecipe } from "@/features/recipes/api/types";
+import { getColumnsCount } from "@/features/recipes/components/RecipeGrid";
 import { RecipeGridSkeleton } from "@/features/recipes/components/RecipeGridSkeleton";
 import { usePagination } from "@/shared/hooks/usePagination";
+import Grid from "@/shared/ui/Layout/Helpers/Grid";
 import {
   Pagination,
   PaginationContent,
@@ -13,11 +17,11 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from "@/shared/ui/Pagination";
+import { useQuery } from "@tanstack/react-query";
 import { useSearchParams } from "next/navigation";
 import { useMemo } from "react";
 import RecipeEmptyState from "./RecipeEmptyState";
 import RecipeFilter, { type SortValues } from "./RecipeFilter";
-import type { DataRecipeCardAccount } from "./types";
 
 const ITEMS_PER_PAGE = 6;
 
@@ -33,18 +37,47 @@ function normalizeSearchText(text: string): string {
 }
 
 export default function RecipeActions({ isFavorites }: Props) {
+  const { data: user, isLoading: isUserLoading } = useGetUser();
+  const recipes = user?.recipes;
+  const savedRecipes = user?.savedRecipes;
+
   const searchParams = useSearchParams();
   const query = searchParams.get("q") || "";
   const sortBy = (searchParams.get("sort") as SortValues) || "";
 
+  const recipeIds = useMemo(() => {
+    const sourceData = isFavorites ? savedRecipes : recipes;
+    if (!sourceData || sourceData.length === 0) return [];
+
+    return sourceData.map((item) =>
+      typeof item === "object" && item !== null && "id" in item
+        ? (item as { id: number }).id
+        : (item as number),
+    );
+  }, [isFavorites, savedRecipes, recipes]);
+
+  const { data: recipesResponse, isLoading: isLoadingRecipes } = useQuery({
+    queryKey: ["recipes", "batch", recipeIds],
+    queryFn: () => recipeApi.getRecipesByIds(recipeIds),
+    enabled: recipeIds.length > 0,
+    staleTime: 5 * 60 * 1000, // 5 minutos
+  });
+
+  const allRecipes = recipesResponse?.data ?? [];
+
   const filteredData = useMemo(() => {
-    let data: DataRecipeCardAccount[] = mockExploreData;
+    if (allRecipes.length === 0) return [];
+
+    let data = [...allRecipes];
 
     if (query) {
       const normalizedQuery = normalizeSearchText(query);
 
       data = data.filter((recipe) => {
-        if (normalizeSearchText(recipe.title).includes(normalizedQuery)) {
+        if (
+          recipe.title &&
+          normalizeSearchText(recipe.title).includes(normalizedQuery)
+        ) {
           return true;
         }
 
@@ -56,8 +89,8 @@ export default function RecipeActions({ isFavorites }: Props) {
         }
 
         if (
-          recipe.recipeType &&
-          normalizeSearchText(recipe.recipeType).includes(normalizedQuery)
+          recipe.category &&
+          normalizeSearchText(recipe.category).includes(normalizedQuery)
         ) {
           return true;
         }
@@ -71,14 +104,21 @@ export default function RecipeActions({ isFavorites }: Props) {
     } else if (sortBy === "views") {
       data = [...data].sort((a, b) => (b.views || 0) - (a.views || 0));
     } else if (sortBy === "recent") {
-      data = [...data].sort(
-        (a, b) =>
-          new Date(b.updated_at!).getTime() - new Date(a.updated_at!).getTime(),
-      );
+      data = [...data].sort((a, b) => {
+        const dateA = a.updatedAt ? new Date(a.updatedAt).getTime() : 0;
+        const dateB = b.updatedAt ? new Date(b.updatedAt).getTime() : 0;
+        return dateB - dateA;
+      });
+    } else if (sortBy === "old") {
+      data = [...data].sort((a, b) => {
+        const dateA = a.updatedAt ? new Date(a.updatedAt).getTime() : 0;
+        const dateB = b.updatedAt ? new Date(b.updatedAt).getTime() : 0;
+        return dateA - dateB;
+      });
     }
 
     return data;
-  }, [query, sortBy]);
+  }, [query, sortBy, allRecipes]);
 
   const {
     currentItems,
@@ -89,7 +129,7 @@ export default function RecipeActions({ isFavorites }: Props) {
     getPageNumbers,
     hasNextPage,
     hasPreviousPage,
-    isLoading,
+    isLoading: isPaginationLoading,
   } = usePagination({
     items: filteredData,
     itemsPerPage: ITEMS_PER_PAGE,
@@ -97,202 +137,92 @@ export default function RecipeActions({ isFavorites }: Props) {
     queryKey: "page",
   });
 
+  const currentItemsRecipe = currentItems as DetailedRecipe[];
+
   const shouldShowPagination = filteredData.length > ITEMS_PER_PAGE;
 
-  if (!isLoading && currentPage > 1 && currentItems.length === 0) {
+  const isLoading = isUserLoading || isLoadingRecipes || isPaginationLoading;
+
+  if (!isLoading && currentPage > 1 && currentItems?.length === 0) {
     goToPage(1);
+  }
+
+  if (isLoading) {
+    return (
+      <RecipeGridSkeleton count={ITEMS_PER_PAGE} className="lg:grid-cols-3" />
+    );
   }
 
   return (
     <>
-      <div className="flex w-full flex-col items-start justify-start gap-4 md:flex-row md:justify-between">
-        <RecipeFilter />
-      </div>
-
-      {isLoading ? (
-        <RecipeGridSkeleton count={ITEMS_PER_PAGE} className="lg:grid-cols-3" />
-      ) : (
+      {currentItemsRecipe && currentItemsRecipe.length > 0 ? (
         <>
-          <div className="grid w-full grid-cols-1 items-center justify-start gap-4 md:grid-cols-2 lg:grid-cols-3">
-            {currentItems.map((card, index) => (
-              <RecipeCard
-                key={index}
-                data={card}
-                isFavorites={isFavorites}
-                className="col-span-1"
-              />
-            ))}
-            {currentItems.length === 0 && (
-              <RecipeEmptyState
-                isFavorites={isFavorites}
-                filteredData={filteredData}
-                searchQuery={query}
-              />
-            )}
+          <div className="flex w-full flex-col items-start justify-start gap-4 md:flex-row md:justify-between">
+            <RecipeFilter />
           </div>
 
-          {shouldShowPagination && currentItems.length > 0 && (
-            <div className="flex w-full justify-center">
-              <Pagination>
-                <PaginationContent>
-                  <PaginationItem>
-                    <PaginationPrevious
-                      onClick={goToPreviousPage}
-                      disabled={!hasPreviousPage || isLoading}
-                    />
-                  </PaginationItem>
-
-                  {getPageNumbers().map((pageNumber, index) =>
-                    pageNumber === "ellipsis" ? (
-                      <PaginationItem key={`ellipsis-${index}`}>
-                        <PaginationEllipsis />
-                      </PaginationItem>
-                    ) : (
-                      <PaginationItem key={pageNumber}>
-                        <PaginationLink
-                          onClick={() => goToPage(pageNumber)}
-                          isActive={currentPage === pageNumber}
-                          disabled={isLoading}
-                        >
-                          {pageNumber}
-                        </PaginationLink>
-                      </PaginationItem>
-                    ),
-                  )}
-
-                  <PaginationItem>
-                    <PaginationNext
-                      onClick={goToNextPage}
-                      disabled={!hasNextPage || isLoading}
-                    />
-                  </PaginationItem>
-                </PaginationContent>
-              </Pagination>
-            </div>
-          )}
+          <Grid
+            className="grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 md:gap-6 lg:grid-cols-4 lg:gap-8"
+            style={{
+              gridTemplateColumns: getColumnsCount(currentItemsRecipe.length),
+            }}
+          >
+            {currentItemsRecipe.map((recipe) => (
+              <RecipeCard
+                key={recipe.id}
+                recipe={recipe}
+                isFavorites={isFavorites}
+              />
+            ))}
+          </Grid>
         </>
+      ) : (
+        <RecipeEmptyState
+          isFavorites={isFavorites}
+          isEmpty={currentItems?.length === 0}
+          searchQuery={query}
+        />
+      )}
+
+      {shouldShowPagination && currentItemsRecipe.length > 0 && (
+        <div className="flex w-full justify-center">
+          <Pagination>
+            <PaginationContent>
+              <PaginationItem>
+                <PaginationPrevious
+                  onClick={goToPreviousPage}
+                  disabled={!hasPreviousPage || isLoading}
+                />
+              </PaginationItem>
+
+              {getPageNumbers().map((pageNumber, index) =>
+                pageNumber === "ellipsis" ? (
+                  <PaginationItem key={`ellipsis-${index}`}>
+                    <PaginationEllipsis />
+                  </PaginationItem>
+                ) : (
+                  <PaginationItem key={pageNumber}>
+                    <PaginationLink
+                      onClick={() => goToPage(pageNumber)}
+                      isActive={currentPage === pageNumber}
+                      disabled={isLoading}
+                    >
+                      {pageNumber}
+                    </PaginationLink>
+                  </PaginationItem>
+                ),
+              )}
+
+              <PaginationItem>
+                <PaginationNext
+                  onClick={goToNextPage}
+                  disabled={!hasNextPage || isLoading}
+                />
+              </PaginationItem>
+            </PaginationContent>
+          </Pagination>
+        </div>
       )}
     </>
   );
 }
-
-function getRandomDate(start: Date, end: Date): string {
-  const date = new Date(
-    start.getTime() + Math.random() * (end.getTime() - start.getTime()),
-  );
-  return date.toISOString();
-}
-
-const mockExploreData: DataRecipeCardAccount[] = [
-  {
-    id: "1",
-    isFavorite: true,
-    rating: 4.5,
-    title: "Creamy Garlic Chicken",
-    imageUrl: food,
-    user: {
-      name: "Liam Smith",
-      avatarUrl: "https://randomuser.me/api/portraits/men/32.jpg",
-    },
-    views: 1203,
-    description:
-      "Frango suculento com molho de alho cremoso, perfeito para um jantar especial.",
-    recipeType: "Janta",
-    updated_at: getRandomDate(new Date("2025-01-01"), new Date()),
-  },
-  {
-    id: "2",
-    isFavorite: false,
-    rating: 3.9,
-    title: "Avocado Toast Deluxe",
-    imageUrl: food,
-    user: {
-      name: "Liam Smith",
-      avatarUrl: "https://randomuser.me/api/portraits/men/32.jpg",
-    },
-    views: 982,
-    description:
-      "Torrada crocante com abacate temperado, ovos e toque de limão.",
-    recipeType: "Café da manhã",
-    updated_at: getRandomDate(new Date("2025-01-01"), new Date()),
-  },
-  {
-    id: "3",
-    isFavorite: true,
-    rating: 4.2,
-    title: "Summer Berry Parfait",
-    imageUrl: food,
-    user: {
-      name: "Liam Smith",
-      avatarUrl: "https://randomuser.me/api/portraits/men/32.jpg",
-    },
-    views: 743,
-    description:
-      "Camadas de frutas vermelhas frescas, iogurte grego e granola crocante.",
-    recipeType: "Sobremesa",
-    updated_at: getRandomDate(new Date("2025-01-01"), new Date()),
-  },
-  {
-    id: "4",
-    isFavorite: false,
-    rating: 3.5,
-    title: "Beef Stroganoff",
-    imageUrl: food,
-    user: {
-      name: "Liam Smith",
-      avatarUrl: "https://randomuser.me/api/portraits/men/32.jpg",
-    },
-    views: 1120,
-    description: "Clássico russo com carne macia, cogumelos e creme de leite.",
-    recipeType: "Almoço",
-    updated_at: getRandomDate(new Date("2025-01-01"), new Date()),
-  },
-  {
-    id: "5",
-    isFavorite: true,
-    rating: 4.7,
-    title: "Pão de Queijo Mineiro",
-    imageUrl: food,
-    user: {
-      name: "Liam Smith",
-      avatarUrl: "https://randomuser.me/api/portraits/men/32.jpg",
-    },
-    views: 1650,
-    description:
-      "Tradicional pão de queijo brasileiro com casquinha crocante e interior macio.",
-    recipeType: "Café da tarde",
-    updated_at: getRandomDate(new Date("2025-01-01"), new Date()),
-  },
-  {
-    id: "6",
-    isFavorite: false,
-    rating: 3.8,
-    title: "Vegetarian Sushi Rolls",
-    imageUrl: food,
-    user: {
-      name: "Liam Smith",
-      avatarUrl: "https://randomuser.me/api/portraits/men/32.jpg",
-    },
-    views: 870,
-    description:
-      "Rolinhos de sushi com vegetais frescos, arroz temperado e alga nori.",
-    recipeType: "Almoço",
-    updated_at: getRandomDate(new Date("2025-01-01"), new Date()),
-  },
-  {
-    id: "7",
-    isFavorite: true,
-    rating: 4.0,
-    title: "Panquecas de Banana Fit",
-    imageUrl: food,
-    user: {
-      name: "Liam Smith",
-      avatarUrl: "https://randomuser.me/api/portraits/men/32.jpg",
-    },
-    views: 1342,
-    description:
-      "Panquecas leves feitas com banana e aveia, perfeitas para começar o dia.",
-    recipeType: "Café da manhã",
-    updated_at: getRandomDate(new Date("2025-01-01"), new Date()),
-  },
-];

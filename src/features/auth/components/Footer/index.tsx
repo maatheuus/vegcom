@@ -12,10 +12,18 @@ export default function AuthFooter() {
       <div className="w-fit">
         <Text
           as="span"
-          className="font-lora text-black-100 !text-sm italic opacity-80"
+          className="font-lora !text-sm text-green-500 italic opacity-80"
         >
-          Todos os direitos reservados a{" "}
-          <Link href="https://github.com/maatheuus">Maat</Link> | {currentYear}
+          Feito com carinho por{" "}
+          <Link
+            href="https://github.com/maatheuus"
+            className="font-maitree underline opacity-100"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Maat
+          </Link>{" "}
+          | {currentYear}
         </Text>
       </div>
     </div>

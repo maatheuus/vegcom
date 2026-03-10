@@ -1,124 +1,173 @@
-/**
- * Community API - Fake implementation
- * Replace with real API calls when backend is ready
- */
+"use server";
 
-import { mockPosts, type Post, type PostComment } from "@/entities/post";
-import { mockDelay, generateMockId } from "@/shared/api/mock";
-import type { CreatePostData, UpdatePostData, CreateCommentData } from "../types";
+import type { PostCardDataProps, PostComment } from "@/shared";
+import { api } from "@/shared/api/axios/axiosInstance";
+import { revalidateTag } from "next/cache";
+import { cookies } from "next/headers";
+import type {
+  CreateCommentData,
+  CreatePostData,
+  GetPostsParams,
+} from "../types";
 
-/**
- * Get all posts
- */
-export const getPosts = async (): Promise<Post[]> => {
-  await mockDelay(800);
-  return mockPosts;
-};
+export interface PaginatedPosts {
+  data: PostCardDataProps[];
+  page: number;
+  limit: number;
+}
 
-/**
- * Get post by ID
- */
-export const getPostById = async (id: string): Promise<Post | null> => {
-  await mockDelay(600);
-  const post = mockPosts.find((p) => p.id === id);
-  return post || null;
-};
+export const getPosts = async (
+  params?: GetPostsParams,
+): Promise<PaginatedPosts> => {
+  const page = params?.page ?? 1;
+  const limit = params?.limit ?? 10;
 
-/**
- * Create new post
- */
-export const createPost = async (data: CreatePostData): Promise<Post> => {
-  await mockDelay(1000);
-
-  const newPost: Post = {
-    id: generateMockId(),
-    ...data,
-    userId: "mock_user_id",
-    user: {
-      name: "Current User",
-      avatarUrl: "https://randomuser.me/api/portraits/lego/1.jpg",
-    },
-    likesCount: 0,
-    commentsCount: 0,
-    comments: [],
-    createdAt: new Date().toISOString(),
-    updatedAt: new Date().toISOString(),
-  };
-
-  return newPost;
-};
-
-/**
- * Update post
- */
-export const updatePost = async (data: UpdatePostData): Promise<Post> => {
-  await mockDelay(900);
-
-  const existingPost = mockPosts.find((p) => p.id === data.id);
-
-  if (!existingPost) {
-    throw new Error("Post not found");
-  }
+  const { data } = await api.get<PostCardDataProps[]>("/community", {
+    params: { ...params, page, limit },
+  });
 
   return {
-    ...existingPost,
-    ...data,
-    updatedAt: new Date().toISOString(),
+    data: data ?? [],
+    page,
+    limit,
   };
 };
 
-/**
- * Delete post
- */
-export const deletePost = async (id: string): Promise<void> => {
-  await mockDelay(700);
-  console.log("Deleted post:", id);
+// export const getAnnouncements = async (
+//   params?: GetPostsParams,
+// ): Promise<PostCardDataProps[]> => {
+//   const { data } = await api.get<PostCardDataProps[]>("admin/announcements", {
+//     params,
+//   });
+//   return data;
+// };
+
+export const getPostById = async (
+  id: string,
+): Promise<PostCardDataProps | null> => {
+  try {
+    const { data } = await api.get<PostCardDataProps>(`/community/${id}`);
+    return data;
+  } catch (err) {
+    if ((err as { status?: number })?.status === 404) return null;
+    throw err;
+  }
 };
 
-/**
- * Like/unlike post
- */
+export const createPost = async (
+  payload: CreatePostData | FormData,
+): Promise<PostCardDataProps> => {
+  const cookieStore = await cookies();
+  const token = cookieStore.get("token")?.value;
+
+  if (!token) {
+    throw new Error("Usuário não está autenticado");
+  }
+
+  const { data } = await api.post<PostCardDataProps>("/community", payload, {
+    headers: {
+      ...(payload instanceof FormData
+        ? { "Content-Type": "multipart/form-data" }
+        : { "Content-Type": "application/json" }),
+      Authorization: `Bearer ${token}`,
+    },
+  });
+
+  return data;
+};
+
+export const deletePost = async (postId: string): Promise<void> => {
+  const cookieStore = await cookies();
+  const token = cookieStore.get("token")?.value;
+
+  if (!token) {
+    throw new Error("Usuário não está autenticado");
+  }
+
+  await api.delete(`/community/posts/${postId}`, {
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+  });
+  revalidateTag("posts");
+};
+
+export const createComment = async (
+  postId: string,
+  payload: CreateCommentData,
+): Promise<PostComment> => {
+  const cookieStore = await cookies();
+  const token = cookieStore.get("token")?.value;
+
+  if (!token) {
+    throw new Error("Usuário não está autenticado");
+  }
+
+  const { data } = await api.post<PostComment>(
+    `/community/${postId}/comments`,
+    payload,
+    {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    },
+  );
+  return data;
+};
+
 export const toggleLike = async (
   postId: string,
-): Promise<{ likesCount: number }> => {
-  await mockDelay(500);
+): Promise<{ postLikes: number }> => {
+  const cookieStore = await cookies();
+  const token = cookieStore.get("token")?.value;
 
-  const post = mockPosts.find((p) => p.id === postId);
-  const currentLikes = post?.likesCount || 0;
+  if (!token) {
+    throw new Error("Usuário não está autenticado");
+  }
 
-  // Toggle: if even, increment, if odd, decrement
-  const newLikesCount = currentLikes + (currentLikes % 2 === 0 ? 1 : -1);
-
-  return { likesCount: newLikesCount };
-};
-
-/**
- * Create comment
- */
-export const createComment = async (
-  data: CreateCommentData,
-): Promise<PostComment> => {
-  await mockDelay(800);
-
-  const newComment: PostComment = {
-    id: generateMockId(),
-    content: data.content,
-    userId: "mock_user_id",
-    user: {
-      name: "Current User",
-      avatarUrl: "https://randomuser.me/api/portraits/lego/1.jpg",
+  const { data } = await api.post<{ postLikes: number }>(
+    `/community/${postId}/likes`,
+    {},
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
     },
-    createdAt: new Date().toISOString(),
-    updatedAt: new Date().toISOString(),
-  };
-
-  return newComment;
+  );
+  revalidateTag("posts");
+  return data;
 };
 
-/**
- * Delete comment
- */
-export const deleteComment = async (commentId: string): Promise<void> => {
-  await mockDelay(600);
-  console.log("Deleted comment:", commentId);
+export const toggleSave = async (
+  postId: number,
+  userId: number,
+): Promise<{
+  success: boolean;
+  message: string;
+  saved: boolean;
+}> => {
+  const cookieStore = await cookies();
+  const token = cookieStore.get("token")?.value;
+
+  if (!token) {
+    throw new Error("Usuário não está autenticado");
+  }
+
+  const { data } = await api.post<{
+    success: boolean;
+    message: string;
+    saved: boolean;
+  }>(
+    `/community/posts/${postId}/save`,
+    { userId },
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    },
+  );
+
+  return data;
 };

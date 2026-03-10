@@ -48,7 +48,7 @@ const ButtonLink = ({
         </>
       )}
 
-      {(!leftIcon && !rightIcon && !icon && text) || children}
+      {!leftIcon && !rightIcon && !icon && (text || children)}
     </Link>
   );
 };

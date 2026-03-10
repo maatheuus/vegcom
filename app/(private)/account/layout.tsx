@@ -1,7 +1,7 @@
-import PremiumMemberCard from "@/features/account/components/PremiumMemberCard";
+import AccountHeader from "@/features/account/components/AccountHeader";
 import Sidebar from "@/features/account/components/Sidebar";
 import Layout from "@/shared/ui/Layout";
-import Text from "@/shared/ui/Text";
+import { Suspense } from "react";
 
 export default function layout({
   children,
@@ -12,26 +12,9 @@ export default function layout({
     <Layout.Default className="style-scrollbar h-auto">
       <div className="w-full space-y-8 py-8">
         <div className="flex items-center justify-between gap-x-4">
-          <div>
-            <Text
-              as="h1"
-              type={Text.Type.HeadingThree}
-              weight={Text.Weight.Bold}
-              className="font-lora text-green-500"
-            >
-              Gerenciamento de Conta
-            </Text>
-            <Text
-              as="p"
-              type={Text.Type.BodyThree}
-              weight={Text.Weight.Medium}
-              className="font-maitree text-green-200"
-            >
-              Gerencie suas configurações e preferências de conta
-            </Text>
-          </div>
-
-          <PremiumMemberCard />
+          <Suspense fallback={<></>}>
+            <AccountHeader />
+          </Suspense>
         </div>
 
         <div className="grid grid-cols-1 gap-6 lg:grid-cols-[320px_1fr]">

@@ -1,175 +1,181 @@
 import { food } from "@/assets";
 import { z } from "zod";
-import type { Recipe } from "./types";
 
-export const recipes: Recipe[] = [
+export const recipes = [
   {
-    id: "1",
+    id: 1,
     title: "Risoto de Cogumelos",
-    image: food,
+    images: [food],
     rating: 4.8,
-    prepTime: "45 min",
-    servings: 4,
+    cookTime: "45 min",
+    quantity: 4,
     description:
       "Um cremoso risoto italiano com mix de cogumelos frescos e ervas aromáticas.",
     views: 1542,
   },
   {
-    id: "2",
+    id: 2,
     title: "Salada Colorida",
-    image: food,
+    images: [food],
     rating: 4.2,
-    prepTime: "15 min",
+    cookTime: "15 min",
     views: 987,
-    servings: 2,
+    quantity: 2,
     description:
       "Salada refrescante com mix de folhas, tomates cereja e molho especial.",
   },
   {
-    id: "3",
+    id: 3,
     title: "Hambúrguer de Grão-de-Bico",
-    image: food,
+    images: [food],
     rating: 4.9,
-    prepTime: "30 min",
+    cookTime: "30 min",
     views: 2134,
-    servings: 4,
+    quantity: 4,
     description:
       "Hambúrguer vegano proteico feito com grão-de-bico e especiarias.",
   },
   {
-    id: "4",
+    id: 4,
     title: "Alimentos Veganos Low Carb",
-    image: food,
+    images: [food],
     rating: 3.7,
-    prepTime: "25 min",
+    cookTime: "25 min",
     views: 863,
-    servings: 3,
+    quantity: 3,
     description:
       "Receitas veganas baixas em carboidratos, perfeitas para sua dieta.",
   },
   {
-    id: "5",
+    id: 5,
     title: "Lasanha Vegetal",
-    image: food,
+    images: [food],
     rating: 4.5,
-    prepTime: "60 min",
+    cookTime: "60 min",
     views: 1920,
-    servings: 6,
+    quantity: 6,
     description:
       "Lasanha tradicional com camadas de vegetais grelhados e molho especial.",
   },
   {
-    id: "6",
+    id: 6,
     title: "Sopa de Lentilha",
-    image: food,
+    images: [food],
     rating: 4.6,
-    prepTime: "35 min",
+    cookTime: "35 min",
     views: 1327,
-    servings: 4,
+    quantity: 4,
     description:
       "Sopa nutritiva e reconfortante com lentilhas e legumes frescos.",
   },
   {
-    id: "7",
+    id: 7,
     title: "Tacos Mexicanos",
-    image: food,
+    images: [food],
     rating: 4.9,
-    prepTime: "25 min",
+    cookTime: "25 min",
     views: 1789,
-    servings: 4,
+    quantity: 4,
     description:
       "Tacos crocantes recheados com feijão preto temperado e guacamole.",
   },
   {
-    id: "8",
+    id: 8,
     title: "Curry de Grão-de-Bico",
-    image: food,
+    images: [food],
     rating: 4.3,
-    prepTime: "40 min",
+    cookTime: "40 min",
     views: 2045,
-    servings: 4,
+    quantity: 4,
     description:
       "Curry aromático indiano com grão-de-bico e leite de coco cremoso.",
   },
   {
-    id: "9",
+    id: 9,
     title: "Pizza Vegana",
-    image: food,
+    images: [food],
     rating: 5,
-    prepTime: "30 min",
+    cookTime: "30 min",
     views: 2756,
-    servings: 3,
+    quantity: 3,
     description:
       "Pizza artesanal com massa caseira e coberturas vegetais saborosas.",
   },
   {
-    id: "10",
+    id: 10,
     title: "Wrap de Hummus",
-    image: food,
+    images: [food],
     rating: 3.9,
-    prepTime: "10 min",
+    cookTime: "10 min",
     views: 654,
-    servings: 2,
+    quantity: 2,
     description: "Wrap leve e nutritivo com hummus caseiro e vegetais frescos.",
   },
   {
-    id: "11",
+    id: 11,
     title: "Bowl de Quinoa",
-    image: food,
+    images: [food],
     rating: 4.7,
-    prepTime: "25 min",
+    cookTime: "25 min",
     views: 1458,
-    servings: 2,
+    quantity: 2,
     description:
       "Bowl colorido e nutritivo com quinoa, vegetais assados e tahine.",
   },
   {
-    id: "12",
+    id: 12,
     title: "Smoothie Verde",
-    image: food,
+    images: [food],
     rating: 4.0,
-    prepTime: "5 min",
+    cookTime: "5 min",
     views: 802,
-    servings: 1,
+    quantity: 1,
     description:
       "Smoothie energético com espinafre, banana e frutas tropicais.",
   },
   {
-    id: "13",
+    id: 13,
     title: "Falafel Assado",
-    image: food,
+    images: [food],
     rating: 4.4,
-    prepTime: "35 min",
+    cookTime: "35 min",
     views: 1723,
-    servings: 4,
+    quantity: 4,
     description:
       "Bolinhos de grão-de-bico assados, crocantes por fora e macios por dentro.",
   },
   {
-    id: "14",
+    id: 14,
     title: "Pad Thai Vegano",
-    image: food,
+    images: [food],
     rating: 4.8,
-    prepTime: "30 min",
+    cookTime: "30 min",
     views: 1945,
-    servings: 3,
+    quantity: 3,
     description:
       "Macarrão tailandês com vegetais salteados e molho de amendoim.",
   },
   {
-    id: "15",
+    id: 15,
     title: "Brownie de Chocolate",
-    image: food,
+    images: [food],
     rating: 5,
-    prepTime: "40 min",
+    cookTime: "40 min",
     views: 2433,
-    servings: 8,
+    quantity: 8,
     description: "Brownie vegano super fudgy com pedaços de chocolate amargo.",
   },
 ];
 
 export const categories = {
-  "Tipo de Refeição": ["Café da manhã", "Almoço", "Jantar", "Sobremesas"],
+  "Tipo de Refeição": [
+    "Café da manhã",
+    "Almoço",
+    "Jantar",
+    "Sobremesas",
+    "Lanches",
+    "Geral",
+  ],
   "Tempo de Preparo": ["Rápidas (≤ 30min)", "Elaboradas"],
   "Destaques da Comunidade": [
     "Mais populares",
@@ -205,17 +211,18 @@ export const newRecipeFormSchema = z.object({
     }),
   ),
 
-  recipe_cookingNotes: z.array(
-    z.object({
-      id: z.string(),
-      label: z.string(),
-      value: z.string(),
-    }),
-  ),
+  recipe_cookingNotes: z
+    .array(
+      z.object({
+        id: z.string(),
+        label: z.string(),
+        value: z.string(),
+      }),
+    )
+    .optional()
+    .default([]),
 
-  recipe_preparationHours: z
-    .string()
-    .min(1, { message: "Informe as horas, mesmo que seja zero." }),
+  recipe_preparationHours: z.string().optional().default("0"),
 
   recipe_preparationMinutes: z
     .string()
@@ -246,18 +253,24 @@ export const newRecipeFormSchema = z.object({
     )
     .min(1, { message: "Pelo menos uma imagem ajuda bastante!" }),
 
-  new_recipe_ingredient_text: z.string(),
+  new_recipe_ingredient_text: z
+    .string()
+    .min(12, { message: "Pelo menos um ingrediente válido" })
+    .max(100, { message: "Esse ingrediente tá meio longo demais, hein? 🤔" }),
 
-  new_recipe_instruction_text: z.string(),
+  new_recipe_instruction_text: z
+    .string()
+    .min(12, { message: "Pelo menos uma instrução válida" })
+    .max(100, { message: "Esse instrução tá meio longo demais, hein? 🤔" }),
 
-  new_recipe_cookingNote_text: z.string(),
+  new_recipe_cookingNote_text: z.string().optional(),
 });
 
 export const defaultValues = {
   recipe_title: "",
   recipe_description: "",
   recipe_preparationTime: "",
-  recipe_preparationHours: "",
+  recipe_preparationHours: "0",
   recipe_preparationMinutes: "",
   recipe_servings: "",
   recipe_category: "",

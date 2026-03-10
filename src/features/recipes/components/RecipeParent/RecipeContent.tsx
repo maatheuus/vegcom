@@ -1,5 +1,6 @@
 "use client";
 
+import RecipeEmptyState from "@/features/recipes/components/RecipeEmptyState";
 import { RecipeGrid } from "@/features/recipes/components/RecipeGrid";
 import { RecipeGridSkeleton } from "@/features/recipes/components/RecipeGridSkeleton";
 import {
@@ -8,6 +9,8 @@ import {
   sortByTitle,
   sortByViews,
 } from "@/features/recipes/lib/sortFunctions";
+
+import type { Recipe } from "@/entities/recipe";
 import { usePagination } from "@/shared/hooks/usePagination";
 import Col from "@/shared/ui/Layout/Helpers/Col";
 import {
@@ -21,7 +24,6 @@ import {
 } from "@/shared/ui/Pagination";
 import Text from "@/shared/ui/Text";
 import { ITEMS_PER_PAGE } from ".";
-import type { Recipe } from "../types";
 
 export type SortType = "rating" | "views" | "title" | "prepTime" | "none";
 
@@ -78,7 +80,7 @@ export default function RecipeContent({
   }
 
   return (
-    <Col as="section" className="gap-y-8">
+    <Col as="section" className="gap-y-6 md:gap-y-8 lg:gap-y-11">
       <div className="flex w-full items-center justify-between">
         <Text
           as="h2"
@@ -89,14 +91,23 @@ export default function RecipeContent({
           {title}
         </Text>
       </div>
-      <Col className="items-center justify-center gap-y-5">
+      <Col className="justify-center gap-y-5">
         {isLoading ? (
           <RecipeGridSkeleton count={ITEMS_PER_PAGE} />
+        ) : currentItems.length > 0 ? (
+          <RecipeGrid
+            // recipes={Array.from({ length: 10 }, () => currentItems[0])}
+            recipes={currentItems}
+            recipesLenght={recipes.length}
+          />
         ) : (
-          <RecipeGrid recipes={currentItems} />
+          <RecipeEmptyState
+            title="Nenhuma receita encontrada"
+            description={`Não encontramos nenhuma receita para "${title}".`}
+          />
         )}
 
-        {shouldShowPagination && (
+        {shouldShowPagination && currentItems.length > 0 && (
           <div className="block">
             <Pagination>
               <PaginationContent>

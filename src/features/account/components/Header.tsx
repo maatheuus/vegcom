@@ -31,6 +31,7 @@ interface Props {
     onClick: () => void;
   };
   actions?: HeaderAction[];
+  hideMobileActions?: boolean;
 }
 
 export default function Header({
@@ -41,6 +42,7 @@ export default function Header({
   children,
   className,
   actions,
+  hideMobileActions,
   ...props
 }: Props) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -85,7 +87,7 @@ export default function Header({
                       className={`font-maitree cursor-pointer py-2 ${
                         action.variant === "destructive"
                           ? "bg-red-500 hover:bg-red-600"
-                          : "bg-green-500"
+                          : "bg-green-200"
                       }`}
                       text={action.text}
                       href={action.href}
@@ -115,7 +117,7 @@ export default function Header({
             </div>
           )}
 
-          {actions && actions.length > 0 && (
+          {!hideMobileActions && actions && actions.length > 0 && (
             <Button.Icon
               onClick={() => setIsMenuOpen(true)}
               className="rounded p-2 text-green-500 hover:bg-green-50 md:hidden"
@@ -138,7 +140,7 @@ export default function Header({
         </div>
       </div>
 
-      {actions && actions.length > 0 && (
+      {!hideMobileActions && actions && actions.length > 0 && (
         <Sheet open={isMenuOpen} onOpenChange={setIsMenuOpen}>
           <SheetContent side="bottom" className="rounded-t-2xl">
             <SheetHeader className="mb-4 text-left">
@@ -155,7 +157,7 @@ export default function Header({
                       className={`font-lora w-full justify-start rounded-lg px-4 py-3 text-base ${
                         action.variant === "destructive"
                           ? "bg-red-50 text-red-600"
-                          : "bg-green-500 text-green-50"
+                          : "bg-green-200 text-green-50"
                       }`}
                       variant="text"
                       leftIcon={action.icon || undefined}
@@ -167,7 +169,7 @@ export default function Header({
                       className={`font-lora w-full justify-start rounded-lg px-4 py-3 text-base ${
                         action.variant === "destructive"
                           ? "bg-red-50 text-red-600"
-                          : "bg-green-500 text-green-50"
+                          : "bg-green-200 text-green-50"
                       }`}
                       variant="text"
                       leftIcon={action.icon || undefined}

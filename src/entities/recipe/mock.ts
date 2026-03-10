@@ -3,9 +3,34 @@
  */
 
 import { food } from "@/assets";
-import type { Recipe } from "./types";
+import type { StaticImageData } from "next/image";
 
-export const mockRecipes: Recipe[] = [
+// Type específico para mock data (diferente do tipo Recipe da API)
+interface MockRecipe {
+  id: string;
+  title: string;
+  description: string;
+  imageUrl: StaticImageData | string;
+  ingredients: string[];
+  instructions: string[];
+  prepTime: number;
+  cookTime: number;
+  servings: number;
+  difficulty: string;
+  tags: string[];
+  userId: string;
+  user: {
+    name: string;
+    avatarUrl: string;
+  };
+  rating: number;
+  views: number;
+  isFavorite: boolean;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export const mockRecipes: MockRecipe[] = [
   {
     id: "recipe_1",
     title: "Creamy Mushroom Risotto",

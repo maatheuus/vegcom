@@ -1,6 +1,4 @@
-/**
- * User entity types
- */
+import type { CulinaryLevel } from "@/features/account";
 
 export interface User {
   id: string;
@@ -9,7 +7,7 @@ export interface User {
   avatarUrl?: string;
   bio?: string;
   location?: string;
-  culinaryLevel?: "beginner" | "intermediate" | "advanced" | "professional";
+  culinaryLevel?: CulinaryLevel;
   createdAt: string;
   updatedAt: string;
 }
