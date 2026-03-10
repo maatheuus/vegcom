@@ -4,6 +4,7 @@ import { useGetUser } from "@/features/auth/api/queries/getAuthApiClient";
 import { toggleLike } from "@/features/community/api/communityApi";
 import { usePostInteraction } from "@/features/communityPost/context/PostInteractionContext";
 import type { PostCardDataProps } from "@/shared";
+import { toast } from "@/shared/hooks/use-toast";
 import Button from "@/shared/ui/Button";
 import Text from "@/shared/ui/Text";
 import { slugify } from "@/shared/utils";
@@ -41,7 +42,7 @@ export default function PostActions({
   const postSlug = slugify(post.postTitle);
   const postUrl = `/community/${post.id}/${postSlug}`;
 
-  const handleShare = (e: React.MouseEvent) => {
+  const handleShareOld = (e: React.MouseEvent) => {
     e.stopPropagation();
 
     const url = `${window.location.origin}${postUrl}`;
@@ -55,6 +56,43 @@ export default function PostActions({
         .catch((error) => console.log("Error sharing", error));
     } else {
       console.log("Share not supported", url);
+    }
+  };
+
+  const handleShare = async (e: React.MouseEvent) => {
+    e.stopPropagation();
+
+    const url = `${window.location.origin}${postUrl}`;
+
+    const summary =
+      post.postContent.postResources.content.length > 150
+        ? `${post.postContent.postResources.content.substring(0, 150)}...`
+        : post.postContent.postResources.content;
+
+    const hashtags =
+      post.postTags.map((tag) => `#${tag.replace(/\s+/g, "")}`).join(" ") || "";
+
+    const shareData = {
+      title: post.postTitle,
+      text: `Confira este post de ${post.user.name}: "${post.postTitle}"\n\n${summary}\n\n${hashtags}\n`,
+      url,
+    };
+
+    try {
+      if (navigator.share) {
+        await navigator.share(shareData);
+      } else {
+        await navigator.clipboard.writeText(`${shareData.text} ${url}`);
+        toast({
+          title: "Sucesso",
+          description: "Link e resumo copiados para a área de transferência!",
+          variant: "success",
+        });
+      }
+    } catch (error) {
+      if ((error as Error).name !== "AbortError") {
+        console.error("Erro ao compartilhar:", error);
+      }
     }
   };
 

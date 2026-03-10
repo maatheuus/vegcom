@@ -25,15 +25,30 @@ import {
   XIcon,
 } from "react-share";
 
-const shareUrl = "https://mocked-recipe-url.com";
-const title = "Confira essa receita maravilhosa!";
+interface Props extends ComponentProps<"div"> {
+  title: string;
+  recipeId?: number;
+  recipeSlug?: string;
+}
 
 const ShareDropdown = memo(function ShareDropdown({
   className,
+  title,
+  recipeId,
+  recipeSlug,
   ...props
-}: ComponentProps<"div">) {
+}: Props) {
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
+  const [shareUrl, setShareUrl] = useState("");
+
+  useEffect(() => {
+    if (typeof window !== "undefined" && recipeId && recipeSlug) {
+      setShareUrl(
+        `${window.location.origin}/recipes/${recipeId}/${recipeSlug}`,
+      );
+    }
+  }, [recipeId, recipeSlug]);
 
   const handleClickOutside = useCallback((event: MouseEvent) => {
     if (

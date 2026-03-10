@@ -29,8 +29,9 @@ interface Props extends React.ComponentProps<"div"> {
   commentsCount?: number;
   rating?: number;
   reviewStatus?: ReviewStatus;
-
   isRecipePage?: boolean;
+  recipeId?: number;
+  recipeSlug?: string;
 }
 
 const REVIEW_STATUS_CONFIG = {
@@ -65,6 +66,8 @@ const Header = memo(function Header({
   rating,
   reviewStatus,
   isRecipePage,
+  recipeId,
+  recipeSlug,
   ...props
 }: Props) {
   function handleSavedChange() {}
@@ -141,7 +144,7 @@ const Header = memo(function Header({
               initialSaved={isSaved!}
               onSavedChange={handleSavedChange}
             />
-            <ShareDropdown />
+            <ShareDropdown title={String(title)} recipeId={recipeId} recipeSlug={recipeSlug} />
           </Row>
         )}
       </div>

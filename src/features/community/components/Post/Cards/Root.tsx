@@ -33,6 +33,7 @@ import { formatDistance } from "date-fns";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { AvatarGroup } from "./AvatarGroup";
+import { toast } from "@/shared/hooks/use-toast";
 interface Props extends React.HTMLAttributes<HTMLDivElement> {
   data: PostCardDataProps;
   children: React.ReactNode;
@@ -57,6 +58,11 @@ export default function PostCardRoot({
     }
     return false;
   });
+  const [likesCount, setLikesCount] = useState(data.postLikes);
+  const [isSaved, setIsSaved] = useState(
+    data.savedBy.includes(Number(currentUser?.id)),
+  );
+  const { data: user } = useGetUser();
 
   useEffect(() => {
     if (data.likes && currentUser?.id) {
@@ -68,10 +74,6 @@ export default function PostCardRoot({
     }
   }, [data.likes, currentUser?.id]);
 
-  const [likesCount, setLikesCount] = useState(data.postLikes);
-  const [isSaved, setIsSaved] = useState(
-    data.savedBy.includes(Number(currentUser?.id)),
-  );
   const postSlug = slugify(data.postTitle);
   const postUrl = `/community/${data.id}/${postSlug}`;
 
@@ -87,6 +89,12 @@ export default function PostCardRoot({
 
   const handleLike = async (e: React.MouseEvent) => {
     e.stopPropagation();
+
+    if (!user) {
+      router.push("/login");
+      return;
+    }
+
     if (!data) return;
 
     const { postLikes } = await toggleLike(String(data.id));
@@ -107,7 +115,7 @@ export default function PostCardRoot({
     await deletePost(String(data.id));
   };
 
-  const handleShare = (e: React.MouseEvent) => {
+  const handleShareOld = (e: React.MouseEvent) => {
     e.stopPropagation();
 
     const url = `${window.location.origin}${postUrl}`;
@@ -121,6 +129,43 @@ export default function PostCardRoot({
         .catch((error) => console.log("Error sharing", error));
     } else {
       console.log("Share not supported", url);
+    }
+  };
+
+  const handleShare = async (e: React.MouseEvent) => {
+    e.stopPropagation();
+
+    const url = `${window.location.origin}${postUrl}`;
+
+    const summary =
+      data.postContent.postResources.content.length > 150
+        ? `${data.postContent.postResources.content.substring(0, 150)}...`
+        : data.postContent.postResources.content;
+
+    const hashtags =
+      data.postTags.map((tag) => `#${tag.replace(/\s+/g, "")}`).join(" ") || "";
+
+    const shareData = {
+      title: data.postTitle,
+      text: `Confira este post de ${data.user.name}: "${data.postTitle}"\n\n${summary}\n\n${hashtags}\n`,
+      url,
+    };
+
+    try {
+      if (navigator.share) {
+        await navigator.share(shareData);
+      } else {
+        await navigator.clipboard.writeText(`${shareData.text} ${url}`);
+        toast({
+          title: "Sucesso",
+          description: "Link e resumo copiados para a área de transferência!",
+          variant: "success",
+        });
+      }
+    } catch (error) {
+      if ((error as Error).name !== "AbortError") {
+        console.error("Erro ao compartilhar:", error);
+      }
     }
   };
 
@@ -235,6 +280,7 @@ export default function PostCardRoot({
                 leftIcon={
                   <ChatCircleTextIcon size={18} className="text-green-500" />
                 }
+                role="div"
               >
                 <Text
                   as="span"

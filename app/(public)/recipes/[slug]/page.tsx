@@ -117,6 +117,7 @@ export default async function page({ params }: Props) {
       <section className="space-y-6 md:space-y-8">
         <BackButton />
         <Header
+          recipeId={recipe.id}
           isRecipePage
           views={recipe.views || 0}
           isSaved={false}

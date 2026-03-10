@@ -19,8 +19,8 @@ export default function RecipeParent({
   if (!recipes || recipes.length === 0) {
     return (
       <RecipeEmptyState
-        title="Nenhuma receita encontrada"
-        description="Parece que ainda não adicionamos nenhuma receita à plataforma. Volte em breve para conferir novidades!"
+        title="Nenhuma receita adicionada"
+        description="Seja o primeiro a adicionar uma receita à plataforma!"
       />
     );
   }
