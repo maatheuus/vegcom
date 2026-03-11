@@ -5,8 +5,14 @@ import { motion } from "framer-motion";
 
 import Button from "@/shared/ui/Button";
 import Text from "@/shared/ui/Text";
+import { useEffect } from "react";
+import { revalidateUserCache } from "../actions/revalidateUser";
 
 export default function PaymentSuccessView() {
+  useEffect(() => {
+    revalidateUserCache().catch(console.error);
+  }, []);
+
   return (
     <div className="col-span-full flex min-h-[70vh] w-full flex-col items-center justify-center px-4 text-center">
       <div className="relative mb-12 flex items-center justify-center">

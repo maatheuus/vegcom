@@ -12,6 +12,7 @@ const PUBLIC_ROUTES = [
   "/community/:id/:slug",
   "/recipes",
   "/curiosities",
+  "/payment/success",
 ];
 const AUTH_REDIRECT_ROUTES = ["/login", "/signup"];
 
