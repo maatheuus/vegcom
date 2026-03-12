@@ -119,14 +119,7 @@ export function UserProfileContent({
           >
             {currentRecipes.length > 0 ? (
               currentRecipes.map((recipe) => (
-                <RecipeCard
-                  key={recipe.id}
-                  recipe={
-                    recipe as unknown as React.ComponentProps<
-                      typeof RecipeCard
-                    >["recipe"]
-                  }
-                />
+                <RecipeCard key={recipe.id} recipe={recipe} />
               ))
             ) : (
               <Col className="col-span-full items-center py-12 text-center text-gray-500">

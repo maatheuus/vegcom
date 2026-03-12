@@ -10,13 +10,14 @@ export interface UpdateProfileData {
 }
 
 export enum CulinaryLevel {
-  BEGINNER = "BEGINNER",
-  INTERMEDIATE = "INTERMEDIATE",
-  ADVANCED = "ADVANCED",
+  BEGINNER = "beginner",
+  INTERMEDIATE = "intermediate",
+  ADVANCED = "advanced",
+  PRO = "pro",
 }
 
 export enum Preference {
-  VEGETARIAN = "VEGETARIAN",
-  VEGAN = "VEGAN",
-  OTHER = "OTHER",
+  VEGETARIAN = "vegetarian",
+  VEGAN = "vegan",
+  OTHER = "other",
 }

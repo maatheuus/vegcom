@@ -115,6 +115,7 @@ export const culinaryLevelOptions = [
   { value: CulinaryLevel.BEGINNER, label: "Queima tudo" },
   { value: CulinaryLevel.INTERMEDIATE, label: "Acerta o arroz soltinho" },
   { value: CulinaryLevel.ADVANCED, label: "Todo mundo pede a receita" },
+  { value: CulinaryLevel.PRO, label: "Chef profissional" },
 ];
 
 export const bioTooShortMessages = [

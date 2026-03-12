@@ -1,11 +1,11 @@
-import { RecipeCard } from "@/entities/recipe/types";
+import { Recipe } from "@/entities/recipe/types";
+import type { UserInformations } from "@/features/auth/api/types";
 import { PostCardDataProps } from "@/shared/types";
 
 export interface UserProfileDetails {
   id: string;
   name: string;
-  avatarUrl?: string;
-  bio?: string;
-  recipes: RecipeCard[];
+  informations: UserInformations;
+  recipes: Recipe[];
   posts: PostCardDataProps[];
 }
