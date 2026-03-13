@@ -15,13 +15,9 @@ export default async function Page({ params }: Props) {
   if (!response?.data) notFound();
 
   const user = response.data;
-  console.log(user);
   return (
-    <Layout.Default
-      className="hidden-scrollbar overflow-hidden"
-      gridClassName="overflow-auto"
-    >
-      <section className="hidden-scrollbar container mx-auto overflow-scroll scroll-auto px-4 py-8">
+    <Layout.Default className="h-auto">
+      <section className="container mx-auto px-4 py-8">
         <div className="mx-auto flex max-w-5xl flex-col gap-y-4">
           <UserProfileHeader user={user} />
           <UserProfileTabsClient user={user} />

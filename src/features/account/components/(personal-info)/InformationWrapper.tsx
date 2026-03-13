@@ -1,5 +1,6 @@
 "use client";
 
+import { type CulinaryLevel, type Preference } from "@/features/account";
 import UserInformations from "@/features/account/components/(personal-info)/UserInformations";
 import {
   maxLengthForBio,
@@ -9,7 +10,6 @@ import { useUpdateProfile } from "@/features/account/hooks/mutations/useUpdatePr
 import { useUploadAvatar } from "@/features/account/hooks/mutations/useUploadAvatar";
 import type { UpdateProfilePayload } from "@/features/auth/api/authApi";
 import type { User } from "@/features/auth/api/types";
-import { type CulinaryLevel, type Preference } from "@/features/account";
 import { toast } from "@/shared/hooks/use-toast";
 import Button from "@/shared/ui/Button";
 import Row from "@/shared/ui/Layout/Helpers/Row";
@@ -73,6 +73,7 @@ export default function InformationWrapper({ user }: InformationWrapperProps) {
     const infoPayload: UpdateProfilePayload["informations"] = {};
 
     if (values.fullName !== user.name) payload.name = values.fullName;
+    if (values.email !== user.email) payload.email = values.email;
 
     if (values.bio !== user.informations?.aboutInfo)
       infoPayload.aboutInfo = values.bio;
@@ -115,11 +116,6 @@ export default function InformationWrapper({ user }: InformationWrapperProps) {
         variant: "destructive",
       });
     }
-  };
-
-  const _onCancel = () => {
-    form.reset();
-    setIsEditing(false);
   };
 
   return (

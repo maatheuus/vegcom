@@ -8,11 +8,14 @@ import type {
   GetChatByIdResponse,
   LastMessage,
 } from "@/features/chat/api/types";
-import { useGenerateResponse } from "@/shared/api/ai/queries/getAiApiClient";
+import {
+  useGenerateResponse,
+  useGetUsageStats,
+} from "@/shared/api/ai/queries/getAiApiClient";
 import Col from "@/shared/ui/Layout/Helpers/Col";
 import { useQueryClient } from "@tanstack/react-query";
 import { useEffect, useRef, useState } from "react";
-import ChatWindow from "./ChatWindow";
+import ChatWindow from "..";
 
 interface Props {
   chatId: number;
@@ -23,6 +26,7 @@ export default function ExistingChatPage({ chatId }: Props) {
   const { data: chat, isLoading } = useGetChatById(chatId);
   const { mutateAsync: generateResponse, isPending: isGenerating } =
     useGenerateResponse();
+  const { data: usageStats } = useGetUsageStats();
 
   const [pendingUserMessage, setPendingUserMessage] =
     useState<LastMessage | null>(null);
@@ -39,6 +43,7 @@ export default function ExistingChatPage({ chatId }: Props) {
   }, [messages]);
 
   const handleSendMessage = async (content: string) => {
+    if (usageStats && usageStats.remaining === 0) return;
     const userMessage: LastMessage = {
       id: Date.now(),
       chatId,
@@ -68,7 +73,6 @@ export default function ExistingChatPage({ chatId }: Props) {
           createdAt: new Date().toISOString(),
         };
 
-        // Update cache immediately with both messages
         queryClient.setQueryData<GetChatByIdResponse>(
           chatKeys.detail(chatId),
           (oldData) => {
@@ -168,6 +172,7 @@ export default function ExistingChatPage({ chatId }: Props) {
         isGenerating={isGenerating}
         onSendMessage={handleSendMessage}
         onRegenerate={handleRegenerateLastMessage}
+        usageStats={usageStats}
       />
     </Col>
   );

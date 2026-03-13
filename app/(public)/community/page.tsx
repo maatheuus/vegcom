@@ -25,6 +25,7 @@ export default async function Page() {
   };
   return (
     <Layout.Default
+      noFooter
       className="hidden-scrollbar overflow-hidden"
       gridClassName="overflow-auto"
     >

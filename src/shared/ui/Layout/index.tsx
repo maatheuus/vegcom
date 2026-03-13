@@ -2,6 +2,7 @@ import Menu from "@/features/community/components/Menu";
 import { cn } from "@/shared/lib/utils";
 import { cva } from "class-variance-authority";
 import clsx from "clsx";
+import { Footer } from "./Footer";
 import Col from "./Helpers/Col";
 import Grid from "./Helpers/Grid";
 
@@ -32,6 +33,7 @@ Layout.displayName = "Layout";
 interface DefaultProps extends React.ComponentProps<"div"> {
   extraChildren?: React.ReactNode;
   gridClassName?: string;
+  noFooter?: boolean;
 }
 
 export function Default({
@@ -39,27 +41,31 @@ export function Default({
   extraChildren,
   className,
   gridClassName,
+  noFooter = false,
 }: DefaultProps) {
   return (
-    <Col
-      as="main"
-      className={clsx(
-        "padding__default size-full gap-y-4 bg-green-50",
-        className,
-      )}
-    >
-      <Menu />
-      {extraChildren}
-      <Grid
-        columns="16"
+    <>
+      <Col
+        as="main"
         className={clsx(
-          "container__content h-auto w-full flex-auto",
-          gridClassName,
+          "padding__default size-full gap-y-4 bg-green-50",
+          className,
         )}
       >
-        {children}
-      </Grid>
-    </Col>
+        <Menu />
+        {extraChildren}
+        <Grid
+          columns="16"
+          className={clsx(
+            "container__content h-auto w-full flex-auto",
+            gridClassName,
+          )}
+        >
+          {children}
+        </Grid>
+      </Col>
+      {!noFooter && <Footer />}
+    </>
   );
 }
 

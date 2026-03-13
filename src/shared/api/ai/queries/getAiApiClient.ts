@@ -1,5 +1,5 @@
 import { chatKeys } from "@/features/chat/api/queries/getChatApiClient";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { aiApi } from "../ai";
 
 export const useGenerateResponse = () => {
@@ -18,9 +18,20 @@ export const useGenerateResponse = () => {
           queryKey: chatKeys.lists(),
         });
       }
+
+      queryClient.invalidateQueries({
+        queryKey: ["usage-stats"],
+      });
     },
     onError: (error) => {
       console.error("Erro ao gerar resposta:", error);
     },
+  });
+};
+
+export const useGetUsageStats = () => {
+  return useQuery({
+    queryKey: ["usage-stats"],
+    queryFn: aiApi.getUsageStats,
   });
 };

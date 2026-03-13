@@ -28,7 +28,7 @@ export default function page() {
   };
 
   return (
-    <Layout.Default className="style-scrollbar h-[90dvh]">
+    <Layout.Default className="style-scrollbar h-auto">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}

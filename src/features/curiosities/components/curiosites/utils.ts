@@ -1,9 +1,230 @@
+import {
+  BookOpenIcon,
+  BooksIcon,
+  ChurchIcon,
+  DeviceMobileIcon,
+  ForkKnifeIcon,
+  GlobeIcon,
+  LeafIcon,
+  MegaphoneIcon,
+  MusicNoteIcon,
+  StorefrontIcon,
+  SunHorizonIcon,
+  UsersThreeIcon,
+} from "@phosphor-icons/react";
 import type { Curiosity } from "../page/CuriositiesPage";
 
 export const didYouKnowPhrases = [
   "O veganismo negro é um movimento de resistência que conecta justiça social, saúde e espiritualidade, inspirado em práticas africanas ancestrais.",
   "Dick Gregory, ícone dos direitos civis, tornou-se vegetariano em 1965 aplicando a filosofia de não-violência de Martin Luther King Jr. à sua alimentação.",
   "Afro-americanos são a população que mais cresce no veganismo nos EUA, resgatando tradições alimentares baseadas em plantas de seus ancestrais africanos.",
+];
+
+export const historyTimeline = [
+  {
+    year: "Séc. XIII–XIX",
+    region: "Etiópia",
+    title: "Jejum vegan etíope",
+    description:
+      "A Igreja Ortodoxa Etíope prescreve abstinência total de produtos animais por até 252 dias no ano. Essa tradição, mantida por milhões de africanos negros, é uma das práticas veganas coletivas mais antigas e contínuas do mundo.",
+    category: "african",
+    icon: ChurchIcon,
+    // Church: representa diretamente a instituição religiosa responsável pela prática
+    source: {
+      label: "Wikipedia — Ethiopian Orthodox fasting",
+      url: "https://en.wikipedia.org/wiki/Fasting_and_abstinence_in_the_Ethiopian_Orthodox_Tewahedo_Church",
+    },
+  },
+  {
+    year: "Séc. XIX–XX",
+    region: "África Ocidental",
+    title: "Dieta pré-colonial plant-based",
+    description:
+      "A dieta tradicional da África Ocidental era majoritariamente baseada em vegetais — inhame, feijão-fradinho, batata-doce, folhas verdes. A carne era condimento, não prato principal. O colonialismo impôs a dieta europeia, distorcendo essa herança.",
+    category: "african",
+    icon: LeafIcon,
+    // Leaf: representa as raízes vegetais e a conexão com a terra
+    source: {
+      label: "NEHA Magazine — Race and the Roots of Veganism",
+      url: "http://www.nehamag.com/savor/race-and-roots-black-veganism/",
+    },
+  },
+  {
+    year: "Anos 1930",
+    region: "Jamaica",
+    title: "Ital: a dieta Rastafari",
+    description:
+      "O movimento Rastafari, nascido na Jamaica como resistência ao colonialismo britânico, desenvolve o conceito de Ital — alimentação natural, orgânica e sem carne. Comer Ital é um ato espiritual e político de descolonização do corpo.",
+    category: "diaspora",
+    icon: SunHorizonIcon,
+    // SunHorizon: simboliza o horizonte africano e a espiritualidade afrocêntrica Rastafari
+    source: {
+      label: "Wikipedia — Ital (Rastafari)",
+      url: "https://en.wikipedia.org/wiki/Ital",
+    },
+  },
+  {
+    year: "1950s",
+    region: "Chicago, EUA",
+    title: "Alvenia Fulton abre o primeiro café vegetariano negro",
+    description:
+      "A médica naturopata Alvenia Fulton inaugurou o primeiro café vegetariano no South Side de Chicago. Ela foi mentora de Dick Gregory e pioneira invisibilizada da saúde plant-based na comunidade negra norte-americana.",
+    category: "activist",
+    icon: StorefrontIcon,
+    // Storefront: representa literalmente o café/loja que ela abriu
+    source: {
+      label: "Atlas Obscura — The Legacy of Dick Gregory's Vegetarian Cookbook",
+      url: "https://www.atlasobscura.com/articles/dick-gregory-cookbook",
+    },
+  },
+  {
+    year: "1962",
+    region: "EUA",
+    title: "Elijah Muhammad conecta alimentação e libertação",
+    description:
+      "O líder da Nação do Islã publica 'How to Eat to Live', conectando dieta vegetariana à saúde e à luta contra a opressão racial. Muhammad dizia que a 'soul food' era comida de escravizados e incentivava a comunidade a abandoná-la.",
+    category: "diaspora",
+    icon: BookOpenIcon,
+    // BookOpen: referência direta ao livro publicado, marco do evento
+    source: {
+      label: "Wikipedia — How to Eat to Live",
+      url: "https://en.wikipedia.org/wiki/How_to_Eat_to_Live",
+    },
+  },
+  {
+    year: "1965",
+    region: "EUA",
+    title: "Dick Gregory: ativismo pelos direitos civis e veganismo",
+    description:
+      "O ativista Dick Gregory adota o vegetarianismo durante sua militância ao lado de Martin Luther King Jr., conectando a não-violência do movimento à recusa em matar animais. Em 1967, torna-se vegan frutariano — décadas à frente do seu tempo.",
+    category: "activist",
+    icon: MegaphoneIcon,
+    // Megaphone: representa o ativismo público e os discursos nos protestos civis
+    source: {
+      label: "Animals 24-7 — Dick Gregory, 50 years a vegan activist",
+      url: "https://www.animals24-7.org/2017/08/25/dick-gregory-50-years-a-vegan-activist-dies-at-84/",
+    },
+  },
+  {
+    year: "1969",
+    region: "Israel / Global",
+    title: "African Hebrew Israelites: comunidade vegan negra global",
+    description:
+      "O grupo fundado por Ben Ammi Carter estabelece uma comunidade 100% vegan em Dimona, Israel, por razões espirituais e de saúde. Desde então, exportam sua filosofia para a diáspora africana ao redor do mundo.",
+    category: "diaspora",
+    icon: GlobeIcon,
+    // Globe: reflete o alcance global do grupo e o conceito de diáspora africana
+    source: {
+      label: "Wikipedia — African Hebrew Israelites of Jerusalem",
+      url: "https://en.wikipedia.org/wiki/African_Hebrew_Israelites_of_Jerusalem",
+    },
+  },
+  {
+    year: "1990",
+    region: "Nova York, EUA",
+    title: "KRS-One e o hip-hop plant-based",
+    description:
+      "O rapper KRS-One lança 'Beef' no álbum Edutainment — uma crítica direta à indústria da carne e ao seu impacto na saúde negra. A música influenciou toda uma geração de artistas e ativistas do hip-hop a questionar o que colocam no prato.",
+    category: "cultural",
+    icon: MusicNoteIcon,
+    // MusicNote: representa o hip-hop como veículo cultural e político
+    source: {
+      label: "Wikipedia — Edutainment (album)",
+      url: "https://en.wikipedia.org/wiki/Edutainment_(album)",
+    },
+  },
+  {
+    year: "2009",
+    region: "EUA",
+    title: "Sistah Vegan — a academia negra encontra o veganismo",
+    description:
+      "A pesquisadora A. Breeze Harper organiza a antologia 'Sistah Vegan', reunindo vozes de mulheres negras veganas. O livro inaugura o campo acadêmico do veganismo negro interseccional, conectando alimentação a racismo sistêmico e justiça ambiental.",
+    category: "literary",
+    icon: BooksIcon,
+    // Books: referência à antologia acadêmica e ao campo literário que ela inaugura
+    source: {
+      label: "Lantern Books — Sistah Vegan",
+      url: "https://www.lanternpm.org/book/sistah-vegan/",
+    },
+  },
+  {
+    year: "2014",
+    region: "EUA",
+    title: "Afro-Vegan: Bryant Terry reinventa a culinária negra",
+    description:
+      "O chef e ativista Bryant Terry publica 'Afro-Vegan', ressignificando a culinária afro-americana com ingredientes plant-based. O livro se torna símbolo cultural — as palavras 'Afro' e 'Vegan' juntas na capa foram uma disrupção da narrativa branca do veganismo mainstream.",
+    category: "literary",
+    icon: ForkKnifeIcon,
+    // ForkKnife: representa a culinária e a transformação do prato como ato político
+    source: {
+      label: "Ten Speed Press — Afro-Vegan",
+      url: "https://www.penguinrandomhouse.com/books/220690/afro-vegan-by-bryant-terry/",
+    },
+  },
+  {
+    year: "2015",
+    region: "EUA / Global",
+    title: "Black Vegans Rock",
+    description:
+      "A ativista Aph Ko cria o projeto Black Vegans Rock, cansada do estereótipo de que veganos são brancos. Dois anos depois, Aph e sua irmã Syl Ko cunham o termo 'veganismo negro' como disciplina filosófica autônoma.",
+    category: "activist",
+    icon: UsersThreeIcon,
+    // UsersThree: representa o movimento coletivo e a comunidade que o projeto construiu
+    source: {
+      label:
+        "Aph Ko — Aphro-ism: Essays on Pop Culture, Feminism, and Black Veganism",
+      url: "https://www.lanternpm.org/book/aphro-ism/",
+    },
+  },
+  {
+    year: "2020–hoje",
+    region: "Global",
+    title: "Tabitha Brown e a virada digital",
+    description:
+      "A influenciadora Tabitha Brown conquista milhões de seguidores no TikTok compartilhando receitas veganas acessíveis. Sua abordagem — acolhedora e enraizada na cultura negra do Sul dos EUA — democratiza o veganismo e prova que ele pode ser profundamente afro.",
+    category: "digital",
+    icon: DeviceMobileIcon,
+    // DeviceMobile: representa o TikTok e a era das redes sociais como plataforma de ativismo alimentar
+    source: {
+      label: "The Guardian — Tabitha Brown: the vegan who became America's mom",
+      url: "https://www.theguardian.com/food/2021/jun/05/tabitha-brown-vegan-tiktok-celebrity",
+    },
+  },
+];
+
+export const fastFacts = [
+  {
+    value: "~79M",
+    label: "veganos no mundo",
+    source: {
+      label: "World Population Review — Vegan Statistics",
+      url: "https://worldpopulationreview.com/country-rankings/vegan-countries",
+    },
+  },
+  {
+    value: "1944",
+    label: "ano da fundação da Vegan Society",
+    source: {
+      label: "The Vegan Society — History",
+      url: "https://www.vegansociety.com/about-us/history",
+    },
+  },
+  {
+    value: "10%+",
+    label: "crescimento anual do mercado plant-based",
+    source: {
+      label: "Market Research — Plant-Based Food CAGR",
+      url: "https://www.marketresearchfuture.com/reports/plant-based-food-market-6526",
+    },
+  },
+  {
+    value: "73%",
+    label: "redução na pegada de carbono com dieta vegana",
+    source: {
+      label: "University of Oxford — Vegan diet carbon footprint study",
+      url: "https://www.ox.ac.uk/news/2023-07-20-vegan-diet-cuts-your-carbon-footprint-quarter-major-new-study-finds",
+    },
+  },
 ];
 
 export const defaultCuriosities: Curiosity[] = [

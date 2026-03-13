@@ -8,6 +8,14 @@ export interface GenerateParams {
   isRegeneration?: boolean;
 }
 
+export interface UsageStats {
+  used: number;
+  limit: number;
+  remaining: number;
+  isPremium: boolean;
+  resetDate: Date;
+}
+
 const aiApi = {
   generateResponse: async ({
     query,
@@ -23,6 +31,15 @@ const aiApi = {
       isRegeneration,
     });
     return res.data;
+  },
+
+  getUsageStats: async (): Promise<UsageStats> => {
+    const userId = (await getUser()).data?.id;
+
+    const { data } = await api.get<UsageStats>("/ai/usage", {
+      params: { userId },
+    });
+    return data;
   },
 };
 

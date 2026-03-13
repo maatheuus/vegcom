@@ -4,7 +4,14 @@ import type { ApiResponse, User, UserInformations } from "./types";
 
 export interface UpdateProfilePayload {
   name?: string;
+  email?: string;
   informations?: Partial<UserInformations>;
+}
+
+export interface UpdatePasswordPayload {
+  userId: number;
+  currentPassword: string;
+  newPassword: string;
 }
 
 export const authApi = {
@@ -36,6 +43,14 @@ export const authApi = {
       success: boolean;
       message: string;
     }>("/auth/me", payload);
+    return responseData;
+  },
+
+  updatePassword: async (payload: UpdatePasswordPayload) => {
+    const { data: responseData } = await api.put<{
+      success: boolean;
+      message: string;
+    }>("/auth/update-password", payload);
     return responseData;
   },
 

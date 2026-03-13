@@ -1,4 +1,5 @@
 import {
+  type UpdatePasswordPayload,
   type UpdateProfilePayload,
   authApi,
 } from "@/features/auth/api/authApi";
@@ -10,6 +11,18 @@ export const useUpdateProfile = () => {
   return useMutation({
     mutationFn: (payload: UpdateProfilePayload) =>
       authApi.updateProfile(payload),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["fetch_auth_user"] });
+    },
+  });
+};
+
+export const useUpdatePassword = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (payload: UpdatePasswordPayload) =>
+      authApi.updatePassword(payload),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["fetch_auth_user"] });
     },
