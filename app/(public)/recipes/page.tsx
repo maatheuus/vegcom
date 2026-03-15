@@ -37,7 +37,9 @@ import { filterRecipes, sortRecipes } from "@/features/recipes/lib/filterUtils";
 interface PageProps {
   searchParams: Promise<{
     q?: string;
-    category?: string;
+    mealType?: string;
+    prepTime?: string;
+    highlight?: string;
     sort?: string;
   }>;
 }
@@ -64,7 +66,13 @@ export default async function Page({ searchParams }: PageProps) {
     console.warn("Failed to fetch featured recipe:", featuredResult.reason);
   }
 
-  let recipes = filterRecipes(recipesData, params.q, params.category);
+  let recipes = filterRecipes(
+    recipesData,
+    params.q,
+    params.mealType,
+    params.prepTime,
+    params.highlight,
+  );
   recipes = sortRecipes(recipes, params.sort);
 
   const jsonLd = {
@@ -77,7 +85,7 @@ export default async function Page({ searchParams }: PageProps) {
   };
 
   return (
-    <Layout.Default className="style-scrollbar h-auto">
+    <Layout.Default className="style-scrollbar">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}

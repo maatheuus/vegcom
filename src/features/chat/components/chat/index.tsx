@@ -255,38 +255,41 @@ export default function ChatWindow({
               </div>
             )}
 
-            <div
-              className={`flex w-full items-end gap-2 rounded-2xl border bg-transparent p-2 transition-all ${
-                isLimitReached
-                  ? "border-gray-300 opacity-60"
-                  : "border-green-500 focus-within:border-green-600"
-              }`}
-            >
-              <textarea
-                ref={textareaRef}
-                value={messageInput}
-                onChange={(e) => setMessageInput(e.target.value)}
-                onKeyDown={(e) => {
-                  if (e.key === "Enter" && !e.shiftKey) {
-                    e.preventDefault();
-                    handleSubmit();
-                  }
-                }}
-                placeholder={
+            <div className="flex items-end gap-x-2 md:gap-x-4">
+              <div
+                className={`flex w-full items-center rounded-xl border bg-transparent p-2 transition-all ${
                   isLimitReached
-                    ? "Limite semanal atingido..."
-                    : "Digite sua mensagem..."
-                }
-                disabled={(isGenerating && !onCancel) || isLimitReached}
-                className="style-scrollbar font-lora my-auto max-h-[200px] w-full flex-1 resize-none overflow-y-auto bg-transparent px-2 py-0 text-sm text-green-500 placeholder:text-green-200 focus:ring-0 focus:outline-none disabled:cursor-not-allowed md:max-h-[400px] md:text-base"
-                rows={1}
-              />
+                    ? "border-gray-300 opacity-60"
+                    : "border-green-500 focus-within:border-green-600"
+                }`}
+              >
+                <textarea
+                  ref={textareaRef}
+                  value={messageInput}
+                  onChange={(e) => setMessageInput(e.target.value)}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter" && !e.shiftKey) {
+                      e.preventDefault();
+                      handleSubmit();
+                    }
+                  }}
+                  placeholder={
+                    isLimitReached
+                      ? "Limite semanal atingido..."
+                      : "Digite sua mensagem..."
+                  }
+                  disabled={(isGenerating && !onCancel) || isLimitReached}
+                  className="style-scrollbar font-lora my-auto max-h-[200px] w-full flex-1 resize-none overflow-y-auto bg-transparent px-2 text-sm text-green-500 placeholder:text-green-200 focus:ring-0 focus:outline-none disabled:cursor-not-allowed md:max-h-[400px] md:text-base"
+                  rows={1}
+                />
+              </div>
+
               <Button.Icon
                 onClick={isGenerating && onCancel ? onCancel : handleSubmit}
                 disabled={
                   (!messageInput.trim() && !isGenerating) || isLimitReached
                 }
-                className="group relative flex size-8 items-center justify-center rounded-full bg-green-500 text-green-50 hover:bg-green-600 disabled:cursor-not-allowed disabled:opacity-50 md:size-10"
+                className="group relative flex size-10 items-center justify-center rounded-full bg-green-500 text-green-50 hover:bg-green-600 disabled:cursor-not-allowed disabled:opacity-50"
                 icon={
                   isGenerating ? (
                     <CircleNotchIcon size={16} className="animate-spin" />

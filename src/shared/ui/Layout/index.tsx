@@ -44,11 +44,11 @@ export function Default({
   noFooter = false,
 }: DefaultProps) {
   return (
-    <>
+    <div className={clsx("flex flex-col", noFooter ? "h-dvh" : "min-h-dvh")}>
       <Col
         as="main"
         className={clsx(
-          "padding__default size-full gap-y-4 bg-green-50",
+          "padding__default flex-1 gap-y-4 bg-green-50",
           className,
         )}
       >
@@ -57,7 +57,8 @@ export function Default({
         <Grid
           columns="16"
           className={clsx(
-            "container__content h-auto w-full flex-auto",
+            "container__content w-full flex-auto",
+            noFooter ? "h-full" : "h-auto",
             gridClassName,
           )}
         >
@@ -65,10 +66,9 @@ export function Default({
         </Grid>
       </Col>
       {!noFooter && <Footer />}
-    </>
+    </div>
   );
 }
-
 Default.displayName = "Default";
 
 Layout.Default = Default;

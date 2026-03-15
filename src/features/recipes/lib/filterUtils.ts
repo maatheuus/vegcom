@@ -1,5 +1,5 @@
 import type { Recipe } from "@/entities/recipe";
-import { categories } from "../components/utils";
+import { CATEGORY_TO_API } from "../components/utils";
 
 export function normalizeText(text: string): string {
   return text
@@ -11,7 +11,9 @@ export function normalizeText(text: string): string {
 export function filterRecipes(
   recipes: Recipe[],
   query?: string,
-  category?: string,
+  mealType?: string,
+  prepTime?: string,
+  highlight?: string,
 ): Recipe[] {
   let filtered = [...recipes];
 
@@ -26,57 +28,45 @@ export function filterRecipes(
     });
   }
 
-  if (category) {
-    const normalizedCategory = normalizeText(category);
-
-    filtered = filtered.filter((recipe) => {
-      if (
-        categories["Tipo de Refeição"]
-          .map(normalizeText)
-          .includes(normalizedCategory)
-      ) {
-        if (
-          recipe.category &&
-          normalizeText(recipe.category) === normalizedCategory
-        )
-          return true;
-
-        if (
-          recipe.mealType &&
-          normalizeText(recipe.mealType) === normalizedCategory
-        )
-          return true;
-
-        return false;
-      }
-
-      if (normalizedCategory.includes("rapida")) {
-        const mins = parseInt(recipe.cookTime || "0", 10);
-        return mins > 0 && mins <= 30;
-      }
-
-      if (normalizedCategory.includes("elaborada")) {
-        const mins = parseInt(recipe.cookTime || "0", 10);
-        return mins > 30;
-      }
-
-      if (
-        categories["Destaques da Comunidade"]
-          .map(normalizeText)
-          .includes(normalizedCategory)
-      ) {
-        if (normalizedCategory.includes("melhor avaliada")) {
-          return (recipe.rating || 0) >= 4.5;
-        }
-        if (normalizedCategory.includes("popular")) {
-          return (recipe.views || 0) > 1000;
-        }
-      }
-
-      return (
-        recipe.category && normalizeText(recipe.category) === normalizedCategory
+  if (mealType) {
+    const normalized = normalizeText(mealType);
+    const apiValues = CATEGORY_TO_API[normalized];
+    if (apiValues) {
+      filtered = filtered.filter(
+        (recipe) =>
+          (recipe.category && apiValues.includes(recipe.category)) ||
+          (recipe.mealType && apiValues.includes(recipe.mealType)),
       );
-    });
+    }
+  }
+
+  if (prepTime) {
+    const normalized = normalizeText(prepTime);
+    if (normalized.includes("rapida")) {
+      filtered = filtered.filter(
+        (recipe) => recipe.prepTimeCategory === "QUICK",
+      );
+    } else if (normalized.includes("elaborada")) {
+      filtered = filtered.filter(
+        (recipe) => recipe.prepTimeCategory === "ELABORATE",
+      );
+    }
+  }
+
+  if (highlight) {
+    const normalized = normalizeText(highlight);
+    if (normalized.includes("popular")) {
+      filtered = filtered.filter((recipe) => (recipe.views || 0) > 1000);
+    } else if (normalized.includes("melhor avaliada")) {
+      filtered = filtered.filter((recipe) => (recipe.rating || 0) >= 4.5);
+    } else if (normalized.includes("novidade")) {
+      const sevenDaysAgo = Date.now() - 7 * 24 * 60 * 60 * 1000;
+      filtered = filtered.filter((recipe) =>
+        recipe.createdAt
+          ? new Date(recipe.createdAt).getTime() >= sevenDaysAgo
+          : false,
+      );
+    }
   }
 
   return filtered;
@@ -84,23 +74,26 @@ export function filterRecipes(
 
 export function sortRecipes(recipes: Recipe[], sortOption?: string): Recipe[] {
   const sorted = [...recipes];
-
   if (!sortOption) return sorted;
-  const normalizedSort = normalizeText(sortOption);
 
-  if (
-    normalizedSort.includes("melhor avaliada") ||
-    normalizedSort === "rating"
-  ) {
-    sorted.sort((a, b) => (b.rating || 0) - (a.rating || 0));
-  } else if (normalizedSort.includes("popular") || normalizedSort === "views") {
-    sorted.sort((a, b) => (b.views || 0) - (a.views || 0));
-  } else if (
-    normalizedSort.includes("novidade") ||
-    normalizedSort === "newest"
-  ) {
-    sorted.sort((a, b) => b.id - a.id);
+  switch (sortOption) {
+    case "rating":
+      return sorted.sort((a, b) => (b.rating || 0) - (a.rating || 0));
+    case "views":
+      return sorted.sort((a, b) => (b.views || 0) - (a.views || 0));
+    case "recent":
+      return sorted.sort((a, b) => {
+        const dateA = a.updatedAt ? new Date(a.updatedAt).getTime() : 0;
+        const dateB = b.updatedAt ? new Date(b.updatedAt).getTime() : 0;
+        return dateB - dateA;
+      });
+    case "old":
+      return sorted.sort((a, b) => {
+        const dateA = a.updatedAt ? new Date(a.updatedAt).getTime() : 0;
+        const dateB = b.updatedAt ? new Date(b.updatedAt).getTime() : 0;
+        return dateA - dateB;
+      });
+    default:
+      return sorted;
   }
-
-  return sorted;
 }

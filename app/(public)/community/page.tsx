@@ -4,10 +4,12 @@ import { Metadata } from "next";
 
 export const metadata: Metadata = {
   title: "Comunidade",
-  description: "Conecte-se com outros veganos e vegetarianos, compartilhe experiências, dúvidas e descobertas na nossa comunidade.",
+  description:
+    "Conecte-se com outros veganos e vegetarianos, compartilhe experiências, dúvidas e descobertas na nossa comunidade.",
   openGraph: {
     title: "Comunidade | VegCom",
-    description: "Conecte-se com outros veganos e vegetarianos, compartilhe experiências, dúvidas e descobertas na nossa comunidade.",
+    description:
+      "Conecte-se com outros veganos e vegetarianos, compartilhe experiências, dúvidas e descobertas na nossa comunidade.",
     url: "https://vegcom.life/community",
   },
   alternates: {
@@ -24,20 +26,13 @@ export default async function Page() {
     url: "https://vegcom.life/community",
   };
   return (
-    <Layout.Default
-      noFooter
-      className="hidden-scrollbar overflow-hidden"
-      gridClassName="overflow-auto"
-    >
+    <Layout.Default noFooter className="overflow-hidden">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
-      <section className="hidden-scrollbar container mx-auto overflow-scroll scroll-auto">
-        <CommunityLayout
-          id="communityLayout"
-          className="col-start-1 col-end-16"
-        />
+      <section className="h-full overflow-hidden">
+        <CommunityLayout className="col-start-1 col-end-16" />
       </section>
     </Layout.Default>
   );

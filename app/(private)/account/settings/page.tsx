@@ -21,6 +21,7 @@ import Button from "@/shared/ui/Button";
 import { Form } from "@/shared/ui/Form";
 import Row from "@/shared/ui/Layout/Helpers/Row";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { WarningIcon } from "@phosphor-icons/react";
 import {
   FloppyDiskIcon,
   PencilSimpleIcon,
@@ -232,44 +233,52 @@ export default function Page() {
         </Form>
       </div>
 
-      <div className="rounded-xl border border-red-200 bg-red-50 p-4">
-        <Header
-          title="Deletar conta"
-          subTitle="Essa ação é permanente e não pode ser desfeita"
-        />
+      <div className="rounded-xl border border-red-100 bg-red-50/50 p-4">
+        <div className="flex items-start gap-3">
+          <div className="mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-red-100">
+            <WarningIcon size={16} weight="fill" className="text-red-500" />
+          </div>
+          <div className="flex-1">
+            <p className="font-lora text-sm font-semibold text-red-700">
+              Deletar conta
+            </p>
+            <p className="font-maitree mt-0.5 text-xs text-red-400">
+              Essa ação é permanente e não pode ser desfeita. Todos os seus
+              dados serão removidos.
+            </p>
+          </div>
+        </div>
 
-        <div className="mt-4 flex items-center justify-between">
-          <p className="font-maitree text-sm text-red-600">
-            Ao deletar sua conta, todos os seus dados serão removidos.
-          </p>
-
+        <div className="mt-4 flex justify-end">
           {!confirmDelete ? (
             <Button
               variant="text"
               size="default"
               onClick={() => setConfirmDelete(true)}
-              className="font-maitree cursor-pointer bg-red-500 text-green-50 transition-all duration-300 hover:bg-red-600 hover:text-green-50"
+              className="font-maitree cursor-pointer border border-red-200 bg-transparent text-red-500 transition-all duration-300 hover:border-red-300 hover:bg-red-100 hover:text-red-600"
             >
               Deletar conta
             </Button>
           ) : (
-            <div className="flex gap-x-2">
-              <Button
-                variant="text"
-                size="default"
-                onClick={handleDeleteAccount}
-                className="font-maitree cursor-pointer bg-red-700 text-green-50 transition-all duration-300 hover:bg-red-800"
-              >
-                Confirmar exclusão
-              </Button>
-
+            <div className="flex items-center gap-x-2">
+              <p className="font-maitree mr-2 text-xs text-red-400">
+                Tem certeza?
+              </p>
               <Button
                 variant="text"
                 size="default"
                 onClick={() => setConfirmDelete(false)}
-                className="font-maitree cursor-pointer border border-red-300 bg-transparent text-red-600 transition-all duration-300 hover:bg-red-100"
+                className="font-maitree cursor-pointer border border-red-200 bg-transparent text-red-400 transition-all duration-300 hover:bg-red-100"
               >
                 Cancelar
+              </Button>
+              <Button
+                variant="text"
+                size="default"
+                onClick={handleDeleteAccount}
+                className="font-maitree cursor-pointer bg-red-500 text-white transition-all duration-300 hover:bg-red-600"
+              >
+                Confirmar exclusão
               </Button>
             </div>
           )}

@@ -42,8 +42,6 @@ export default function RecipeActions({ isFavorites }: Props) {
   const savedRecipes = user?.savedRecipes;
 
   const searchParams = useSearchParams();
-  const query = searchParams.get("q") || "";
-  const sortBy = (searchParams.get("sort") as SortValues) || "";
 
   const recipeIds = useMemo(() => {
     const sourceData = isFavorites ? savedRecipes : recipes;
@@ -65,6 +63,10 @@ export default function RecipeActions({ isFavorites }: Props) {
 
   const allRecipes = recipesResponse?.data ?? [];
 
+  const query = searchParams.get("q") || "";
+  const sortBy = (searchParams.get("sort") as SortValues) || "";
+  const categoryFilter = searchParams.get("category") || "";
+
   const filteredData = useMemo(() => {
     if (allRecipes.length === 0) return [];
 
@@ -72,31 +74,26 @@ export default function RecipeActions({ isFavorites }: Props) {
 
     if (query) {
       const normalizedQuery = normalizeSearchText(query);
+      data = data.filter(
+        (recipe) =>
+          (recipe.title &&
+            normalizeSearchText(recipe.title).includes(normalizedQuery)) ||
+          (recipe.description &&
+            normalizeSearchText(recipe.description).includes(
+              normalizedQuery,
+            )) ||
+          (recipe.category &&
+            normalizeSearchText(recipe.category).includes(normalizedQuery)),
+      );
+    }
 
-      data = data.filter((recipe) => {
-        if (
-          recipe.title &&
-          normalizeSearchText(recipe.title).includes(normalizedQuery)
-        ) {
-          return true;
-        }
-
-        if (
-          recipe.description &&
-          normalizeSearchText(recipe.description).includes(normalizedQuery)
-        ) {
-          return true;
-        }
-
-        if (
+    if (categoryFilter) {
+      const normalizedCategory = normalizeSearchText(categoryFilter);
+      data = data.filter(
+        (recipe) =>
           recipe.category &&
-          normalizeSearchText(recipe.category).includes(normalizedQuery)
-        ) {
-          return true;
-        }
-
-        return false;
-      });
+          normalizeSearchText(recipe.category).includes(normalizedCategory),
+      );
     }
 
     if (sortBy === "rating") {
@@ -118,7 +115,7 @@ export default function RecipeActions({ isFavorites }: Props) {
     }
 
     return data;
-  }, [query, sortBy, allRecipes]);
+  }, [query, categoryFilter, sortBy, allRecipes]);
 
   const {
     currentItems,
@@ -138,7 +135,8 @@ export default function RecipeActions({ isFavorites }: Props) {
   });
 
   const currentItemsRecipe = currentItems as DetailedRecipe[];
-
+  console.log("currentItemsRecipe", currentItemsRecipe);
+  console.log("filteredData", filteredData);
   const shouldShowPagination = filteredData.length > ITEMS_PER_PAGE;
 
   const isLoading = isUserLoading || isLoadingRecipes || isPaginationLoading;

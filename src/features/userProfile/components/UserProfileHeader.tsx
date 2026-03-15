@@ -12,55 +12,46 @@ interface UserProfileHeaderProps {
 }
 
 export function UserProfileHeader({ user }: UserProfileHeaderProps) {
-  return (
-    <Col className="group relative w-full overflow-hidden rounded-3xl border border-green-100/60 bg-white shadow-[0_8px_32px_rgba(0,0,0,0.06)] transition-all duration-500 hover:shadow-[0_24px_60px_rgba(34,197,94,0.12)]">
-      {/* ── Cover ─────────────────────────────────────── */}
-      <div className="relative h-40 w-full overflow-hidden bg-gradient-to-br from-green-700 via-emerald-500 to-teal-400 md:h-52">
-        {/* Decorative light orbs */}
-        <div className="absolute -top-10 -right-10 size-52 rounded-full bg-white/10 blur-3xl" />
-        <div className="absolute -bottom-14 -left-10 size-60 rounded-full bg-emerald-200/20 blur-3xl" />
-        {/* Dot grid */}
-        <div className="absolute inset-0 [background-image:radial-gradient(rgba(255,255,255,0.7)_0.5px,transparent_0.5px)] [background-size:18px_18px] opacity-20" />
-        {/* Bottom vignette */}
-        <div className="absolute inset-x-0 bottom-0 h-20 bg-gradient-to-t from-black/15 to-transparent" />
-      </div>
+  const recipeCount = user.recipes?.length ?? 0;
+  const postCount = user.posts?.length ?? 0;
 
-      {/* ── Body ──────────────────────────────────────── */}
-      <div className="relative px-6 pb-8 md:px-10">
-        {/* Avatar + name row */}
-        <div className="flex flex-col items-center md:flex-row md:items-end md:gap-5">
-          {/* Avatar — lifted over the cover */}
-          <div className="-mt-14 shrink-0 md:-mt-16">
-            <div className="relative rounded-full p-[3px] ring-4 shadow-xl ring-white transition-transform duration-500 group-hover:scale-[1.04]">
-              {/* Glow ring */}
-              <div className="absolute inset-0 rounded-full bg-gradient-to-br from-green-400 to-emerald-600 opacity-70 blur-[6px]" />
-              <div className="relative rounded-full border-[3px] border-white">
-                <Avatar className="size-20 md:size-28">
-                  <AvatarImage
-                    src={user.informations.avatarUrl}
-                    alt={user.name}
-                    className="object-cover"
-                  />
-                  <AvatarFallback className="bg-gradient-to-br from-green-100 to-emerald-100 text-3xl font-bold text-green-700 capitalize md:text-4xl">
-                    {user.name?.slice(0, 2)}
-                  </AvatarFallback>
-                </Avatar>
-              </div>
-            </div>
+  return (
+    <div className="w-full rounded-xl border border-green-100 bg-green-100 p-6 md:p-8">
+      <div className="flex flex-col gap-6 md:flex-row md:items-start md:justify-between">
+        <Row className="items-center gap-5">
+          <div className="shrink-0 rounded-full p-[2px] ring-2 ring-green-100">
+            <Avatar className="size-16 md:size-20">
+              <AvatarImage
+                src={user.informations.avatarUrl}
+                alt={user.name}
+                className="object-cover"
+              />
+              <AvatarFallback className="font-lora bg-green-50 text-xl font-bold text-green-600 capitalize md:text-2xl">
+                {user.name?.slice(0, 2)}
+              </AvatarFallback>
+            </Avatar>
           </div>
 
-          {/* Name + badges */}
-          <div className="mt-4 flex flex-1 flex-col items-center gap-2.5 pb-1 text-center md:mt-0 md:items-start md:text-left">
+          <Col className="gap-1.5">
             <Text
               as="h1"
-              type={Text.Type.HeadingOne}
+              type={Text.Type.HeadingThree}
               weight={Text.Weight.Bold}
-              className="font-maitree leading-tight text-green-800 md:text-4xl"
+              className="font-lora leading-tight text-green-800"
             >
               {user.name}
             </Text>
 
-            <Row className="flex-wrap justify-center gap-2 md:justify-start">
+            {user.informations.location && (
+              <Row className="items-center gap-1 text-green-600">
+                <MapPinIcon size={12} weight="fill" />
+                <span className="font-maitree text-xs text-green-600 capitalize">
+                  {user.informations.location}
+                </span>
+              </Row>
+            )}
+
+            <Row className="mt-1 flex-wrap gap-1.5">
               {user.informations.preference && (
                 <UserPreferenceBadge
                   preference={user.informations.preference}
@@ -72,40 +63,46 @@ export function UserProfileHeader({ user }: UserProfileHeaderProps) {
                 />
               )}
             </Row>
+          </Col>
+        </Row>
+
+        <Row className="gap-4 md:shrink-0 md:flex-col md:items-end md:gap-3">
+          <div className="flex items-baseline gap-1.5">
+            <span className="font-lora text-xl font-bold text-green-600">
+              {recipeCount}
+            </span>
+            <span className="font-maitree text-xs text-green-600">
+              {recipeCount === 0
+                ? "nenhuma receita"
+                : recipeCount === 1
+                  ? "receita"
+                  : "receitas"}
+            </span>
           </div>
-        </div>
-
-        {/* Subtle divider */}
-        <div className="my-5 h-px bg-gradient-to-r from-transparent via-green-100 to-transparent" />
-
-        {/* Location + bio */}
-        <Col className="items-center gap-3 text-center md:items-start md:text-left">
-          {user.informations.location && (
-            <Row className="items-center gap-1.5 text-green-500/80">
-              <MapPinIcon size={14} weight="fill" />
-              <Text
-                type={Text.Type.BodyFour}
-                weight={Text.Weight.Medium}
-                className="font-maitree text-inherit capitalize"
-              >
-                {user.informations.location}
-              </Text>
-            </Row>
-          )}
-
-          {user.informations.aboutInfo && (
-            <p className="font-lora relative max-w-2xl text-sm leading-relaxed text-green-500/70 italic md:text-base">
-              <span className="mr-0.5 font-serif text-2xl leading-none text-green-200/80 not-italic">
-                "
-              </span>
-              {user.informations.aboutInfo}
-              <span className="ml-0.5 font-serif text-2xl leading-none text-green-200/80 not-italic">
-                "
-              </span>
-            </p>
-          )}
-        </Col>
+          <div className="h-4 w-px bg-green-100 md:hidden" />
+          <div className="flex items-baseline gap-1.5">
+            <span className="font-lora text-xl font-bold text-green-600">
+              {postCount}
+            </span>
+            <span className="font-maitree text-xs text-green-600">
+              {postCount === 0
+                ? "nenhum post"
+                : postCount === 1
+                  ? "post"
+                  : "posts"}
+            </span>
+          </div>
+        </Row>
       </div>
-    </Col>
+
+      {user.informations.aboutInfo && (
+        <>
+          <div className="my-5 h-px bg-green-50" />
+          <p className="font-maitree text-sm leading-relaxed text-gray-500">
+            {user.informations.aboutInfo}
+          </p>
+        </>
+      )}
+    </div>
   );
 }

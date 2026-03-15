@@ -16,13 +16,11 @@ export default async function Page({ params }: Props) {
 
   const user = response.data;
   return (
-    <Layout.Default className="h-auto">
-      <section className="container mx-auto px-4 py-8">
-        <div className="mx-auto flex max-w-5xl flex-col gap-y-4">
-          <UserProfileHeader user={user} />
-          <UserProfileTabsClient user={user} />
-        </div>
-      </section>
+    <Layout.Default className="style-scrollbar">
+      <div className="mx-auto flex w-full max-w-5xl flex-col gap-y-5 py-6">
+        <UserProfileHeader user={user} />
+        <UserProfileTabsClient user={user} />
+      </div>
     </Layout.Default>
   );
 }

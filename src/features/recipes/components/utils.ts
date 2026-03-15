@@ -184,6 +184,15 @@ export const categories = {
   ],
 };
 
+export const CATEGORY_TO_API: Record<string, string[]> = {
+  "cafe da manha": ["breakfast", "BREAKFAST"],
+  almoco: ["lunch", "LUNCH"],
+  jantar: ["dinner", "DINNER"],
+  sobremesas: ["dessert", "DESSERT"],
+  lanches: ["snacks", "SNACKS"],
+  geral: ["general", "GENERAL"],
+};
+
 export const newRecipeFormSchema = z.object({
   recipe_title: z
     .string()

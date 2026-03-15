@@ -8,6 +8,12 @@ import { Fragment } from "react";
 import { SelectCategoryItem } from "./SelectCategoryItem";
 import { categories } from "./utils";
 
+const CATEGORY_PARAMS: Record<string, string> = {
+  "Tipo de Refeição": "mealType",
+  "Tempo de Preparo": "prepTime",
+  "Destaques da Comunidade": "highlight",
+};
+
 export function Categories({ className }: React.ComponentProps<"div">) {
   return (
     <Popover>
@@ -22,7 +28,6 @@ export function Categories({ className }: React.ComponentProps<"div">) {
           Categorias
         </Button.Icon>
       </PopoverTrigger>
-
       <PopoverPortal>
         <PopoverContent
           className={clsx(
@@ -33,18 +38,22 @@ export function Categories({ className }: React.ComponentProps<"div">) {
           align="end"
         >
           <div className="space-y-4">
-            {Object.entries(categories).map(([category, items]) => (
-              <Fragment key={category}>
+            {Object.entries(categories).map(([group, items]) => (
+              <Fragment key={group}>
                 <Text
                   as="h3"
                   type={Text.Type.BodyThree}
                   className="font-lora mb-2 font-semibold text-green-500"
                 >
-                  {category}
+                  {group}
                 </Text>
                 <div className="font-maitree space-y-2">
                   {items.map((item) => (
-                    <SelectCategoryItem key={item} item={item} />
+                    <SelectCategoryItem
+                      key={item}
+                      item={item}
+                      paramKey={CATEGORY_PARAMS[group]}
+                    />
                   ))}
                 </div>
               </Fragment>

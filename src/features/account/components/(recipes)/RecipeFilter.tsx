@@ -1,3 +1,5 @@
+"use client";
+
 import { SearchBar } from "@/features/recipes/components/SearchBar";
 import useDebounce from "@/shared/hooks/useDebounce";
 import {

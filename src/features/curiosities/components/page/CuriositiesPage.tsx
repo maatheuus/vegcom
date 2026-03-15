@@ -65,9 +65,8 @@ export default function CuriositiesPage() {
   }, []);
 
   return (
-    <div className="mt-12 h-full overflow-auto md:mt-0">
-      <main className="mx-auto w-full max-w-3xl space-y-16 px-4 py-12">
-        {/* ── HERO ───────────────────────────────────────────── */}
+    <div className="mt-6 h-full overflow-auto md:mt-0">
+      <main className="mx-auto w-full max-w-5xl space-y-8 px-4 py-6 md:space-y-16 md:py-12">
         <section className="space-y-3 text-center">
           <span className="inline-flex items-center gap-x-1.5 rounded-full bg-green-100 px-3 py-1 text-xs font-semibold tracking-wider text-green-600 uppercase">
             <LeafIcon size={12} weight="fill" />

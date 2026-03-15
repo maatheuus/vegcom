@@ -104,7 +104,7 @@ export default async function Page({ params }: Props) {
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         />
-        <section className="hidden-scrollbar col-span-full container mx-auto overflow-scroll scroll-auto">
+        <section className="hidden-scrollbar mx-auto w-full max-w-5xl overflow-scroll scroll-auto">
           <BackToCommunityButton />
           <Col className="w-full rounded-2xl border-b border-b-gray-100 py-5 transition-colors md:px-4">
             {/* Header */}

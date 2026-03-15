@@ -8,21 +8,28 @@ import { useRouter, useSearchParams } from "next/navigation";
 interface ClearFiltersButtonProps {
   className?: string;
 }
+const FILTER_PARAMS = [
+  "q",
+  "mealType",
+  "prepTime",
+  "highlight",
+  "sort",
+  "page",
+];
 
 export function ClearFiltersButton({ className }: ClearFiltersButtonProps) {
-  const searchParams = useSearchParams();
   const router = useRouter();
+  const searchParams = useSearchParams();
 
-  const hasFilters =
-    searchParams.has("q") ||
-    searchParams.has("category") ||
-    searchParams.has("sort");
+  const hasFilters = FILTER_PARAMS.some((p) => searchParams.has(p));
 
   if (!hasFilters) return null;
 
-  const handleClear = () => {
-    router.replace("?", { scroll: false });
-  };
+  function handleClear() {
+    const params = new URLSearchParams(searchParams.toString());
+    FILTER_PARAMS.forEach((p) => params.delete(p));
+    router.replace(`?${params.toString()}`, { scroll: false });
+  }
 
   return (
     <Button.Icon

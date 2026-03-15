@@ -5,7 +5,7 @@ import { Suspense } from "react";
 
 export default function page() {
   return (
-    <Layout.Default className="style-scrollbar overflow-y-auto">
+    <Layout.Default className="style-scrollbar overflow-hidden">
       <section className="relative space-y-8 overflow-hidden">
         <Header title="Nova receita" />
 

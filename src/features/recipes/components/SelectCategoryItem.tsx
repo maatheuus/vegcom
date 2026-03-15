@@ -4,31 +4,35 @@ import Button from "@/shared/ui/Button";
 import clsx from "clsx";
 import { useRouter, useSearchParams } from "next/navigation";
 
-export function SelectCategoryItem({ item }: { item: string }) {
+export function SelectCategoryItem({
+  item,
+  paramKey,
+}: {
+  item: string;
+  paramKey: string;
+}) {
   const router = useRouter();
   const searchParams = useSearchParams();
 
-  const currentCategory = searchParams.get("category");
-  const isSelected = currentCategory === item;
+  const current = searchParams.get(paramKey);
+  const isSelected = current === item;
 
-  function handleClick(category: string) {
+  function handleClick() {
     const params = new URLSearchParams(searchParams.toString());
 
     if (isSelected) {
-      params.delete("category");
+      params.delete(paramKey);
     } else {
-      params.set("category", category);
+      params.set(paramKey, item);
     }
 
     params.delete("page");
-
     router.replace(`?${params.toString()}`, { scroll: false });
   }
 
   return (
     <Button
-      key={item}
-      onClick={() => handleClick(item)}
+      onClick={handleClick}
       variant="text"
       className={clsx(
         "block w-full cursor-pointer px-2 py-2 text-left text-sm font-medium transition-colors",

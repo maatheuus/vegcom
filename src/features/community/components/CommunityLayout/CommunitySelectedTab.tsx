@@ -69,7 +69,7 @@ export default function CommunitySelectedTab({ selectedTab, tabs }: Props) {
   const allPosts = data?.pages.flatMap((page) => page.data) ?? [];
 
   return (
-    <div className="min-h-screen">
+    <div>
       <ActiveComponent data={allPosts} />
 
       <div ref={sentinelRef} className="h-4 w-full" />
