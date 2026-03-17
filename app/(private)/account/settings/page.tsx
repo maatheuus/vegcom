@@ -27,7 +27,6 @@ import {
   PencilSimpleIcon,
 } from "@phosphor-icons/react/dist/ssr";
 import clsx from "clsx";
-import { redirect } from "next/navigation";
 import { useForm } from "react-hook-form";
 import type { z } from "zod";
 
@@ -60,7 +59,6 @@ export default function Page() {
       onCancel();
       setTimeout(() => {
         logout();
-        redirect("/login");
       }, 1000);
     } catch (error: unknown) {
       console.log("password error", error);
@@ -83,7 +81,6 @@ export default function Page() {
       if (err.message === "Access token not found") {
         setTimeout(() => {
           logout();
-          redirect("/login");
         }, 1000);
         form.setError("currentPassword", {
           type: "manual",

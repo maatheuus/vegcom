@@ -40,6 +40,11 @@ export default function RenderStepContent({
                       type="text"
                       className="rounded-sm!"
                       placeholder="Nova receita de..."
+                      onKeyDown={(e) => {
+                        if (e.key === "Enter") {
+                          e.preventDefault();
+                        }
+                      }}
                       {...field}
                     />
                   </FormControl>
@@ -56,6 +61,11 @@ export default function RenderStepContent({
                     <Textarea
                       placeholder="Esta receita é ótima para..."
                       className="h-full max-h-none min-h-[120px] max-w-full rounded-sm!"
+                      onKeyDown={(e) => {
+                        if (e.key === "Enter") {
+                          e.preventDefault();
+                        }
+                      }}
                       {...field}
                     />
                   </FormControl>

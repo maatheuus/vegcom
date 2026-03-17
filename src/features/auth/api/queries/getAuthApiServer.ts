@@ -3,6 +3,7 @@
 import { serverFetch } from "@/shared/api/axios/serverFetch";
 import { revalidatePath } from "next/cache";
 import { cookies } from "next/headers";
+import { redirect } from "next/navigation";
 import type { AuthResponse, LoginCredentials, SignupData } from "../../types";
 import type { ApiResponse, User } from "../types";
 
@@ -49,4 +50,5 @@ export const logout = async () => {
   const cookieStore = await cookies();
   cookieStore.delete("token");
   revalidatePath("/");
+  redirect("/login");
 };

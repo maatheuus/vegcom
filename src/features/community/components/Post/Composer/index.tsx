@@ -164,17 +164,18 @@ export default function PostComposer({ className, disabled, ...props }: Props) {
                 disabled={disabled}
                 type="text"
                 placeholder="Título do post"
-                className="font-lora border-none px-0 !text-xl leading-none font-medium tracking-tight text-green-500 italic placeholder:text-green-500/80 focus:!ring-0 sm:!text-2xl/tight"
+                className="font-lora border-none px-0 !text-xl leading-none font-medium tracking-tight text-green-500 placeholder:text-green-500/80 focus:!ring-0 sm:!text-2xl/tight"
                 maxLength={50}
               />
 
               <EditorContent
                 editor={editor}
                 className={clsx(
-                  "hidden-scrollbar h-auto max-h-[20rem] min-h-24 w-full overflow-y-auto py-2",
+                  "hidden-scrollbar font-maitree h-auto max-h-[20rem] min-h-24 w-full overflow-y-auto py-2 text-green-500",
                   "[&_.is-editor-empty]:before:content-[attr(data-placeholder)]",
                   "[&_.is-editor-empty]:before:absolute",
                   "[&_.is-editor-empty]:before:text-green-500/80",
+                  "[&_.is-editor-empty]:before:font-maitree",
                   "[&_.is-editor-empty]:before:top-0 [&_.is-editor-empty]:before:left-0",
                   "[&_.is-editor-empty]:before:pointer-events-none",
                   "[&_.is-editor-empty]:before:text-base",

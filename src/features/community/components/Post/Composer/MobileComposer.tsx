@@ -6,7 +6,8 @@ import {
   DrawerTitle,
   DrawerTrigger,
 } from "@/shared/ui/drawer";
-import { PlusIcon } from "@phosphor-icons/react";
+import { LockSimpleIcon, PlusIcon } from "@phosphor-icons/react";
+import Link from "next/link";
 import PostComposer from "./index";
 
 interface Props {
@@ -14,14 +15,64 @@ interface Props {
 }
 
 export default function MobilePostComposer({ disabled }: Props) {
+  if (disabled) {
+    return (
+      <Drawer shouldScaleBackground>
+        <DrawerTrigger asChild>
+          <Button.Icon
+            variant="filled"
+            className="fixed right-6 bottom-6 z-50 h-14 w-14 rounded-full shadow-xl md:hidden"
+            icon={<PlusIcon size={24} weight="bold" />}
+          />
+        </DrawerTrigger>
+        <DrawerContent className="bg-green-50">
+          <DrawerHeader className="pb-0 text-left">
+            <DrawerTitle className="font-maitree font-medium text-green-500">
+              Criar publicação
+            </DrawerTitle>
+          </DrawerHeader>
+          <div className="flex flex-col items-center gap-4 px-6 py-8 text-center">
+            <div className="flex h-14 w-14 items-center justify-center rounded-full bg-green-100">
+              <LockSimpleIcon
+                size={24}
+                weight="fill"
+                className="text-green-500"
+              />
+            </div>
+            <div className="space-y-1">
+              <p className="font-lora text-base font-semibold text-green-200">
+                Faça login para publicar
+              </p>
+              <p className="font-maitree text-sm text-green-500">
+                Entre na sua conta para compartilhar receitas e ideias com a
+                comunidade.
+              </p>
+            </div>
+            <Button.Link
+              href="/login"
+              className="font-maitree mt-2 w-full bg-green-200 text-green-50 active:bg-green-500"
+            >
+              Fazer login
+            </Button.Link>
+            <Link
+              href="/register"
+              className="font-maitree text-sm text-green-500 underline underline-offset-2"
+            >
+              Não tem conta? Cadastre-se
+            </Link>
+          </div>
+        </DrawerContent>
+      </Drawer>
+    );
+  }
+
   return (
     <Drawer shouldScaleBackground>
       <DrawerTrigger asChild>
         <Button.Icon
           variant="filled"
-          className="fixed right-6 bottom-6 z-50 h-14 w-14 rounded-full shadow-xl disabled:cursor-not-allowed disabled:bg-gray-400 md:hidden"
+          className="fixed right-6 bottom-6 z-50 h-14 w-14 rounded-full shadow-xl md:hidden"
           icon={<PlusIcon size={24} weight="bold" />}
-          disabled={disabled}
         />
       </DrawerTrigger>
       <DrawerContent className="bg-green-50">
@@ -31,10 +82,7 @@ export default function MobilePostComposer({ disabled }: Props) {
           </DrawerTitle>
         </DrawerHeader>
         <div className="p-4 pb-8">
-          <PostComposer
-            disabled={disabled}
-            className="rounded-xl border border-green-100 bg-green-50 shadow-none"
-          />
+          <PostComposer className="rounded-xl border border-green-100 bg-green-50 shadow-none" />
         </div>
       </DrawerContent>
     </Drawer>

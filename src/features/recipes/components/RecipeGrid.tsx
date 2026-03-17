@@ -4,27 +4,13 @@ import RecipeCard from "./Cards/RecipeCard";
 
 interface Props {
   recipes: RecipeGridProps["recipes"];
-  recipesLenght?: number;
 }
 
-export const getColumnsCount = (length?: number) => {
-  if (!length) return "1fr";
-  if (length === 1) return "1fr";
-  if (length === 2) return "repeat(2, minmax(0, 1fr))";
-  if (length === 3) return "repeat(3, minmax(0, 1fr))";
-  return "repeat(4, minmax(0, 1fr))";
-};
-
-export function RecipeGrid({ recipes, recipesLenght }: Props) {
+export function RecipeGrid({ recipes }: Props) {
   return (
-    <Grid
-      className="grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 md:gap-6 lg:grid-cols-4 lg:gap-8"
-      style={{
-        gridTemplateColumns: getColumnsCount(recipesLenght),
-      }}
-    >
+    <Grid className="grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 md:gap-6 lg:gap-8 xl:grid-cols-4">
       {recipes.map((recipe) => (
-        <RecipeCard key={recipe.id} recipe={recipe} />
+        <RecipeCard key={recipe.id} recipe={recipe} className="max-w-full" />
       ))}
     </Grid>
   );

@@ -264,12 +264,12 @@ export const newRecipeFormSchema = z.object({
 
   new_recipe_ingredient_text: z
     .string()
-    .min(12, { message: "Pelo menos um ingrediente válido" })
+    .min(3, { message: "Pelo menos um ingrediente válido" })
     .max(100, { message: "Esse ingrediente tá meio longo demais, hein? 🤔" }),
 
   new_recipe_instruction_text: z
     .string()
-    .min(12, { message: "Pelo menos uma instrução válida" })
+    .min(3, { message: "Pelo menos uma instrução válida" })
     .max(100, { message: "Esse instrução tá meio longo demais, hein? 🤔" }),
 
   new_recipe_cookingNote_text: z.string().optional(),

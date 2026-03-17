@@ -21,6 +21,7 @@ import type { Props } from "../ImageUploadArea";
 import RenderCheckList from "./RenderCheckList";
 
 export type RecipeType = "ingredients" | "instructions" | "cookingNotes";
+
 type Item = {
   id: string;
   label: string;
@@ -233,6 +234,20 @@ export default function GroupFields({
                         }}
                         name={field.name}
                         ref={field.ref}
+                        onKeyDown={(e) => {
+                          if (e.key === "Enter") {
+                            e.preventDefault();
+                            if (
+                              !isAddDisabled(
+                                field.value || "",
+                                current[type].length,
+                              )
+                            ) {
+                              handleAddItemToList(field.value || "", type);
+                              field.value = "";
+                            }
+                          }
+                        }}
                       />
                     </FormControl>
                   </div>

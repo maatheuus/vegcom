@@ -95,11 +95,7 @@ export default function RecipeContent({
         {isLoading ? (
           <RecipeGridSkeleton count={ITEMS_PER_PAGE} />
         ) : currentItems.length > 0 ? (
-          <RecipeGrid
-            // recipes={Array.from({ length: 10 }, () => currentItems[0])}
-            recipes={currentItems}
-            recipesLenght={recipes.length}
-          />
+          <RecipeGrid recipes={currentItems} />
         ) : (
           <RecipeEmptyState
             title="Nenhuma receita encontrada"

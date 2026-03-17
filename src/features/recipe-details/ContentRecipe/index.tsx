@@ -18,7 +18,6 @@ export default function ContentRecipe({ recipe }: Props) {
     alt: recipe.title,
   }));
 
-  console.log(recipe);
   return (
     <div className="flex w-full flex-col gap-y-8">
       <Col className="gap-y-6">
