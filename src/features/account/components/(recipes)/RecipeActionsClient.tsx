@@ -4,7 +4,6 @@ import RecipeCard from "@/features/account/components/(recipes)/RecipeCard";
 import { useGetUser } from "@/features/auth/api/queries/getAuthApiClient";
 import { recipeApi } from "@/features/recipes/api/recipesApi";
 import type { DetailedRecipe } from "@/features/recipes/api/types";
-import { getColumnsCount } from "@/features/recipes/components/RecipeGrid";
 import { RecipeGridSkeleton } from "@/features/recipes/components/RecipeGridSkeleton";
 import { usePagination } from "@/shared/hooks/usePagination";
 import Grid from "@/shared/ui/Layout/Helpers/Grid";
@@ -135,8 +134,6 @@ export default function RecipeActions({ isFavorites }: Props) {
   });
 
   const currentItemsRecipe = currentItems as DetailedRecipe[];
-  console.log("currentItemsRecipe", currentItemsRecipe);
-  console.log("filteredData", filteredData);
   const shouldShowPagination = filteredData.length > ITEMS_PER_PAGE;
 
   const isLoading = isUserLoading || isLoadingRecipes || isPaginationLoading;
@@ -159,12 +156,7 @@ export default function RecipeActions({ isFavorites }: Props) {
             <RecipeFilter />
           </div>
 
-          <Grid
-            className="grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 md:gap-6 lg:grid-cols-4 lg:gap-8"
-            style={{
-              gridTemplateColumns: getColumnsCount(currentItemsRecipe.length),
-            }}
-          >
+          <Grid className="grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 md:gap-6 lg:gap-8 xl:grid-cols-4">
             {currentItemsRecipe.map((recipe) => (
               <RecipeCard
                 key={recipe.id}

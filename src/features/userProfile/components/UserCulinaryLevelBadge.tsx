@@ -4,7 +4,6 @@ import { CulinaryLevel } from "@/features/account";
 import { cn } from "@/shared/lib/utils";
 import Text from "@/shared/ui/Text";
 import {
-  ChefHatIcon,
   CookingPotIcon,
   FireIcon,
   GraduationCapIcon,
@@ -15,26 +14,25 @@ interface UserCulinaryLevelBadgeProps {
   className?: string;
 }
 
-const LEVEL_CONFIG = {
+const LEVEL_CONFIG: Record<
+  CulinaryLevel,
+  { label: string; icon: any; className: string }
+> = {
   [CulinaryLevel.BEGINNER]: {
     label: "Queima tudo",
     icon: FireIcon,
     className: "bg-red-50 text-red-700 ring-red-600/20 border-red-100",
   },
   [CulinaryLevel.INTERMEDIATE]: {
-    label: "Acerta o arroz",
+    label: "Acerta o arroz soltinho",
     icon: CookingPotIcon,
     className: "bg-blue-50 text-blue-700 ring-blue-600/20 border-blue-100",
   },
   [CulinaryLevel.ADVANCED]: {
-    label: "Mestre da cozinha",
+    label: "Todo mundo pede a receita",
     icon: GraduationCapIcon,
-    className: "bg-purple-50 text-purple-700 ring-purple-600/20 border-purple-100",
-  },
-  [CulinaryLevel.PRO]: {
-    label: "Chef Profissional",
-    icon: ChefHatIcon,
-    className: "bg-amber-50 text-amber-700 ring-amber-600/20 border-amber-100",
+    className:
+      "bg-purple-50 text-purple-700 ring-purple-600/20 border-purple-100",
   },
 };
 

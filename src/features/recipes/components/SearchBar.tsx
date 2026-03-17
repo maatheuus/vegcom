@@ -14,7 +14,7 @@ interface Props extends React.ComponentProps<"input"> {
 
 export function SearchBar({
   className,
-  placeholder = "Buscar ingredientes...",
+  placeholder = "Buscar receitas...",
   inputClassName,
   ...props
 }: Props) {

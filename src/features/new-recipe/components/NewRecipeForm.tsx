@@ -200,13 +200,17 @@ export default function NewRecipeForm({}: Props) {
       <div className="h-full py-8">
         <div className="mx-auto h-full max-w-4xl">
           <Form {...form}>
-            <form className="block h-full w-full md:min-h-[420px]">
+            <form
+              className="block h-full w-full md:min-h-[420px]"
+              onSubmit={(e) => e.preventDefault()}
+            >
               <RenderStepContent currentStep={currentStep} form={form} />
             </form>
           </Form>
 
           <div className="mt-6 flex items-center justify-between">
             <Button
+              type="button"
               variant="text"
               onClick={prevStep}
               disabled={currentStep === 1}
@@ -218,6 +222,7 @@ export default function NewRecipeForm({}: Props) {
 
             {currentStep < totalSteps ? (
               <Button
+                type="button"
                 onClick={nextStep}
                 className="flex cursor-pointer items-center gap-2 bg-green-500 hover:bg-green-600"
               >
@@ -226,6 +231,7 @@ export default function NewRecipeForm({}: Props) {
               </Button>
             ) : (
               <Button
+                type="button"
                 onClick={handlePublish}
                 className="flex cursor-pointer items-center gap-2 bg-green-500 hover:bg-green-800"
                 disabled={isPending}

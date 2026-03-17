@@ -1,15 +1,13 @@
 "use client";
 
-import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 
 export default function LogoutPage() {
-  const router = useRouter();
-
   useEffect(() => {
     document.cookie = "token=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT";
-    router.push("/login");
-  }, [router]);
+
+    window.location.reload();
+  }, []);
 
   return (
     <div className="flex min-h-screen items-center justify-center">

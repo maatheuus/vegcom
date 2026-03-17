@@ -23,7 +23,7 @@ export default function PostCardDefault({ data }: Props) {
           as="h2"
           type={Text.Type.BodyTwo}
           weight={Text.Weight.Medium}
-          className="font-lora font-semibold"
+          className="font-lora font-semibold italic"
         >
           {data.postTitle}
         </Text>

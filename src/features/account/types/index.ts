@@ -13,7 +13,6 @@ export enum CulinaryLevel {
   BEGINNER = "beginner",
   INTERMEDIATE = "intermediate",
   ADVANCED = "advanced",
-  PRO = "pro",
 }
 
 export enum Preference {

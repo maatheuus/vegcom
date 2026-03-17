@@ -68,7 +68,7 @@ export default function RecipeCard({ recipe, className }: Props) {
   return (
     <>
       <Col
-        className={`group relative h-full w-full max-w-full overflow-hidden rounded-xl border border-green-200 bg-green-50 shadow-sm transition-all hover:shadow-md lg:max-w-[334px] ${className || ""}`}
+        className={`group relative h-full w-full max-w-full overflow-hidden rounded-xl border border-green-200 bg-green-50 shadow-sm transition-all hover:shadow-md ${className || ""}`}
       >
         <div className="relative aspect-square max-h-[220px] overflow-hidden">
           <Link
@@ -131,14 +131,16 @@ export default function RecipeCard({ recipe, className }: Props) {
             ) : (
               <>
                 <div className="z-10 flex h-6 items-center justify-center rounded-full bg-green-500 px-3">
-                  <Text
-                    as="span"
-                    type={Text.Type.BodyFive}
-                    weight={Text.Weight.SemiBold}
-                    className="font-maitree rounded-full text-green-50"
-                  >
-                    {formatCategoryLabel(recipe.category)}
-                  </Text>
+                  {Boolean(recipe.category) && (
+                    <Text
+                      as="span"
+                      type={Text.Type.BodyFive}
+                      weight={Text.Weight.SemiBold}
+                      className="font-maitree rounded-full text-green-50"
+                    >
+                      {formatCategoryLabel(recipe.category)}
+                    </Text>
+                  )}
                 </div>
                 <Button.Icon
                   aria-label={
@@ -175,23 +177,24 @@ export default function RecipeCard({ recipe, className }: Props) {
           className="grid h-full flex-[1] space-y-2 p-4 md:space-y-4"
         >
           <div className="space-y-2">
-            <Text
-              as="h3"
-              weight={Text.Weight.SemiBold}
-              className="font-lora line-clamp-1 text-lg font-semibold text-green-500"
-            >
-              {recipe?.title}
-            </Text>
-
-            {recipe?.description && (
-              <p className="font-maitree text-black-100 line-clamp-3 text-sm">
+            {Boolean(recipe.title) && (
+              <Text
+                as="h3"
+                weight={Text.Weight.SemiBold}
+                className="font-lora line-clamp-1 text-lg font-semibold text-green-500"
+              >
+                {recipe?.title}
+              </Text>
+            )}
+            {Boolean(recipe.description) && (
+              <p className="font-maitree text-black-100 line-clamp-2 text-sm">
                 {recipe?.description}
               </p>
             )}
           </div>
 
           <div className="mt-auto flex w-full items-center justify-between">
-            {recipe?.rating && (
+            {Boolean(recipe.rating) && (
               <div
                 className="flex items-center"
                 aria-label={`Avaliação: ${recipe?.rating} estrelas`}
@@ -205,7 +208,7 @@ export default function RecipeCard({ recipe, className }: Props) {
             )}
 
             <div className="font-maitree text-black-100 flex items-center gap-x-2 text-xs font-semibold">
-              {recipe?.cookTime && (
+              {Boolean(recipe.cookTime) && (
                 <div
                   className="flex items-center gap-1"
                   aria-label={`Tempo: ${recipe?.cookTime}`}
@@ -214,7 +217,7 @@ export default function RecipeCard({ recipe, className }: Props) {
                   <span>{recipe?.cookTime}</span>
                 </div>
               )}
-              {recipe?.quantity && (
+              {Boolean(recipe.quantity) && (
                 <div
                   className="flex items-center gap-1"
                   aria-label={`Serve: ${recipe?.quantity}`}
@@ -224,7 +227,7 @@ export default function RecipeCard({ recipe, className }: Props) {
                 </div>
               )}
 
-              {recipe?.views && (
+              {Boolean(recipe.views) && (
                 <div
                   className="flex items-center gap-1"
                   aria-label={`Serve: ${recipe?.views || 0}`}
@@ -238,14 +241,14 @@ export default function RecipeCard({ recipe, className }: Props) {
         </Link>
       </Col>
 
-      {recipe?.images && recipe?.images.length > 0 && (
+      {Boolean(recipe.images) && recipe.images.length > 0 && (
         <ImageCarouselModal
           isOpen={isGalleryOpen}
           onClose={setIsGalleryOpen}
-          images={recipe?.images.map(
+          images={recipe.images.map(
             (img): CarouselImage => ({
               src: img,
-              alt: recipe?.title,
+              alt: recipe.title,
             }),
           )}
           initialIndex={selectedImageIndex}

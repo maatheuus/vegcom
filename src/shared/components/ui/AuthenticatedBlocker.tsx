@@ -1,5 +1,5 @@
 import Button from "@/shared/ui/Button";
-import { ArrowRightIcon } from "@phosphor-icons/react";
+import { ArrowRightIcon, LockSimpleIcon } from "@phosphor-icons/react";
 import clsx from "clsx";
 import Link from "next/link";
 import { type HTMLAttributes } from "react";
@@ -15,7 +15,7 @@ interface Props extends HTMLAttributes<HTMLDivElement> {
 export default function AuthenticatedBlocker({
   title = "Entre para interagir",
   description,
-  action = "Entrar",
+  action = "Fazer login",
   redirectHref = "/login",
   className,
   type = "banner",
@@ -25,31 +25,49 @@ export default function AuthenticatedBlocker({
     return (
       <div
         className={clsx(
-          "group flex items-center justify-between gap-x-4 rounded-2xl border border-green-500/10 bg-green-50/80 px-4 py-3 shadow-sm transition-all hover:border-green-500/20 hover:bg-green-100/60",
+          "flex items-center justify-between gap-x-4 rounded-2xl bg-white px-5 py-4 shadow-sm",
           className,
         )}
         {...props}
       >
         <div className="flex items-center gap-x-3">
-          <div className="flex flex-col">
-            <span className="font-lora text-base font-medium text-green-700 italic">
+          <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-green-100">
+            <LockSimpleIcon
+              size={16}
+              weight="fill"
+              className="text-green-500"
+            />
+          </div>
+
+          <div className="flex flex-col gap-0.5">
+            <span className="font-lora text-sm font-semibold text-green-500">
               {title}
             </span>
             {description && (
-              <span className="text-xs text-green-500/70">{description}</span>
+              <span className="font-maitree text-xs text-green-200">
+                {description}
+              </span>
             )}
           </div>
         </div>
 
-        <Link href={redirectHref} className="shrink-0">
-          <Button
-            variant="default"
-            className="h-9 gap-x-1.5 rounded-xl px-4 text-sm font-semibold transition-all hover:scale-105 active:scale-95"
+        <div className="flex shrink-0 items-center gap-2">
+          <Link
+            href="/register"
+            className="font-maitree text-xs text-green-200 underline underline-offset-2 transition-colors hover:text-green-600"
           >
-            {action}
-            <ArrowRightIcon size={15} weight="bold" />
-          </Button>
-        </Link>
+            Cadastrar-se
+          </Link>
+          <Link href={redirectHref}>
+            <Button
+              variant="default"
+              className="font-maitree h-8 gap-x-1.5 rounded-xl px-4 text-xs font-medium"
+            >
+              {action}
+              <ArrowRightIcon size={13} weight="bold" />
+            </Button>
+          </Link>
+        </div>
       </div>
     );
   }

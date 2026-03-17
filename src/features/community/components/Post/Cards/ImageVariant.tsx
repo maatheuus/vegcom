@@ -67,7 +67,7 @@ export default function PostCardImage({ data }: Props) {
                   e.stopPropagation();
                   openImage(idx);
                 }}
-                className="size-full max-h-[5rem] max-w-[5rem] cursor-pointer overflow-hidden rounded-sm md:max-h-[12rem] md:max-w-[12rem]"
+                className="size-full max-h-[8rem] max-w-[8rem] cursor-pointer overflow-hidden rounded-sm md:max-h-[12rem] md:max-w-[12rem]"
               >
                 <Image
                   src={img.src}
