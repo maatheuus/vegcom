@@ -1,0 +1,12 @@
+yarn run v1.22.22
+$ next dev --turbopack -p 3002
+   ▲ Next.js 15.1.6 (Turbopack)
+   - Local:        http://localhost:3002
+   - Network:      http://192.168.0.2:3002
+
+ ✓ Starting...
+ ✓ Ready in 1427ms
+ ○ Compiling / ...
+ ✓ Compiled / in 3.8s
+ GET / 200 in 4348ms
+ ✓ Compiled in 180ms
