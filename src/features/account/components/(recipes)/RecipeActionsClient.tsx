@@ -66,55 +66,61 @@ export default function RecipeActions({ isFavorites }: Props) {
   const sortBy = (searchParams.get("sort") as SortValues) || "";
   const categoryFilter = searchParams.get("category") || "";
 
-  const filteredData = useMemo(() => {
-    if (allRecipes.length === 0) return [];
+  // Pre-calculate normalized fields when allRecipes changes
+  const recipesWithNormalizedFields = useMemo(() => {
+    return allRecipes.map(recipe => ({
+      recipe,
+      normalizedTitle: recipe.title ? normalizeSearchText(recipe.title) : "",
+      normalizedDescription: recipe.description ? normalizeSearchText(recipe.description) : "",
+      normalizedCategory: recipe.category ? normalizeSearchText(recipe.category) : "",
+    }));
+  }, [allRecipes]);
 
-    let data = [...allRecipes];
+  const filteredData = useMemo(() => {
+    if (recipesWithNormalizedFields.length === 0) return [];
+
+    let data = [...recipesWithNormalizedFields];
 
     if (query) {
       const normalizedQuery = normalizeSearchText(query);
       data = data.filter(
-        (recipe) =>
-          (recipe.title &&
-            normalizeSearchText(recipe.title).includes(normalizedQuery)) ||
-          (recipe.description &&
-            normalizeSearchText(recipe.description).includes(
-              normalizedQuery,
-            )) ||
-          (recipe.category &&
-            normalizeSearchText(recipe.category).includes(normalizedQuery)),
+        (item) =>
+          item.normalizedTitle.includes(normalizedQuery) ||
+          item.normalizedDescription.includes(normalizedQuery) ||
+          item.normalizedCategory.includes(normalizedQuery)
       );
     }
 
     if (categoryFilter) {
       const normalizedCategory = normalizeSearchText(categoryFilter);
-      data = data.filter(
-        (recipe) =>
-          recipe.category &&
-          normalizeSearchText(recipe.category).includes(normalizedCategory),
+      data = data.filter((item) =>
+        item.normalizedCategory.includes(normalizedCategory)
       );
     }
 
+    // Extract original recipe objects back
+    let finalData = data.map(item => item.recipe);
+
     if (sortBy === "rating") {
-      data = [...data].sort((a, b) => (b.rating || 0) - (a.rating || 0));
+      finalData = [...finalData].sort((a, b) => (b.rating || 0) - (a.rating || 0));
     } else if (sortBy === "views") {
-      data = [...data].sort((a, b) => (b.views || 0) - (a.views || 0));
+      finalData = [...finalData].sort((a, b) => (b.views || 0) - (a.views || 0));
     } else if (sortBy === "recent") {
-      data = [...data].sort((a, b) => {
+      finalData = [...finalData].sort((a, b) => {
         const dateA = a.updatedAt ? new Date(a.updatedAt).getTime() : 0;
         const dateB = b.updatedAt ? new Date(b.updatedAt).getTime() : 0;
         return dateB - dateA;
       });
     } else if (sortBy === "old") {
-      data = [...data].sort((a, b) => {
+      finalData = [...finalData].sort((a, b) => {
         const dateA = a.updatedAt ? new Date(a.updatedAt).getTime() : 0;
         const dateB = b.updatedAt ? new Date(b.updatedAt).getTime() : 0;
         return dateA - dateB;
       });
     }
 
-    return data;
-  }, [query, categoryFilter, sortBy, allRecipes]);
+    return finalData;
+  }, [query, categoryFilter, sortBy, recipesWithNormalizedFields]);
 
   const {
     currentItems,
