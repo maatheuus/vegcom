@@ -71,28 +71,57 @@ export default function RecipeActions({ isFavorites }: Props) {
 
     let data = [...allRecipes];
 
-    if (query) {
-      const normalizedQuery = normalizeSearchText(query);
-      data = data.filter(
-        (recipe) =>
-          (recipe.title &&
-            normalizeSearchText(recipe.title).includes(normalizedQuery)) ||
-          (recipe.description &&
-            normalizeSearchText(recipe.description).includes(
-              normalizedQuery,
-            )) ||
-          (recipe.category &&
-            normalizeSearchText(recipe.category).includes(normalizedQuery)),
-      );
-    }
+    const hasQuery = Boolean(query);
+    const hasCategoryFilter = Boolean(categoryFilter);
 
-    if (categoryFilter) {
-      const normalizedCategory = normalizeSearchText(categoryFilter);
-      data = data.filter(
-        (recipe) =>
-          recipe.category &&
-          normalizeSearchText(recipe.category).includes(normalizedCategory),
-      );
+    if (hasQuery || hasCategoryFilter) {
+      const normalizedQuery = hasQuery ? normalizeSearchText(query) : "";
+      const normalizedCategory = hasCategoryFilter
+        ? normalizeSearchText(categoryFilter)
+        : "";
+
+      data = data.filter((recipe) => {
+        let matchesQuery = !hasQuery;
+        let matchesCategory = !hasCategoryFilter;
+
+        let normCategory: string | undefined;
+
+        if (hasQuery) {
+          const normTitle = recipe.title ? normalizeSearchText(recipe.title) : "";
+          if (normTitle.includes(normalizedQuery)) {
+            matchesQuery = true;
+          } else {
+            const normDesc = recipe.description
+              ? normalizeSearchText(recipe.description)
+              : "";
+            if (normDesc.includes(normalizedQuery)) {
+              matchesQuery = true;
+            } else {
+              normCategory = recipe.category
+                ? normalizeSearchText(recipe.category)
+                : "";
+              if (normCategory.includes(normalizedQuery)) {
+                matchesQuery = true;
+              }
+            }
+          }
+        }
+
+        if (!matchesQuery) return false;
+
+        if (hasCategoryFilter) {
+          if (normCategory === undefined) {
+            normCategory = recipe.category
+              ? normalizeSearchText(recipe.category)
+              : "";
+          }
+          if (normCategory.includes(normalizedCategory)) {
+            matchesCategory = true;
+          }
+        }
+
+        return matchesQuery && matchesCategory;
+      });
     }
 
     if (sortBy === "rating") {
