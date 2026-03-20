@@ -32,12 +32,15 @@ export default function SuggestionsPage() {
   const pillRef = useRef<HTMLDivElement>(null);
   const buttonsRef = useRef<(HTMLButtonElement | null)[]>([]);
 
-  const categories = [
-    { key: "all", label: "Todas" },
-    ...Array.from(
-      new Map(suggestions.map((s) => [s.key, s.category])).entries(),
-    ).map(([key, label]) => ({ key, label })),
-  ];
+  const categories = useMemo(
+    () => [
+      { key: "all", label: "Todas" },
+      ...Array.from(
+        new Map(suggestions.map((s) => [s.key, s.category])).entries(),
+      ).map(([key, label]) => ({ key, label })),
+    ],
+    [],
+  );
 
   const handleCategoryChange = (key: string) => {
     if (key === selectedKey) return;
