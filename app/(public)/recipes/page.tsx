@@ -30,7 +30,7 @@ import Layout from "@/shared/ui/Layout";
 import Row from "@/shared/ui/Layout/Helpers/Row";
 
 import type { Recipe } from "@/entities/recipe";
-import Header from "@/features/recipe-details/Header";
+import Header from "@/features/recipe-details/RecipeDetailsHeader";
 import type { DetailedRecipe } from "@/features/recipes/api/types";
 import { filterRecipes, sortRecipes } from "@/features/recipes/lib/filterUtils";
 

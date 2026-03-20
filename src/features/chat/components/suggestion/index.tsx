@@ -32,12 +32,15 @@ export default function SuggestionsPage() {
   const pillRef = useRef<HTMLDivElement>(null);
   const buttonsRef = useRef<(HTMLButtonElement | null)[]>([]);
 
-  const categories = [
-    { key: "all", label: "Todas" },
-    ...Array.from(
-      new Map(suggestions.map((s) => [s.key, s.category])).entries(),
-    ).map(([key, label]) => ({ key, label })),
-  ];
+  const categories = useMemo(
+    () => [
+      { key: "all", label: "Todas" },
+      ...Array.from(
+        new Map(suggestions.map((s) => [s.key, s.category])).entries(),
+      ).map(([key, label]) => ({ key, label })),
+    ],
+    [],
+  );
 
   const handleCategoryChange = (key: string) => {
     if (key === selectedKey) return;
@@ -49,21 +52,20 @@ export default function SuggestionsPage() {
 
   const displayedSuggestions = useMemo(() => {
     if (selectedKey === "all") {
-      const mix: Suggestion[] = [];
-      const grouped = suggestions.reduce(
+      return suggestions.reduce<{
+        mix: Suggestion[];
+        counts: Record<string, number>;
+      }>(
         (acc, curr) => {
-          if (!acc[curr.key]) acc[curr.key] = [];
-          acc[curr.key].push(curr);
+          const count = acc.counts[curr.key] || 0;
+          if (count < 2) {
+            acc.mix.push(curr);
+            acc.counts[curr.key] = count + 1;
+          }
           return acc;
         },
-        {} as Record<string, Suggestion[]>,
-      );
-
-      const keys = Object.keys(grouped) as Array<keyof typeof grouped>;
-      keys.forEach((key) => {
-        mix.push(...grouped[key].slice(0, 2));
-      });
-      return mix;
+        { mix: [], counts: {} },
+      ).mix;
     }
 
     return suggestions.filter((s) => s.key === selectedKey);

@@ -1,6 +1,8 @@
 "use client";
 
 import LogoLoader from "@/features/account/components/(recipes)/LogoLoader";
+import { useGetUser } from "@/features/auth/api/queries/getAuthApiClient";
+import AuthenticatedBlocker from "@/shared/components/ui/AuthenticatedBlocker";
 import { useEffect, useRef } from "react";
 import useFetchPosts from "../../hooks/useFetchPosts";
 import type { CommunityPostType } from "../../types";
@@ -10,6 +12,8 @@ interface Props {
   selectedTab: CommunityPostType;
   tabs: Tab[];
 }
+
+const POSTS_LIMIT = 10;
 
 export default function CommunitySelectedTab({ selectedTab, tabs }: Props) {
   const sentinelRef = useRef<HTMLDivElement>(null);
@@ -25,15 +29,22 @@ export default function CommunitySelectedTab({ selectedTab, tabs }: Props) {
     fetchNextPage,
   } = useFetchPosts(selectedTab);
 
+  const { data: userData } = useGetUser();
+  const isAuthenticated = !!userData?.id;
+
+  const handleRefetchPosts = () => {
+    queryClient.removeQueries({ queryKey });
+    refetch();
+  };
+
   useEffect(() => {
-    const handleNewPost = () => {
-      queryClient.removeQueries({ queryKey });
-      refetch();
+    window.addEventListener("community:post-created", handleRefetchPosts);
+    window.addEventListener("community:post-deleted", handleRefetchPosts);
+    return () => {
+      window.removeEventListener("community:post-created", handleRefetchPosts);
+      window.removeEventListener("community:post-deleted", handleRefetchPosts);
     };
-    window.addEventListener("community:post-created", handleNewPost);
-    return () =>
-      window.removeEventListener("community:post-created", handleNewPost);
-  }, [selectedTab]);
+  }, [selectedTab, queryKey, refetch]);
 
   useEffect(() => {
     const sentinel = sentinelRef.current;
@@ -66,15 +77,36 @@ export default function CommunitySelectedTab({ selectedTab, tabs }: Props) {
     );
   }
 
-  const allPosts = data?.pages.flatMap((page) => page.data) ?? [];
+  let allPosts = data?.pages.flatMap((page) => page.data) ?? [];
+
+  const hasLoadedEnough = allPosts.length >= POSTS_LIMIT;
+  const showBlocker = !isAuthenticated && hasLoadedEnough;
+
+  if (showBlocker) {
+    allPosts = allPosts.slice(0, POSTS_LIMIT);
+  }
 
   return (
-    <div>
+    <div className="relative">
       <ActiveComponent data={allPosts} />
 
-      <div ref={sentinelRef} className="h-4 w-full" />
+      {showBlocker && (
+        <div className="absolute right-0 bottom-0 left-0 z-50">
+          <div className="h-90 bg-gradient-to-t from-green-50 to-transparent" />
+          <div className="absolute top-0 left-0 z-50 h-full w-full bg-gradient-to-t from-green-50 to-transparent">
+            <AuthenticatedBlocker
+              title="Veja mais posts da comunidade"
+              description="Faça login para acessar todos os posts sem limite."
+              className="mx-auto w-full max-w-[calc(100%-2rem)] drop-shadow-md"
+              showIcon={false}
+            />
+          </div>
+        </div>
+      )}
 
-      {(isFetchingNextPage || isFetching) && (
+      {!showBlocker && <div ref={sentinelRef} className="h-4 w-full" />}
+
+      {(isFetchingNextPage || isFetching) && !showBlocker && (
         <div className="flex justify-center py-6">
           <LogoLoader loading={true} />
         </div>

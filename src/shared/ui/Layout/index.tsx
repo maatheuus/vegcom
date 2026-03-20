@@ -44,7 +44,12 @@ export function Default({
   noFooter = false,
 }: DefaultProps) {
   return (
-    <div className={clsx("flex flex-col", noFooter ? "h-dvh" : "min-h-dvh")}>
+    <div
+      className={clsx(
+        "body__container-lg--no-padding flex flex-col",
+        noFooter ? "h-dvh" : "min-h-dvh",
+      )}
+    >
       <Col
         as="main"
         className={clsx(
@@ -57,7 +62,7 @@ export function Default({
         <Grid
           columns="16"
           className={clsx(
-            "container__content w-full flex-auto",
+            "mt-4 w-full flex-auto md:mt-8 lg:mt-10",
             noFooter ? "h-full" : "h-auto",
             gridClassName,
           )}

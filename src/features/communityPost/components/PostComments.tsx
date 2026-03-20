@@ -4,14 +4,14 @@ import { useGetUser } from "@/features/auth/api/queries/getAuthApiClient";
 import type { PostComment } from "@/shared";
 import { dateFormatDistanceLocale } from "@/shared/lib/utils";
 import { Avatar, AvatarFallback, AvatarImage } from "@/shared/ui/Avatar";
+import EmptyState from "@/shared/ui/EmptyState";
 import Col from "@/shared/ui/Layout/Helpers/Col";
 import Row from "@/shared/ui/Layout/Helpers/Row";
 import Text from "@/shared/ui/Text";
 import { formatDistance } from "date-fns";
+import Link from "next/link";
 import CommentComposer from "./CommentComposer";
 import ReplyButton from "./ReplyButton";
-import EmptyState from "@/shared/ui/EmptyState";
-import Link from "next/link";
 interface PostCommentsProps {
   comments?: PostComment[];
   uniqueUsers: { name: string; avatarUrl?: string }[];
@@ -43,7 +43,7 @@ export default function PostComments({
               >
                 <Link href={`/user/${comment.user.id}`} className="contents">
                   <Avatar className="size-8 md:size-10">
-                    <AvatarImage src={comment.user.avatarUrl || ""} />
+                    <AvatarImage src={comment.user.urlImage || ""} />
                     <AvatarFallback className="text-xs capitalize md:text-base">
                       {comment.user.name.slice(0, 2)}
                     </AvatarFallback>

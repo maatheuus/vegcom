@@ -19,6 +19,13 @@ export interface UserData {
   role?: "ADMIN" | "USER";
 }
 
+export interface PostUserData {
+  id: number;
+  name: string;
+  urlImage: string;
+  role?: "ADMIN" | "USER";
+}
+
 export interface PostImage {
   src: string;
   alt: string;
@@ -26,7 +33,7 @@ export interface PostImage {
 }
 
 export interface PostComment {
-  user: UserData;
+  user: PostUserData;
   commentContent: string;
   commentDate: string;
 }
@@ -34,7 +41,7 @@ export interface PostComment {
 export interface PostCardDataProps {
   id?: string | number;
   slug?: string;
-  user: UserData;
+  user: PostUserData;
   postTitle: string;
   savedBy: number[];
   postContent: {
@@ -55,3 +62,27 @@ export interface PostCardDataProps {
   postDate: string;
   postTags: string[];
 }
+
+export type RecipePreview = {
+  type: "recipe";
+  slug: string;
+  title: string;
+  description?: string;
+  image?: string;
+  cookTime?: string;
+  rating?: number;
+  href: string;
+};
+
+export type PostPreview = {
+  type: "post";
+  id: string;
+  title: string;
+  excerpt?: string;
+  authorName: string;
+  authorAvatar?: string;
+  commentsCount: number;
+  href: string;
+};
+
+export type LinkPreviewData = RecipePreview | PostPreview;

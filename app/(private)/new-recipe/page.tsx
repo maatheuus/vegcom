@@ -1,5 +1,5 @@
 import NewRecipeForm from "@/features/new-recipe/components/NewRecipeForm";
-import Header from "@/features/recipe-details/Header";
+import Header from "@/features/recipe-details/RecipeDetailsHeader";
 import Layout from "@/shared/ui/Layout";
 import { Suspense } from "react";
 

@@ -1,3 +1,4 @@
+import { Node } from "@tiptap/core";
 import { NodeViewWrapper } from "@tiptap/react";
 import Image from "next/image";
 
@@ -11,8 +12,7 @@ interface ImageComponentProps {
     };
   };
   deleteNode: () => void;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  extension: any;
+  extension: Node;
 }
 
 const ImageComponent = ({ node }: ImageComponentProps) => {
@@ -23,7 +23,7 @@ const ImageComponent = ({ node }: ImageComponentProps) => {
       <span
         data-custom-image={id}
         contentEditable={false}
-        className="hidden absolute"
+        className="absolute hidden"
       >
         <Image
           width={0}

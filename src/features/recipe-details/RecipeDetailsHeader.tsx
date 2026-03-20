@@ -30,7 +30,6 @@ interface Props extends React.ComponentProps<"div"> {
   rating?: number;
   reviewStatus?: ReviewStatus;
   isRecipePage?: boolean;
-  recipeId?: number;
   recipeSlug?: string;
 }
 
@@ -55,7 +54,7 @@ const REVIEW_STATUS_CONFIG = {
   },
 };
 
-const Header = memo(function Header({
+const RecipeDetailsHeader = memo(function RecipeDetailsHeader({
   className,
   views,
   isSaved,
@@ -66,7 +65,6 @@ const Header = memo(function Header({
   rating,
   reviewStatus,
   isRecipePage,
-  recipeId,
   recipeSlug,
   ...props
 }: Props) {
@@ -144,7 +142,7 @@ const Header = memo(function Header({
               initialSaved={isSaved!}
               onSavedChange={handleSavedChange}
             />
-            <ShareDropdown title={String(title)} recipeId={recipeId} recipeSlug={recipeSlug} />
+            <ShareDropdown title={String(title)} recipeSlug={recipeSlug} />
           </Row>
         )}
       </div>
@@ -226,4 +224,4 @@ const Header = memo(function Header({
   );
 });
 
-export default Header;
+export default RecipeDetailsHeader;

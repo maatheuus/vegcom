@@ -28,7 +28,6 @@ export default function SubscribedView({ className, user, ...props }: Props) {
     startTransition(async () => {
       try {
         const result = await createPortalSession(user.id);
-        console.log(result);
         if (result.url) window.open(result.url, "_blank");
       } catch (error) {
         console.error(error);

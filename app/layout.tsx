@@ -105,13 +105,6 @@ export default function RootLayout({
             `,
           }}
         />
-
-        <Script
-          strategy="afterInteractive"
-          src="https://www.bugherd.com/sidebarv2.js?apikey=66aaw2ns1tp10dykx6wcua"
-          async
-          type="text/javascript"
-        />
       </body>
     </html>
   );

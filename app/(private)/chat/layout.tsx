@@ -10,7 +10,7 @@ export default function ChatLayout({
   children: React.ReactNode;
 }) {
   return (
-    <Layout.Default className="h-full" noFooter>
+    <Layout.Default className="mb-4 h-full md:mb-8 lg:mb-12" noFooter>
       <Col className="relative h-full flex-1 space-y-4">
         <Suspense
           fallback={

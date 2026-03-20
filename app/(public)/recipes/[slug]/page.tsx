@@ -1,6 +1,5 @@
 import BackButton from "@/features/recipe-details/BackButton";
 import ContentRecipe from "@/features/recipe-details/ContentRecipe";
-import Header from "@/features/recipe-details/Header";
 import { ViewTracker } from "@/features/recipe-details/ViewTracker";
 import {
   getRecipeById,
@@ -11,6 +10,7 @@ import { formatDistanceToNow } from "date-fns";
 import { ptBR } from "date-fns/locale";
 import { notFound, permanentRedirect } from "next/navigation";
 
+import RecipeDetailsHeader from "@/features/recipe-details/RecipeDetailsHeader";
 import { Metadata } from "next";
 
 interface Props {
@@ -116,8 +116,8 @@ export default async function page({ params }: Props) {
       <ViewTracker recipeId={recipe.id} />
       <section className="space-y-6 md:space-y-8">
         <BackButton />
-        <Header
-          recipeId={recipe.id}
+        <RecipeDetailsHeader
+          recipeSlug={recipe.slug}
           isRecipePage
           views={recipe.views || 0}
           isSaved={false}
