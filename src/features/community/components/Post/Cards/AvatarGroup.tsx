@@ -23,10 +23,10 @@ export function AvatarGroup({
         {visibleComments.map((comment, index) => (
           <Avatar key={index}>
             <AvatarImage
-              src={comment.user.avatarUrl}
+              src={comment.user.urlImage}
               alt={comment.user.name || "user image"}
             />
-            <AvatarFallback className="capitalize !text-xs">
+            <AvatarFallback className="!text-xs capitalize">
               {comment.user?.name?.substring(0, 2)}
             </AvatarFallback>
           </Avatar>

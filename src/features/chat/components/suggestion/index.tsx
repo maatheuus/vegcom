@@ -52,21 +52,20 @@ export default function SuggestionsPage() {
 
   const displayedSuggestions = useMemo(() => {
     if (selectedKey === "all") {
-      const mix: Suggestion[] = [];
-      const grouped = suggestions.reduce(
+      return suggestions.reduce<{
+        mix: Suggestion[];
+        counts: Record<string, number>;
+      }>(
         (acc, curr) => {
-          if (!acc[curr.key]) acc[curr.key] = [];
-          acc[curr.key].push(curr);
+          const count = acc.counts[curr.key] || 0;
+          if (count < 2) {
+            acc.mix.push(curr);
+            acc.counts[curr.key] = count + 1;
+          }
           return acc;
         },
-        {} as Record<string, Suggestion[]>,
-      );
-
-      const keys = Object.keys(grouped) as Array<keyof typeof grouped>;
-      keys.forEach((key) => {
-        mix.push(...grouped[key].slice(0, 2));
-      });
-      return mix;
+        { mix: [], counts: {} },
+      ).mix;
     }
 
     return suggestions.filter((s) => s.key === selectedKey);
