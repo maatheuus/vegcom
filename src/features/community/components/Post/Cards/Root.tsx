@@ -6,6 +6,7 @@ import {
   toggleLike,
   toggleSave,
 } from "@/features/community/api/communityApi";
+import { toast } from "@/shared/hooks/use-toast";
 import { dateFormatDistanceLocale } from "@/shared/lib/utils";
 import type { PostCardDataProps } from "@/shared/types";
 import { Avatar, AvatarFallback, AvatarImage } from "@/shared/ui/Avatar";
@@ -18,6 +19,7 @@ import {
 } from "@/shared/ui/DropdownMenu";
 import Col from "@/shared/ui/Layout/Helpers/Col";
 import Row from "@/shared/ui/Layout/Helpers/Row";
+import LinkPreviewList from "@/shared/ui/PreviewLinks/LinkPreviewList";
 import Text from "@/shared/ui/Text";
 import { slugify } from "@/shared/utils";
 import {
@@ -30,11 +32,11 @@ import {
 } from "@phosphor-icons/react";
 import clsx from "clsx";
 import { formatDistance } from "date-fns";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+import CommentPreview from "../CommentsPreview/CommentPreview";
 import { AvatarGroup } from "./AvatarGroup";
-import { toast } from "@/shared/hooks/use-toast";
-import Link from "next/link";
 interface Props extends React.HTMLAttributes<HTMLDivElement> {
   data: PostCardDataProps;
   children: React.ReactNode;
@@ -114,23 +116,7 @@ export default function PostCardRoot({
   const handleDelete = async (e: React.MouseEvent) => {
     e.stopPropagation();
     await deletePost(String(data.id));
-  };
-
-  const handleShareOld = (e: React.MouseEvent) => {
-    e.stopPropagation();
-
-    const url = `${window.location.origin}${postUrl}`;
-    if (navigator.share) {
-      navigator
-        .share({
-          title: data.postTitle,
-          text: data.postContent.postResources?.content,
-          url,
-        })
-        .catch((error) => console.log("Error sharing", error));
-    } else {
-      console.log("Share not supported", url);
-    }
+    window.dispatchEvent(new CustomEvent("community:post-deleted"));
   };
 
   const handleShare = async (e: React.MouseEvent) => {
@@ -179,13 +165,12 @@ export default function PostCardRoot({
       )}
       {...props}
     >
-      {/* Header */}
       <Row className="mb-4 w-full justify-between">
         <Row className="min-w-0 flex-1 items-center gap-x-2 md:gap-x-3">
           <Link href={`/user/${data.user.id}`} className="contents">
             <Avatar className="h-10 w-10 shrink-0">
               <AvatarImage
-                src={data.user.avatarUrl || ""}
+                src={data.user.urlImage || ""}
                 alt={data.user.name || "user image"}
               />
               <AvatarFallback className="text-xs capitalize md:text-base">
@@ -262,6 +247,18 @@ export default function PostCardRoot({
       </Row>
 
       {children}
+      <LinkPreviewList
+        content={data.postContent.postResources.content ?? ""}
+        links={data.postContent.postResources.links ?? []}
+      />
+
+      {variant !== "announcement" && data.comments.comments.length > 0 && (
+        <CommentPreview
+          comments={data.comments.comments}
+          totalCount={data.comments.commentsNumber}
+          onClickSeeAll={() => router.push(postUrl)}
+        />
+      )}
 
       <Row className="items-baseline justify-between">
         <Row className="mt-3 items-center gap-x-3">

@@ -10,6 +10,7 @@ interface Props extends HTMLAttributes<HTMLDivElement> {
   action?: string;
   redirectHref?: string;
   type?: "banner";
+  showIcon?: boolean;
 }
 
 export default function AuthenticatedBlocker({
@@ -19,6 +20,7 @@ export default function AuthenticatedBlocker({
   redirectHref = "/login",
   className,
   type = "banner",
+  showIcon = true,
   ...props
 }: Props) {
   if (type === "banner") {
@@ -31,13 +33,15 @@ export default function AuthenticatedBlocker({
         {...props}
       >
         <div className="flex items-center gap-x-3">
-          <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-green-100">
-            <LockSimpleIcon
-              size={16}
-              weight="fill"
-              className="text-green-500"
-            />
-          </div>
+          {showIcon && (
+            <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-green-100">
+              <LockSimpleIcon
+                size={16}
+                weight="fill"
+                className="text-green-500"
+              />
+            </div>
+          )}
 
           <div className="flex flex-col gap-0.5">
             <span className="font-lora text-sm font-semibold text-green-500">
@@ -53,7 +57,7 @@ export default function AuthenticatedBlocker({
 
         <div className="flex shrink-0 items-center gap-2">
           <Link
-            href="/register"
+            href="/signup"
             className="font-maitree text-xs text-green-200 underline underline-offset-2 transition-colors hover:text-green-600"
           >
             Cadastrar-se

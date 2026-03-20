@@ -33,8 +33,8 @@ async function submitSignupForm(data: Omit<SignupFormData, "currentStep">) {
       meetUs: data.meetUs,
     },
   };
-  const response = await getSignup(payload);
-  console.log("response", response);
+  await getSignup(payload);
+
   return {
     success: true,
     message: "Cadastro finalizado com sucesso!",

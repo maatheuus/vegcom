@@ -113,7 +113,7 @@ export default async function Page({ params }: Props) {
                 <Link href={`/user/${post.user.id}`} className="contents">
                   <Avatar className="size-8 md:size-10">
                     <AvatarImage
-                      src={post.user.avatarUrl || ""}
+                      src={post.user.urlImage || ""}
                       alt={post.user.name || "user image"}
                     />
                     <AvatarFallback className="text-xs capitalize md:text-base">

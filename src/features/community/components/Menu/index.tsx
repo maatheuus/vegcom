@@ -27,7 +27,7 @@ export default function Menu() {
   }, []);
 
   return (
-    <div className="sticky top-4 z-50 mx-auto mb-16 h-auto w-full max-w-6xl px-2 md:mb-18 md:px-4">
+    <div className="body__container-lg sticky top-4 z-50 mx-auto mb-16 h-auto w-full md:mb-18">
       <motion.nav
         layout
         initial={false}
@@ -41,7 +41,7 @@ export default function Menu() {
         <div className="desktop:p-3 desktop:flex desktop:items-center h-full p-2">
           {/* Topbar — brand + menus */}
           <motion.div layout="position" className="flex w-full items-center">
-            <Row className="h-full w-full items-center justify-between gap-x-4 px-2 md:px-4">
+            <Row className="h-full w-full items-center justify-between gap-x-4">
               {/* Brand */}
               <Link href={menuConfig.brand.href} className="block flex-1">
                 <div className="flex items-center gap-x-1">
@@ -64,7 +64,6 @@ export default function Menu() {
                 userName={user?.name}
               />
 
-
               <MobileMenuTrigger
                 isLoggedIn={isLoggedIn}
                 isPremium={isPremium}
@@ -73,7 +72,6 @@ export default function Menu() {
               />
             </Row>
           </motion.div>
-
 
           <MobileMenuDrawer
             isLoggedIn={isLoggedIn}

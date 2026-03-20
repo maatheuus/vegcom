@@ -8,7 +8,6 @@ export default async function Page() {
   const { data: user } = await getUser();
   const { data: productsData } = await getProducts();
 
-  console.log({ user, productsData });
   return (
     <AccountLayout>
       <Header title="Assinatura" subTitle="Gerencie sua assinatura" />

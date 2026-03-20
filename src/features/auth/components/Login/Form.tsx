@@ -28,14 +28,12 @@ import SubmitButton from "../SubmitButton/SubmitButton";
 
 const formSchema = z.object({
   email: z.string().email({ message: "Endereço de email inválido." }),
-  password: z
-    .string()
-    .min(6, { message: "A senha deve ter pelo menos 6 caracteres." }),
+  password: z.string().min(1, { message: "A senha não pode estar vazia." }),
 });
+
 const loginErrorMessages: Partial<Record<keyof typeof AUTH_ERRORS, string>> = {
   [AUTH_ERRORS.USER_NOT_FOUND]: "Usuário não encontrado.",
   [AUTH_ERRORS.AUTH_INVALID_CREDENTIALS]: "E-mail ou senha incorretos.",
-  [AUTH_ERRORS.INVALID_CURRENT_PASSWORD]: "Senha atual incorreta.",
 };
 
 export default function LoginForm() {

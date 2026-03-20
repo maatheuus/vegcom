@@ -23,7 +23,7 @@ export function Footer() {
         <div className="absolute right-10 bottom-10 h-64 w-64 rounded-full bg-white blur-3xl" />
       </div>
 
-      <div className="relative mx-auto max-w-6xl">
+      <div className="body__container-lg--no-padding relative">
         <div className="grid grid-cols-1 gap-8 md:grid-cols-2 md:gap-6">
           <div className="flex flex-col gap-3">
             <Link

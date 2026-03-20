@@ -47,7 +47,7 @@ const chatApi = {
       `/chat/${payload.id}/title`,
       { title: payload.title },
     );
-    console.log("data:", data);
+
     return data;
   },
 

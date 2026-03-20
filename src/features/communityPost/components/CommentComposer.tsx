@@ -72,7 +72,7 @@ export default function CommentComposer({
   const queryClient = useQueryClient();
   const [comment, setComment] = useState("");
   const [isPending, startTransition] = useTransition();
-  const [isMarkdownOpen, setIsMarkdownOpen] = useState(false);
+  const [isMarkdownOpen, setIsMarkdownOpen] = useState(true);
 
   const isNearLimit = comment.length > MAX_LENGTH_FOR_INPUT * 0.8;
 
@@ -228,7 +228,9 @@ export default function CommentComposer({
       <div
         className={clsx(
           "flex items-center gap-x-0.5 border-b border-green-500/15 bg-green-50/70 px-3 py-2 transition-all duration-300",
-          isMarkdownOpen ? "visible opacity-100" : "invisible opacity-0",
+          isMarkdownOpen
+            ? "visible translate-y-0 opacity-100"
+            : "invisible -translate-y-2 opacity-0",
         )}
       >
         {FORMATTING_BUTTONS.map(

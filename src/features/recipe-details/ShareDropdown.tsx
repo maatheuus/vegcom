@@ -1,8 +1,9 @@
 "use client";
 
+import { toast } from "@/shared/hooks/use-toast";
 import Button from "@/shared/ui/Button";
 import Row from "@/shared/ui/Layout/Helpers/Row";
-import { ShareNetworkIcon } from "@phosphor-icons/react";
+import { CopyIcon, ShareNetworkIcon } from "@phosphor-icons/react";
 import clsx from "clsx";
 import {
   memo,
@@ -27,14 +28,12 @@ import {
 
 interface Props extends ComponentProps<"div"> {
   title: string;
-  recipeId?: number;
   recipeSlug?: string;
 }
 
 const ShareDropdown = memo(function ShareDropdown({
   className,
   title,
-  recipeId,
   recipeSlug,
   ...props
 }: Props) {
@@ -43,12 +42,10 @@ const ShareDropdown = memo(function ShareDropdown({
   const [shareUrl, setShareUrl] = useState("");
 
   useEffect(() => {
-    if (typeof window !== "undefined" && recipeId && recipeSlug) {
-      setShareUrl(
-        `${window.location.origin}/recipes/${recipeId}/${recipeSlug}`,
-      );
+    if (typeof window !== "undefined" && recipeSlug) {
+      setShareUrl(`${window.location.origin}/recipes/${recipeSlug}`);
     }
-  }, [recipeId, recipeSlug]);
+  }, [recipeSlug]);
 
   const handleClickOutside = useCallback((event: MouseEvent) => {
     if (
@@ -79,6 +76,18 @@ const ShareDropdown = memo(function ShareDropdown({
     }
   }, []);
 
+  const handleCopy = useCallback(async () => {
+    await navigator.clipboard.writeText(
+      `Confira essa delícia: ${title}\n\n${shareUrl}`,
+    );
+    toast({
+      title: "Sucesso",
+      description: "Link copiado para a área de transferência!",
+      variant: "success",
+    });
+    setIsOpen(false);
+  }, [shareUrl]);
+
   return (
     <div
       className={`relative ${className || ""}`}
@@ -104,7 +113,7 @@ const ShareDropdown = memo(function ShareDropdown({
         ref={dropdownRef}
         data-state={isOpen ? "open" : "closed"}
         className={clsx(
-          "absolute right-0 z-10 mt-2 w-fit gap-x-4 rounded-md bg-green-50 p-3 shadow-md",
+          "absolute right-0 z-10 mt-2 w-fit items-center gap-x-4 rounded-md bg-green-50 p-3 shadow-md",
           "origin-top transition-all duration-200 data-[state=closed]:scale-0 data-[state=closed]:opacity-0 data-[state=open]:scale-100 data-[state=open]:opacity-100",
         )}
         role="menu"
@@ -149,6 +158,21 @@ const ShareDropdown = memo(function ShareDropdown({
         >
           <EmailIcon size={24} round aria-hidden="true" />
         </EmailShareButton>
+
+        <Button
+          variant="none"
+          className="cursor-pointer p-0"
+          onClick={handleCopy}
+          aria-label="Copiar link"
+          aria-expanded={isOpen}
+          aria-haspopup="true"
+        >
+          <CopyIcon
+            className="!size-6 text-green-500"
+            weight="fill"
+            aria-hidden="true"
+          />
+        </Button>
       </Row>
     </div>
   );

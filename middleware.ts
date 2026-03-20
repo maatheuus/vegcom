@@ -13,6 +13,8 @@ const PUBLIC_ROUTES = [
   "/recipes",
   "/curiosities",
   "/payment/success",
+  "/user/:id",
+  "/user/:id/",
 ];
 const AUTH_REDIRECT_ROUTES = ["/login", "/signup"];
 
