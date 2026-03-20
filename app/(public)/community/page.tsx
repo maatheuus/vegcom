@@ -31,7 +31,7 @@ export default async function Page() {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
-      <section className="body__container-md h-full overflow-hidden">
+      <section className="h-full overflow-hidden">
         <CommunityLayout className="col-start-1 col-end-16" />
       </section>
     </Layout.Default>

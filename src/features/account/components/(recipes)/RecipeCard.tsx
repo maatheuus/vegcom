@@ -1,4 +1,4 @@
-import StarRating from "@/features/community/components/AsideContent/StarRating";
+import StarRating from "@/features/community/components/StarRating";
 import {
   formatCategoryLabel,
   formatTimeLabel,
