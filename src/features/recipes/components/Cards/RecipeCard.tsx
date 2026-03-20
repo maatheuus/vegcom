@@ -1,6 +1,6 @@
 import type { Recipe } from "@/entities/recipe/types";
 import { useGetUser } from "@/features/auth/api/queries/getAuthApiClient";
-import StarRating from "@/features/community/components/AsideContent/StarRating";
+import StarRating from "@/features/community/components/StarRating";
 import { formatCategoryLabel } from "@/features/recipe-details/ContentRecipe/utils";
 import Button from "@/shared/ui/Button";
 import ImageCarouselModal, {
