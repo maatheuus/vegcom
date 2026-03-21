@@ -1,0 +1,16 @@
+import AuthFooter from "@/features/auth/components/Footer";
+import AuthHeader from "@/features/auth/components/Header";
+import SignupFlow from "@/features/auth/components/Signup/SignupFlow";
+import Col from "@/shared/ui/Layout/Helpers/Col";
+
+export default function SignupPage() {
+  return (
+    <>
+      <AuthHeader shouldGoBack />
+      <Col className="mx-auto h-full w-full max-w-112 gap-y-3">
+        <SignupFlow />
+        <AuthFooter />
+      </Col>
+    </>
+  );
+}

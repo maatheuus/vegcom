@@ -1,0 +1,26 @@
+@reference "../../../app/global.css";
+
+.home-s {
+  @apply absolute top-[-90px] -left-12;
+  transform: matrix(0.95, -0.31, 0.3, 0.95, 0, 0);
+}
+
+.home-a {
+  @apply absolute top-[-16.92px] left-[197.99px];
+  transform: matrix(0.99, 0.12, -0.11, 0.99, 0, 0);
+}
+
+.home-u {
+  @apply absolute left-[502.77px] top-[89.54px];
+  transform: matrix(1, 0.09, -0.09, 1, 0, 0);
+}
+
+.home-d {
+  @apply absolute left-5 top-[522px];
+  transform: matrix(0.96, -0.28, 0.27, 0.96, 0, 0);
+}
+
+.home-e {
+  @apply absolute left-[332px] top-[357px];
+  transform: matrix(0.99, -0.16, 0.15, 0.99, 0, 0);
+}

@@ -20,6 +20,7 @@ export default async function Page({ params }: Props) {
     <Layout.Default className="style-scrollbar">
       <div className="body__container-lg flex flex-col gap-y-5 py-6">
         <BackButton />
+      <div className="mx-auto flex w-full max-w-5xl flex-col gap-y-5 py-6">
         <UserProfileHeader user={user} />
         <UserProfileTabsClient user={user} />
       </div>

@@ -1,0 +1,25 @@
+@reference "../../../app/global.css";
+
+.container__default {
+  @apply mx-auto max-w-7xl px-6 md:px-4 xll:px-0;
+}
+
+.container__content {
+  @apply mx-auto py-4 md:max-w-5xl md:py-6 lg:max-w-xll lg:py-8 xll:px-0;
+}
+
+.padding__default {
+  @apply px-5 md:px-8 lg:px-10;
+}
+
+.body__container-lg {
+  @apply mx-auto px-5 md:px-10 lg:px-20 2xl:px-0 lg:max-w-6xl xl:max-w-xll;
+}
+
+.body__container-md {
+  @apply mx-auto px-5 md:px-10 lg:px-20 2xl:px-0 lg:max-w-4xl xl:max-w-5xl;
+}
+
+.body__container-lg--no-padding {
+  @apply mx-auto lg:max-w-6xl xl:max-w-xll;
+}
