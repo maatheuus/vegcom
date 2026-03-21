@@ -1,5 +1,4 @@
-import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import { useEffect, useState, type TransitionStartFunction } from "react";
+import { useEffect, useState } from "react";
 import Tabs, { type Tab } from ".";
 import { getPosts } from "../../api/communityApi";
 import type { CommunityPostType } from "../../types";
@@ -7,30 +6,15 @@ import type { CommunityPostType } from "../../types";
 interface Props {
   tabs: Tab[];
   selectedTab: CommunityPostType;
-  isPending: boolean;
   setSelectedTab: (tab: CommunityPostType) => void;
-  startTransition: TransitionStartFunction;
 }
 
 export default function TabsClient({
   tabs,
   selectedTab,
-  isPending,
   setSelectedTab,
-  startTransition,
 }: Props) {
-  const router = useRouter();
-  const pathname = usePathname();
-  const searchParams = useSearchParams();
   const [hasUnreadAnnouncement, setHasUnreadAnnouncement] = useState(false);
-
-  useEffect(() => {
-    const tabFromUrl = searchParams.get("tab");
-    if (tabFromUrl && tabFromUrl !== selectedTab) {
-      setSelectedTab(tabFromUrl as CommunityPostType);
-    }
-  }, [searchParams]);
-
   const [hasCheckedAnnouncements, setHasCheckedAnnouncements] = useState(false);
 
   useEffect(() => {
@@ -72,13 +56,7 @@ export default function TabsClient({
       localStorage.setItem("lastReadAnnouncement", new Date().toISOString());
     }
 
-    startTransition(() => {
-      setSelectedTab(key);
-
-      const params = new URLSearchParams(searchParams.toString());
-      params.set("tab", key);
-      router.replace(`${pathname}?${params.toString()}`, { scroll: false });
-    });
+    setSelectedTab(key);
   };
 
   const tabsWithNotification = tabs.map((tab) => {
@@ -93,7 +71,7 @@ export default function TabsClient({
       tabs={tabsWithNotification}
       selectedTab={selectedTab}
       setSelectedTab={handleTabChange as (tab: string) => void}
-      isTransitioning={isPending}
+      isTransitioning={false}
       className="sticky -top-1 z-20 bg-green-50 pt-5 md:top-63"
     />
   );
