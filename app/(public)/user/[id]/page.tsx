@@ -1,5 +1,5 @@
-import { getUserDetails } from "@/features/userProfile/api/userApi";
 import BackButton from "@/features/recipe-details/BackButton";
+import { getUserDetails } from "@/features/userProfile/api/userApi";
 import { UserProfileHeader } from "@/features/userProfile/components/UserProfileHeader";
 import UserProfileTabsClient from "@/features/userProfile/components/UserProfileTabsClient";
 import Layout from "@/shared/ui/Layout/";
@@ -24,6 +24,8 @@ export default async function Page({ params }: Props) {
         <UserProfileHeader user={user} />
         <UserProfileTabsClient user={user} />
       </div>
+      </div>
     </Layout.Default>
   );
 }
+
