@@ -26,6 +26,7 @@ const features = [
 export default function NotSubscribedView({
   className,
   productsData,
+  user,
   ...props
 }: Props) {
   const [isPending, startTransition] = useTransition();
@@ -39,9 +40,9 @@ export default function NotSubscribedView({
 
     startTransition(async () => {
       const checkoutSession = await createCheckoutSession({
-        userId: props.user.id,
+        userId: user.id,
         priceId,
-        email: props.user.email,
+        email: user.email,
       });
 
       if (checkoutSession.success) {
