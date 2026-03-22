@@ -1,5 +1,6 @@
 "use client";
 
+import { defaultCuriosities } from "@/features/curiosities/components/curiosites/utils";
 import { Avatar, AvatarFallback, AvatarImage } from "@/shared/ui/Avatar";
 import Col from "@/shared/ui/Layout/Helpers/Col";
 import Row from "@/shared/ui/Layout/Helpers/Row";
@@ -32,7 +33,6 @@ interface Curiosity {
 
 interface CommunitySidebarProps {
   activeMembersData?: ActiveMember[];
-  curiositiesData?: Curiosity[];
   selectedTab: CommunityPostType;
   onTabChange: (tab: CommunityPostType) => void;
 }
@@ -57,9 +57,14 @@ const FEED_TABS = [
   },
 ];
 
+const curiositiesData = defaultCuriosities.slice(0, 4).map((c) => ({
+  id: c.id,
+  title: c.title,
+  href: "/curiosities",
+}));
+
 export default function CommunitySidebar({
   activeMembersData = [],
-  curiositiesData = [],
   selectedTab,
   onTabChange,
 }: CommunitySidebarProps) {

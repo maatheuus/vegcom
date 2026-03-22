@@ -6,6 +6,7 @@ import Row from "@/shared/ui/Layout/Helpers/Row";
 import Text from "@/shared/ui/Text";
 import { formatCurrency } from "@/shared/utils";
 import { SparkleIcon } from "@phosphor-icons/react/dist/ssr";
+import { formatDate } from "date-fns";
 import { useTransition } from "react";
 import { createPortalSession } from "../../apiSubscription/queries/getSubscriptionApiServer";
 
@@ -92,8 +93,7 @@ export default function SubscribedView({ className, user, ...props }: Props) {
             >
               Renova em{" "}
               <strong>
-                {user.subscription?.expiresAt ||
-                  new Date().toLocaleDateString()}
+                {formatDate(String(user.subscription?.expiresAt), "dd/MM/yyyy")}
               </strong>
             </Text>
           </Row>

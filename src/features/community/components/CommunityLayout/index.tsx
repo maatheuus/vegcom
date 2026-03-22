@@ -1,7 +1,6 @@
 "use client";
 
 import { useGetUser } from "@/features/auth/api/queries/getAuthApiClient";
-import { defaultCuriosities } from "@/features/curiosities/components/curiosites/utils";
 import { useCommunitySidebar } from "@/shared/hooks/useCommunitySidebar";
 import Button from "@/shared/ui/Button";
 import Col from "@/shared/ui/Layout/Helpers/Col";
@@ -121,11 +120,6 @@ export default function CommunityLayout({ className, ...props }: Props) {
           <CommunitySidebar
             selectedTab={selectedTab}
             onTabChange={setSelectedTab}
-            curiositiesData={defaultCuriosities.slice(0, 4).map((c) => ({
-              id: c.id,
-              title: c.title,
-              href: "/curiosities",
-            }))}
           />
         </div>
       </aside>
@@ -150,7 +144,7 @@ export default function CommunityLayout({ className, ...props }: Props) {
           ref={scrollContainerRef}
           className="hidden-scrollbar h-full w-full overflow-x-hidden overflow-y-auto rounded-lg bg-green-50 p-0"
         >
-          <Col className="relative gap-y-7">
+          <Col className="relative gap-y-7 lg:gap-y-4">
             <PostComposer
               disabled={!isAuthenticated}
               className={clsx(
