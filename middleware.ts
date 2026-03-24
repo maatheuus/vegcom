@@ -5,7 +5,6 @@ const PUBLIC_ROUTES = [
   "/",
   "/login",
   "/signup",
-  "/logout",
   "/forgot-password",
   "/community",
   "/community/:id/",
@@ -35,14 +34,12 @@ function isPublicRoute(pathname: string): boolean {
 }
 
 export async function middleware(request: NextRequest) {
-  const { pathname, searchParams } = request.nextUrl;
-
-  const isServerExpired = searchParams.get("expired") === "true";
+  const { pathname } = request.nextUrl;
 
   const tokenCookie = request.cookies.get("token");
   const tokenValue = tokenCookie?.value;
-  const isTokenValid =
-    tokenValue && !isTokenExpired(tokenValue) && !isServerExpired;
+
+  const isTokenValid = tokenValue && !isTokenExpired(tokenValue);
 
   const isPublic = isPublicRoute(pathname);
   const isAuthRoute = AUTH_REDIRECT_ROUTES.includes(pathname);
@@ -50,7 +47,6 @@ export async function middleware(request: NextRequest) {
   if (!isTokenValid) {
     if (isPublic) {
       const response = NextResponse.next();
-
       if (tokenValue) {
         response.cookies.delete("token");
       }
