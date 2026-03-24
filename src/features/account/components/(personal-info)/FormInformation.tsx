@@ -20,6 +20,8 @@ import type { z } from "zod";
 import Text from "@/shared/ui/Text";
 import Textarea from "@/shared/ui/TextArea";
 // import clsx from "clsx";
+import type { CitySearchResult } from "@/shared/lib/api/cities";
+import { SearchCityLocation } from "@/shared/ui/SearchCityLocation";
 import { useState } from "react";
 import {
   bioTooLongMessages,
@@ -109,11 +111,22 @@ export default function FormInformation({
                 <FormLabel className="font-maitree text-base font-semibold text-green-500">
                   Localização
                 </FormLabel>
-                <FormControl className="rounded-lg">
+                {/* <FormControl className="rounded-lg">
                   <Input
                     placeholder={location || "Ex: São Paulo, SP"}
                     disabled={isEditing}
                     {...field}
+                  />
+                </FormControl> */}
+                <FormControl className="rounded-lg">
+                  <SearchCityLocation
+                    value={field.value}
+                    onChange={field.onChange}
+                    onSelect={(city: CitySearchResult) => {
+                      field.onChange(city.displayName || city.nome);
+                    }}
+                    placeholder="Digite sua cidade..."
+                    error={!!form.getFieldState("location").error}
                   />
                 </FormControl>
                 <FormMessage />

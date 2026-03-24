@@ -37,3 +37,9 @@ export const useSignup = () => {
     },
   });
 };
+
+export const useCheckEmail = () => {
+  return useMutation({
+    mutationFn: (email: string) => authApi.checkEmail(email),
+  });
+};

@@ -60,7 +60,7 @@ export function MobileMenuDrawer({
             </Link>
 
             {isLoggedIn && (
-              <Link href="/logout" className={cls.mobileLink}>
+              <Link href="/api/logout" className={cls.mobileLink}>
                 <SignOutIcon size={22} className="text-green-600" />
                 <span className={cls.mobileLabel}>Sair</span>
               </Link>

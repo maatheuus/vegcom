@@ -130,7 +130,7 @@ export default function DesktopMenu({
                     Minha conta
                   </DropdownMenuItem>
                 </Link>
-                <Link href="/logout" className="contents">
+                <Link href="/api/logout" className="contents">
                   <DropdownMenuItem
                     className={`${cls.text} cursor-pointer text-green-500`}
                   >

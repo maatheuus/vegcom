@@ -15,6 +15,16 @@ export interface UpdatePasswordPayload {
 }
 
 export const authApi = {
+  checkEmail: async (email: string) => {
+    const formatedEmail = email.toLowerCase().trim();
+
+    const { data: responseData } = await api.get<{ available: boolean }>(
+      "/auth/check-email",
+      { params: { email: formatedEmail } },
+    );
+    return responseData;
+  },
+
   getUser: async () => {
     const { data: responseData } = await api.get<ApiResponse<User>>("/auth/me");
     return responseData.data;

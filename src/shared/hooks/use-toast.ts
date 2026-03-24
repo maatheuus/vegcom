@@ -5,7 +5,12 @@ import * as React from "react";
 import type { ToastActionElement, ToastProps } from "../ui/toast";
 
 const TOAST_LIMIT = 1;
-const TOAST_REMOVE_DELAY = 2000;
+const TOAST_REMOVE_DELAY = 500;
+
+const getDurationByVariant = (variant?: string) => {
+  if (variant === "destructive") return 6000;
+  return 2000;
+};
 
 export type ToasterToast = ToastProps & {
   id: string;
@@ -141,12 +146,10 @@ export type Toast = Omit<ToasterToast, "id">;
 
 function toast({ ...props }: Toast) {
   const id = genId();
+  const duration = getDurationByVariant(props.variant!!);
 
   const update = (props: ToasterToast) =>
-    dispatch({
-      type: "UPDATE_TOAST",
-      toast: { ...props, id },
-    });
+    dispatch({ type: "UPDATE_TOAST", toast: { ...props, id } });
   const dismiss = () => dispatch({ type: "DISMISS_TOAST", toastId: id });
 
   dispatch({
@@ -155,17 +158,14 @@ function toast({ ...props }: Toast) {
       ...props,
       id,
       open: true,
+      duration, // 👈 aqui
       onOpenChange: (open: boolean) => {
         if (!open) dismiss();
       },
     },
   });
 
-  return {
-    id: id,
-    dismiss,
-    update,
-  };
+  return { id, dismiss, update };
 }
 
 function useToast() {
