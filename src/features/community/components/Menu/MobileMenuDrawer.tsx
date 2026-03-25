@@ -1,9 +1,10 @@
+"use client";
 import { SignOutIcon, UserCircleIcon } from "@phosphor-icons/react";
 import { AnimatePresence, motion } from "framer-motion";
 import Link from "next/link";
 import { menuConfig } from "./menuConfig";
 import { cls } from "./shared";
-import { logout } from "@/features/auth/api/queries/getAuthApiServer";
+import { useLogout } from "@/features/auth/hooks/useLogout";
 
 type DrawerProps = {
   isLoggedIn: boolean;
@@ -17,6 +18,7 @@ export function MobileMenuDrawer({
   onLinkClick,
 }: DrawerProps) {
   const { centerLinks } = menuConfig;
+  const { handleLogout } = useLogout();
 
   return (
     <AnimatePresence>
@@ -61,7 +63,7 @@ export function MobileMenuDrawer({
             </Link>
 
             {isLoggedIn && (
-              <button type="submit" onClick={logout} className={cls.mobileLink}>
+              <button type="button" onClick={handleLogout} className={cls.mobileLink}>
                 <SignOutIcon size={22} className="text-green-600" />
                 <span className={cls.mobileLabel}>Sair</span>
               </button>
