@@ -17,7 +17,6 @@ export const useGetUser = () => {
     enabled: !!token,
     retry: false,
     staleTime: 0,
-    gcTime: 0,
   });
 };
 
