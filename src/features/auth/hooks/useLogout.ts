@@ -1,6 +1,7 @@
 "use client";
 
 import { logout } from "@/features/auth/api/queries/getAuthApiServer";
+import { authKeys } from "@/features/auth/api/queries/getAuthApiClient";
 import { useQueryClient } from "@tanstack/react-query";
 import { useTransition } from "react";
 
@@ -9,6 +10,7 @@ export function useLogout() {
   const [isPending, startTransition] = useTransition();
 
   const handleLogout = () => {
+    queryClient.removeQueries({ queryKey: authKeys.user });
     queryClient.clear();
     startTransition(() => {
       logout();
