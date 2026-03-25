@@ -43,11 +43,6 @@ export const authApi = {
     return responseData;
   },
 
-  logout: async () => {
-    const { data: responseData } = await api.post<User>("/auth/logout");
-    return responseData;
-  },
-
   updateProfile: async (payload: UpdateProfilePayload) => {
     const { data: responseData } = await api.put<{
       success: boolean;

@@ -57,9 +57,7 @@ export default function Page() {
       });
 
       onCancel();
-      setTimeout(() => {
-        logout();
-      }, 1000);
+      await logout();
     } catch (error: unknown) {
       console.log("password error", error);
 
@@ -79,13 +77,11 @@ export default function Page() {
       }
 
       if (err.message === "Access token not found") {
-        setTimeout(() => {
-          logout();
-        }, 1000);
         form.setError("currentPassword", {
           type: "manual",
           message: "Sessão expirada, faça login novamente",
         });
+        await logout();
       }
 
       if (err.code === "PASSWORD_MISMATCH") {

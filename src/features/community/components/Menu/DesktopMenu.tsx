@@ -13,6 +13,7 @@ import { useState } from "react";
 import NotificationPopup from "./NotificationPopup";
 import { menuConfig } from "./menuConfig";
 import { cls } from "./shared";
+import { logout } from "@/features/auth/api/queries/getAuthApiServer";
 
 type Props = {
   isLoggedIn: boolean;
@@ -130,13 +131,15 @@ export default function DesktopMenu({
                     Minha conta
                   </DropdownMenuItem>
                 </Link>
-                <Link href="/api/logout" className="contents">
-                  <DropdownMenuItem
-                    className={`${cls.text} cursor-pointer text-green-500`}
-                  >
-                    Sair
-                  </DropdownMenuItem>
-                </Link>
+                <form action={logout} className="contents">
+                  <button type="submit" className="contents">
+                    <DropdownMenuItem
+                      className={`${cls.text} cursor-pointer text-green-500`}
+                    >
+                      Sair
+                    </DropdownMenuItem>
+                  </button>
+                </form>
               </>
             )}
           </DropdownMenuContent>

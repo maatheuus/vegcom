@@ -3,6 +3,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import Link from "next/link";
 import { menuConfig } from "./menuConfig";
 import { cls } from "./shared";
+import { logout } from "@/features/auth/api/queries/getAuthApiServer";
 
 type DrawerProps = {
   isLoggedIn: boolean;
@@ -60,10 +61,12 @@ export function MobileMenuDrawer({
             </Link>
 
             {isLoggedIn && (
-              <Link href="/api/logout" className={cls.mobileLink}>
-                <SignOutIcon size={22} className="text-green-600" />
-                <span className={cls.mobileLabel}>Sair</span>
-              </Link>
+              <form action={logout}>
+                <button type="submit" className={cls.mobileLink}>
+                  <SignOutIcon size={22} className="text-green-600" />
+                  <span className={cls.mobileLabel}>Sair</span>
+                </button>
+              </form>
             )}
           </div>
         </motion.div>
