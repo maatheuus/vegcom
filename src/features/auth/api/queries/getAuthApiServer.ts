@@ -8,10 +8,17 @@ import type { AuthResponse, LoginCredentials, SignupData } from "../../types";
 import type { ApiResponse, User } from "../types";
 
 export const getUser = async () => {
-  return serverFetch<ApiResponse<User>>("/auth/me", {
-    method: "GET",
-    next: { tags: ["user"] },
-  });
+  try {
+    return await serverFetch<ApiResponse<User>>("/auth/me", {
+      method: "GET",
+      next: { tags: ["user"] },
+      skipRedirectOn401: true,
+    });
+  } catch (error) {
+    // If not authenticated (401) or other fetch issues, return null
+    // so it doesn't crash the server component or trigger unnecessary 500 errors
+    return { data: null } as unknown as ApiResponse<User>;
+  }
 };
 
 export const getSignin = async (credentials: LoginCredentials) => {
