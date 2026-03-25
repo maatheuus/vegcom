@@ -79,7 +79,7 @@ export default function RootLayout({
       suppressHydrationWarning
       className={`${lora.variable} ${maitree.variable} ${montserrat.variable} ${rancho.variable} h-full w-full`}
     >
-      <body className="h-full bg-green-50">
+      <body className="h-full bg-green-50" suppressHydrationWarning>
         <QueryClientWrapper>
           <SmoothScroll />
           <ProgressProviderClient>{children}</ProgressProviderClient>

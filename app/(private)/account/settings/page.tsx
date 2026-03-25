@@ -8,7 +8,7 @@ import {
   FormMessage,
 } from "@/shared/ui/Form";
 import { Input } from "@/shared/ui/Input";
-import { useState } from "react";
+import { useState, useTransition } from "react";
 
 import AccountLayout from "@/features/account/components/AccountLayout";
 import Header from "@/features/account/components/Header";
@@ -31,6 +31,7 @@ import { useForm } from "react-hook-form";
 import type { z } from "zod";
 
 export default function Page() {
+  const [isPending, startTransition] = useTransition();
   const [isEditing, setIsEditing] = useState(false);
   const [confirmDelete, setConfirmDelete] = useState(false);
   const { data: user } = useGetUser();
@@ -57,7 +58,9 @@ export default function Page() {
       });
 
       onCancel();
-      await logout();
+      startTransition(() => {
+        logout();
+      });
     } catch (error: unknown) {
       console.log("password error", error);
 
@@ -81,7 +84,9 @@ export default function Page() {
           type: "manual",
           message: "Sessão expirada, faça login novamente",
         });
-        await logout();
+        startTransition(() => {
+          logout();
+        });
       }
 
       if (err.code === "PASSWORD_MISMATCH") {

@@ -131,15 +131,13 @@ export default function DesktopMenu({
                     Minha conta
                   </DropdownMenuItem>
                 </Link>
-                <form action={logout} className="contents">
-                  <button type="submit" className="contents">
-                    <DropdownMenuItem
-                      className={`${cls.text} cursor-pointer text-green-500`}
-                    >
-                      Sair
-                    </DropdownMenuItem>
-                  </button>
-                </form>
+                <button type="submit" onClick={logout} className="contents">
+                  <DropdownMenuItem
+                    className={`${cls.text} cursor-pointer text-green-500`}
+                  >
+                    Sair
+                  </DropdownMenuItem>
+                </button>
               </>
             )}
           </DropdownMenuContent>

@@ -12,11 +12,8 @@ export const getUser = async () => {
     return await serverFetch<ApiResponse<User>>("/auth/me", {
       method: "GET",
       next: { tags: ["user"] },
-      skipRedirectOn401: true,
     });
   } catch (error) {
-    // If not authenticated (401) or other fetch issues, return null
-    // so it doesn't crash the server component or trigger unnecessary 500 errors
     return { data: null } as unknown as ApiResponse<User>;
   }
 };
@@ -30,32 +27,29 @@ export const getSignin = async (credentials: LoginCredentials) => {
   });
 
   const cookieStore = await cookies();
-
   cookieStore.set("token", responseData.accessToken, {
-    // httpOnly: true,
+    httpOnly: true,
     secure: process.env.NODE_ENV === "production",
     sameSite: "lax",
-    maxAge: 60 * 60 * 24 * 7, // 7 days in seconds
+    maxAge: 60 * 60 * 24 * 7,
     path: "/",
   });
 
-  revalidatePath("/auth/me");
+  revalidatePath("/", "layout");
   return responseData;
 };
 
 export const getSignup = async (data: SignupData) => {
-  const responseData = await serverFetch<AuthResponse>("/auth/signup", {
+  return serverFetch<AuthResponse>("/auth/signup", {
     method: "POST",
     next: { tags: ["signup"] },
     body: data,
   });
-
-  return responseData;
 };
 
 export const logout = async () => {
   const cookieStore = await cookies();
   cookieStore.delete("token");
-  revalidatePath("/");
+  revalidatePath("/", "layout");
   redirect("/login");
 };

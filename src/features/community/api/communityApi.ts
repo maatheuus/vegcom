@@ -22,8 +22,14 @@ export const getPosts = async (
   const page = params?.page ?? 1;
   const limit = params?.limit ?? 10;
 
+  const cookieStore = await cookies();
+  const token = cookieStore.get("token")?.value;
+
   const { data } = await api.get<PostCardDataProps[]>("/community", {
     params: { ...params, page, limit },
+    ...(token && {
+      headers: { Authorization: `Bearer ${token}` },
+    }),
   });
 
   return {
@@ -45,8 +51,15 @@ export const getPosts = async (
 export const getPostById = async (
   id: string,
 ): Promise<PostCardDataProps | null> => {
+  const cookieStore = await cookies();
+  const token = cookieStore.get("token")?.value;
+
   try {
-    const { data } = await api.get<PostCardDataProps>(`/community/${id}`);
+    const { data } = await api.get<PostCardDataProps>(`/community/${id}`, {
+      ...(token && {
+        headers: { Authorization: `Bearer ${token}` },
+      }),
+    });
     return data;
   } catch (err) {
     if ((err as { status?: number })?.status === 404) return null;

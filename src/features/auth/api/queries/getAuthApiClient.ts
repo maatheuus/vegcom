@@ -9,10 +9,13 @@ export const authKeys = {
 };
 
 export const useGetUser = () => {
+  const token = getTokenFromCookies();
+
   return useQuery({
     queryKey: authKeys.user,
     queryFn: authApi.getUser,
-    enabled: !!getTokenFromCookies(),
+    enabled: !!token,
+    retry: false,
   });
 };
 

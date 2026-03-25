@@ -61,12 +61,10 @@ export function MobileMenuDrawer({
             </Link>
 
             {isLoggedIn && (
-              <form action={logout}>
-                <button type="submit" className={cls.mobileLink}>
-                  <SignOutIcon size={22} className="text-green-600" />
-                  <span className={cls.mobileLabel}>Sair</span>
-                </button>
-              </form>
+              <button type="submit" onClick={logout} className={cls.mobileLink}>
+                <SignOutIcon size={22} className="text-green-600" />
+                <span className={cls.mobileLabel}>Sair</span>
+              </button>
             )}
           </div>
         </motion.div>
