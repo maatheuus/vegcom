@@ -13,7 +13,7 @@ import { useState } from "react";
 import NotificationPopup from "./NotificationPopup";
 import { menuConfig } from "./menuConfig";
 import { cls } from "./shared";
-import { logout } from "@/features/auth/api/queries/getAuthApiServer";
+import { useLogout } from "@/features/auth/hooks/useLogout";
 
 type Props = {
   isLoggedIn: boolean;
@@ -29,6 +29,7 @@ export default function DesktopMenu({
   const pathname = usePathname();
   const [hoveredItem, setHoveredItem] = useState("");
   const { upgradeLink, centerLinks } = menuConfig;
+  const { handleLogout } = useLogout();
 
   return (
     <>
@@ -131,7 +132,7 @@ export default function DesktopMenu({
                     Minha conta
                   </DropdownMenuItem>
                 </Link>
-                <button type="submit" onClick={logout} className="contents">
+                <button type="button" onClick={handleLogout} className="contents">
                   <DropdownMenuItem
                     className={`${cls.text} cursor-pointer text-green-500`}
                   >
