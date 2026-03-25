@@ -16,6 +16,8 @@ export const useGetUser = () => {
     queryFn: authApi.getUser,
     enabled: !!token,
     retry: false,
+    staleTime: 0,
+    gcTime: 0,
   });
 };
 
