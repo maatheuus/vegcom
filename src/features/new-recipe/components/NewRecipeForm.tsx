@@ -1,6 +1,5 @@
 "use client";
 
-import { useGetUser } from "@/features/auth/api/queries/getAuthApiClient";
 import {
   defaultValues,
   newRecipeFormSchema,
@@ -43,7 +42,6 @@ export default function NewRecipeForm({}: Props) {
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
-  const { data: user } = useGetUser();
 
   const form = useForm<NewRecipeFormValues>({
     resolver: zodResolver(newRecipeFormSchema),
@@ -93,8 +91,7 @@ export default function NewRecipeForm({}: Props) {
     if (validateStep(currentStep, values, toast)) {
       const formData = form.getValues();
 
-      const userId = user?.id;
-      const payload = transformFormToApiPayload(formData, Number(userId));
+      const payload = transformFormToApiPayload(formData, 0);
 
       try {
         const { data, success } = await createNewRecipe(payload);

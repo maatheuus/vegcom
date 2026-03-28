@@ -1,5 +1,6 @@
 "use client";
 
+import { getInitials } from "@/features/account/components/utils";
 import type { LinkPreviewData } from "@/shared/types";
 import { Avatar, AvatarFallback, AvatarImage } from "@/shared/ui/Avatar";
 import Col from "@/shared/ui/Layout/Helpers/Col";
@@ -25,8 +26,8 @@ export default function PreviewPostCard({
           <Row className="ml-auto items-center gap-x-1.5">
             <Avatar className="size-4">
               <AvatarImage src={p.authorAvatar ?? ""} />
-              <AvatarFallback className="text-[8px]">
-                {p.authorName.slice(0, 2).toUpperCase()}
+              <AvatarFallback className="!text-[10px]">
+                {p.authorName ? getInitials(p.authorName) : "U"}
               </AvatarFallback>
             </Avatar>
             <Text

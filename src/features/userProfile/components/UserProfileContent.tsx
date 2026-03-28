@@ -1,12 +1,9 @@
 import { useGetUser } from "@/features/auth/api/queries/getAuthApiClient";
 import PostCardRoot from "@/features/community/components/Post/Cards/Root";
 import RecipeCard from "@/features/recipes/components/Cards/RecipeCard";
+import { usePagination } from "@/shared/hooks/usePagination";
 import Button from "@/shared/ui/Button";
 import Col from "@/shared/ui/Layout/Helpers/Col";
-import Text from "@/shared/ui/Text";
-import type { UserProfileDetails } from "../types";
-import { prepareHtmlContent } from "@/shared/utils";
-import { usePagination } from "@/shared/hooks/usePagination";
 import {
   Pagination,
   PaginationContent,
@@ -16,6 +13,9 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from "@/shared/ui/Pagination";
+import Text from "@/shared/ui/Text";
+import { prepareHtmlContent } from "@/shared/utils";
+import type { UserProfileDetails } from "../types";
 
 interface UserProfileContentProps {
   user: UserProfileDetails;
@@ -223,7 +223,7 @@ export function UserProfileContent({
             )}
           </Col>
 
-          {user.posts.length > 5 && currentPosts.length > 0 && (
+          {user?.posts.length > 5 && currentPosts.length > 0 && (
             <div className="mt-4 block">
               <Pagination>
                 <PaginationContent>
