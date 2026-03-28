@@ -14,8 +14,10 @@ import AccountLayout from "@/features/account/components/AccountLayout";
 import Header from "@/features/account/components/Header";
 
 import { useUpdatePassword } from "@/features/account/hooks/mutations/useUpdateProfile";
-import { useGetUser } from "@/features/auth/api/queries/getAuthApiClient";
-import { logout } from "@/features/auth/api/queries/getAuthApiServer";
+import {
+  useGetUser,
+  useLogout,
+} from "@/features/auth/api/queries/getAuthApiClient";
 import { updatePasswordFormSchema } from "@/features/auth/utils";
 import Button from "@/shared/ui/Button";
 import { Form } from "@/shared/ui/Form";
@@ -35,6 +37,7 @@ export default function Page() {
   const [isEditing, setIsEditing] = useState(false);
   const [confirmDelete, setConfirmDelete] = useState(false);
   const { data: user } = useGetUser();
+  const { mutateAsync: logout } = useLogout();
   const { mutateAsync: updatePassword, isPending: isUpdatingPassword } =
     useUpdatePassword();
 
@@ -58,8 +61,9 @@ export default function Page() {
       });
 
       onCancel();
-      startTransition(() => {
-        logout();
+      startTransition(async () => {
+        await logout();
+        window.location.href = "/login";
       });
     } catch (error: unknown) {
       console.log("password error", error);
@@ -84,8 +88,9 @@ export default function Page() {
           type: "manual",
           message: "Sessão expirada, faça login novamente",
         });
-        startTransition(() => {
-          logout();
+        startTransition(async () => {
+          await logout();
+          window.location.href = "/login";
         });
       }
 

@@ -121,7 +121,7 @@ export default async function page({ params }: Props) {
           isRecipePage
           views={recipe.views || 0}
           isSaved={false}
-          authorName={recipe.user.name}
+          authorName={recipe.user?.name}
           commentsCount={recipe.totalComments || 0}
           rating={recipe.averageRating || 0}
           timeAgo={timeAgo}

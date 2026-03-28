@@ -1,3 +1,4 @@
+import AuthGuard from "@/features/auth/components/AuthGuard";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -12,5 +13,5 @@ export default function PrivateLayout({
 }: {
   children: React.ReactNode;
 }) {
-  return children;
+  return <AuthGuard>{children}</AuthGuard>;
 }
