@@ -1,3 +1,4 @@
+import { useLogout } from "@/features/auth/hooks/useLogout";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -28,11 +29,12 @@ export default function DesktopMenu({
   const pathname = usePathname();
   const [hoveredItem, setHoveredItem] = useState("");
   const { upgradeLink, centerLinks } = menuConfig;
+  const { handleLogout } = useLogout();
 
   return (
     <>
       {/* Nav Links */}
-      <Row className="desktop:flex hidden w-full flex-1 gap-x-4">
+      <Row className="desktop:flex hidden w-full flex-1 justify-end gap-x-4">
         <Row className="items-center justify-center gap-x-4">
           {centerLinks.map(({ href, icon: Icon, label }) => {
             const isActive = pathname.startsWith(href);
@@ -71,7 +73,7 @@ export default function DesktopMenu({
         {isLoggedIn && (
           <Link href={upgradeLink.href} className="group/plant contents">
             <Row
-              className={`${cls.baseButton} items-center justify-center rounded-lg bg-green-200 px-2 py-1 text-green-50 group-hover/plant:bg-green-100`}
+              className={`${cls.baseButton} items-center justify-center rounded-lg bg-green-200 p-2 text-green-50 group-hover/plant:bg-green-100`}
             >
               <upgradeLink.icon
                 size={20}
@@ -89,7 +91,7 @@ export default function DesktopMenu({
         )}
 
         <DropdownMenu>
-          <DropdownMenuTrigger className="group/user flex cursor-pointer items-center gap-x-2 rounded-lg border-0 bg-green-100 px-2 py-1 transition-colors duration-300 outline-none hover:bg-green-200">
+          <DropdownMenuTrigger className="group/user flex cursor-pointer items-center gap-x-2 rounded-lg border-0 bg-green-100 p-2 transition-colors duration-300 outline-none hover:bg-green-200">
             <UserCircleIcon
               size={20}
               className="size-5 text-green-200 group-hover/user:text-green-50"
@@ -130,13 +132,17 @@ export default function DesktopMenu({
                     Minha conta
                   </DropdownMenuItem>
                 </Link>
-                <Link href="/api/logout" className="contents">
+                <button
+                  type="button"
+                  onClick={handleLogout}
+                  className="contents"
+                >
                   <DropdownMenuItem
                     className={`${cls.text} cursor-pointer text-green-500`}
                   >
                     Sair
                   </DropdownMenuItem>
-                </Link>
+                </button>
               </>
             )}
           </DropdownMenuContent>

@@ -26,7 +26,7 @@ export default async function AccountHeader() {
         </Text>
       </div>
 
-      {user?.data.subscription?.status === "active" ? (
+      {user?.data?.subscription?.status === "active" ? (
         <PremiumMemberBadge />
       ) : (
         <PremiumMemberCard />

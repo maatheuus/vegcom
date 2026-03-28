@@ -49,8 +49,8 @@ export default function useLinkPreviews(
             id,
             title: post.postTitle,
             excerpt: post.postContent.postResources?.content?.slice(0, 120),
-            authorName: post.user.name,
-            authorAvatar: post.user.urlImage,
+            authorName: post.user?.name,
+            authorAvatar: post.user?.urlImage,
             commentsCount: post.comments.commentsNumber ?? 0,
             href: `/community/${id}/${post.postTitle
               .toLowerCase()

@@ -32,7 +32,7 @@ import Row from "@/shared/ui/Layout/Helpers/Row";
 import type { Recipe } from "@/entities/recipe";
 import Header from "@/features/recipe-details/RecipeDetailsHeader";
 import type { DetailedRecipe } from "@/features/recipes/api/types";
-import { filterRecipes, sortRecipes } from "@/features/recipes/lib/filterUtils";
+import { filterRecipes, normalizeText, sortRecipes } from "@/features/recipes/lib/filterUtils";
 
 interface PageProps {
   searchParams: Promise<{
@@ -47,8 +47,30 @@ interface PageProps {
 export default async function Page({ searchParams }: PageProps) {
   const params = await searchParams;
 
+  const MEAL_TYPE_MAP: Record<string, string> = {
+    "cafe da manha": "BREAKFAST",
+    almoco: "LUNCH",
+    jantar: "DINNER",
+    sobremesas: "DESSERT",
+    lanches: "SNACKS",
+    geral: "GENERAL",
+  };
+
+  const apiSort =
+    params.highlight === "Mais populares"
+      ? "popular"
+      : params.highlight === "Melhor avaliadas"
+        ? "rated"
+        : params.highlight === "Novidades"
+          ? "newest"
+          : undefined;
+
+  const apiMealType = params.mealType
+    ? MEAL_TYPE_MAP[normalizeText(params.mealType)]
+    : undefined;
+
   const [recipesResult, featuredResult] = await Promise.allSettled([
-    getRecipes(),
+    getRecipes({ sort: apiSort, mealType: apiMealType }),
     getFeaturedRecipe("most_viewed_month"),
   ]);
 
@@ -66,13 +88,7 @@ export default async function Page({ searchParams }: PageProps) {
     console.warn("Failed to fetch featured recipe:", featuredResult.reason);
   }
 
-  let recipes = filterRecipes(
-    recipesData,
-    params.q,
-    params.mealType,
-    params.prepTime,
-    params.highlight,
-  );
+  let recipes = filterRecipes(recipesData, params.q, params.prepTime);
   recipes = sortRecipes(recipes, params.sort);
 
   const jsonLd = {

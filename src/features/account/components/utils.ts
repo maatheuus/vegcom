@@ -58,7 +58,7 @@ export const messagesToDisplayForPremium = [
   },
 ];
 
-export const maxLengthForBio = 400;
+export const maxLengthForBio = 500;
 
 export const personalInfoFormSchema = z
   .object({
@@ -135,6 +135,5 @@ export const bioTooLongMessages = [
 export const getInitials = (name: string) => {
   const parts = name.trim().split(" ");
   const first = parts[0]?.[0] || "";
-  const last = parts.length > 1 ? parts[parts.length - 1]?.[0] : "";
-  return (first + last).toUpperCase();
+  return first.toUpperCase();
 };

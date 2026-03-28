@@ -33,7 +33,9 @@ export default function PostActions({
 
   const [isLiked, setIsLiked] = useState(() => {
     if (post.likes && user?.id) {
-      return post.likes.some((like) => String(like.userId) === String(user.id));
+      return post.likes.some(
+        (like) => String(like.userId) === String(user?.id),
+      );
     }
     return false;
   });
@@ -74,7 +76,7 @@ export default function PostActions({
 
     const shareData = {
       title: post.postTitle,
-      text: `Confira este post de ${post.user.name}: "${post.postTitle}"\n\n${summary}\n\n${hashtags}\n`,
+      text: `Confira este post de ${post.user?.name}: "${post.postTitle}"\n\n${summary}\n\n${hashtags}\n`,
       url,
     };
 
@@ -124,7 +126,7 @@ export default function PostActions({
   useEffect(() => {
     if (post.likes && user?.id) {
       setIsLiked(
-        post.likes.some((like) => String(like.userId) === String(user.id)),
+        post.likes.some((like) => String(like.userId) === String(user?.id)),
       );
     }
   }, [post.likes, user?.id]);

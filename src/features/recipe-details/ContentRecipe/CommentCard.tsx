@@ -1,3 +1,4 @@
+import { getInitials } from "@/features/account/components/utils";
 import type { CommentData } from "@/features/comments";
 import { Avatar, AvatarFallback } from "@/shared/ui/Avatar";
 import Button from "@/shared/ui/Button";
@@ -28,14 +29,16 @@ export default function CommentCard({
     locale: ptBR,
   });
 
-  const isOwner = currentUserId === comment.user.id;
+  const isOwner = currentUserId === comment.user?.id;
 
   return (
     <Col className="gap-y-2">
       <Row className="items-center justify-between">
         <Row className="items-center gap-x-2">
           <Avatar className="size-8 rounded-full border">
-            <AvatarFallback>{comment.user.name.charAt(0)}</AvatarFallback>
+            <AvatarFallback>
+              {comment.user?.name ? getInitials(comment.user.name) : "U"}
+            </AvatarFallback>
           </Avatar>
           <Col>
             <Text
@@ -43,7 +46,7 @@ export default function CommentCard({
               weight={Text.Weight.Bold}
               className="text-green-500"
             >
-              {comment.user.name}
+              {comment.user?.name}
             </Text>
             <Text type={Text.Type.BodyFive} className="text-green-500">
               {timeAgo}

@@ -11,6 +11,12 @@ export const getProducts = async () => {
   return serverFetch<GetProductsResponse>("/stripe/products", {
     method: "GET",
     next: { tags: ["products"] },
+    skipRedirectOn401: true,
+  }).catch(() => {
+    return {
+      success: false,
+      data: [],
+    } as GetProductsResponse;
   });
 };
 

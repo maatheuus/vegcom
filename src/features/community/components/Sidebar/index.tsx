@@ -1,5 +1,6 @@
 "use client";
 
+import { getInitials } from "@/features/account/components/utils";
 import { defaultCuriosities } from "@/features/curiosities/components/curiosites/utils";
 import { Avatar, AvatarFallback, AvatarImage } from "@/shared/ui/Avatar";
 import Col from "@/shared/ui/Layout/Helpers/Col";
@@ -174,7 +175,7 @@ export default function CommunitySidebar({
                         alt={member.name}
                       />
                       <AvatarFallback className="text-[9px]">
-                        {member.name.slice(0, 2).toUpperCase()}
+                        {member.name ? getInitials(member.name) : "U"}
                       </AvatarFallback>
                     </Avatar>
                     <span className="absolute right-0 bottom-0 size-1.5 rounded-full bg-green-400 ring-1 ring-green-50" />

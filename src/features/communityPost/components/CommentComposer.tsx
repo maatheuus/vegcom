@@ -227,10 +227,10 @@ export default function CommentComposer({
     <Col className="gap-y-0 overflow-hidden rounded-2xl border border-green-500/20 bg-green-50/30 ring-1 shadow-sm ring-green-100 transition-all">
       <div
         className={clsx(
-          "flex items-center gap-x-0.5 border-b border-green-500/15 bg-green-50/70 px-3 py-2 transition-all duration-300",
+          "flex items-center gap-x-0.5 border-b border-green-500/15 bg-green-50/70 px-3 overflow-hidden transition-all duration-300",
           isMarkdownOpen
-            ? "visible translate-y-0 opacity-100"
-            : "invisible -translate-y-2 opacity-0",
+            ? "max-h-12 py-2 opacity-100"
+            : "max-h-0 py-0 opacity-0",
         )}
       >
         {FORMATTING_BUTTONS.map(

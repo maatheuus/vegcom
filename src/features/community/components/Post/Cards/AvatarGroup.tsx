@@ -1,3 +1,4 @@
+import { getInitials } from "@/features/account/components/utils";
 import type { PostComment } from "@/shared";
 import { Avatar, AvatarFallback, AvatarImage } from "@/shared/ui/Avatar";
 import clsx from "clsx";
@@ -23,11 +24,11 @@ export function AvatarGroup({
         {visibleComments.map((comment, index) => (
           <Avatar key={index}>
             <AvatarImage
-              src={comment.user.urlImage}
-              alt={comment.user.name || "user image"}
+              src={comment.user?.urlImage}
+              alt={comment.user?.name || "user image"}
             />
             <AvatarFallback className="!text-xs capitalize">
-              {comment.user?.name?.substring(0, 2)}
+              {comment.user?.name ? getInitials(comment.user.name) : "U"}
             </AvatarFallback>
           </Avatar>
         ))}

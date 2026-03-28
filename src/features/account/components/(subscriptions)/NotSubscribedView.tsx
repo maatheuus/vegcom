@@ -1,5 +1,3 @@
-"use client";
-
 import type { User } from "@/features/auth/api/types";
 import Button from "@/shared/ui/Button";
 import Col from "@/shared/ui/Layout/Helpers/Col";
@@ -31,6 +29,7 @@ export default function NotSubscribedView({
 }: Props) {
   const [isPending, startTransition] = useTransition();
 
+  console.log("produ:", { productsData, user });
   const product = productsData?.[0];
   const price = product?.default_price;
 
@@ -40,9 +39,9 @@ export default function NotSubscribedView({
 
     startTransition(async () => {
       const checkoutSession = await createCheckoutSession({
-        userId: user.id,
+        userId: user?.id,
         priceId,
-        email: user.email,
+        email: user?.email,
       });
 
       if (checkoutSession.success) {

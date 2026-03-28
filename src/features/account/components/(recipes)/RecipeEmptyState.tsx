@@ -92,7 +92,7 @@ export default function RecipeEmptyState({
       }
       action={
         <Button.Link
-          href={isFavorites ? "/recipes" : "/recipes/new"}
+          href={isFavorites ? "/recipes" : "/new-recipe"}
           leftIcon={isFavorites ? <HeartIcon /> : <PlusIcon />}
         >
           {isFavorites ? "Explorar receitas" : "Adicionar Receita"}

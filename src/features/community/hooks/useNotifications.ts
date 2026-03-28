@@ -1,5 +1,4 @@
 import { notificationsApi } from "@/features/community/api/notificationsApi";
-import { getTokenFromCookies } from "@/shared/api/axios/axiosInstance";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useCallback } from "react";
 
@@ -37,12 +36,10 @@ export const notificationKeys = {
 
 export function useNotifications(page = 1, limit = 10) {
   const queryClient = useQueryClient();
-  const isAuthenticated = !!getTokenFromCookies();
 
   const { data: notificationsData } = useQuery({
     queryKey: notificationKeys.list(page, limit),
     queryFn: () => notificationsApi.getNotifications(page, limit),
-    enabled: isAuthenticated,
     placeholderData: {
       data: [],
       meta: { page: 1, limit: 10, total: 0, totalPages: 0 },
@@ -52,7 +49,6 @@ export function useNotifications(page = 1, limit = 10) {
   const { data: unreadCountData } = useQuery({
     queryKey: notificationKeys.unreadCount,
     queryFn: notificationsApi.getUnreadCount,
-    enabled: isAuthenticated,
   });
 
   const markAsReadMutation = useMutation({

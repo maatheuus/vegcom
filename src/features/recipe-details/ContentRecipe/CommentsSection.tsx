@@ -22,6 +22,7 @@ import {
 import Text from "@/shared/ui/Text";
 import { ChatTeardropTextIcon } from "@phosphor-icons/react";
 import clsx from "clsx";
+import Link from "next/link";
 import { memo, useCallback, useState } from "react";
 import CommentCard from "./CommentCard";
 import CommentSkeleton from "./CommentSkeleton";
@@ -193,11 +194,14 @@ const CommentsSection = memo(function CommentsSection({
           }
         />
       ) : (
-        <Col className="w-full items-center rounded-md border border-green-200 py-4">
+        <Link
+          href="/login"
+          className="flex w-full items-center justify-center rounded-md border border-green-200 py-4 transition-colors duration-200 hover:border-green-300 hover:bg-green-100"
+        >
           <Text type={Text.Type.BodyThree} className="text-green-500">
             Faça login para deixar um comentário
           </Text>
-        </Col>
+        </Link>
       )}
 
       {currentItems.length > 0 && (
@@ -235,7 +239,7 @@ const CommentsSection = memo(function CommentsSection({
               onLike={() => handleLike(comment.id)}
               currentUserId={currentUserId}
               onDelete={
-                currentUserId === comment.user.id
+                currentUserId === comment.user?.id
                   ? () => handleDelete(comment.id)
                   : undefined
               }

@@ -1,5 +1,6 @@
 "use client";
 
+import { getInitials } from "@/features/account/components/utils";
 import { Avatar, AvatarFallback } from "@/shared/ui/Avatar";
 import type { SuggestionProps } from "@tiptap/suggestion";
 import { forwardRef, useEffect, useImperativeHandle, useState } from "react";
@@ -74,7 +75,7 @@ const MentionList = forwardRef<unknown, MentionListProps>((props, ref) => {
         >
           <Avatar className="h-6 w-6">
             <AvatarFallback className="bg-green-100 text-[10px] text-green-600">
-              {item.slice(0, 2).toUpperCase()}
+              {item ? getInitials(item) : "U"}
             </AvatarFallback>
           </Avatar>
           <span className="font-medium">{item}</span>

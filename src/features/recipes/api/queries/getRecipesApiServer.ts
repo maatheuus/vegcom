@@ -11,11 +11,24 @@ import type {
   UpdateRecipePayload,
 } from "../types";
 
-export const getRecipes = async () => {
-  return serverFetch<GetRecipesResponse>("/recipes/list", {
-    method: "GET",
-    next: { tags: ["recipes"] },
-  });
+interface GetRecipesParams {
+  sort?: "popular" | "rated" | "newest";
+  mealType?: string;
+}
+
+export const getRecipes = async (params?: GetRecipesParams) => {
+  const query = new URLSearchParams();
+  if (params?.sort) query.set("sort", params.sort);
+  if (params?.mealType) query.set("mealType", params.mealType);
+  const qs = query.toString();
+
+  return serverFetch<GetRecipesResponse>(
+    `/recipes/list${qs ? `?${qs}` : ""}`,
+    {
+      method: "GET",
+      next: { tags: ["recipes"] },
+    },
+  );
 };
 
 export const getRecipeById = async (id: number) => {

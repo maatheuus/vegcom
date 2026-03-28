@@ -9,7 +9,7 @@ interface Props {
 }
 
 export default function PostCardAnnouncement({ data }: Props) {
-  const isUserAdmin = data.user.role === "ADMIN";
+  const isUserAdmin = data.user?.role === "ADMIN";
 
   if (!isUserAdmin) return null;
 

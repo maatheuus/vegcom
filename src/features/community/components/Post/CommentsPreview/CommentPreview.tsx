@@ -1,5 +1,6 @@
 "use client";
 
+import { getInitials } from "@/features/account/components/utils";
 import type { PostComment } from "@/shared/types";
 import { Avatar, AvatarFallback, AvatarImage } from "@/shared/ui/Avatar";
 import Col from "@/shared/ui/Layout/Helpers/Col";
@@ -46,11 +47,11 @@ export default function CommentPreview({
         <Row key={idx} className="items-start gap-x-2">
           <Avatar className="mt-0.5 size-5 shrink-0">
             <AvatarImage
-              src={comment.user.urlImage ?? ""}
-              alt={comment.user.name}
+              src={comment.user?.urlImage ?? ""}
+              alt={comment.user?.name}
             />
             <AvatarFallback className="text-[8px]">
-              {comment.user.name?.slice(0, 2).toUpperCase()}
+              {comment.user?.name ? getInitials(comment.user.name) : "U"}
             </AvatarFallback>
           </Avatar>
 
@@ -62,7 +63,7 @@ export default function CommentPreview({
                 weight={Text.Weight.Bold}
                 className="font-maitree shrink-0 text-green-600"
               >
-                {comment.user.name}
+                {comment.user?.name}
               </Text>
               <Text
                 as="span"
