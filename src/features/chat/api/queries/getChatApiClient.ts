@@ -1,3 +1,4 @@
+import { getAccessToken } from "@/shared/api/axios/axiosInstance";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { chatApi } from "../chatApi";
 
@@ -12,6 +13,7 @@ export const useGetChats = () => {
   return useQuery({
     queryKey: chatKeys.lists(),
     queryFn: chatApi.getChats,
+    enabled: !!getAccessToken(),
   });
 };
 
@@ -19,7 +21,7 @@ export const useGetChatById = (id: number) => {
   return useQuery({
     queryKey: chatKeys.detail(id),
     queryFn: () => chatApi.getChatById(id),
-    enabled: !!id,
+    enabled: !!id && !!getAccessToken(),
   });
 };
 

@@ -1,5 +1,6 @@
 import { chatKeys } from "@/features/chat/api/queries/getChatApiClient";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { getAccessToken } from "../../axios/axiosInstance";
 import { aiApi } from "../ai";
 
 export const useGenerateResponse = () => {
@@ -33,5 +34,6 @@ export const useGetUsageStats = () => {
   return useQuery({
     queryKey: ["usage-stats"],
     queryFn: aiApi.getUsageStats,
+    enabled: !!getAccessToken(),
   });
 };

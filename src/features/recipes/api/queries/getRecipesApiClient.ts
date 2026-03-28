@@ -1,3 +1,4 @@
+import { getAccessToken } from "@/shared/api/axios/axiosInstance";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { recipeApi } from "../recipesApi";
 import type { UpdateRecipePayload } from "../types";
@@ -22,6 +23,7 @@ export const useGetMyRecipes = () => {
   return useQuery({
     queryKey: recipeKeys.myRecipes(),
     queryFn: recipeApi.getMyRecipes,
+    enabled: !!getAccessToken(),
   });
 };
 

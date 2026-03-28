@@ -1,4 +1,5 @@
 import {
+  getAccessToken,
   removeAccessToken,
   setAccessToken,
 } from "@/shared/api/axios/axiosInstance";
@@ -17,6 +18,7 @@ export const useGetUser = () => {
     queryFn: authApi.getUser,
     retry: false,
     staleTime: 0,
+    enabled: !!getAccessToken(),
   });
 };
 
