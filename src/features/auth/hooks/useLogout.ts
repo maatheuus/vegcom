@@ -1,19 +1,16 @@
 "use client";
 
-import { logout } from "@/features/auth/api/queries/getAuthApiServer";
-import { authKeys } from "@/features/auth/api/queries/getAuthApiClient";
-import { useQueryClient } from "@tanstack/react-query";
+import { useLogout as useClientLogout } from "@/features/auth/api/queries/getAuthApiClient";
 import { useTransition } from "react";
 
 export function useLogout() {
-  const queryClient = useQueryClient();
+  const { mutateAsync: logout } = useClientLogout();
   const [isPending, startTransition] = useTransition();
 
   const handleLogout = () => {
-    queryClient.removeQueries({ queryKey: authKeys.user });
-    queryClient.clear();
-    startTransition(() => {
-      logout();
+    startTransition(async () => {
+      await logout();
+      window.location.href = "/login";
     });
   };
 

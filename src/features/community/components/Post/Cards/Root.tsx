@@ -1,5 +1,6 @@
 "use client";
 
+import { getInitials } from "@/features/account/components/utils";
 import { useGetUser } from "@/features/auth/api/queries/getAuthApiClient";
 import {
   deletePost,
@@ -134,7 +135,7 @@ export default function PostCardRoot({
 
     const shareData = {
       title: data.postTitle,
-      text: `Confira este post de ${data.user.name}: "${data.postTitle}"\n\n${summary}\n\n${hashtags}\n`,
+      text: `Confira este post de ${data.user?.name}: "${data.postTitle}"\n\n${summary}\n\n${hashtags}\n`,
       url,
     };
 
@@ -167,26 +168,26 @@ export default function PostCardRoot({
     >
       <Row className="mb-4 w-full justify-between">
         <Row className="min-w-0 flex-1 items-center gap-x-2 md:gap-x-3">
-          <Link href={`/user/${data.user.id}`} className="contents">
+          <Link href={`/user/${data.user?.id}`} className="contents">
             <Avatar className="h-10 w-10 shrink-0">
               <AvatarImage
-                src={data.user.urlImage || ""}
-                alt={data.user.name || "user image"}
+                src={data.user?.urlImage || ""}
+                alt={data.user?.name || "user image"}
               />
               <AvatarFallback className="text-xs capitalize md:text-base">
-                {data.user.name?.slice(0, 2)}
+                {data.user?.name ? getInitials(data.user.name) : "U"}
               </AvatarFallback>
             </Avatar>
           </Link>
           <Row className="min-w-0 flex-1 items-center gap-x-2">
-            <Link href={`/user/${data.user.id}`} className="contents">
+            <Link href={`/user/${data.user?.id}`} className="contents">
               <Text
                 as="span"
                 type={Text.Type.BodyFive}
                 weight={Text.Weight.Bold}
                 className="font-maitree truncate text-xs text-green-500 md:text-base"
               >
-                {data.user.name}
+                {data.user?.name}
               </Text>
             </Link>
             <span className="size-0.5 shrink-0 rounded-full bg-green-500"></span>
@@ -225,7 +226,7 @@ export default function PostCardRoot({
               Salvar post
             </DropdownMenuItem>
 
-            {data.user.id === currentUser?.id && (
+            {data.user?.id === currentUser?.id && (
               <DropdownMenuItem
                 onClick={handleDelete}
                 className="cursor-pointer gap-x-3 py-2.5 text-red-400 hover:!bg-green-200/80 focus:!text-red-400"
