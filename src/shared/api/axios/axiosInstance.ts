@@ -57,6 +57,15 @@ api.interceptors.response.use(
       removeAccessToken();
     }
 
+    if (status === 429) {
+      return Promise.reject({
+        status,
+        message: "Muitas requisições. Por favor, aguarde um momento.",
+        code: "TOO_MANY_REQUESTS",
+        ...data,
+      });
+    }
+
     return Promise.reject({
       status,
       message: data?.message || "Erro inesperado.",

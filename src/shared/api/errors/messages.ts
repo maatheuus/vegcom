@@ -4,11 +4,16 @@ import {
   CHAT_ERRORS,
   COMMENT_ERRORS,
   COMMUNITY_ERRORS,
+  RATE_LIMIT_ERRORS,
   RECIPE_ERRORS,
   STRIPE_ERRORS,
 } from "./codes";
 
 export const ERROR_MESSAGES: Record<string, string> = {
+  // Rate limiting
+  [RATE_LIMIT_ERRORS.TOO_MANY_REQUESTS]:
+    "Muitas requisições. Por favor, aguarde um momento.",
+
   // Auth
   [AUTH_ERRORS.USER_ALREADY_EXISTS]: "Este e-mail já está em uso.",
   [AUTH_ERRORS.AUTH_INVALID_CREDENTIALS]: "Credenciais inválidas.",
