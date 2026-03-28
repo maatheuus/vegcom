@@ -1,5 +1,3 @@
-"use client";
-
 import { type User } from "@/features/auth/api/types";
 import Button from "@/shared/ui/Button";
 import Row from "@/shared/ui/Layout/Helpers/Row";
@@ -26,11 +24,11 @@ export default function SubscribedView({ className, user, ...props }: Props) {
   const [isPending, startTransition] = useTransition();
 
   const getExpirationDate = () => {
-    if (user.subscription?.expiresAt) {
-      return new Date(user.subscription.expiresAt);
+    if (user?.subscription?.expiresAt) {
+      return new Date(user?.subscription.expiresAt);
     }
-    if (user.subscription?.startedAt) {
-      return addMonths(new Date(user.subscription.startedAt), 1);
+    if (user?.subscription?.startedAt) {
+      return addMonths(new Date(user?.subscription.startedAt), 1);
     }
     return new Date();
   };
@@ -38,7 +36,7 @@ export default function SubscribedView({ className, user, ...props }: Props) {
   const handleManageSubscription = () => {
     startTransition(async () => {
       try {
-        const result = await createPortalSession(user.id);
+        const result = await createPortalSession(user?.id);
         if (result.url) window.open(result.url, "_blank");
       } catch (error) {
         console.error(error);
@@ -70,8 +68,8 @@ export default function SubscribedView({ className, user, ...props }: Props) {
               className="font-lora text-green-500"
             >
               {formatCurrency(
-                user.subscription?.currency || "BRL",
-                user.subscription?.currentInvoiceAmount || 0,
+                user?.subscription?.currency || "BRL",
+                user?.subscription?.currentInvoiceAmount || 0,
               )}
             </Text>
             <Text

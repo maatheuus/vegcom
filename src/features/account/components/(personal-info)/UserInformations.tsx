@@ -13,6 +13,7 @@ import {
 
 import { toast } from "@/shared/hooks/use-toast";
 
+import type { User } from "@/features/auth/api/types";
 import { Avatar, AvatarFallback, AvatarImage } from "@/shared/ui/Avatar";
 import {
   Dialog,
@@ -29,7 +30,6 @@ import {
 } from "@phosphor-icons/react";
 import Image from "next/image";
 import FormInformation from "./FormInformation";
-import type { User } from "@/features/auth/api/types";
 
 type PersonalInfoFormValues = z.infer<typeof personalInfoFormSchema>;
 interface Props extends React.HTMLAttributes<HTMLFormElement> {
@@ -68,8 +68,8 @@ export default function UserInformations({
       Math.floor(Math.random() * messagesToDisplayForPremium.length)
     ];
 
-  const lastProfileUpdate = user.updatedAt
-    ? new Date(user.updatedAt).toLocaleDateString("pt-BR", {
+  const lastProfileUpdate = user?.updatedAt
+    ? new Date(user?.updatedAt).toLocaleDateString("pt-BR", {
         day: "2-digit",
         month: "2-digit",
         year: "numeric",
@@ -183,23 +183,27 @@ export default function UserInformations({
             </DialogTrigger>
           </div>
 
-          <div className="md:space-y-1">
-            <Text
-              as="h3"
-              type={Text.Type.HeadingFour}
-              weight={Text.Weight.Bold}
-              className="font-lora text-base text-green-500 md:text-xl"
-            >
-              {fullName}
-            </Text>
-            <Text
-              as="span"
-              type={Text.Type.BodyThree}
-              weight={Text.Weight.Medium}
-              className="font-maitree !text-xs text-green-200"
-            >
-              Última vez atualizado: {lastProfileUpdate}
-            </Text>
+          <div>
+            {fullName && (
+              <Text
+                as="h3"
+                type={Text.Type.HeadingFour}
+                weight={Text.Weight.Bold}
+                className="font-lora text-base text-green-500 md:text-xl"
+              >
+                {fullName}
+              </Text>
+            )}
+            {lastProfileUpdate && (
+              <Text
+                as="span"
+                type={Text.Type.BodyThree}
+                weight={Text.Weight.Medium}
+                className="font-maitree !text-xs text-green-200"
+              >
+                Última vez atualizado: {lastProfileUpdate}
+              </Text>
+            )}
           </div>
         </div>
 
