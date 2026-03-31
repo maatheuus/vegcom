@@ -57,7 +57,7 @@ const NotificationPopup = memo(function NotificationPopup({
         notification.type === "POST_LIKE"
       ) {
         if (notification.entityId) {
-          router.push(`/community/${notification.entityId}/post`);
+          router.push(`/${notification.entityId}/post`);
         }
       } else if (notification.type === "RECIPE_LIKE") {
         if (notification.entityId) {

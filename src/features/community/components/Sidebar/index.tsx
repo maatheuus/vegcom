@@ -39,7 +39,7 @@ interface CommunitySidebarProps {
 }
 
 const NAV_LINKS = [
-  { href: "/community", label: "Comunidade", icon: UsersFourIcon },
+  { href: "/", label: "Comunidade", icon: UsersFourIcon },
   { href: "/recipes", label: "Receitas", icon: ChefHatIcon },
   { href: "/curiosities", label: "Curiosidades", icon: LightbulbFilamentIcon },
 ];

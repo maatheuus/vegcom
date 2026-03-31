@@ -15,7 +15,7 @@ All pages accessible to unauthenticated users.
 | `/` | `(public)/page.tsx` | Home page — featured recipe hero, recipe highlights |
 | `/recipes` | `(public)/recipes/page.tsx` | Recipe listing with search and filters |
 | `/recipes/[slug]` | `(public)/recipes/[slug]/page.tsx` | Individual recipe detail |
-| `/community` | `(public)/community/page.tsx` | Community feed — posts, likes, comments |
+| `/` | Community feed ((new home page)) — posts, likes, comments |
 | `/curiosities` | `(public)/curiosities/page.tsx` | Vegan/vegetarian facts and timeline |
 | `/user/[id]` | `(public)/user/[id]/page.tsx` | Public user profile |
 

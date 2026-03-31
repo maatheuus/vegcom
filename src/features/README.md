@@ -10,7 +10,7 @@ Each folder in this directory is a self-contained feature module. It owns everyt
 | [recipes](recipes/) | `/recipes` | Recipe listing, search, filters, sort, and grid display |
 | [recipe-details](recipe-details/) | `/recipes/[slug]` | Full recipe detail view — save, share, view tracking |
 | [new-recipe](new-recipe/) | `/new-recipe` | Recipe creation form with Tiptap rich text editor and image upload |
-| [community](community/) | `/community` | Community feed — post listing, API, and layout |
+| [community](community/) | `/` | Community feed — post listing, API, and layout | New home page
 | [communityPost](communityPost/) | `/community` (nested) | Single post — interactions (like, comment), context provider |
 | [comments](comments/) | Used within recipe-details and community | Comment and reply API — read, create, like, delete |
 | [chat](chat/) | `/chat` | AI chat interface backed by Google Gemini |

@@ -22,7 +22,7 @@ export const menuConfig = {
     logo: "/favicon-leaf-fork.png",
   },
   centerLinks: [
-    { label: "Comunidade", href: "/community", icon: UsersFourIcon },
+    { label: "Comunidade", href: "/", icon: UsersFourIcon },
     { label: "Receitas", href: "/recipes", icon: ChefHatIcon },
     { label: "Nova receita", href: "/new-recipe", icon: PlusCircleIcon },
     { label: "Chat", href: "/chat", icon: ChatCircleIcon },

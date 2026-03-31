@@ -63,7 +63,7 @@ export default function LoginForm() {
           description: "Você será redirecionado.",
           variant: "success",
         });
-        router.push("/community/");
+        router.push("/");
       } catch (error: unknown) {
         console.error("Login error:", error);
         const err = error as { message?: string; code?: string };

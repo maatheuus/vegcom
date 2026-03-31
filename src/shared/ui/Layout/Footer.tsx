@@ -6,7 +6,7 @@ const footerLinks = {
   explorar: [
     { label: "Receitas", href: "/recipes" },
     { label: "Curiosidades", href: "/curiosities" },
-    { label: "Comunidade", href: "/community" },
+    { label: "Comunidade", href: "/" },
   ],
   receitas: [
     { label: "Sobremesas", href: "/recipes?mealType=Sobremesas" },

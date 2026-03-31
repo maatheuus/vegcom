@@ -16,7 +16,7 @@ type Props = {
 };
 
 const pathLinksHome: Props[] = [
-  { path: "/community", text: "Comunidade", icon: UsersFourIcon },
+  { path: "/", text: "Comunidade", icon: UsersFourIcon },
   { path: "/recipes", text: "Receitas", icon: ChefHatIcon },
   { path: "/curiosities", text: "Curiosidades", icon: LightbulbFilamentIcon },
 ];
