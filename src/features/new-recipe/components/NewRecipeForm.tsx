@@ -42,7 +42,6 @@ export default function NewRecipeForm({}: Props) {
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
-
   const form = useForm<NewRecipeFormValues>({
     resolver: zodResolver(newRecipeFormSchema),
     defaultValues: { ...defaultValues },
@@ -90,8 +89,7 @@ export default function NewRecipeForm({}: Props) {
   const handlePublish = async () => {
     if (validateStep(currentStep, values, toast)) {
       const formData = form.getValues();
-
-      const payload = transformFormToApiPayload(formData, 0);
+      const payload = transformFormToApiPayload(formData);
 
       try {
         const { data, success } = await createNewRecipe(payload);

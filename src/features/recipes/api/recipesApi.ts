@@ -3,7 +3,6 @@ import type {
   CreateRecipePayload,
   CreateRecipeResponse,
   FavoriteRecipeResponse,
-  GetRecipeByIdResponse,
   GetRecipeBySlugResponse,
   GetRecipesByIdsResponse,
   GetRecipesResponse,
@@ -21,10 +20,6 @@ const recipeApi = {
   },
   getRecipes: async () => {
     const { data } = await api.get<GetRecipesResponse>("/recipes/list");
-    return data;
-  },
-  getRecipeById: async (id: number) => {
-    const { data } = await api.get<GetRecipeByIdResponse>(`/recipes/get/${id}`);
     return data;
   },
   getRecipeBySlug: async (slug: string) => {

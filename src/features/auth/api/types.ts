@@ -31,7 +31,7 @@ export interface User {
   subscription?: SubscriptionData;
   recipesCount: number;
   informations: UserInformations;
-  savedRecipes: unknown[];
+  savedRecipes: { id: number; savedRecipeId: number }[];
   recipes: Record<string, number>[];
   chats: Chat[];
   createdAt: string;

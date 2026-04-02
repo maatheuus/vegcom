@@ -4,7 +4,7 @@ import type { Recipe } from "../types";
  * Sort recipes by rating (highest first)
  */
 export const sortByRating = (a: Recipe, b: Recipe): number => {
-  return (b.rating || 0) - (a.rating || 0);
+  return (b.averageRating || 0) - (a.averageRating || 0);
 };
 
 /**

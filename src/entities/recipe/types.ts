@@ -28,7 +28,7 @@ export interface Recipe {
   isPublished: boolean;
   reviewStatus?: ReviewStatus;
   views: number;
-  rating: number;
+  averageRating: number;
   likes: { id: number; userId: number }[];
   createdAt: string;
   updatedAt: string;

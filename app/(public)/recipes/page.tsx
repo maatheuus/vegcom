@@ -30,7 +30,7 @@ import Layout from "@/shared/ui/Layout";
 import Row from "@/shared/ui/Layout/Helpers/Row";
 
 import type { Recipe } from "@/entities/recipe";
-import Header from "@/features/recipe-details/RecipeDetailsHeader";
+import RecipeDetailsHeader from "@/features/recipe-details/RecipeDetailsHeader";
 import type { DetailedRecipe } from "@/features/recipes/api/types";
 import { filterRecipes, normalizeText, sortRecipes } from "@/features/recipes/lib/filterUtils";
 
@@ -109,7 +109,7 @@ export default async function Page({ searchParams }: PageProps) {
       <section className="space-y-6 md:space-y-8 lg:space-y-11">
         <Row className="items-center justify-between">
           <HeaderComponent>
-            <Header title="Receitas" className="border-0 p-0" />
+            <RecipeDetailsHeader title="Receitas" className="border-0 p-0" />
 
             <Row className="hidden items-center gap-1 md:flex">
               <Row className="gap-2">

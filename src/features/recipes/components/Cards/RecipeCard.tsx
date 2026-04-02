@@ -116,7 +116,7 @@ export default function RecipeCard({ recipe, className }: Props) {
                   </Text>
                 </div>
                 <Button.Icon
-                  className="flex items-center justify-center rounded-full bg-green-500/80 p-2 backdrop-blur-sm transition-colors hover:bg-green-500"
+                  className="flex cursor-auto items-center justify-center rounded-full bg-green-500/80 p-2 backdrop-blur-sm transition-colors hover:bg-green-500"
                   aria-label="User recipe"
                   aria-disabled
                   role="div"
@@ -194,13 +194,13 @@ export default function RecipeCard({ recipe, className }: Props) {
           </div>
 
           <div className="mt-auto flex w-full items-center justify-between">
-            {Boolean(recipe.rating) && (
+            {Boolean(recipe.averageRating) && (
               <div
                 className="flex items-center"
-                aria-label={`Avaliação: ${recipe?.rating} estrelas`}
+                aria-label={`Avaliação: ${recipe?.averageRating} estrelas`}
               >
                 <StarRating
-                  rating={recipe?.rating}
+                  rating={recipe?.averageRating}
                   iconClassName="w-4 h-4"
                   aria-hidden="true"
                 />

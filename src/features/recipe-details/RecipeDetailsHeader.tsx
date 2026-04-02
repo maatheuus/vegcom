@@ -1,36 +1,27 @@
 "use client";
 
-import { ReviewStatus } from "@/features/recipes/api/types";
+import {
+  ReviewStatus,
+  type DetailedRecipe,
+} from "@/features/recipes/api/types";
 import Col from "@/shared/ui/Layout/Helpers/Col";
 import Row from "@/shared/ui/Layout/Helpers/Row";
 import Text from "@/shared/ui/Text";
 import clsx from "clsx";
-import { Fragment, memo } from "react";
+import { memo } from "react";
 
-import {
-  CalendarDotsIcon,
-  ClockCountdownIcon,
-  EyeIcon,
-  ScrollIcon,
-  StarIcon,
-  UserIcon,
-  XCircleIcon,
-} from "@phosphor-icons/react";
+import { ClockCountdownIcon, XCircleIcon } from "@phosphor-icons/react";
+import { useGetUser } from "../auth/api/queries/getAuthApiClient";
+import DeleteRecipeButton from "./DeleteRecipeButton";
+import RowHeaderData from "./RowHeaderData";
 import SaveRecipeButton from "./SaveRecipeButton";
 import ShareDropdown from "./ShareDropdown";
 
 interface Props extends React.ComponentProps<"div"> {
   size?: "default" | "max" | "min";
-  views?: number;
-  isSaved?: boolean;
-  title?: string;
-  authorName?: string;
-  timeAgo?: string;
-  commentsCount?: number;
-  rating?: number;
-  reviewStatus?: ReviewStatus;
   isRecipePage?: boolean;
-  recipeSlug?: string;
+  recipe?: DetailedRecipe;
+  title?: string;
 }
 
 const REVIEW_STATUS_CONFIG = {
@@ -56,64 +47,15 @@ const REVIEW_STATUS_CONFIG = {
 
 const RecipeDetailsHeader = memo(function RecipeDetailsHeader({
   className,
-  views,
-  isSaved,
+  recipe,
   title,
-  authorName,
-  timeAgo,
-  commentsCount,
-  rating,
-  reviewStatus,
   isRecipePage,
-  recipeSlug,
   ...props
 }: Props) {
-  function handleSavedChange() {}
+  const { data: userData } = useGetUser();
 
-  const ROW_DATA = [
-    {
-      key: "author",
-      label: authorName,
-      icon: <UserIcon />,
-      ariaLabel: `Autor: ${authorName}`,
-    },
-    {
-      separator: true,
-    },
-    {
-      key: "timeAgo",
-      label: timeAgo,
-      icon: <CalendarDotsIcon />,
-      ariaLabel: `Publicado ${timeAgo}`,
-    },
-    {
-      separator: true,
-    },
-    {
-      key: "commentsCount",
-      label: `${commentsCount} ${commentsCount === 1 ? "comentário" : "comentários"}`,
-      icon: <ScrollIcon />,
-      ariaLabel: `${commentsCount} ${commentsCount === 1 ? "comentário" : "comentários"}`,
-    },
-    {
-      separator: true,
-    },
-    {
-      key: "views",
-      label: `${views} ${views === 1 ? "visto" : "vistos"}`,
-      icon: <EyeIcon />,
-      ariaLabel: `${views} ${views === 1 ? "pessoa" : "pessoas"} visualizaram esta receita`,
-    },
-    {
-      separator: true,
-    },
-    {
-      key: "rating",
-      label: `${rating?.toFixed(1)}`,
-      icon: <StarIcon />,
-      ariaLabel: `Avaliação média: ${rating}`,
-    },
-  ];
+  const { reviewStatus, slug: recipeSlug, id: recipeId, userId: recipeUserId, title: recipeTitle } = recipe || {};
+  const isOwner = !!userData && !!recipeUserId && userData.id === recipeUserId;
 
   return (
     <Col
@@ -129,7 +71,7 @@ const RecipeDetailsHeader = memo(function RecipeDetailsHeader({
           weight={Text.Weight.Medium}
           className="font-lora font-semibold text-green-500"
         >
-          {title}
+          {title || recipe?.title}
         </Text>
 
         {isRecipePage && (
@@ -138,10 +80,10 @@ const RecipeDetailsHeader = memo(function RecipeDetailsHeader({
             role="group"
             aria-label="Ações da receita"
           >
-            <SaveRecipeButton
-              initialSaved={isSaved!}
-              onSavedChange={handleSavedChange}
-            />
+            {isOwner && (
+              <DeleteRecipeButton recipeId={recipeId!} recipeTitle={recipeTitle} />
+            )}
+            <SaveRecipeButton user={userData} recipeId={recipeId!} />
             <ShareDropdown title={String(title)} recipeSlug={recipeSlug} />
           </Row>
         )}
@@ -186,38 +128,7 @@ const RecipeDetailsHeader = memo(function RecipeDetailsHeader({
           role="list"
           aria-label="Informações da receita"
         >
-          {ROW_DATA.map((item, idx) => {
-            const Icon = !item.separator && item?.icon?.type;
-            return (
-              <Fragment key={idx}>
-                {item.separator ? (
-                  <div className="hidden size-1 rounded-full bg-green-500 opacity-50 md:block" />
-                ) : (
-                  <Row
-                    className="gap-x-2"
-                    role="listitem"
-                    aria-label={item.ariaLabel}
-                  >
-                    {Icon && (
-                      <Icon
-                        className="text-green-500"
-                        size={18}
-                        aria-hidden="true"
-                      />
-                    )}
-                    <Text
-                      as="span"
-                      type={Text.Type.BodyFive}
-                      weight={Text.Weight.Medium}
-                      className="text-green-500"
-                    >
-                      {item.label}
-                    </Text>
-                  </Row>
-                )}
-              </Fragment>
-            );
-          })}
+          <RowHeaderData recipe={recipe} />
         </Row>
       )}
     </Col>

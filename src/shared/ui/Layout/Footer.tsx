@@ -122,12 +122,12 @@ export function Footer() {
             </Link>{" "}
             Feito com 💚 para uma vida melhor.
           </Text>
-          {/* <Text
+          <Text
             type={Text.Type.BodyFive}
             className="font-maitree text-xs text-green-100/60"
           >
             Dedicado ao meu grande amigo, obrigado por tudo Rafa!
-          </Text> */}
+          </Text>
         </div>
       </div>
     </footer>

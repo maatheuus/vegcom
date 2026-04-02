@@ -100,7 +100,8 @@ export default function EmptyState({
         <Text
           as="h3"
           type={styles.titleType}
-          className="font-lora font-medium text-green-500"
+          weight={Text.Weight.SemiBold}
+          className="font-lora font-semibold text-green-500"
         >
           {title}
         </Text>

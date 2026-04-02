@@ -2,7 +2,6 @@ import { api } from "@/shared/api/axios/axiosInstance";
 import type { CreateRecipeResponse } from "../../recipes/api/types";
 
 export interface CreateRecipeFormData {
-  userId: number;
   title: string;
   description: string;
   timeForPreparation: string;

@@ -26,6 +26,8 @@ export default function Menu() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
+  const userName = user?.name.split(" ").slice(0, 2).join(" ") ;
+
   return (
     <div className="body__container-lg sticky top-4 z-50 mx-auto mb-16 h-auto w-full md:mb-18">
       <motion.nav
@@ -61,7 +63,7 @@ export default function Menu() {
               <DesktopMenu
                 isLoggedIn={isLoggedIn}
                 isPremium={isPremium}
-                userName={user?.name}
+                userName={userName}
               />
 
               <MobileMenuTrigger
