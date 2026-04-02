@@ -7,7 +7,6 @@ export const recipeKeys = {
   all: ["recipes"] as const,
   lists: () => [...recipeKeys.all, "list"] as const,
   myRecipes: () => [...recipeKeys.all, "my"] as const,
-  detail: (id: number) => [...recipeKeys.all, "detail", id] as const,
   detailBySlug: (slug: string) =>
     [...recipeKeys.all, "detail", "slug", slug] as const,
 };
@@ -27,14 +26,6 @@ export const useGetMyRecipes = () => {
   });
 };
 
-export const useGetRecipeById = (id: number) => {
-  return useQuery({
-    queryKey: recipeKeys.detail(id),
-    queryFn: () => recipeApi.getRecipeById(id),
-    enabled: !!id,
-  });
-};
-
 export const useGetRecipeBySlug = (slug: string) => {
   return useQuery({
     queryKey: recipeKeys.detailBySlug(slug),
@@ -48,11 +39,8 @@ export const useUpdateRecipe = () => {
   return useMutation({
     mutationFn: ({ id, data }: { id: number; data: UpdateRecipePayload }) =>
       recipeApi.updateRecipe(id, data),
-    onSuccess: (_, variables) => {
+    onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: recipeKeys.lists() });
-      queryClient.invalidateQueries({
-        queryKey: recipeKeys.detail(variables.id),
-      });
     },
     onError: (error) => {
       console.error("Erro ao atualizar receita:", error);
@@ -77,11 +65,9 @@ export const useFavoriteRecipe = () => {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: recipeApi.favoriteRecipe,
-    onSuccess: (_, recipeId) => {
+    onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: recipeKeys.lists() });
-      queryClient.invalidateQueries({
-        queryKey: recipeKeys.detail(recipeId),
-      });
+      queryClient.invalidateQueries({ queryKey: recipeKeys.all });
     },
     onError: (error) => {
       console.error("Erro ao favoritar receita:", error);

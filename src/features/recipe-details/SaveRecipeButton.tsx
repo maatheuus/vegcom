@@ -1,54 +1,76 @@
 "use client";
 
 import Row from "@/shared/ui/Layout/Helpers/Row";
-import { BookmarkIcon } from "@phosphor-icons/react";
-import { memo, useCallback, useState } from "react";
+import { HeartIcon } from "@phosphor-icons/react";
+import { memo, useEffect, useState, useTransition } from "react";
+import { useFavoriteRecipe } from "../recipes/api/queries/getRecipesApiClient";
+import type { User } from "../auth/api/types";
 
 interface SaveRecipeButtonProps {
-  initialSaved: boolean;
-  onSavedChange?: (saved: boolean) => void;
+  user: User | undefined;
+  recipeId: number;
 }
 
 const SaveRecipeButton = memo(function SaveRecipeButton({
-  initialSaved,
-  onSavedChange,
+  user,
+  recipeId,
 }: SaveRecipeButtonProps) {
-  const [saved, setSaved] = useState(initialSaved);
+  const initialSaved =
+    user?.savedRecipes?.some((saved) => saved.id === recipeId) ?? false;
 
-  const handleClick = useCallback(() => {
-    const newSaved = !saved;
-    setSaved(newSaved);
-    onSavedChange?.(newSaved);
-  }, [saved, onSavedChange]);
+  const [isSaved, setIsSaved] = useState(initialSaved);
+  const [isMounted, setIsMounted] = useState(false);
+  const [isPending, startTransition] = useTransition();
+  const { mutateAsync: favoriteRecipe, data } = useFavoriteRecipe();
 
-  const handleKeyDown = useCallback(
-    (e: React.KeyboardEvent) => {
-      if (e.key === "Enter" || e.key === " ") {
-        e.preventDefault();
-        handleClick();
-      }
-    },
-    [handleClick],
-  );
+  useEffect(() => {
+    setIsMounted(true);
+    setIsSaved(initialSaved);
+  }, [initialSaved]);
+
+  const handleFavorite = async (e: React.MouseEvent | React.KeyboardEvent) => {
+    if (!recipeId || isPending) return;
+
+    const previousState = isSaved;
+    setIsSaved(!previousState);
+
+    try {
+      startTransition(async () => {
+        await favoriteRecipe(Number(recipeId));
+
+        if (data && Boolean(data.saved)) {
+          setIsSaved(data.saved);
+        }
+      });
+    } catch (error) {
+      console.error("Error favoriting recipe:", error);
+      setIsSaved(previousState);
+    }
+  };
 
   return (
     <Row
-      onClick={handleClick}
-      onKeyDown={handleKeyDown}
+      onClick={handleFavorite}
       className="cursor-pointer select-none"
       role="button"
       tabIndex={0}
       aria-label={
-        saved ? "Remover receita dos favoritos" : "Salvar receita nos favoritos"
+        isSaved
+          ? "Remover receita dos favoritos"
+          : "Salvar receita nos favoritos"
       }
-      aria-pressed={saved}
+      aria-pressed={isSaved}
     >
-      <BookmarkIcon
-        weight={saved ? "fill" : "thin"}
-        size={18}
-        className="text-green-500"
-        aria-hidden="true"
-      />
+      {isPending ? (
+        <span className="h-4 w-4 animate-spin rounded-full border-2 border-green-500 border-t-transparent" />
+      ) : (
+        <HeartIcon
+          weight={!isMounted ? "regular" : isSaved ? "fill" : "regular"}
+          size={18}
+          className="text-green-500"
+          aria-hidden="true"
+        />
+      )}
     </Row>
   );
 });

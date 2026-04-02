@@ -33,7 +33,7 @@ export default function RecipeParent({
           recipes={recipes}
           title="Mais Bem Avaliadas"
           queryKey="bestRated"
-          sortBy="rating"
+          sortBy="averageRating"
         />
       </Suspense>
       <Suspense fallback={<RecipeGridSkeleton count={ITEMS_PER_PAGE} />}>

@@ -14,8 +14,10 @@ export function ViewTracker({ recipeId }: ViewTrackerProps) {
       if (sessionStorage.getItem(viewedKey)) return;
 
       try {
-        await recipeApi.incrementView(recipeId);
-        sessionStorage.setItem(viewedKey, "true");
+        const result = await recipeApi.incrementView(recipeId);
+        if (result.success) {
+          sessionStorage.setItem(viewedKey, "true");
+        }
       } catch (error) {
         console.error("Failed to increment view:", error);
       }

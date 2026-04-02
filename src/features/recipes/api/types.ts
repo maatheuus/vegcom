@@ -122,5 +122,5 @@ export interface GetRecipesByIdsResponse {
 
 export interface IncrementViewResponse {
   success: boolean;
-  views: number;
+  views?: number;
 }
