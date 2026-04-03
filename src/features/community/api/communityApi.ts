@@ -2,6 +2,7 @@
 
 import type { PostCardDataProps, PostComment } from "@/shared";
 import { api } from "@/shared/api/axios/axiosInstance";
+import { serverFetch } from "@/shared/api/axios/serverFetch";
 import { revalidateTag } from "next/cache";
 import { cookies } from "next/headers";
 import type {
@@ -51,106 +52,60 @@ export const getPosts = async (
 export const getPostById = async (
   id: string,
 ): Promise<PostCardDataProps | null> => {
-  const cookieStore = await cookies();
-  const token = cookieStore.get("token")?.value;
-
-  try {
-    const { data } = await api.get<PostCardDataProps>(`/community/${id}`, {
-      ...(token && {
-        headers: { Authorization: `Bearer ${token}` },
-      }),
-    });
-    return data;
-  } catch (err) {
-    if ((err as { status?: number })?.status === 404) return null;
-    throw err;
-  }
+  return serverFetch<PostCardDataProps>(`/community/${id}`, {
+    method: "GET",
+  });
 };
 
 export const createPost = async (
   payload: CreatePostData | FormData,
 ): Promise<PostCardDataProps> => {
-  const cookieStore = await cookies();
-  const token = cookieStore.get("token")?.value;
-
-  if (!token) {
-    throw new Error("Usuário não está autenticado");
-  }
-
-  const { data } = await api.post<PostCardDataProps>("/community", payload, {
+  return serverFetch<PostCardDataProps>("/community", {
+    method: "POST",
     headers: {
       ...(payload instanceof FormData
         ? { "Content-Type": "multipart/form-data" }
         : { "Content-Type": "application/json" }),
-      Authorization: `Bearer ${token}`,
     },
+    body: payload,
   });
-
-  return data;
 };
 
 export const deletePost = async (postId: string): Promise<void> => {
-  const cookieStore = await cookies();
-  const token = cookieStore.get("token")?.value;
-
-  if (!token) {
-    throw new Error("Usuário não está autenticado");
-  }
-
-  await api.delete(`/community/posts/${postId}`, {
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${token}`,
-    },
-  });
   revalidateTag("posts");
+  return serverFetch(`/community/posts/${postId}`, {
+    method: "DELETE",
+  });
 };
 
 export const createComment = async (
   postId: string,
   payload: CreateCommentData,
 ): Promise<PostComment> => {
-  const cookieStore = await cookies();
-  const token = cookieStore.get("token")?.value;
-
-  if (!token) {
-    throw new Error("Usuário não está autenticado");
-  }
-
-  const { data } = await api.post<PostComment>(
-    `/community/${postId}/comments`,
-    payload,
-    {
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
-    },
-  );
-  return data;
+  return serverFetch(`/community/${postId}/comments`, {
+    method: "POST",
+    body: payload,
+  });
 };
 
 export const toggleLike = async (
   postId: string,
 ): Promise<{ postLikes: number }> => {
-  const cookieStore = await cookies();
-  const token = cookieStore.get("token")?.value;
-
-  if (!token) {
-    throw new Error("Usuário não está autenticado");
-  }
-
-  const { data } = await api.post<{ postLikes: number }>(
-    `/community/${postId}/likes`,
-    {},
-    {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    },
-  );
   revalidateTag("posts");
-  return data;
+  return serverFetch(`/community/${postId}/likes`, {
+    method: "POST",
+  });
+};
+
+export const createReport = async (payload: {
+  reason: string;
+  communityPostId?: number | string;
+  targetUserId?: number;
+}): Promise<void> => {
+  return serverFetch("/reports", {
+    method: "POST",
+    body: payload,
+  });
 };
 
 export const toggleSave = async (
@@ -161,26 +116,8 @@ export const toggleSave = async (
   message: string;
   saved: boolean;
 }> => {
-  const cookieStore = await cookies();
-  const token = cookieStore.get("token")?.value;
-
-  if (!token) {
-    throw new Error("Usuário não está autenticado");
-  }
-
-  const { data } = await api.post<{
-    success: boolean;
-    message: string;
-    saved: boolean;
-  }>(
-    `/community/posts/${postId}/save`,
-    { userId },
-    {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    },
-  );
-
-  return data;
+  return serverFetch(`/community/posts/${postId}/save`, {
+    method: "POST",
+    body: { userId },
+  });
 };
