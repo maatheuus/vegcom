@@ -3,11 +3,9 @@ import type {
   CreateRecipePayload,
   CreateRecipeResponse,
   FavoriteRecipeResponse,
-  GetRecipeByIdResponse,
   GetRecipeBySlugResponse,
   GetRecipesByIdsResponse,
   GetRecipesResponse,
-  IncrementViewResponse,
   UpdateRecipePayload,
 } from "./types";
 
@@ -21,10 +19,6 @@ const recipeApi = {
   },
   getRecipes: async () => {
     const { data } = await api.get<GetRecipesResponse>("/recipes/list");
-    return data;
-  },
-  getRecipeById: async (id: number) => {
-    const { data } = await api.get<GetRecipeByIdResponse>(`/recipes/get/${id}`);
     return data;
   },
   getRecipeBySlug: async (slug: string) => {
@@ -58,12 +52,7 @@ const recipeApi = {
     });
     return data;
   },
-  incrementView: async (id: number) => {
-    const { data } = await api.post<IncrementViewResponse>(
-      `/recipes/${id}/view`,
-    );
-    return data;
-  },
+
   getMyRecipes: async () => {
     const { data } = await api.get<GetRecipesResponse>("/recipes/my");
     return data;

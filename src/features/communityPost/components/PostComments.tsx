@@ -1,5 +1,6 @@
 "use client";
 
+import { getInitials } from "@/features/account/components/utils";
 import { useGetUser } from "@/features/auth/api/queries/getAuthApiClient";
 import type { PostComment } from "@/shared";
 import { dateFormatDistanceLocale } from "@/shared/lib/utils";
@@ -41,11 +42,13 @@ export default function PostComments({
                 key={index}
                 className="w-full items-start gap-x-2 md:gap-x-3"
               >
-                <Link href={`/user/${comment.user.id}`} className="contents">
+                <Link href={`/user/${comment.user?.id}`} className="contents">
                   <Avatar className="size-8 md:size-10">
-                    <AvatarImage src={comment.user.urlImage || ""} />
+                    <AvatarImage src={comment.user?.urlImage || ""} />
                     <AvatarFallback className="text-xs capitalize md:text-base">
-                      {comment.user.name.slice(0, 2)}
+                      {comment.user?.name
+                        ? getInitials(comment.user.name)
+                        : "U"}
                     </AvatarFallback>
                   </Avatar>
                 </Link>
@@ -53,7 +56,7 @@ export default function PostComments({
                 <Col className="flex-1 gap-y-1">
                   <Row className="w-full items-baseline justify-between gap-x-2">
                     <Link
-                      href={`/user/${comment.user.id}`}
+                      href={`/user/${comment.user?.id}`}
                       className="contents"
                     >
                       <Text
@@ -61,7 +64,7 @@ export default function PostComments({
                         weight={Text.Weight.Bold}
                         className="font-maitree text-xs text-green-500 md:text-base"
                       >
-                        {comment.user.name}
+                        {comment.user?.name}
                       </Text>
                     </Link>
                     <Text
@@ -85,11 +88,19 @@ export default function PostComments({
                     type={Text.Type.BodyFour}
                     className="font-maitree text-base leading-relaxed font-medium break-words break-all text-green-500"
                   >
-                    {comment.commentContent}
+                    {comment.commentContent.split(/(@\w+)/g).map((part, i) =>
+                      part.startsWith("@") ? (
+                        <span key={i} className="font-bold text-green-500">
+                          {part}
+                        </span>
+                      ) : (
+                        part
+                      ),
+                    )}
                   </Text>
 
                   <ReplyButton
-                    username={comment.user.name}
+                    username={comment.user?.name}
                     isAuthenticated={!!user}
                     className="w-fit"
                   />

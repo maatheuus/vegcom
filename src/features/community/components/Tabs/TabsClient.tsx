@@ -72,7 +72,7 @@ export default function TabsClient({
       selectedTab={selectedTab}
       setSelectedTab={handleTabChange as (tab: string) => void}
       isTransitioning={false}
-      className="sticky -top-1 z-20 bg-green-50 pt-5 md:top-63"
+      className="sticky top-[4.5rem] z-20 bg-green-50 pt-5"
     />
   );
 }

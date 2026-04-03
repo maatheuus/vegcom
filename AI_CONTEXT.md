@@ -24,7 +24,7 @@ VegCom ("Comunidade Vegana") is a platform designed to connect vegans and vegeta
 ## Key Workflows
 - **Authentication:** Custom login, signup, and forgot-password flows (`app/(public)/(auth)`).
 - **Content Creation:** Users can create new recipes using a dedicated rich text interface (`app/(private)/new-recipe`).
-- **User Engagement:** Users can save/like recipes and participate in community discussions (`app/(public)/community`).
+- **User Engagement:** Users can save/like recipes and participate in community discussions (`app/`).
 
 ## AI Interaction Guidelines
 - **Yarn:** Always use `yarn` instead of `npm` or `pnpm` for package management.

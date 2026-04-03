@@ -17,9 +17,10 @@ import {
 import type { UseFormReturn } from "react-hook-form";
 import type { z } from "zod";
 
+import type { CitySearchResult } from "@/shared/lib/api/cities";
+import { SearchCityLocation } from "@/shared/ui/SearchCityLocation";
 import Text from "@/shared/ui/Text";
 import Textarea from "@/shared/ui/TextArea";
-// import clsx from "clsx";
 import { useState } from "react";
 import {
   bioTooLongMessages,
@@ -49,7 +50,7 @@ export default function FormInformation({
     null,
   );
 
-  const { email, location, publicProfile } = form.getValues();
+  const { email, location, publicProfile, fullName } = form.getValues();
 
   return (
     <form className={`space-y-6 ${className || ""}`}>
@@ -67,6 +68,7 @@ export default function FormInformation({
                   <Input
                     placeholder="Digite seu nome completo"
                     disabled={isEditing}
+                    defaultValue={fullName}
                     {...field}
                   />
                 </FormControl>
@@ -89,6 +91,7 @@ export default function FormInformation({
                   <Input
                     placeholder="Digite seu email"
                     disabled={isEditing}
+                    defaultValue={email}
                     {...field}
                   />
                 </FormControl>
@@ -110,10 +113,15 @@ export default function FormInformation({
                   Localização
                 </FormLabel>
                 <FormControl className="rounded-lg">
-                  <Input
-                    placeholder={location || "Ex: São Paulo, SP"}
+                  <SearchCityLocation
+                    value={field.value}
+                    onChange={field.onChange}
+                    onSelect={(city: CitySearchResult) => {
+                      field.onChange(city.displayName || city.nome);
+                    }}
                     disabled={isEditing}
-                    {...field}
+                    placeholder="Digite sua cidade..."
+                    error={!!form.getFieldState("location").error}
                   />
                 </FormControl>
                 <FormMessage />
@@ -247,7 +255,7 @@ export default function FormInformation({
                 disabled={isEditing}
                 showCharacterCount={!isEditing}
                 maxLength={maxLengthForBio}
-                className="w-full max-w-full"
+                className="hidden-scrollbar w-full max-w-full resize-none rounded-lg border border-green-200 bg-green-50/60 p-3 text-green-500 focus:border-green-300 focus:bg-green-100/40 focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50"
                 {...field}
                 onChange={(e) => {
                   const value = e.target.value;

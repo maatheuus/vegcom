@@ -20,16 +20,13 @@ import {
   useState,
   type ComponentProps,
 } from "react";
+import { getPostById } from "../../api/communityApi";
 
 const getNotificationIcon = (type: NotificationType) => {
   switch (type) {
     case "COMMENT_REPLY":
     case "COMMENT_LIKE":
       return "💬";
-    case "RECIPE_LIKE":
-      return "❤️";
-    case "FOLLOW":
-      return "➕";
     default:
       return "🔔";
   }
@@ -45,7 +42,7 @@ const NotificationPopup = memo(function NotificationPopup({
     useNotifications();
 
   const handleNotificationClick = useCallback(
-    (notification: (typeof notifications)[0]) => {
+    async (notification: (typeof notifications)[0]) => {
       if (!notification.isRead) {
         markAsRead(notification.id);
       }
@@ -54,17 +51,20 @@ const NotificationPopup = memo(function NotificationPopup({
       if (
         notification.type === "COMMENT_REPLY" ||
         notification.type === "COMMENT_LIKE" ||
+        notification.type === "COMMUNITY_COMMENT" ||
+        notification.type === "COMMUNITY_POST" ||
+        notification.type === "POST_COMMENT" ||
         notification.type === "POST_LIKE"
       ) {
         if (notification.entityId) {
-          router.push(`/community/${notification.entityId}/post`);
-        }
-      } else if (notification.type === "RECIPE_LIKE") {
-        if (notification.entityId) {
-          router.push(`/recipes/${notification.entityId}/recipe`);
+          const postSlug =
+            (await getPostById(String(notification.entityId))?.then(
+              (post) => post?.slug,
+            )) || "";
+
+          router.push(`/community/${notification.entityId}/${postSlug}`);
         }
       }
-      // Handle FOLLOW or SYSTEM if needed in the future
     },
     [markAsRead, router],
   );

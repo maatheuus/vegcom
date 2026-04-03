@@ -6,9 +6,6 @@ import {
   FormMessage,
 } from "@/shared/ui/Form";
 import { Input } from "@/shared/ui/Input";
-import Row from "@/shared/ui/Layout/Helpers/Row";
-import { Switch } from "@/shared/ui/Switch";
-import Text from "@/shared/ui/Text";
 import Textarea from "@/shared/ui/TextArea";
 import { useState } from "react";
 import DynamicFields from "./DynamicFields";
@@ -105,17 +102,17 @@ export default function RenderStepContent({
           <DynamicFields
             title="Adicione Imagens"
             className="w-full"
-            rightContent={
-              <Row.Center className="gap-x-2">
-                <Text className="font-maitree !text-xs text-green-500/70">
-                  Usar imagens pré-selecionadas
-                </Text>
-                <Switch
-                  checked={useDefaultImages}
-                  onCheckedChange={setUseDefaultImages}
-                />
-              </Row.Center>
-            }
+            // rightContent={
+            //   <Row.Center className="gap-x-2">
+            //     <Text className="font-maitree !text-xs text-green-500/70">
+            //       Usar imagens pré-selecionadas
+            //     </Text>
+            //     <Switch
+            //       checked={useDefaultImages}
+            //       onCheckedChange={setUseDefaultImages}
+            //     />
+            //   </Row.Center>
+            // }
           >
             <ImageUploadArea
               form={form}

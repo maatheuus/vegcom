@@ -66,7 +66,7 @@ const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>(
         {showCharacterCount && (
           <div
             className={clsx(
-              "font-lora absolute right-3 bottom-2 flex items-center gap-x-1 italic",
+              "font-lora absolute right-3 bottom-2 flex items-center gap-x-1 rounded-full bg-green-50 p-1 italic backdrop-blur-2xl",
               disabled && "opacity-50",
             )}
           >

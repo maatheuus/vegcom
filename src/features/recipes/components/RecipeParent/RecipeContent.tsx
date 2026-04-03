@@ -25,7 +25,7 @@ import {
 import Text from "@/shared/ui/Text";
 import { ITEMS_PER_PAGE } from ".";
 
-export type SortType = "rating" | "views" | "title" | "prepTime" | "none";
+export type SortType = "averageRating" | "views" | "title" | "prepTime" | "none";
 
 interface RecipeContentProps {
   title?: string;
@@ -42,7 +42,7 @@ export default function RecipeContent({
 }: RecipeContentProps) {
   const getSortFunction = (type: SortType) => {
     switch (type) {
-      case "rating":
+      case "averageRating":
         return sortByRating;
       case "views":
         return sortByViews;

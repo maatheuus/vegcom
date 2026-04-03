@@ -148,7 +148,6 @@ export type NewRecipeForm = UseFormReturn<NewRecipeFormValues>;
 
 export const transformFormToApiPayload = (
   formData: NewRecipeFormValues,
-  userId: number,
 ): { data: CreateRecipeFormData; images: File[] } => {
   const hours = Number(formData.recipe_preparationHours) || 0;
   const minutes = Number(formData.recipe_preparationMinutes) || 0;
@@ -164,7 +163,6 @@ export const transformFormToApiPayload = (
   };
 
   const data: CreateRecipeFormData = {
-    userId,
     title: formData.recipe_title,
     description: formData.recipe_description,
     timeForPreparation: formatPreparationTime(),

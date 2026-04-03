@@ -23,7 +23,7 @@ import { useRouter } from "next/navigation";
 import { useState, useTransition } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import { getSignin } from "../../api/queries/getAuthApiServer";
+import { useSignin } from "../../api/queries/getAuthApiClient";
 import SubmitButton from "../SubmitButton/SubmitButton";
 
 const formSchema = z.object({
@@ -40,6 +40,7 @@ export default function LoginForm() {
   const [showingPassword, setShowingPassword] = useState<boolean>(false);
   const [isPending, startTransition] = useTransition();
   const router = useRouter();
+  const signinMutation = useSignin();
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -55,13 +56,14 @@ export default function LoginForm() {
   async function handleLogin(credentials: z.infer<typeof formSchema>) {
     startTransition(async () => {
       try {
-        await getSignin(credentials);
+        await signinMutation.mutateAsync(credentials);
+        router.refresh();
         toast({
           title: "Sucesso!",
           description: "Você será redirecionado.",
           variant: "success",
         });
-        router.push("/community/");
+        router.push("/");
       } catch (error: unknown) {
         console.error("Login error:", error);
         const err = error as { message?: string; code?: string };

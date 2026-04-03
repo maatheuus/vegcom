@@ -1,7 +1,7 @@
 import { useCitiesSearch } from "@/shared/hooks/useCitiesSearch";
 import type { CitySearchResult } from "@/shared/lib/api/cities";
 import { cn } from "@/shared/lib/utils";
-import { CaretDownIcon, MapPinSimpleAreaIcon } from "@phosphor-icons/react";
+import { MapPinSimpleAreaIcon } from "@phosphor-icons/react";
 import clsx from "clsx";
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import { Input } from "../Input";
@@ -165,15 +165,8 @@ export function SearchCityLocation({
           )}
         />
         <div className="pointer-events-none absolute top-1/2 right-3 -translate-y-1/2">
-          {isLoading ? (
+          {isLoading && (
             <div className="h-4 w-4 animate-spin rounded-full border-2 border-green-500 border-t-transparent" />
-          ) : (
-            <CaretDownIcon
-              className={clsx(
-                "h-4 w-4 text-green-500 transition-transform",
-                isOpen && "rotate-180",
-              )}
-            />
           )}
         </div>
       </div>

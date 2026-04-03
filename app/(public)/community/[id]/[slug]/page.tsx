@@ -1,3 +1,4 @@
+import { getInitials } from "@/features/account/components/utils";
 import { getPostById } from "@/features/community";
 import BackToCommunityButton from "@/features/communityPost/components/BackToCommunityButton";
 import PostActions from "@/features/communityPost/components/PostActions";
@@ -9,6 +10,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/shared/ui/Avatar";
 import Layout from "@/shared/ui/Layout";
 import Col from "@/shared/ui/Layout/Helpers/Col";
 import Row from "@/shared/ui/Layout/Helpers/Row";
+import LinkPreviewList from "@/shared/ui/PreviewLinks/LinkPreviewList";
 import Text from "@/shared/ui/Text";
 import { prepareHtmlContent } from "@/shared/utils";
 import { formatDistance } from "date-fns";
@@ -59,8 +61,8 @@ export default async function Page({ params }: Props) {
 
   const uniqueUsersMap = new Map<string, { name: string }>();
   post.comments?.comments.forEach((comment: PostComment) => {
-    if (comment.user && comment.user.name) {
-      uniqueUsersMap.set(comment.user.name, comment.user);
+    if (comment.user && comment.user?.name) {
+      uniqueUsersMap.set(comment.user?.name, comment.user);
     }
   });
 
@@ -82,7 +84,7 @@ export default async function Page({ params }: Props) {
     headline: post.postTitle,
     author: {
       "@type": "Person",
-      name: post.user.name,
+      name: post.user?.name,
     },
     datePublished: post.postDate,
     description: content || "Post de discussão na comunidade.",
@@ -104,32 +106,32 @@ export default async function Page({ params }: Props) {
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         />
-        <section className="hidden-scrollbar mx-auto w-full max-w-5xl overflow-scroll scroll-auto">
+        <section className="hidden-scrollbar w-full overflow-scroll scroll-auto">
           <BackToCommunityButton />
           <Col className="w-full rounded-2xl border-b border-b-gray-100 py-5 transition-colors md:px-4">
             {/* Header */}
             <Row className="mb-4 w-full justify-between">
               <Row className="w-full items-center gap-x-2 md:gap-x-3">
-                <Link href={`/user/${post.user.id}`} className="contents">
+                <Link href={`/user/${post.user?.id}`} className="contents">
                   <Avatar className="size-8 md:size-10">
                     <AvatarImage
-                      src={post.user.urlImage || ""}
-                      alt={post.user.name || "user image"}
+                      src={post.user?.urlImage || ""}
+                      alt={post.user?.name || "user image"}
                     />
                     <AvatarFallback className="text-xs capitalize md:text-base">
-                      {post.user.name?.slice(0, 2)}
+                      {post.user?.name ? getInitials(post.user?.name) : "U"}
                     </AvatarFallback>
                   </Avatar>
                 </Link>
                 <Row className="items-center gap-x-2">
-                  <Link href={`/user/${post.user.id}`} className="contents">
+                  <Link href={`/user/${post.user?.id}`} className="contents">
                     <Text
                       as="span"
                       type={Text.Type.BodyFive}
                       weight={Text.Weight.Bold}
                       className="font-maitree text-xs text-green-500 md:text-base"
                     >
-                      {post.user.name}
+                      {post.user?.name}
                     </Text>
                   </Link>
                   <span className="size-0.5 rounded-full bg-green-500"></span>
@@ -174,6 +176,11 @@ export default async function Page({ params }: Props) {
                   {content}
                 </Text>
               )}
+
+              <LinkPreviewList
+                content={post.postContent.postResources.content ?? ""}
+                links={post.postContent.postResources.links ?? []}
+              />
 
               {/* Images */}
               {post.postContent.postResources &&

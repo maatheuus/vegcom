@@ -1,3 +1,4 @@
+import { getInitials } from "@/features/account/components/utils";
 import { Avatar, AvatarFallback, AvatarImage } from "@/shared/ui/Avatar";
 import Col from "@/shared/ui/Layout/Helpers/Col";
 import Row from "@/shared/ui/Layout/Helpers/Row";
@@ -12,8 +13,8 @@ interface UserProfileHeaderProps {
 }
 
 export function UserProfileHeader({ user }: UserProfileHeaderProps) {
-  const recipeCount = user.recipes?.length ?? 0;
-  const postCount = user.posts?.length ?? 0;
+  const recipeCount = user?.recipes?.length ?? 0;
+  const postCount = user?.posts?.length ?? 0;
 
   return (
     <div className="w-full rounded-xl border border-green-100 bg-green-100 p-6 md:p-8">
@@ -22,12 +23,12 @@ export function UserProfileHeader({ user }: UserProfileHeaderProps) {
           <div className="shrink-0 rounded-full p-[2px] ring-2 ring-green-100">
             <Avatar className="size-16 md:size-20">
               <AvatarImage
-                src={user.informations.avatarUrl}
-                alt={user.name}
+                src={user?.informations.avatarUrl}
+                alt={user?.name}
                 className="object-cover"
               />
               <AvatarFallback className="font-lora bg-green-50 text-xl font-bold text-green-600 capitalize md:text-2xl">
-                {user.name?.slice(0, 2)}
+                {user?.name ? getInitials(user.name) : "U"}
               </AvatarFallback>
             </Avatar>
           </div>
@@ -39,27 +40,27 @@ export function UserProfileHeader({ user }: UserProfileHeaderProps) {
               weight={Text.Weight.Bold}
               className="font-lora leading-tight text-green-800"
             >
-              {user.name}
+              {user?.name}
             </Text>
 
-            {user.informations.location && (
+            {user?.informations.location && (
               <Row className="items-center gap-1 text-green-600">
                 <MapPinIcon size={12} weight="fill" />
                 <span className="font-maitree text-xs text-green-600 capitalize">
-                  {user.informations.location}
+                  {user?.informations.location}
                 </span>
               </Row>
             )}
 
             <Row className="mt-1 flex-wrap gap-1.5">
-              {user.informations.preference && (
+              {user?.informations.preference && (
                 <UserPreferenceBadge
-                  preference={user.informations.preference}
+                  preference={user?.informations.preference}
                 />
               )}
-              {user.informations.culinaryLevel && (
+              {user?.informations.culinaryLevel && (
                 <UserCulinaryLevelBadge
-                  level={user.informations.culinaryLevel}
+                  level={user?.informations.culinaryLevel}
                 />
               )}
             </Row>
@@ -95,11 +96,11 @@ export function UserProfileHeader({ user }: UserProfileHeaderProps) {
         </Row>
       </div>
 
-      {user.informations.aboutInfo && (
+      {user?.informations.aboutInfo && (
         <>
           <div className="my-5 h-px bg-green-50" />
           <p className="font-maitree text-sm leading-relaxed text-gray-500">
-            {user.informations.aboutInfo}
+            {user?.informations.aboutInfo}
           </p>
         </>
       )}

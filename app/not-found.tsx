@@ -27,7 +27,7 @@ export default function NotFound() {
           comunidade?
         </Text>
 
-        <Button.Link href="/community" className="mt-4">
+        <Button.Link href="/" className="mt-4">
           Voltar para a comunidade
         </Button.Link>
       </div>

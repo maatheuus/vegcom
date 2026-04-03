@@ -15,7 +15,9 @@ import { InputIcon } from "@/shared/ui/Input";
 
 import Col from "@/shared/ui/Layout/Helpers/Col";
 
+import { useCheckEmail } from "@/features/auth/api/queries/getAuthApiClient";
 import { useSignupFormState } from "@/features/auth/hooks/queries/useSignupFormState";
+import useDebounce from "@/shared/hooks/useDebounce";
 import {
   AtIcon,
   CircleNotchIcon,
@@ -23,7 +25,7 @@ import {
   EyesIcon,
   UserCircleDashedIcon,
 } from "@phosphor-icons/react";
-import { useState, type ComponentProps, type FC } from "react";
+import { useRef, useState, type ComponentProps, type FC } from "react";
 import SubmitButton from "../SubmitButton/SubmitButton";
 
 const formSchema = z.object({
@@ -47,7 +49,61 @@ const SignupForm: FC<ComponentProps<"form">> = ({ className, ...props }) => {
     },
   });
 
-  function onSubmit(data: z.infer<typeof formSchema>) {
+  const emailValue = form.watch("email");
+  const debouncedEmail = useDebounce(emailValue, 500);
+  const { mutateAsync: checkEmailMutate } = useCheckEmail();
+
+  const verifiedEmailRef = useRef<string | null>(formData.email || null);
+
+  // async function checkEmail(email: string) {
+  //   if (!email || !email.includes("@")) {
+  //     if (form.getFieldState("email").error?.type === "manual") {
+  //       form.clearErrors("email");
+  //     }
+  //     return;
+  //   }
+
+  //   if (email === verifiedEmailRef.current) return;
+
+  //   try {
+  //     const { available } = await checkEmailMutate(email);
+
+  //     if (!available) {
+  //       verifiedEmailRef.current = null;
+  //       form.setError("email", {
+  //         type: "manual",
+  //         message: "Este email já está cadastrado.",
+  //       });
+  //     } else {
+  //       verifiedEmailRef.current = email;
+  //       if (form.getFieldState("email").error?.type === "manual") {
+  //         form.clearErrors("email");
+  //       }
+  //     }
+  //   } catch (error) {
+  //     console.error("Erro ao verificar email:", error);
+  //   }
+  // }
+
+  async function onSubmit(data: z.infer<typeof formSchema>) {
+    if (data.email !== verifiedEmailRef.current) {
+      try {
+        const { available } = await checkEmailMutate(data.email);
+        if (!available) {
+          verifiedEmailRef.current = null;
+          form.setError("email", {
+            type: "manual",
+            message: "Este email já está cadastrado.",
+          });
+          return;
+        }
+        verifiedEmailRef.current = data.email;
+      } catch (error) {
+        console.error("Erro ao verificar email:", error);
+        return;
+      }
+    }
+
     updateFormData(data);
     nextStep();
   }

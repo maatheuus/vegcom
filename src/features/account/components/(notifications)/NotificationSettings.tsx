@@ -32,7 +32,7 @@ export default function NotificationSettings() {
   const [isEditing, setIsEditing] = useState(false);
   const { data: _user } = useGetUser();
 
-  // In a real app, these default values would come from user.emailPreferences
+  // In a real app, these default values would come from user?.emailPreferences
   const form = useForm<NotificationSettingsForm>({
     resolver: zodResolver(notificationSettingsSchema),
     defaultValues: {

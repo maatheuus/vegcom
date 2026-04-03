@@ -1,11 +1,15 @@
 "use client";
 
-// Inspired by react-hot-toast library
 import * as React from "react";
 import type { ToastActionElement, ToastProps } from "../ui/toast";
 
 const TOAST_LIMIT = 1;
-const TOAST_REMOVE_DELAY = 2000;
+const TOAST_REMOVE_DELAY = 300;
+
+const getDurationByVariant = (variant?: string) => {
+  if (variant === "destructive") return 6000;
+  return 2500;
+};
 
 export type ToasterToast = ToastProps & {
   id: string;
@@ -14,7 +18,6 @@ export type ToasterToast = ToastProps & {
   action?: ToastActionElement;
 };
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const actionTypes = {
   ADD_TOAST: "ADD_TOAST",
   UPDATE_TOAST: "UPDATE_TOAST",
@@ -53,23 +56,53 @@ interface State {
   toasts: ToasterToast[];
 }
 
-const toastTimeouts = new Map<string, ReturnType<typeof setTimeout>>();
+const listeners: Array<(state: State) => void> = [];
+let memoryState: State = { toasts: [] };
 
-const addToRemoveQueue = (toastId: string) => {
-  if (toastTimeouts.has(toastId)) {
-    return;
+const removeTimeouts = new Map<string, ReturnType<typeof setTimeout>>();
+const dismissTimeouts = new Map<string, ReturnType<typeof setTimeout>>();
+
+function clearToastTimers(toastId: string) {
+  const removeTimeout = removeTimeouts.get(toastId);
+  if (removeTimeout) {
+    clearTimeout(removeTimeout);
+    removeTimeouts.delete(toastId);
   }
 
+  const dismissTimeout = dismissTimeouts.get(toastId);
+  if (dismissTimeout) {
+    clearTimeout(dismissTimeout);
+    dismissTimeouts.delete(toastId);
+  }
+}
+
+function addToRemoveQueue(toastId: string) {
+  if (removeTimeouts.has(toastId)) return;
+
   const timeout = setTimeout(() => {
-    toastTimeouts.delete(toastId);
+    removeTimeouts.delete(toastId);
     dispatch({
       type: "REMOVE_TOAST",
-      toastId: toastId,
+      toastId,
     });
   }, TOAST_REMOVE_DELAY);
 
-  toastTimeouts.set(toastId, timeout);
-};
+  removeTimeouts.set(toastId, timeout);
+}
+
+function addToDismissQueue(toastId: string, duration: number) {
+  if (dismissTimeouts.has(toastId)) return;
+
+  const timeout = setTimeout(() => {
+    dismissTimeouts.delete(toastId);
+    dispatch({
+      type: "DISMISS_TOAST",
+      toastId,
+    });
+  }, duration);
+
+  dismissTimeouts.set(toastId, timeout);
+}
 
 export const reducer = (state: State, action: Action): State => {
   switch (action.type) {
@@ -90,8 +123,6 @@ export const reducer = (state: State, action: Action): State => {
     case "DISMISS_TOAST": {
       const { toastId } = action;
 
-      // ! Side effects ! - This could be extracted into a dismissToast() action,
-      // but I'll keep it here for simplicity
       if (toastId) {
         addToRemoveQueue(toastId);
       } else {
@@ -112,23 +143,24 @@ export const reducer = (state: State, action: Action): State => {
         ),
       };
     }
+
     case "REMOVE_TOAST":
       if (action.toastId === undefined) {
+        state.toasts.forEach((toast) => clearToastTimers(toast.id));
         return {
           ...state,
           toasts: [],
         };
       }
+
+      clearToastTimers(action.toastId);
+
       return {
         ...state,
         toasts: state.toasts.filter((t) => t.id !== action.toastId),
       };
   }
 };
-
-const listeners: Array<(state: State) => void> = [];
-
-let memoryState: State = { toasts: [] };
 
 function dispatch(action: Action) {
   memoryState = reducer(memoryState, action);
@@ -137,16 +169,17 @@ function dispatch(action: Action) {
   });
 }
 
-export type Toast = Omit<ToasterToast, "id">;
+export type Toast = Omit<ToasterToast, "id" | "variant"> & {
+  variant?: "success" | "error" | "warning" | "info" | "destructive";
+};
 
-function toast({ ...props }: Toast) {
+function toast({ variant, ...props }: Toast) {
   const id = genId();
+  const duration = props.duration ?? getDurationByVariant(variant);
 
   const update = (props: ToasterToast) =>
-    dispatch({
-      type: "UPDATE_TOAST",
-      toast: { ...props, id },
-    });
+    dispatch({ type: "UPDATE_TOAST", toast: { ...props, id } });
+
   const dismiss = () => dispatch({ type: "DISMISS_TOAST", toastId: id });
 
   dispatch({
@@ -155,17 +188,16 @@ function toast({ ...props }: Toast) {
       ...props,
       id,
       open: true,
+      duration,
       onOpenChange: (open: boolean) => {
         if (!open) dismiss();
       },
     },
   });
 
-  return {
-    id: id,
-    dismiss,
-    update,
-  };
+  addToDismissQueue(id, duration);
+
+  return { id, dismiss, update };
 }
 
 function useToast() {
@@ -175,11 +207,9 @@ function useToast() {
     listeners.push(setState);
     return () => {
       const index = listeners.indexOf(setState);
-      if (index > -1) {
-        listeners.splice(index, 1);
-      }
+      if (index > -1) listeners.splice(index, 1);
     };
-  }, [state]);
+  }, []);
 
   return {
     ...state,

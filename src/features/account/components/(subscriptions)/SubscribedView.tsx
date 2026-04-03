@@ -1,11 +1,10 @@
-"use client";
-
 import { type User } from "@/features/auth/api/types";
 import Button from "@/shared/ui/Button";
 import Row from "@/shared/ui/Layout/Helpers/Row";
 import Text from "@/shared/ui/Text";
 import { formatCurrency } from "@/shared/utils";
 import { SparkleIcon } from "@phosphor-icons/react/dist/ssr";
+import { addMonths, formatDate } from "date-fns";
 import { useTransition } from "react";
 import { createPortalSession } from "../../apiSubscription/queries/getSubscriptionApiServer";
 
@@ -24,10 +23,20 @@ const benefits = [
 export default function SubscribedView({ className, user, ...props }: Props) {
   const [isPending, startTransition] = useTransition();
 
+  const getExpirationDate = () => {
+    if (user?.subscription?.expiresAt) {
+      return new Date(user?.subscription.expiresAt);
+    }
+    if (user?.subscription?.startedAt) {
+      return addMonths(new Date(user?.subscription.startedAt), 1);
+    }
+    return new Date();
+  };
+
   const handleManageSubscription = () => {
     startTransition(async () => {
       try {
-        const result = await createPortalSession(user.id);
+        const result = await createPortalSession(user?.id);
         if (result.url) window.open(result.url, "_blank");
       } catch (error) {
         console.error(error);
@@ -59,8 +68,8 @@ export default function SubscribedView({ className, user, ...props }: Props) {
               className="font-lora text-green-500"
             >
               {formatCurrency(
-                user.subscription?.currency || "BRL",
-                user.subscription?.currentInvoiceAmount || 0,
+                user?.subscription?.currency || "BRL",
+                user?.subscription?.currentInvoiceAmount || 0,
               )}
             </Text>
             <Text
@@ -75,7 +84,7 @@ export default function SubscribedView({ className, user, ...props }: Props) {
         </div>
 
         <div className="space-y-4">
-          <Row className="w-full justify-between">
+          <Row className="w-full items-center justify-between gap-x-4">
             <Text
               as="h3"
               type={Text.Type.HeadingFour}
@@ -88,13 +97,10 @@ export default function SubscribedView({ className, user, ...props }: Props) {
               as="h3"
               type={Text.Type.BodyFour}
               weight={Text.Weight.Normal}
-              className="font-lora text-green-500"
+              className="font-lora text-right text-green-500"
             >
-              Renova em{" "}
-              <strong>
-                {user.subscription?.expiresAt ||
-                  new Date().toLocaleDateString()}
-              </strong>
+              <span className="block">Renova em:</span>
+              <strong>{formatDate(getExpirationDate(), "dd/MM/yyyy")}</strong>
             </Text>
           </Row>
 

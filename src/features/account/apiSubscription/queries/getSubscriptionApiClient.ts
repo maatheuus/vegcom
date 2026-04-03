@@ -1,3 +1,4 @@
+import { getAccessToken } from "@/shared/api/axios/axiosInstance";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { subscriptionApi } from "../subscriptionApi";
 
@@ -10,6 +11,7 @@ export const useGetProducts = () => {
   return useQuery({
     queryKey: subscriptionKeys.products(),
     queryFn: subscriptionApi.getProducts,
+    enabled: !!getAccessToken(),
   });
 };
 

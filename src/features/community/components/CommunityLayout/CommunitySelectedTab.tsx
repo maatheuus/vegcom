@@ -11,11 +11,16 @@ import type { Tab } from "../Tabs";
 interface Props {
   selectedTab: CommunityPostType;
   tabs: Tab[];
+  scrollContainerRef: React.RefObject<HTMLDivElement | null>;
 }
 
 const POSTS_LIMIT = 10;
 
-export default function CommunitySelectedTab({ selectedTab, tabs }: Props) {
+export default function CommunitySelectedTab({
+  selectedTab,
+  tabs,
+  scrollContainerRef,
+}: Props) {
   const sentinelRef = useRef<HTMLDivElement>(null);
   const {
     queryKey,
@@ -52,11 +57,16 @@ export default function CommunitySelectedTab({ selectedTab, tabs }: Props) {
 
     const observer = new IntersectionObserver(
       (entries) => {
-        if (entries[0].isIntersecting && hasNextPage && !isFetchingNextPage) {
+        const first = entries[0];
+        if (first?.isIntersecting && hasNextPage && !isFetchingNextPage) {
           fetchNextPage();
         }
       },
-      { threshold: 0.1 },
+      {
+        root: scrollContainerRef?.current || null,
+        threshold: 0,
+        rootMargin: "0px 0px 400px 0px",
+      },
     );
 
     observer.observe(sentinel);

@@ -1,4 +1,8 @@
-import { getTokenFromCookies } from "@/shared/api/axios/axiosInstance";
+import {
+  getAccessToken,
+  removeAccessToken,
+  setAccessToken,
+} from "@/shared/api/axios/axiosInstance";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import type { LoginCredentials, SignupData } from "../../types";
 import { authApi } from "../authApi";
@@ -12,7 +16,9 @@ export const useGetUser = () => {
   return useQuery({
     queryKey: authKeys.user,
     queryFn: authApi.getUser,
-    enabled: !!getTokenFromCookies(),
+    retry: false,
+    staleTime: 0,
+    enabled: !!getAccessToken(),
   });
 };
 
@@ -21,8 +27,10 @@ export const useSignin = () => {
 
   return useMutation({
     mutationFn: (credentials: LoginCredentials) => authApi.signin(credentials),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: authKeys.user });
+    onSuccess: async (response) => {
+      setAccessToken(response.accessToken);
+      document.cookie = `token=${response.accessToken}; path=/; SameSite=Lax`;
+      await queryClient.invalidateQueries({ queryKey: authKeys.user });
     },
   });
 };
@@ -32,8 +40,29 @@ export const useSignup = () => {
 
   return useMutation({
     mutationFn: (data: SignupData) => authApi.signup(data),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: authKeys.user });
+    onSuccess: async () => {
+      removeAccessToken();
+      await queryClient.invalidateQueries({ queryKey: authKeys.user });
     },
+  });
+};
+
+export const useLogout = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async () => {
+      removeAccessToken();
+    },
+    onSuccess: async () => {
+      await queryClient.cancelQueries();
+      queryClient.clear();
+    },
+  });
+};
+
+export const useCheckEmail = () => {
+  return useMutation({
+    mutationFn: (email: string) => authApi.checkEmail(email),
   });
 };

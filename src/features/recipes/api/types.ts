@@ -120,7 +120,3 @@ export interface GetRecipesByIdsResponse {
   data: DetailedRecipe[];
 }
 
-export interface IncrementViewResponse {
-  success: boolean;
-  views: number;
-}

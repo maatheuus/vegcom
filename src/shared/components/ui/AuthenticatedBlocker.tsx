@@ -27,7 +27,7 @@ export default function AuthenticatedBlocker({
     return (
       <div
         className={clsx(
-          "flex items-center justify-between gap-x-4 rounded-2xl bg-white px-5 py-4 shadow-sm",
+          "flex flex-col items-center justify-between gap-4 rounded-2xl bg-white px-2 py-4 shadow-sm sm:flex-row sm:px-5",
           className,
         )}
         {...props}
@@ -43,7 +43,7 @@ export default function AuthenticatedBlocker({
             </div>
           )}
 
-          <div className="flex flex-col gap-0.5">
+          <div className="flex flex-col gap-0.5 text-center sm:text-left">
             <span className="font-lora text-sm font-semibold text-green-500">
               {title}
             </span>

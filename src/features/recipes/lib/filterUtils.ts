@@ -1,5 +1,4 @@
 import type { Recipe } from "@/entities/recipe";
-import { CATEGORY_TO_API } from "../components/utils";
 
 export function normalizeText(text: string): string {
   return text
@@ -8,12 +7,18 @@ export function normalizeText(text: string): string {
     .replace(/[\u0300-\u036f]/g, "");
 }
 
+function parseCookTimeMinutes(cookTime: string): number {
+  const hoursMatch = cookTime.match(/(\d+)\s*h/i);
+  const minsMatch = cookTime.match(/(\d+)\s*min/i);
+  const hours = hoursMatch ? parseInt(hoursMatch[1]) : 0;
+  const mins = minsMatch ? parseInt(minsMatch[1]) : 0;
+  return hours * 60 + mins;
+}
+
 export function filterRecipes(
   recipes: Recipe[],
   query?: string,
-  mealType?: string,
   prepTime?: string,
-  highlight?: string,
 ): Recipe[] {
   let filtered = [...recipes];
 
@@ -28,43 +33,15 @@ export function filterRecipes(
     });
   }
 
-  if (mealType) {
-    const normalized = normalizeText(mealType);
-    const apiValues = CATEGORY_TO_API[normalized];
-    if (apiValues) {
-      filtered = filtered.filter(
-        (recipe) =>
-          (recipe.category && apiValues.includes(recipe.category)) ||
-          (recipe.mealType && apiValues.includes(recipe.mealType)),
-      );
-    }
-  }
-
   if (prepTime) {
     const normalized = normalizeText(prepTime);
     if (normalized.includes("rapida")) {
       filtered = filtered.filter(
-        (recipe) => recipe.prepTimeCategory === "QUICK",
+        (recipe) => parseCookTimeMinutes(recipe.cookTime) <= 30,
       );
     } else if (normalized.includes("elaborada")) {
       filtered = filtered.filter(
-        (recipe) => recipe.prepTimeCategory === "ELABORATE",
-      );
-    }
-  }
-
-  if (highlight) {
-    const normalized = normalizeText(highlight);
-    if (normalized.includes("popular")) {
-      filtered = filtered.filter((recipe) => (recipe.views || 0) > 1000);
-    } else if (normalized.includes("melhor avaliada")) {
-      filtered = filtered.filter((recipe) => (recipe.rating || 0) >= 4.5);
-    } else if (normalized.includes("novidade")) {
-      const sevenDaysAgo = Date.now() - 7 * 24 * 60 * 60 * 1000;
-      filtered = filtered.filter((recipe) =>
-        recipe.createdAt
-          ? new Date(recipe.createdAt).getTime() >= sevenDaysAgo
-          : false,
+        (recipe) => parseCookTimeMinutes(recipe.cookTime) > 30,
       );
     }
   }
@@ -77,8 +54,10 @@ export function sortRecipes(recipes: Recipe[], sortOption?: string): Recipe[] {
   if (!sortOption) return sorted;
 
   switch (sortOption) {
-    case "rating":
-      return sorted.sort((a, b) => (b.rating || 0) - (a.rating || 0));
+    case "averageRating":
+      return sorted.sort(
+        (a, b) => (b.averageRating || 0) - (a.averageRating || 0),
+      );
     case "views":
       return sorted.sort((a, b) => (b.views || 0) - (a.views || 0));
     case "recent":

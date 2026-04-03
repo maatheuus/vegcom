@@ -50,7 +50,8 @@ export const serverFetch = async <T>(
 
   if (!response.ok) {
     if (response.status === 401 && !options.skipRedirectOn401) {
-      redirect("/login?expired=true");
+      const expiredParam = token ? "?expired=true" : "";
+      redirect(`/login${expiredParam}`);
     }
 
     const errorData = await response.json().catch(() => null);

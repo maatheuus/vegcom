@@ -8,14 +8,16 @@ import {
   FormMessage,
 } from "@/shared/ui/Form";
 import { Input } from "@/shared/ui/Input";
-import { useState } from "react";
+import { useState, useTransition } from "react";
 
 import AccountLayout from "@/features/account/components/AccountLayout";
 import Header from "@/features/account/components/Header";
 
 import { useUpdatePassword } from "@/features/account/hooks/mutations/useUpdateProfile";
-import { useGetUser } from "@/features/auth/api/queries/getAuthApiClient";
-import { logout } from "@/features/auth/api/queries/getAuthApiServer";
+import {
+  useGetUser,
+  useLogout,
+} from "@/features/auth/api/queries/getAuthApiClient";
 import { updatePasswordFormSchema } from "@/features/auth/utils";
 import Button from "@/shared/ui/Button";
 import { Form } from "@/shared/ui/Form";
@@ -31,9 +33,11 @@ import { useForm } from "react-hook-form";
 import type { z } from "zod";
 
 export default function Page() {
+  const [isPending, startTransition] = useTransition();
   const [isEditing, setIsEditing] = useState(false);
   const [confirmDelete, setConfirmDelete] = useState(false);
   const { data: user } = useGetUser();
+  const { mutateAsync: logout } = useLogout();
   const { mutateAsync: updatePassword, isPending: isUpdatingPassword } =
     useUpdatePassword();
 
@@ -57,9 +61,10 @@ export default function Page() {
       });
 
       onCancel();
-      setTimeout(() => {
-        logout();
-      }, 1000);
+      startTransition(async () => {
+        await logout();
+        window.location.href = "/login";
+      });
     } catch (error: unknown) {
       console.log("password error", error);
 
@@ -79,12 +84,13 @@ export default function Page() {
       }
 
       if (err.message === "Access token not found") {
-        setTimeout(() => {
-          logout();
-        }, 1000);
         form.setError("currentPassword", {
           type: "manual",
           message: "Sessão expirada, faça login novamente",
+        });
+        startTransition(async () => {
+          await logout();
+          window.location.href = "/login";
         });
       }
 

@@ -6,7 +6,6 @@ import {
   PlantIcon,
   PlusCircleIcon,
   UserCircleIcon,
-  UsersFourIcon,
 } from "@phosphor-icons/react";
 
 export type NavLink = {
@@ -22,7 +21,6 @@ export const menuConfig = {
     logo: "/favicon-leaf-fork.png",
   },
   centerLinks: [
-    { label: "Comunidade", href: "/community", icon: UsersFourIcon },
     { label: "Receitas", href: "/recipes", icon: ChefHatIcon },
     { label: "Nova receita", href: "/new-recipe", icon: PlusCircleIcon },
     { label: "Chat", href: "/chat", icon: ChatCircleIcon },

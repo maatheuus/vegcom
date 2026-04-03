@@ -91,7 +91,7 @@ export default function Tabs({
 
       {hasLink && (
         <Link
-          href="/community/recipes"
+          href="/recipes"
           className="font-lora text-base font-semibold text-green-200 italic underline transition-colors hover:text-green-500"
         >
           Explorar receitas

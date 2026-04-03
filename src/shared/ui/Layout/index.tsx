@@ -44,16 +44,16 @@ export function Default({
   noFooter = false,
 }: DefaultProps) {
   return (
-    <div
+    <Col
       className={clsx(
-        "body__container-lg--no-padding flex flex-col",
-        noFooter ? "h-dvh" : "min-h-dvh",
+        "w-full bg-green-50",
+        noFooter ? "h-dvh overflow-hidden" : "min-h-dvh",
       )}
     >
       <Col
         as="main"
         className={clsx(
-          "padding__default flex-1 gap-y-4 bg-green-50",
+          "body__container-lg--no-padding padding__default mx-auto min-h-0 w-full flex-1 gap-y-4",
           className,
         )}
       >
@@ -63,7 +63,7 @@ export function Default({
           columns="16"
           className={clsx(
             "mt-4 w-full flex-auto md:mt-8 lg:mt-10",
-            noFooter ? "h-full" : "h-auto",
+            noFooter ? "h-full min-h-0 grid-rows-[1fr]" : "h-auto",
             gridClassName,
           )}
         >
@@ -71,7 +71,7 @@ export function Default({
         </Grid>
       </Col>
       {!noFooter && <Footer />}
-    </div>
+    </Col>
   );
 }
 Default.displayName = "Default";

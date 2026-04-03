@@ -104,6 +104,7 @@ const ShareDropdown = memo(function ShareDropdown({
       >
         <ShareNetworkIcon
           className="text-green-500"
+          weight="regular"
           size={18}
           aria-hidden="true"
         />

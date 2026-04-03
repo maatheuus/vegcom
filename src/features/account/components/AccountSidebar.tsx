@@ -1,6 +1,5 @@
 "use client";
 
-import { cn } from "@/shared/lib/utils";
 import {
   BellIcon,
   ChefHatIcon,
@@ -9,6 +8,7 @@ import {
   ScrollIcon,
   UserCircleIcon,
 } from "@phosphor-icons/react";
+import clsx from "clsx";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
@@ -55,12 +55,12 @@ const sidebarItems = [
   },
 ];
 
-export default function Sidebar({ items }: SidebarProps) {
+export default function AccountSidebar({ items }: SidebarProps) {
   const pathname = usePathname();
 
   return (
     <nav className="mx-auto w-fit rounded-xl border border-green-200 bg-green-50 p-2 lg:w-full">
-      <ul className="flex flex-row md:flex-wrap gap-1 lg:flex-col">
+      <ul className="flex flex-row gap-1 md:flex-wrap lg:flex-col">
         {(items || sidebarItems).map((item) => {
           const isActive = pathname === item.href;
 
@@ -68,7 +68,7 @@ export default function Sidebar({ items }: SidebarProps) {
             <li key={item.href}>
               <Link
                 href={item.href}
-                className={cn(
+                className={clsx(
                   "flex items-center gap-3 rounded-lg px-4 py-3 text-sm font-medium transition-colors",
                   isActive
                     ? "bg-green-100 text-green-500"

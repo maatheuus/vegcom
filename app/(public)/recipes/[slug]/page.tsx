@@ -1,14 +1,8 @@
 import BackButton from "@/features/recipe-details/BackButton";
 import ContentRecipe from "@/features/recipe-details/ContentRecipe";
-import { ViewTracker } from "@/features/recipe-details/ViewTracker";
-import {
-  getRecipeById,
-  getRecipeBySlug,
-} from "@/features/recipes/api/queries/getRecipesApiServer";
+import { getRecipeBySlug } from "@/features/recipes/api/queries/getRecipesApiServer";
 import Layout from "@/shared/ui/Layout";
-import { formatDistanceToNow } from "date-fns";
-import { ptBR } from "date-fns/locale";
-import { notFound, permanentRedirect } from "next/navigation";
+import { notFound } from "next/navigation";
 
 import RecipeDetailsHeader from "@/features/recipe-details/RecipeDetailsHeader";
 import { Metadata } from "next";
@@ -19,21 +13,8 @@ interface Props {
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
-  const isNumericId = /^\d+$/.test(slug);
-  let recipe;
-
-  try {
-    if (isNumericId) {
-      const response = await getRecipeById(parseInt(slug, 10));
-      recipe = response.data;
-    } else {
-      const response = await getRecipeBySlug(slug);
-      recipe = response.data;
-    }
-  } catch (_error) {
-    console.error("Error fetching recipe metadata: ", _error);
-    return { title: "Receita não encontrada" };
-  }
+  const result = await getRecipeBySlug(slug).catch(() => null);
+  const recipe = result?.data;
 
   if (!recipe) return { title: "Receita não encontrada" };
 
@@ -59,33 +40,13 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 export default async function page({ params }: Props) {
   const { slug } = await params;
 
-  const isNumericId = /^\d+$/.test(slug);
-
-  let recipe;
-
-  if (isNumericId) {
-    try {
-      const recipeId = parseInt(slug, 10);
-      const response = await getRecipeById(recipeId);
-      recipe = response.data;
-
-      permanentRedirect(`/recipes/${recipe.slug}`);
-    } catch (_error) {
-      notFound();
-    }
-  } else {
-    try {
-      const response = await getRecipeBySlug(slug);
-      recipe = response.data;
-    } catch (_error) {
-      notFound();
-    }
+  const result = await getRecipeBySlug(slug).catch((error) =>
+    console.error("Error fetching recipe by slug:", error),
+  );
+  const recipe = result?.data;
+  if (!recipe) {
+    notFound();
   }
-
-  const timeAgo = formatDistanceToNow(new Date(recipe.createdAt), {
-    addSuffix: true,
-    locale: ptBR,
-  });
 
   const jsonLd = {
     "@context": "https://schema.org",
@@ -107,27 +68,17 @@ export default async function page({ params }: Props) {
       })) || [],
   };
 
+  console.log("recipe:", recipe);
   return (
     <Layout.Default className="style-scrollbar h-auto">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
-      <ViewTracker recipeId={recipe.id} />
+
       <section className="space-y-6 md:space-y-8">
         <BackButton />
-        <RecipeDetailsHeader
-          recipeSlug={recipe.slug}
-          isRecipePage
-          views={recipe.views || 0}
-          isSaved={false}
-          authorName={recipe.user.name}
-          commentsCount={recipe.totalComments || 0}
-          rating={recipe.averageRating || 0}
-          timeAgo={timeAgo}
-          title={recipe.title}
-          reviewStatus={recipe.reviewStatus}
-        />
+        <RecipeDetailsHeader recipe={recipe} isRecipePage />
         <ContentRecipe recipe={recipe} />
       </section>
     </Layout.Default>

@@ -1,32 +1,20 @@
-import { isTokenExpired } from "@/shared/lib/jwt";
 import axios from "axios";
 
-/**
- * Gets the authentication token from cookies
- * This works on client-side by reading document.cookie
- */
-export function getTokenFromCookies(): string | null {
+const TOKEN_STORAGE_KEY = "vegcom_access_token";
+
+export function getAccessToken(): string | null {
   if (typeof window === "undefined") return null;
-
-  const cookies = document.cookie.split("; ");
-  const tokenCookie = cookies.find((cookie) => cookie.startsWith("token="));
-  if (!tokenCookie) return null;
-
-  const token = tokenCookie.split("=")[1];
-  if (isTokenExpired(token)) {
-    return null;
-  }
-
-  return token;
+  return window.localStorage.getItem(TOKEN_STORAGE_KEY);
 }
 
-/**
- * Clears the authentication token cookie
- */
-function clearTokenCookie(): void {
+export function setAccessToken(token: string): void {
   if (typeof window === "undefined") return;
+  window.localStorage.setItem(TOKEN_STORAGE_KEY, token);
+}
 
-  document.cookie = "token=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT";
+export function removeAccessToken(): void {
+  if (typeof window === "undefined") return;
+  window.localStorage.removeItem(TOKEN_STORAGE_KEY);
 }
 
 export const api = axios.create({
@@ -39,10 +27,10 @@ export const api = axios.create({
   withCredentials: true,
 });
 
-// REQUEST INTERCEPTOR
+// RESPONSE INTERCEPTOR
 api.interceptors.request.use(
   (config) => {
-    const token = getTokenFromCookies();
+    const token = getAccessToken();
 
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
@@ -53,7 +41,6 @@ api.interceptors.request.use(
   (error) => Promise.reject(error),
 );
 
-// RESPONSE INTERCEPTOR
 api.interceptors.response.use(
   (response) => response,
   (error) => {
@@ -67,11 +54,16 @@ api.interceptors.response.use(
     const { status, data } = error.response;
 
     if (status === 401) {
-      clearTokenCookie();
+      removeAccessToken();
+    }
 
-      // if (typeof window !== "undefined") {
-      //   window.location.href = "/login";
-      // }
+    if (status === 429) {
+      return Promise.reject({
+        status,
+        message: "Muitas requisições. Por favor, aguarde um momento.",
+        code: "TOO_MANY_REQUESTS",
+        ...data,
+      });
     }
 
     return Promise.reject({

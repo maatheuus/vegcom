@@ -2,6 +2,16 @@ import AuthFooter from "@/features/auth/components/Footer";
 import AuthHeader from "@/features/auth/components/Header";
 import LoginCard from "@/features/auth/components/Login/Card";
 import Col from "@/shared/ui/Layout/Helpers/Col";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Entre",
+  description: "Entre na sua conta na VegCom",
+  robots: {
+    index: false,
+    follow: false,
+  },
+};
 
 export default async function Page() {
   return (

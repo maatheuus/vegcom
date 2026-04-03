@@ -1,5 +1,5 @@
-"use client";
-
+import { getInitials } from "@/features/account/components/utils";
+import { defaultCuriosities } from "@/features/curiosities/components/curiosites/utils";
 import { Avatar, AvatarFallback, AvatarImage } from "@/shared/ui/Avatar";
 import Col from "@/shared/ui/Layout/Helpers/Col";
 import Row from "@/shared/ui/Layout/Helpers/Row";
@@ -13,6 +13,7 @@ import {
   ScrollIcon,
   UsersFourIcon,
 } from "@phosphor-icons/react";
+import clsx from "clsx";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import type { CommunityPostType } from "../../types";
@@ -32,13 +33,13 @@ interface Curiosity {
 
 interface CommunitySidebarProps {
   activeMembersData?: ActiveMember[];
-  curiositiesData?: Curiosity[];
   selectedTab: CommunityPostType;
+  sidebarOpen: boolean;
   onTabChange: (tab: CommunityPostType) => void;
 }
 
 const NAV_LINKS = [
-  { href: "/community", label: "Comunidade", icon: UsersFourIcon },
+  { href: "/", label: "Comunidade", icon: UsersFourIcon },
   { href: "/recipes", label: "Receitas", icon: ChefHatIcon },
   { href: "/curiosities", label: "Curiosidades", icon: LightbulbFilamentIcon },
 ];
@@ -57,25 +58,75 @@ const FEED_TABS = [
   },
 ];
 
+const curiositiesData = defaultCuriosities.slice(0, 4).map((c) => ({
+  id: c.id,
+  title: c.title,
+  href: "/curiosities",
+}));
+
 export default function CommunitySidebar({
   activeMembersData = [],
-  curiositiesData = [],
   selectedTab,
+  sidebarOpen,
   onTabChange,
 }: CommunitySidebarProps) {
   const pathname = usePathname();
 
   return (
-    <Col className="h-full gap-y-1 overflow-y-auto py-2 pr-1">
-      <SectionLabel>Navegar</SectionLabel>
+    <aside
+      className={clsx(
+        "sticky top-20 hidden h-full shrink-0 self-start overflow-hidden lg:block",
+        !sidebarOpen && "pointer-events-none",
+      )}
+      style={{
+        maxWidth: sidebarOpen ? 220 : 0,
+        marginRight: sidebarOpen ? 0 : 32,
+        opacity: sidebarOpen ? 1 : 0,
+        transform: sidebarOpen ? "translateX(0px)" : "translateX(-20px)",
+        transition:
+          "max-width 250ms cubic-bezier(0.4, 0, 0.2, 1), margin-right 250ms cubic-bezier(0.4, 0, 0.2, 1), opacity 250ms cubic-bezier(0.4, 0, 0.2, 1), transform 250ms cubic-bezier(0.4, 0, 0.2, 1)",
+        willChange: "max-width, margin-right, opacity, transform",
+      }}
+    >
+      <div className="relative h-full w-[220px] border-r border-green-200/50 bg-green-50">
+        <Col className="h-full gap-y-1 overflow-y-auto py-2 pr-1">
+          <SectionLabel>Navegar</SectionLabel>
 
-      {NAV_LINKS.map(({ href, label, icon: Icon }) => {
-        const isActive = pathname === href;
-        return (
-          <Link key={href} href={href} className="contents">
-            <Row
-              className={`items-center gap-x-2.5 rounded-lg px-2 py-2 transition-colors duration-150 ${
-                isActive
+          {NAV_LINKS.map(({ href, label, icon: Icon }) => {
+            const isActive = pathname === href;
+            return (
+              <Link key={href} href={href} className="contents">
+                <Row
+                  className={`items-center gap-x-2.5 rounded-lg px-2 py-2 transition-colors duration-150 ${
+                    isActive
+                      ? "bg-green-200/30 text-green-600"
+                      : "text-green-500/70 hover:bg-green-100/60 hover:text-green-500"
+                  }`}
+                >
+                  <Icon size={16} className="shrink-0" />
+                  <Text
+                    as="span"
+                    type={Text.Type.BodyFive}
+                    weight={Text.Weight.Medium}
+                    className="font-lora italic"
+                  >
+                    {label}
+                  </Text>
+                </Row>
+              </Link>
+            );
+          })}
+
+          <Divider />
+
+          <SectionLabel>Feed</SectionLabel>
+
+          {FEED_TABS.map(({ key, label, icon: Icon }) => (
+            <button
+              key={key}
+              onClick={() => onTabChange(key)}
+              className={`flex w-full cursor-pointer items-center gap-x-2.5 rounded-lg px-2 py-2 transition-colors duration-150 ${
+                selectedTab === key
                   ? "bg-green-200/30 text-green-600"
                   : "text-green-500/70 hover:bg-green-100/60 hover:text-green-500"
               }`}
@@ -89,104 +140,78 @@ export default function CommunitySidebar({
               >
                 {label}
               </Text>
-            </Row>
-          </Link>
-        );
-      })}
-
-      <Divider />
-
-      <SectionLabel>Feed</SectionLabel>
-
-      {FEED_TABS.map(({ key, label, icon: Icon }) => (
-        <button
-          key={key}
-          onClick={() => onTabChange(key)}
-          className={`flex w-full cursor-pointer items-center gap-x-2.5 rounded-lg px-2 py-2 transition-colors duration-150 ${
-            selectedTab === key
-              ? "bg-green-200/30 text-green-600"
-              : "text-green-500/70 hover:bg-green-100/60 hover:text-green-500"
-          }`}
-        >
-          <Icon size={16} className="shrink-0" />
-          <Text
-            as="span"
-            type={Text.Type.BodyFive}
-            weight={Text.Weight.Medium}
-            className="font-lora italic"
-          >
-            {label}
-          </Text>
-        </button>
-      ))}
-
-      {curiositiesData.length > 0 && (
-        <>
-          <Divider />
-          <SectionLabel>Curiosidades</SectionLabel>
-
-          {curiositiesData.slice(0, 4).map((item) => (
-            <Link key={item.id} href={item.href} className="contents">
-              <Row className="items-start gap-x-2.5 rounded-lg px-2 py-2 text-green-500/70 transition-colors hover:bg-green-100/60 hover:text-green-500">
-                <BookOpenIcon size={14} className="mt-0.5 shrink-0" />
-                <Text
-                  as="span"
-                  type={Text.Type.BodyFive}
-                  className="font-maitree line-clamp-2 leading-snug"
-                >
-                  {item.title}
-                </Text>
-              </Row>
-            </Link>
+            </button>
           ))}
 
-          <Link
-            href="/curiosities"
-            className="font-maitree px-2 text-xs text-green-500/40 transition-colors hover:text-green-500"
-          >
-            Ver todas →
-          </Link>
-        </>
-      )}
+          {curiositiesData.length > 0 && (
+            <>
+              <Divider />
+              <SectionLabel>Curiosidades</SectionLabel>
 
-      {activeMembersData.length > 0 && (
-        <>
-          <Divider />
-          <SectionLabel>Ativos agora</SectionLabel>
+              {curiositiesData.slice(0, 4).map((item) => (
+                <Link key={item.id} href={item.href} className="contents">
+                  <Row className="items-start gap-x-2.5 rounded-lg px-2 py-2 text-green-500/70 transition-colors hover:bg-green-100/60 hover:text-green-500">
+                    <BookOpenIcon size={14} className="mt-0.5 shrink-0" />
+                    <Text
+                      as="span"
+                      type={Text.Type.BodyFive}
+                      className="font-maitree line-clamp-2 leading-snug"
+                    >
+                      {item.title}
+                    </Text>
+                  </Row>
+                </Link>
+              ))}
 
-          <Col className="gap-y-1 px-1">
-            {activeMembersData.slice(0, 6).map((member) => (
               <Link
-                key={member.id}
-                href={`/user/${member.id}`}
-                className="contents"
+                href="/curiosities"
+                className="font-maitree px-2 text-xs text-green-500/40 transition-colors hover:text-green-500"
               >
-                <Row className="items-center gap-x-2.5 rounded-lg px-1 py-1.5 transition-colors hover:bg-green-100/60">
-                  <div className="relative">
-                    <Avatar className="size-6">
-                      <AvatarImage
-                        src={member.avatarUrl ?? ""}
-                        alt={member.name}
-                      />
-                      <AvatarFallback className="text-[9px]">
-                        {member.name.slice(0, 2).toUpperCase()}
-                      </AvatarFallback>
-                    </Avatar>
-                    <span className="absolute right-0 bottom-0 size-1.5 rounded-full bg-green-400 ring-1 ring-green-50" />
-                  </div>
-                  <Text
-                    as="span"
-                    type={Text.Type.BodyFive}
-                    className="font-maitree text-green-500/70"
-                  >
-                    {member.name}
-                  </Text>
-                </Row>
+                Ver todas →
               </Link>
-            ))}
-          </Col>
-        </>
-      )}
-    </Col>
+            </>
+          )}
+
+          {activeMembersData.length > 0 && (
+            <>
+              <Divider />
+              <SectionLabel>Ativos agora</SectionLabel>
+
+              <Col className="gap-y-1 px-1">
+                {activeMembersData.slice(0, 6).map((member) => (
+                  <Link
+                    key={member.id}
+                    href={`/user/${member.id}`}
+                    className="contents"
+                  >
+                    <Row className="items-center gap-x-2.5 rounded-lg px-1 py-1.5 transition-colors hover:bg-green-100/60">
+                      <div className="relative">
+                        <Avatar className="size-6">
+                          <AvatarImage
+                            src={member.avatarUrl ?? ""}
+                            alt={member.name}
+                          />
+                          <AvatarFallback className="text-[9px]">
+                            {member.name ? getInitials(member.name) : "U"}
+                          </AvatarFallback>
+                        </Avatar>
+                        <span className="absolute right-0 bottom-0 size-1.5 rounded-full bg-green-400 ring-1 ring-green-50" />
+                      </div>
+                      <Text
+                        as="span"
+                        type={Text.Type.BodyFive}
+                        className="font-maitree text-green-500/70"
+                      >
+                        {member.name}
+                      </Text>
+                    </Row>
+                  </Link>
+                ))}
+              </Col>
+            </>
+          )}
+        </Col>
+      </div>
+    </aside>
   );
 }

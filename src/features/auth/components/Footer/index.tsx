@@ -7,17 +7,17 @@ export default function AuthFooter() {
   return (
     <div
       role="footer"
-      className="absolute bottom-4 left-1/2 flex w-fit -translate-x-1/2 items-center justify-center gap-2"
+      className="absolute bottom-4 left-1/2 flex w-fit -translate-x-1/2 items-center justify-center"
     >
-      <Text as="span" className="font-lora !text-xs text-gray-500 italic">
-        <Link
-          href="https://maatmbx.dev"
-          className="mr-1 text-xs text-gray-500 underline decoration-green-500/50 underline-offset-2 transition-colors hover:text-gray-600"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Cultivado com algum propósito ·
-        </Link>
+      <Link
+        href="https://maatmbx.dev"
+        className="mr-1 inline text-xs whitespace-nowrap text-gray-500 underline decoration-green-500/50 underline-offset-2 transition-colors hover:text-gray-600"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        Cultivado com algum propósito ·
+      </Link>
+      <Text as="span" className="!text-xs text-gray-500 italic">
         {currentYear}
       </Text>
     </div>

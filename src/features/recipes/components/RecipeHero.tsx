@@ -1,5 +1,6 @@
 "use client";
 
+import { useGetUser } from "@/features/auth/api/queries/getAuthApiClient";
 import StarRating from "@/features/community/components/StarRating";
 import {
   getAvailableFiltersClient,
@@ -45,13 +46,16 @@ export function RecipeHero({ className, hightlightedRecipe }: RecipeHeroProps) {
     description,
     cookTime,
     quantity,
-    rating,
+    averageRating,
+    userId,
     images,
     views,
     slug,
   } = recipe;
 
   const image = images[0];
+  const { data: currentUser } = useGetUser();
+  const isUserRecipe = userId === currentUser?.id;
 
   useEffect(() => {
     const fetchAvailableFilters = async () => {
@@ -89,6 +93,21 @@ export function RecipeHero({ className, hightlightedRecipe }: RecipeHeroProps) {
         href={`/recipes/${slug}`}
         className="group relative block min-h-[340px] overflow-hidden rounded-xl shadow-md transition-all duration-500 hover:shadow-lg md:min-h-auto"
       >
+        {isUserRecipe && (
+          <div className="absolute top-4 left-4 z-10 md:top-8 md:left-8">
+            <div className="flex h-7 items-center justify-center rounded-full bg-green-500 px-3 backdrop-blur-sm">
+              <Text
+                as="span"
+                type={Text.Type.BodyFive}
+                weight={Text.Weight.SemiBold}
+                className="font-maitree text-sm text-green-50"
+              >
+                Sua receita
+              </Text>
+            </div>
+          </div>
+        )}
+
         <div className="relative min-h-[340px] md:aspect-[21/9] md:min-h-auto">
           <Image
             src={image}
@@ -125,10 +144,10 @@ export function RecipeHero({ className, hightlightedRecipe }: RecipeHeroProps) {
 
           <div className="mt-3 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
             <div className="font-maitree flex translate-y-0 flex-wrap items-center gap-x-2 font-semibold text-green-50 opacity-100 transition-all delay-100 duration-500 ease-out sm:gap-x-6 lg:translate-y-6 lg:opacity-0 lg:group-hover:translate-y-0 lg:group-hover:opacity-100">
-              {rating && (
+              {averageRating && (
                 <div className="flex gap-1">
                   <StarRating
-                    rating={rating}
+                    rating={averageRating}
                     iconClassName="!text-green-50 !w-4 !h-4 sm:!w-5 sm:h-5"
                   />
                 </div>
