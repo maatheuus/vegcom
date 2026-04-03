@@ -132,7 +132,7 @@ export default function CommunityLayout({ className, ...props }: Props) {
           )}
         />
 
-        <MobilePostComposer disabled={!isAuthenticated} />
+        {isAuthenticated && <MobilePostComposer />}
 
         <Col className="min-h-0 flex-1">
           <Suspense fallback={null}>
