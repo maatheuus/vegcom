@@ -29,6 +29,7 @@ export const useSignin = () => {
     mutationFn: (credentials: LoginCredentials) => authApi.signin(credentials),
     onSuccess: async (response) => {
       setAccessToken(response.accessToken);
+      document.cookie = `token=${response.accessToken}; path=/; SameSite=Lax`;
       await queryClient.invalidateQueries({ queryKey: authKeys.user });
     },
   });
