@@ -42,14 +42,14 @@ export default function RecipeActions({ isFavorites }: Props) {
 
   const searchParams = useSearchParams();
 
-  const recipeIds = useMemo(() => {
+  const recipeIds = useMemo((): number[] => {
     const sourceData = isFavorites ? savedRecipes : recipes;
     if (!sourceData || sourceData.length === 0) return [];
 
     return sourceData.map((item) =>
       typeof item === "object" && item !== null && "id" in item
         ? (item as { id: number }).id
-        : (item as number),
+        : (item as unknown as number),
     );
   }, [isFavorites, savedRecipes, recipes]);
 
@@ -103,9 +103,9 @@ export default function RecipeActions({ isFavorites }: Props) {
 
     let finalData = data.map((item) => item.recipe);
 
-    if (sortBy === "rating") {
+    if (sortBy === "averageRating") {
       finalData = [...finalData].sort(
-        (a, b) => (b.rating || 0) - (a.rating || 0),
+        (a, b) => (b.averageRating || 0) - (a.averageRating || 0),
       );
     } else if (sortBy === "views") {
       finalData = [...finalData].sort(

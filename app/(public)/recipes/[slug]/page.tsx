@@ -1,9 +1,6 @@
 import BackButton from "@/features/recipe-details/BackButton";
 import ContentRecipe from "@/features/recipe-details/ContentRecipe";
-import { ViewTracker } from "@/features/recipe-details/ViewTracker";
-import {
-  getRecipeBySlug
-} from "@/features/recipes/api/queries/getRecipesApiServer";
+import { getRecipeBySlug } from "@/features/recipes/api/queries/getRecipesApiServer";
 import Layout from "@/shared/ui/Layout";
 import { notFound } from "next/navigation";
 
@@ -43,7 +40,9 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 export default async function page({ params }: Props) {
   const { slug } = await params;
 
-  const result = await getRecipeBySlug(slug).catch((error) => console.error("Error fetching recipe by slug:", error));
+  const result = await getRecipeBySlug(slug).catch((error) =>
+    console.error("Error fetching recipe by slug:", error),
+  );
   const recipe = result?.data;
   if (!recipe) {
     notFound();
@@ -75,7 +74,7 @@ export default async function page({ params }: Props) {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
-      <ViewTracker recipeId={recipe.id} />
+
       <section className="space-y-6 md:space-y-8">
         <BackButton />
         <RecipeDetailsHeader recipe={recipe} isRecipePage />

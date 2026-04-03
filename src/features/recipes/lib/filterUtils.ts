@@ -54,8 +54,10 @@ export function sortRecipes(recipes: Recipe[], sortOption?: string): Recipe[] {
   if (!sortOption) return sorted;
 
   switch (sortOption) {
-    case "rating":
-      return sorted.sort((a, b) => (b.rating || 0) - (a.rating || 0));
+    case "averageRating":
+      return sorted.sort(
+        (a, b) => (b.averageRating || 0) - (a.averageRating || 0),
+      );
     case "views":
       return sorted.sort((a, b) => (b.views || 0) - (a.views || 0));
     case "recent":

@@ -14,7 +14,7 @@ import {
 import { useRouter, useSearchParams } from "next/navigation";
 import { useCallback, useEffect, useRef, useState } from "react";
 
-export type SortValues = "recent" | "old" | "views" | "rating";
+export type SortValues = "recent" | "old" | "views" | "averageRating";
 
 const sortByOptions = [
   { value: "recent", label: "Mais recentes" },

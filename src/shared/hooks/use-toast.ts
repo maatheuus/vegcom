@@ -170,7 +170,7 @@ function dispatch(action: Action) {
 }
 
 export type Toast = Omit<ToasterToast, "id" | "variant"> & {
-  variant?: "success" | "error" | "warning" | "info";
+  variant?: "success" | "error" | "warning" | "info" | "destructive";
 };
 
 function toast({ variant, ...props }: Toast) {
