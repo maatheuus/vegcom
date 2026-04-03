@@ -6,7 +6,6 @@ import type {
   GetRecipeBySlugResponse,
   GetRecipesByIdsResponse,
   GetRecipesResponse,
-  IncrementViewResponse,
   UpdateRecipePayload,
 } from "./types";
 
@@ -53,12 +52,7 @@ const recipeApi = {
     });
     return data;
   },
-  incrementView: async (id: number) => {
-    const { data } = await api.post<IncrementViewResponse>(
-      `/recipes/${id}/view`,
-    );
-    return data;
-  },
+
   getMyRecipes: async () => {
     const { data } = await api.get<GetRecipesResponse>("/recipes/my");
     return data;

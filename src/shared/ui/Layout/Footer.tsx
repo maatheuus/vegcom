@@ -1,3 +1,4 @@
+import { FeedbackModal } from "@/features/feedback/components/FeedbackModal";
 import Logo from "@/shared/ui/Logo";
 import Text from "@/shared/ui/Text";
 import Link from "next/link";
@@ -107,21 +108,25 @@ export function Footer() {
           </div>
         </div>
 
-        <div className="mt-8 flex flex-col items-center gap-1 border-t border-white/10 pt-6 text-center">
-          <Text
-            type={Text.Type.BodyFour}
-            className="font-lora text-sm text-green-100"
-          >
-            © {new Date().getFullYear()} VegCom.{" "}
-            <Link
-              href="https://maatmbx.dev"
-              target="_blank"
-              className="font-bold underline"
+        <div className="mt-8 flex flex-col items-center gap-2 border-t border-white/10 pt-6 text-center">
+          <div className="flex items-center gap-4">
+            <Text
+              type={Text.Type.BodyFour}
+              className="font-lora text-sm text-green-100"
             >
-              Todos os direitos reservados.
-            </Link>{" "}
-            Feito com 💚 para uma vida melhor.
-          </Text>
+              © {new Date().getFullYear()} VegCom.{" "}
+              <Link
+                href="https://maatmbx.dev"
+                target="_blank"
+                className="font-bold underline"
+              >
+                Todos os direitos reservados.
+              </Link>{" "}
+              Feito com 💚 para uma vida melhor.
+            </Text>
+            <span className="text-green-100/40">·</span>
+            <FeedbackModal />
+          </div>
           <Text
             type={Text.Type.BodyFive}
             className="font-maitree text-xs text-green-100/60"
