@@ -6,6 +6,7 @@ import StarterKit from "@tiptap/starter-kit";
 
 export function usePostComposerEditor() {
   const editor = useEditor({
+    immediatelyRender: false,
     extensions: [
       StarterKit.configure({
         heading: {

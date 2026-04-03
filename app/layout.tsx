@@ -1,6 +1,5 @@
 import { lora, maitree, montserrat, rancho } from "@/assets/fonts";
 import ProgressProviderClient from "@/shared/components/ui/ProgressProviderClient";
-import SmoothScroll from "@/shared/components/ui/SmoothScroll";
 import QueryClientWrapper from "@/shared/tanstack/QueryClientWrapper";
 import { Toaster } from "@/shared/ui/toaster";
 import { Analytics } from "@vercel/analytics/next";
@@ -81,7 +80,6 @@ export default function RootLayout({
     >
       <body className="h-full bg-green-50" suppressHydrationWarning>
         <QueryClientWrapper>
-          <SmoothScroll />
           <ProgressProviderClient>{children}</ProgressProviderClient>
           <Toaster />
         </QueryClientWrapper>

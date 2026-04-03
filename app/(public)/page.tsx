@@ -27,13 +27,13 @@ export default function Home() {
   };
 
   return (
-    <Layout.Default noFooter className="overflow-hidden">
+    <Layout.Default noFooter className="hidden-scrollbar">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
-      <section className="h-full overflow-hidden">
-        <CommunityLayout className="col-start-1 col-end-16" />
+      <section className="col-start-1 col-end-16 h-full min-h-0">
+        <CommunityLayout className="h-full min-h-0" />
       </section>
     </Layout.Default>
   );

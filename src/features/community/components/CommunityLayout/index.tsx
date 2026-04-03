@@ -10,22 +10,23 @@ import {
   MegaphoneIcon,
   PaperclipIcon,
   ScrollIcon,
-  SidebarIcon,
 } from "@phosphor-icons/react";
+import { useQueryClient } from "@tanstack/react-query";
 import clsx from "clsx";
 import {
   Suspense,
+  useCallback,
   useEffect,
   useRef,
   useState,
   type HtmlHTMLAttributes,
 } from "react";
-import useFetchPosts from "../../hooks/useFetchPosts";
 import type { CommunityPostType } from "../../types";
 import PostComposer from "../Post/Composer";
 import MobilePostComposer from "../Post/Composer/MobileComposer";
 import PostList from "../Post/List";
 import CommunitySidebar from "../Sidebar";
+import ToggleButton from "../Sidebar/ToggleButton";
 import type { Tab } from "../Tabs";
 import Announcements from "../Tabs/Announcements";
 import Resources from "../Tabs/Resources";
@@ -61,135 +62,120 @@ export const tabs: Tab[] = [
 export default function CommunityLayout({ className, ...props }: Props) {
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [showScrollTop, setShowScrollTop] = useState(false);
-  const scrollContainerRef = useRef<HTMLDivElement>(null);
   const [selectedTab, setSelectedTab] = useState<CommunityPostType>("POST");
 
   const { data } = useGetUser();
   const isAuthenticated = !!data?.id;
-  const { queryClient, queryKey } = useFetchPosts(selectedTab);
+  const queryClient = useQueryClient();
+  const queryKey = ["community-posts", selectedTab];
   const { isOpen: sidebarOpen, toggle: toggleSidebar } = useCommunitySidebar();
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    const container = scrollContainerRef.current;
-    if (!container) return;
+    const scrollContainer = scrollContainerRef.current;
+    if (!scrollContainer) return;
 
     const handleScroll = () => {
-      const currentScrollTop = container.scrollTop;
-      setShowScrollTop(currentScrollTop > 600);
-      if (isRefreshing && currentScrollTop <= 10) {
+      const scrollY = scrollContainer.scrollTop;
+      setShowScrollTop(scrollY > 600);
+      if (isRefreshing && scrollY <= 10) {
         setIsRefreshing(false);
         queryClient.resetQueries({ queryKey });
       }
     };
 
-    container.addEventListener("scroll", handleScroll);
-    return () => container.removeEventListener("scroll", handleScroll);
+    scrollContainer.addEventListener("scroll", handleScroll, { passive: true });
+    return () => scrollContainer.removeEventListener("scroll", handleScroll);
   }, [isRefreshing, queryClient, queryKey]);
 
-  const handleRefresh = async () => {
-    const container = scrollContainerRef.current;
-    if (!container) return;
-    if (container.scrollTop === 0) {
+  const handleRefresh = useCallback(() => {
+    const scrollContainer = scrollContainerRef.current;
+    if (!scrollContainer) return;
+
+    if (scrollContainer.scrollTop === 0) {
       queryClient.resetQueries({ queryKey });
       return;
     }
     setIsRefreshing(true);
-    container.scrollTo({ top: 0, behavior: "smooth" });
-  };
+    scrollContainer.scrollTo({ top: 0, behavior: "smooth" });
+  }, [queryClient, queryKey]);
 
   return (
     <Row
       className={clsx(
-        "relative h-full w-full gap-x-8 overflow-hidden",
+        "relative h-full min-h-0 w-full items-start lg:gap-x-8",
         className,
       )}
       {...props}
     >
-      <aside
+      <div className="relative hidden h-full lg:flex">
+        <CommunitySidebar
+          selectedTab={selectedTab}
+          onTabChange={setSelectedTab}
+          sidebarOpen={sidebarOpen}
+        />
+        <ToggleButton sidebarOpen={sidebarOpen} toggleSidebar={toggleSidebar} />
+      </div>
+
+      {/* ── Center Content ── */}
+      <Col
         className={clsx(
-          "relative hidden shrink-0 overflow-hidden lg:block",
-          sidebarOpen ? "mr-0" : "mr-8",
+          "h-full min-h-0 min-w-0 flex-1 rounded-lg bg-green-50 md:overflow-hidden",
+          !sidebarOpen && "lg:ml-8",
         )}
-        style={{
-          width: sidebarOpen ? 220 : 0,
-          transition: "width 250ms cubic-bezier(0.4, 0, 0.2, 1)",
-          willChange: "width",
-        }}
       >
-        <div className="h-full w-[220px] border-r border-green-200/50 bg-green-50">
-          <CommunitySidebar
-            selectedTab={selectedTab}
-            onTabChange={setSelectedTab}
-          />
-        </div>
-      </aside>
+        <PostComposer
+          disabled={!isAuthenticated}
+          className={clsx(
+            "z-40 hidden shrink-0 rounded-[20px] border border-green-500 bg-green-50 md:block",
+            !isAuthenticated && "cursor-not-allowed",
+          )}
+        />
 
-      <button
-        onClick={toggleSidebar}
-        title={sidebarOpen ? "Fechar menu" : "Abrir menu"}
-        className={clsx(
-          "absolute top-0 z-20 hidden cursor-pointer rounded-full bg-green-500 p-1 text-green-50 transition-colors hover:bg-green-200 lg:block",
-          sidebarOpen ? "left-[-0.2rem]" : "left-0",
-        )}
-        style={{
-          transform: sidebarOpen ? "translateX(210px)" : "translateX(0)",
-          transition: "transform 350ms cubic-bezier(0.4, 0, 0.2, 1)",
-        }}
-      >
-        <SidebarIcon size={20} />
-      </button>
+        <MobilePostComposer disabled={!isAuthenticated} />
 
-      <Col className="relative min-w-0 flex-1 overflow-hidden">
-        <div
-          ref={scrollContainerRef}
-          className="hidden-scrollbar h-full w-full overflow-x-hidden overflow-y-auto rounded-lg bg-green-50 p-0"
-        >
-          <Col className="relative gap-y-7 lg:gap-y-4">
-            <PostComposer
-              disabled={!isAuthenticated}
-              className={clsx(
-                "sticky top-0 z-40 hidden rounded-[20px] border border-green-500 bg-green-50 transition-all duration-200 md:block",
-                !isAuthenticated && "cursor-not-allowed",
-              )}
-            />
+        <Col className="min-h-0 flex-1">
+          <Suspense fallback={null}>
+            <div className="contents lg:hidden">
+              <TabsClient
+                tabs={tabs}
+                selectedTab={selectedTab}
+                setSelectedTab={setSelectedTab}
+              />
+            </div>
+          </Suspense>
 
-            <MobilePostComposer disabled={!isAuthenticated} />
-
-            <Button.Icon
-              variant="filled"
-              onClick={handleRefresh}
-              icon={<ArrowUpIcon size={24} weight="bold" />}
-              className={clsx(
-                "fixed bottom-6 z-50 h-14 w-14 rounded-full shadow-xl transition-all duration-300",
-                "left-6 md:right-16 md:left-auto",
-                showScrollTop
-                  ? "translate-y-0 opacity-100"
-                  : "pointer-events-none translate-y-10 opacity-0",
-              )}
-            />
-
-            <Col>
-              <Suspense fallback={null}>
-                <div className="contents lg:hidden">
-                  <TabsClient
-                    tabs={tabs}
-                    selectedTab={selectedTab}
-                    setSelectedTab={setSelectedTab}
-                  />
-                </div>
-              </Suspense>
-
-              <div className="transition-opacity duration-200">
-                <CommunitySelectedTab selectedTab={selectedTab} tabs={tabs} />
-              </div>
-            </Col>
-          </Col>
-        </div>
+          <div
+            ref={scrollContainerRef}
+            className="min-h-0 flex-1 overflow-y-auto overscroll-contain pr-2"
+          >
+            <div className="transition-opacity duration-200">
+              <CommunitySelectedTab
+                selectedTab={selectedTab}
+                tabs={tabs}
+                scrollContainerRef={scrollContainerRef}
+              />
+            </div>
+          </div>
+        </Col>
       </Col>
 
-      <aside className="hidden w-[260px] shrink-0 border-l border-green-200/50 bg-green-50 lg:block">
-        <CommunityRightSidebar />
-      </aside>
+      {/* ── Right Sidebar ── */}
+      <CommunityRightSidebar />
+
+      {/* ── Scroll-to-top FAB ── */}
+      <Button.Icon
+        variant="filled"
+        onClick={handleRefresh}
+        icon={<ArrowUpIcon size={24} weight="bold" />}
+        className={clsx(
+          "fixed bottom-6 z-50 h-14 w-14 rounded-full shadow-xl transition-all duration-300",
+          "left-6 md:right-16 md:left-auto",
+          showScrollTop
+            ? "translate-y-0 opacity-100"
+            : "pointer-events-none translate-y-10 opacity-0",
+        )}
+      />
     </Row>
   );
 }

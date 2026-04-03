@@ -27,6 +27,7 @@ import {
   BookmarkIcon,
   ChatCircleTextIcon,
   DotsThreeIcon,
+  FlagIcon,
   ShareFatIcon,
   SparkleIcon,
   TrashIcon,
@@ -38,6 +39,8 @@ import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import CommentPreview from "../CommentsPreview/CommentPreview";
 import { AvatarGroup } from "./AvatarGroup";
+import ReportPostDialog from "./ReportPostDialog";
+
 interface Props extends React.HTMLAttributes<HTMLDivElement> {
   data: PostCardDataProps;
   children: React.ReactNode;
@@ -54,6 +57,7 @@ export default function PostCardRoot({
   const router = useRouter();
   const { data: currentUser } = useGetUser();
 
+  const [reportOpen, setReportOpen] = useState(false);
   const [isLiked, setIsLiked] = useState(() => {
     if (data.likes && currentUser?.id) {
       return data.likes.some(
@@ -62,11 +66,11 @@ export default function PostCardRoot({
     }
     return false;
   });
+
   const [likesCount, setLikesCount] = useState(data.postLikes);
   const [isSaved, setIsSaved] = useState(
     data.savedBy.includes(Number(currentUser?.id)),
   );
-  const { data: user } = useGetUser();
 
   useEffect(() => {
     if (data.likes && currentUser?.id) {
@@ -94,7 +98,7 @@ export default function PostCardRoot({
   const handleLike = async (e: React.MouseEvent) => {
     e.stopPropagation();
 
-    if (!user) {
+    if (!currentUser) {
       router.push("/login");
       return;
     }
@@ -118,6 +122,15 @@ export default function PostCardRoot({
     e.stopPropagation();
     await deletePost(String(data.id));
     window.dispatchEvent(new CustomEvent("community:post-deleted"));
+  };
+
+  const handleReport = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    // Delay opening the dialog so the DropdownMenu finishes its cleanup
+    // (removing pointer-events/overflow styles from body) before Dialog adds its own.
+    requestAnimationFrame(() => {
+      setReportOpen(true);
+    });
   };
 
   const handleShare = async (e: React.MouseEvent) => {
@@ -161,7 +174,7 @@ export default function PostCardRoot({
     <Col
       onClick={handleCardClick}
       className={clsx(
-        "w-full cursor-pointer rounded-2xl border-b border-b-gray-100 py-5 transition-colors first-of-type:mt-4 hover:bg-green-100/35 md:px-4",
+        "w-full cursor-pointer border-b-gray-100 py-5 transition-colors hover:bg-green-100/35 max-md:border-b md:rounded-2xl md:px-4 first-of-type:md:mt-4",
         className,
       )}
       {...props}
@@ -238,11 +251,16 @@ export default function PostCardRoot({
             {/* <DropdownMenuItem className="cursor-pointer gap-x-3 py-2.5 hover:!bg-green-200/80 focus:!bg-green-200/80 focus:!text-green-50">
               <EyeSlashIcon size={18} />
               Ocultar
-            </DropdownMenuItem>
-            <DropdownMenuItem className="cursor-pointer gap-x-3 py-2.5 text-red-400 hover:!bg-green-200/80 focus:!bg-green-200/80 focus:!text-red-400">
-              <FlagIcon size={18} />
-              Denunciar
             </DropdownMenuItem> */}
+            {data.user?.id !== currentUser?.id && (
+              <DropdownMenuItem
+                onClick={handleReport}
+                className="cursor-pointer gap-x-3 py-2.5 text-red-400 hover:!bg-green-200/80 focus:!bg-green-200/80 focus:!text-red-400"
+              >
+                <FlagIcon size={18} />
+                Denunciar
+              </DropdownMenuItem>
+            )}
           </DropdownMenuContent>
         </DropdownMenu>
       </Row>
@@ -335,6 +353,12 @@ export default function PostCardRoot({
           </Button.Icon>
         </Row>
       </Row>
+      <ReportPostDialog
+        open={reportOpen}
+        onOpenChange={setReportOpen}
+        postId={data.id!}
+        targetUserId={data.user?.id as number | undefined}
+      />
     </Col>
   );
 }

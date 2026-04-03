@@ -37,7 +37,7 @@ export default function DesktopMenu({
       <Row className="desktop:flex hidden w-full flex-1 justify-end gap-x-4">
         <Row className="items-center justify-center gap-x-4">
           {centerLinks.map(({ href, icon: Icon, label }) => {
-            const isActive = pathname.startsWith(href);
+            const isActive = pathname.startsWith(href) && href !== "/";
             return (
               <Link key={href} href={href} className="contents">
                 <div

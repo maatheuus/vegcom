@@ -1,5 +1,3 @@
-"use client";
-
 import { recipeApi } from "@/features/recipes";
 import Col from "@/shared/ui/Layout/Helpers/Col";
 import { useQuery } from "@tanstack/react-query";
@@ -14,9 +12,11 @@ export default function CommunityRightSidebar() {
   });
 
   return (
-    <Col className="h-full gap-y-4 overflow-y-auto py-2 pl-5">
-      <ChatWidget />
-      <RecipeSuggestions data={data} isLoading={isLoading} />
-    </Col>
+    <aside className="sticky top-20 hidden h-full w-[260px] shrink-0 self-start overflow-hidden border-l border-green-200/50 bg-green-50 lg:block">
+      <Col className="h-full gap-y-4 overflow-y-auto py-2 pl-5">
+        <ChatWidget />
+        <RecipeSuggestions data={data} isLoading={isLoading} />
+      </Col>
+    </aside>
   );
 }
