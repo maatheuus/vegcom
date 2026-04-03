@@ -1,3 +1,3 @@
 export const MAX_LENGTH_FOR_TEXTAREA = 500;
-export const MAX_LENGTH_FOR_COMPOSER = 1000;
+export const MAX_LENGTH_FOR_COMPOSER = 3000;
 export const MAX_LENGTH_FOR_INPUT = 200;

@@ -16,7 +16,10 @@ export default function AuthHeader({
   return (
     <div
       role="banner"
-      className={clsx("flex items-center justify-between px-6 pt-5", className)}
+      className={clsx(
+        "flex items-center justify-between pt-5 md:px-6",
+        className,
+      )}
       {...props}
     >
       <Link href="/" className="relative flex items-center justify-start">

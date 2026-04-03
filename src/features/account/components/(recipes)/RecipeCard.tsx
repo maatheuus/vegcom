@@ -126,13 +126,13 @@ export default function RecipeCard({
             </div>
 
             <div className="mt-auto flex w-full items-center justify-between">
-              {recipe?.rating && (
+              {recipe?.averageRating && (
                 <div
                   className="flex items-center"
-                  aria-label={`Avaliação: ${recipe?.rating} estrelas`}
+                  aria-label={`Avaliação: ${recipe?.averageRating} estrelas`}
                 >
                   <StarRating
-                    rating={recipe?.rating}
+                    rating={recipe?.averageRating}
                     iconClassName="w-4 h-4"
                     aria-hidden="true"
                   />
