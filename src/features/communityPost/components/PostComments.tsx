@@ -88,7 +88,15 @@ export default function PostComments({
                     type={Text.Type.BodyFour}
                     className="font-maitree text-base leading-relaxed font-medium break-words break-all text-green-500"
                   >
-                    {comment.commentContent}
+                    {comment.commentContent.split(/(@\w+)/g).map((part, i) =>
+                      part.startsWith("@") ? (
+                        <span key={i} className="font-bold text-green-500">
+                          {part}
+                        </span>
+                      ) : (
+                        part
+                      ),
+                    )}
                   </Text>
 
                   <ReplyButton

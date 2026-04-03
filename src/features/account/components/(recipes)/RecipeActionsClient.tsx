@@ -168,7 +168,7 @@ export default function RecipeActions({ isFavorites }: Props) {
             <RecipeFilter />
           </div>
 
-          <Grid className="grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 md:gap-6 lg:gap-8 xl:grid-cols-4">
+          <Grid className="grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 md:gap-6 lg:gap-8">
             {currentItemsRecipe.map((recipe) => (
               <RecipeCard
                 key={recipe.id}

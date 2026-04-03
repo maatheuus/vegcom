@@ -179,13 +179,24 @@ export default function RecipeCard({ recipe, className }: Props) {
             </div>
 
             <div className="mt-auto flex w-full items-center justify-between">
-              {Boolean(recipe.averageRating) && (
+              {Boolean(recipe.averageRating) ? (
                 <div
                   className="flex items-center"
                   aria-label={`Avaliação: ${recipe?.averageRating} estrelas`}
                 >
                   <StarRating
                     rating={recipe?.averageRating}
+                    iconClassName="w-4 h-4"
+                    aria-hidden="true"
+                  />
+                </div>
+              ) : (
+                <div
+                  className="flex items-center"
+                  aria-label={`Fallback de estrelas`}
+                >
+                  <StarRating
+                    rating={0}
                     iconClassName="w-4 h-4"
                     aria-hidden="true"
                   />

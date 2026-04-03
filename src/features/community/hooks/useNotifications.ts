@@ -4,9 +4,12 @@ import { useCallback } from "react";
 
 export type NotificationType =
   | "COMMENT_REPLY"
+  | "COMMUNITY_COMMENT"
+  | "COMMUNITY_POST"
   | "COMMENT_LIKE"
   | "RECIPE_LIKE"
   | "POST_LIKE"
+  | "POST_COMMENT"
   | "FOLLOW"
   | "SYSTEM";
 
