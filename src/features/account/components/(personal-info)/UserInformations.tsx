@@ -15,6 +15,7 @@ import { toast } from "@/shared/hooks/use-toast";
 
 import type { User } from "@/features/auth/api/types";
 import { Avatar, AvatarFallback, AvatarImage } from "@/shared/ui/Avatar";
+import Button from "@/shared/ui/Button";
 import {
   Dialog,
   DialogContent,
@@ -24,6 +25,7 @@ import {
 } from "@/shared/ui/Dialog";
 import { Form } from "@/shared/ui/Form";
 import {
+  ArrowSquareOutIcon,
   FloppyDiskIcon,
   PencilSimpleIcon,
   TrashIcon,
@@ -164,46 +166,61 @@ export default function UserInformations({
           }
         }}
       >
-        <div className="flex items-center gap-4 border-b border-green-100 pb-6">
-          <div className="relative">
-            <DialogTrigger asChild>
-              <Avatar className="size-12 border-4 border-green-500 md:size-16">
-                <AvatarImage src={imagePreview} alt="Avatar do usuário" />
-                <AvatarFallback className="text-base capitalize md:text-lg">
-                  {fullName ? getInitials(fullName) : "U"}
-                </AvatarFallback>
-              </Avatar>
-            </DialogTrigger>
-            <DialogTrigger asChild>
-              {!isEditing && (
-                <button className="absolute top-0 right-0 z-20 flex size-12 cursor-pointer items-center justify-center rounded-full border-2 border-green-50 bg-green-500 transition-colors hover:bg-green-600 md:-top-1.5 md:size-7">
-                  <PencilSimpleIcon size={14} className="text-green-50" />
-                </button>
-              )}
-            </DialogTrigger>
-          </div>
+        <div className="flex flex-col justify-between gap-4 border-b border-green-100 pb-6 sm:flex-row sm:items-center">
+          <div className="flex items-center gap-4">
+            <div className="relative">
+              <DialogTrigger asChild>
+                <Avatar className="size-12 border-4 border-green-500 md:size-16">
+                  <AvatarImage src={imagePreview} alt="Avatar do usuário" />
+                  <AvatarFallback className="text-base capitalize md:text-lg">
+                    {fullName ? getInitials(fullName) : "U"}
+                  </AvatarFallback>
+                </Avatar>
+              </DialogTrigger>
+              <DialogTrigger asChild>
+                {!isEditing && (
+                  <button className="absolute top-0 right-0 z-20 flex size-12 cursor-pointer items-center justify-center rounded-full border-2 border-green-50 bg-green-500 transition-colors hover:bg-green-600 md:-top-1.5 md:size-7">
+                    <PencilSimpleIcon size={14} className="text-green-50" />
+                  </button>
+                )}
+              </DialogTrigger>
+            </div>
 
-          <div>
-            {fullName && (
-              <Text
-                as="h3"
-                type={Text.Type.HeadingFour}
-                weight={Text.Weight.Bold}
-                className="font-lora text-base text-green-500 md:text-xl"
-              >
-                {fullName}
-              </Text>
-            )}
-            {lastProfileUpdate && (
-              <Text
-                as="span"
-                type={Text.Type.BodyThree}
-                weight={Text.Weight.Medium}
-                className="font-maitree !text-xs text-green-200"
-              >
-                Última vez atualizado: {lastProfileUpdate}
-              </Text>
-            )}
+            <div>
+              {fullName && (
+                <Text
+                  as="h3"
+                  type={Text.Type.HeadingFour}
+                  weight={Text.Weight.Bold}
+                  className="font-lora text-base text-green-500 md:text-xl"
+                >
+                  {fullName}
+                </Text>
+              )}
+              {lastProfileUpdate && (
+                <Text
+                  as="span"
+                  type={Text.Type.BodyThree}
+                  weight={Text.Weight.Medium}
+                  className="font-maitree !text-xs text-green-200"
+                >
+                  Última vez atualizado: {lastProfileUpdate}
+                </Text>
+              )}
+            </div>
+          </div>
+          <div className="self-end justify-self-end">
+            <Button.Link
+              href={`/user/${user.id}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              rightIcon={<ArrowSquareOutIcon className="size-4 sm:size-5" />}
+              variant="text"
+              size="default"
+              className="font-maitree cursor-pointer bg-green-50 p-0 text-sm text-green-500 hover:text-green-200 hover:underline lg:text-base"
+            >
+              Ver preview do perfil
+            </Button.Link>
           </div>
         </div>
 

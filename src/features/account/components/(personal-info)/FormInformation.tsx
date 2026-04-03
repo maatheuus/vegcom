@@ -17,11 +17,10 @@ import {
 import type { UseFormReturn } from "react-hook-form";
 import type { z } from "zod";
 
-import Text from "@/shared/ui/Text";
-import Textarea from "@/shared/ui/TextArea";
-// import clsx from "clsx";
 import type { CitySearchResult } from "@/shared/lib/api/cities";
 import { SearchCityLocation } from "@/shared/ui/SearchCityLocation";
+import Text from "@/shared/ui/Text";
+import Textarea from "@/shared/ui/TextArea";
 import { useState } from "react";
 import {
   bioTooLongMessages,

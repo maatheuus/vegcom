@@ -1,5 +1,5 @@
 import AccountHeader from "@/features/account/components/AccountHeader";
-import Sidebar from "@/features/account/components/Sidebar";
+import AccountSidebar from "@/features/account/components/AccountSidebar";
 import Layout from "@/shared/ui/Layout";
 import { Suspense } from "react";
 
@@ -19,7 +19,7 @@ export default function layout({
 
         <div className="grid grid-cols-1 gap-6 lg:grid-cols-[320px_1fr]">
           <aside className="h-fit">
-            <Sidebar />
+            <AccountSidebar />
           </aside>
 
           <main className="min-h-[600px]">{children}</main>

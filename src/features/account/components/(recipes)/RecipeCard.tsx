@@ -11,7 +11,6 @@ import ImageCarouselModal, {
 import Col from "@/shared/ui/Layout/Helpers/Col";
 import Text from "@/shared/ui/Text";
 import {
-  ChefHatIcon,
   ClockIcon,
   EyeIcon,
   HeartIcon,
@@ -81,24 +80,19 @@ export default function RecipeCard({
                 {formatCategoryLabel(recipe.category)}
               </Text>
             </div>
-            <Button.Icon
-              onClick={(e) => isFavorites && handleFavorite(e)}
-              className={`flex items-center justify-center rounded-full bg-green-500/80 p-2 backdrop-blur-sm transition-colors hover:bg-green-500 ${isFavorites ? "cursor-pointer" : "cursor-default"}`}
-              aria-label={
-                isFavorites ? "Desfavoritar receita" : "Favoritar receita"
-              }
-              role="div"
-              icon={
-                isFavorites ? (
+            {isFavorites && (
+              <Button.Icon
+                onClick={handleFavorite}
+                className="flex items-center justify-center rounded-full bg-green-500/80 p-2 backdrop-blur-sm transition-colors hover:bg-green-500"
+                aria-label="Desfavoritar receita"
+                icon={
                   <HeartIcon
                     weight={isRecipeFavorite ? "fill" : "regular"}
                     className="size-6 text-green-50"
                   />
-                ) : (
-                  <ChefHatIcon weight="fill" className="size-6 text-green-50" />
-                )
-              }
-            />
+                }
+              />
+            )}
           </div>
         </div>
 
@@ -126,13 +120,24 @@ export default function RecipeCard({
             </div>
 
             <div className="mt-auto flex w-full items-center justify-between">
-              {recipe?.averageRating && (
+              {Boolean(recipe?.averageRating) ? (
                 <div
                   className="flex items-center"
                   aria-label={`Avaliação: ${recipe?.averageRating} estrelas`}
                 >
                   <StarRating
                     rating={recipe?.averageRating}
+                    iconClassName="w-4 h-4"
+                    aria-hidden="true"
+                  />
+                </div>
+              ) : (
+                <div
+                  className="flex items-center"
+                  aria-label={`Avaliação de fallback estrelas`}
+                >
+                  <StarRating
+                    rating={0}
                     iconClassName="w-4 h-4"
                     aria-hidden="true"
                   />
