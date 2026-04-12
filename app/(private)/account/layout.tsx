@@ -10,7 +10,7 @@ export default function layout({
 }>) {
   return (
     <Layout.Default className="style-scrollbar h-auto">
-      <div className="w-full space-y-8 py-8">
+      <div className="w-full space-y-8 pt-0 pb-8">
         <div className="flex items-center justify-between gap-x-4">
           <Suspense fallback={<></>}>
             <AccountHeader />

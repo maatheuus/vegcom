@@ -62,7 +62,7 @@ export function Default({
         <Grid
           columns="16"
           className={clsx(
-            "mt-4 w-full flex-auto md:mt-8 lg:mt-10",
+            "mt-6 w-full flex-auto md:mt-8 lg:mt-12",
             noFooter ? "h-full min-h-0 grid-rows-[1fr]" : "h-auto",
             gridClassName,
           )}

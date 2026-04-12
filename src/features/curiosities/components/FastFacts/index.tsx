@@ -11,7 +11,7 @@ export default function FastFacts() {
           href={source.url}
           target="_blank"
           rel="noopener noreferrer"
-          className="group flex flex-col items-center rounded-2xl border border-green-500/10 bg-green-50/60 px-3 py-4 text-center transition-colors duration-200 hover:border-green-500/30 hover:bg-green-50 md:px-4 md:py-5"
+          className="group relative flex flex-col items-center overflow-hidden rounded-2xl border border-green-500/10 bg-green-50/60 px-3 py-4 text-center transition-colors duration-200 hover:border-green-500/30 hover:bg-green-50 md:px-4 md:py-5"
         >
           <span className="font-lora text-xl font-bold text-green-600 md:text-2xl">
             {value}
@@ -20,16 +20,21 @@ export default function FastFacts() {
             {label}
           </span>
 
-          <span className="mt-auto flex items-center justify-center gap-1 pt-3 text-[9px] text-gray-400 md:opacity-0 md:transition-opacity md:duration-200 md:group-hover:opacity-100">
+          <span className="mt-auto flex items-center justify-center gap-1 pt-3 text-[9px] text-gray-400 md:hidden">
+            <ArrowSquareOutIcon size={10} weight="fill" className="shrink-0" />
+            <span className="line-clamp-1">{source.label}</span>
+          </span>
+
+          <div className="absolute inset-0 hidden flex-col items-center justify-center gap-1 bg-black/70 px-2 pt-3 opacity-0 transition-opacity duration-300 group-hover:opacity-100 md:flex">
             <ArrowSquareOutIcon
-              size={10}
+              size={18}
               weight="fill"
-              className="shrink-0 md:hidden"
+              className="text-green-50"
             />
-            <span className="line-clamp-1 md:line-clamp-none">
+            <span className="font-maitree text-xs text-green-50">
               {source.label}
             </span>
-          </span>
+          </div>
         </Link>
       ))}
     </div>

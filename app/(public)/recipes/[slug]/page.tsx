@@ -76,7 +76,7 @@ export default async function page({ params }: Props) {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
 
-      <section className="space-y-6 md:space-y-8">
+      <section className="space-y-2 md:space-y-4">
         <BackButton />
         <RecipeDetailsHeader recipe={recipe} isRecipePage />
         <ContentRecipe recipe={recipe} />
