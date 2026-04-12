@@ -90,7 +90,7 @@ export default function CommunitySidebar({
         willChange: "max-width, margin-right, opacity, transform",
       }}
     >
-      <div className="relative h-full w-[220px] border-r border-green-200/50 bg-green-50">
+      <div className="relative h-full w-full max-w-[220px] border-r border-green-200/50 bg-green-50">
         <Col className="h-full gap-y-1 overflow-y-auto py-2 pr-1">
           <SectionLabel>Navegar</SectionLabel>
 
