@@ -1,3 +1,4 @@
+import LogoLoader from "@/features/account/components/(recipes)/LogoLoader";
 import type { LastMessage } from "@/features/chat/api/types";
 import type { UsageStats } from "@/shared/api/ai/ai";
 import Button from "@/shared/ui/Button";
@@ -13,10 +14,12 @@ import {
   AlienIcon,
   ArrowRightIcon,
   CircleNotchIcon,
+  InfoIcon,
   LockIcon,
   PaperPlaneRightIcon,
 } from "@phosphor-icons/react";
 import Link from "next/link";
+import { useSearchParams } from "next/navigation";
 import { useCallback, useEffect, useRef, useState } from "react";
 import MessageBubble from "./ChatHandler/MessageBubble";
 import { groupMessages } from "./utils/groupMessages";
@@ -42,11 +45,15 @@ export default function ChatWindow({
   defaultMessage = "",
   usageStats,
 }: ChatWindowProps) {
+  const searchParams = useSearchParams();
+  const promptParam = searchParams.get("prompt");
+
   const isLimitReached = usageStats !== undefined && usageStats.remaining === 0;
   const [messageInput, setMessageInput] = useState(defaultMessage);
   const [showScrollButton, setShowScrollButton] = useState<boolean | null>(
     false,
   );
+
   const [hasNewMessages, setHasNewMessages] = useState(false);
   const [containerEl, setContainerEl] = useState<HTMLDivElement | null>(null);
 
@@ -84,11 +91,10 @@ export default function ChatWindow({
 
     const handleScroll = () => {
       const { scrollTop, scrollHeight, clientHeight } = container;
-      const isAtBottom = Math.abs(scrollHeight - scrollTop - clientHeight) < 50; // Tolerance of 50px
+      const isAtBottom = Math.abs(scrollHeight - scrollTop - clientHeight) < 50;
 
       isEndVisibleRef.current = isAtBottom;
 
-      // If we are at the bottom, hide button. If not, show it.
       if (isAtBottom) {
         setShowScrollButton(false);
         setHasNewMessages(false);
@@ -121,6 +127,15 @@ export default function ChatWindow({
     lastMessageCountRef.current = newCount;
   }, [messages?.length]);
 
+  useEffect(() => {
+    if (promptParam) {
+      const decodedPrompt = decodeURIComponent(promptParam);
+      setMessageInput(decodedPrompt);
+
+      window.history.replaceState(null, "", "/chat?tab=chat");
+    }
+  }, [promptParam]);
+
   const handleSubmit = async () => {
     if (!messageInput.trim() || isGenerating || isLimitReached) return;
     const query = messageInput.trim();
@@ -133,10 +148,7 @@ export default function ChatWindow({
   if (isLoading) {
     return (
       <div className="flex h-full flex-1 items-center justify-center">
-        <CircleNotchIcon
-          size={44}
-          className="my-auto animate-spin text-green-500"
-        />
+        <LogoLoader loading={true} className="my-auto" />
       </div>
     );
   }
@@ -145,83 +157,98 @@ export default function ChatWindow({
     <Col className="h-full w-full justify-end">
       <div className="flex h-full">
         <Col className="relative min-h-0 flex-1">
-          <div ref={containerRefCallback} className="min-h-0 flex-1 p-4">
-            <div className="mx-auto max-w-4xl space-y-4">
-              {groupedMessages.length === 0 && !isGenerating ? (
-                <Col className="mt-12 items-center justify-center gap-y-2 text-center md:mt-16">
-                  <div className="w-fit rounded-full bg-green-500 p-2">
-                    <AlienIcon size={32} className="text-green-50 opacity-90" />
-                  </div>
-                  <div className="space-y-2">
-                    <Text
-                      as="h1"
-                      type={Text.Type.BodyTwo}
-                      weight={Text.Weight.SemiBold}
-                      className="font-maitree font-semibold text-green-500"
-                    >
-                      Como posso ajudar você hoje?
-                    </Text>
-                  </div>
-                </Col>
-              ) : (
-                groupedMessages.map((group, index) => {
-                  const isLastGroup = index === groupedMessages.length - 1;
-                  if (
-                    isLastGroup &&
-                    group.role === "assistant" &&
-                    isGenerating
-                  ) {
-                    return null;
-                  }
-
-                  return (
-                    <MessageBubble
-                      key={group.id}
-                      group={group}
-                      onRegenerate={
-                        isLastGroup &&
-                        group.role === "assistant" &&
-                        !isGenerating
-                          ? onRegenerate
-                          : undefined
-                      }
-                    />
-                  );
-                })
-              )}
-
-              {isGenerating && (
-                <div className="flex animate-pulse gap-3">
-                  <div className="size-8 shrink-0 rounded-full bg-green-200" />
-                  <div className="px-2 py-3">
-                    <div className="flex gap-1">
-                      <span className="h-2 w-2 animate-bounce rounded-full bg-green-500" />
-                      <span className="h-2 w-2 animate-bounce rounded-full bg-green-500 [animation-delay:100ms]" />
-                      <span className="h-2 w-2 animate-bounce rounded-full bg-green-500 [animation-delay:200ms]" />
+          <div className="relative min-h-0 flex-1">
+            <div
+              ref={containerRefCallback}
+              className="style-scrollbar h-full overflow-y-auto p-4"
+            >
+              <div className="mx-auto max-w-4xl space-y-4">
+                {groupedMessages.length === 0 && !isGenerating ? (
+                  <div className="mt-12 space-y-2 text-center md:mt-16">
+                    <div className="mx-auto w-fit rounded-full bg-green-500 p-2">
+                      <AlienIcon
+                        size={32}
+                        className="text-green-50 opacity-90"
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Text
+                        as="h1"
+                        type={Text.Type.BodyTwo}
+                        weight={Text.Weight.SemiBold}
+                        className="font-lora text-green-200 italic"
+                      >
+                        Como posso ajudar você hoje?
+                      </Text>
                     </div>
                   </div>
-                </div>
-              )}
-            </div>
-            <div ref={messagesEndRef} />
-          </div>
+                ) : (
+                  groupedMessages.map((group, index) => {
+                    const isLastGroup = index === groupedMessages.length - 1;
+                    if (
+                      isLastGroup &&
+                      group.role === "assistant" &&
+                      isGenerating
+                    ) {
+                      return null;
+                    }
 
-          {showScrollButton && (
-            <div className="group fixed right-[50%] bottom-8 z-10 translate-x-[50%]">
-              <button
-                onClick={scrollToBottom}
-                className="animate-slideUp cursor-pointer rounded-full border border-green-500 bg-green-50 p-2.5 shadow-lg transition-all hover:scale-105"
-              >
-                <ArrowRightIcon className="size-4 rotate-90 text-green-500" />
-                {hasNewMessages && (
-                  <div className="absolute -top-1 -right-1 flex h-3 w-3">
-                    <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-red-400 opacity-75"></span>
-                    <span className="relative inline-flex h-3 w-3 rounded-full bg-red-500"></span>
+                    return (
+                      <MessageBubble
+                        key={group.id}
+                        group={group}
+                        onRegenerate={
+                          isLastGroup &&
+                          group.role === "assistant" &&
+                          !isGenerating
+                            ? onRegenerate
+                            : undefined
+                        }
+                      />
+                    );
+                  })
+                )}
+
+                {isGenerating && (
+                  <div
+                    className="flex items-center gap-[5px] rounded-[20px] bg-green-50/55 px-4 py-3"
+                    style={{ animation: "fadeSlide 0.3s ease-out both" }}
+                  >
+                    <span
+                      className="loading-dot"
+                      style={{ animationDelay: "0ms" }}
+                    />
+                    <span
+                      className="loading-dot"
+                      style={{ animationDelay: "160ms" }}
+                    />
+                    <span
+                      className="loading-dot"
+                      style={{ animationDelay: "320ms" }}
+                    />
                   </div>
                 )}
-              </button>
+              </div>
+              <div ref={messagesEndRef} />
             </div>
-          )}
+
+            {showScrollButton && (
+              <div className="absolute bottom-4 left-1/2 z-10 -translate-x-1/2">
+                <button
+                  onClick={scrollToBottom}
+                  className="animate-slideUp relative cursor-pointer rounded-full border border-green-500 bg-green-50 p-2.5 shadow-lg transition-all hover:scale-105"
+                >
+                  <ArrowRightIcon className="size-4 rotate-90 text-green-500" />
+                  {hasNewMessages && (
+                    <div className="absolute -top-1 -right-1 flex h-3 w-3">
+                      <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-red-400 opacity-75"></span>
+                      <span className="relative inline-flex h-3 w-3 rounded-full bg-red-500"></span>
+                    </div>
+                  )}
+                </button>
+              </div>
+            )}
+          </div>
 
           <div className="mx-auto mb-2 w-full max-w-4xl space-y-1.5 md:space-y-4">
             {isLimitReached && (
@@ -255,7 +282,7 @@ export default function ChatWindow({
               </div>
             )}
 
-            <div className="flex items-end gap-x-2 md:gap-x-4">
+            <div className="flex items-end gap-x-2 px-3 md:gap-x-4">
               <div
                 className={`flex w-full items-center rounded-xl border bg-transparent p-2 transition-all ${
                   isLimitReached
@@ -287,7 +314,9 @@ export default function ChatWindow({
               <Button.Icon
                 onClick={isGenerating && onCancel ? onCancel : handleSubmit}
                 disabled={
-                  (!messageInput.trim() && !isGenerating) || isLimitReached
+                  (!messageInput.trim() && !isGenerating) ||
+                  isLimitReached ||
+                  isGenerating
                 }
                 className="group relative flex size-10 items-center justify-center rounded-full bg-green-500 text-green-50 hover:bg-green-600 disabled:cursor-not-allowed disabled:opacity-50"
                 icon={
@@ -300,29 +329,40 @@ export default function ChatWindow({
               />
             </div>
 
-            {usageStats && !isLimitReached && (
-              <div className="ml-auto w-full text-right">
-                <TooltipProvider>
-                  <Tooltip>
-                    <TooltipTrigger className="cursor-text">
-                      <p className="font-lora text-right text-xs text-green-200">
-                        {usageStats.remaining} de {usageStats.limit} mensagens
-                        restantes esta semana
-                      </p>
-                    </TooltipTrigger>
-                    <TooltipContent className="mr-2 mb-2 flex items-start">
-                      <Text
-                        type={Text.Type.BodyThree}
-                        className="text-green-50"
-                      >
-                        Me ajuda a comprar um café <br /> pra continuar sua
-                        conversa :)
-                      </Text>
-                    </TooltipContent>
-                  </Tooltip>
-                </TooltipProvider>
-              </div>
-            )}
+            <div className="ml-auto w-full pr-3 text-right">
+              <TooltipProvider>
+                <Tooltip>
+                  <TooltipTrigger className="cursor-text">
+                    <div className="flex cursor-help items-center justify-end gap-1">
+                      <div className="font-lora flex text-right text-xs text-green-200">
+                        {usageStats && !isLimitReached ? (
+                          usageStats.remaining
+                        ) : (
+                          <div className="mr-1 inline w-6 animate-pulse rounded-sm bg-green-100 py-0.5" />
+                        )}{" "}
+                        de{" "}
+                        {usageStats && !isLimitReached ? (
+                          usageStats.limit
+                        ) : (
+                          <div className="mx-1 inline w-6 animate-pulse rounded-sm bg-green-100 py-0.5" />
+                        )}{" "}
+                        mensagens restantes esta semana
+                      </div>
+                      <InfoIcon
+                        size={16}
+                        className="inline text-green-200"
+                      />{" "}
+                    </div>
+                  </TooltipTrigger>
+                  <TooltipContent className="mr-2 mb-2 flex items-start">
+                    <Text type={Text.Type.BodyFour} className="text-green-50">
+                      Me ajuda a comprar um café <br /> pra continuar sua
+                      conversa :)
+                    </Text>
+                  </TooltipContent>
+                </Tooltip>
+              </TooltipProvider>
+            </div>
           </div>
         </Col>
       </div>

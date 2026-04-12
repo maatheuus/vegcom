@@ -32,16 +32,15 @@ export default function DeleteChatModal({
 
   return (
     <Dialog open={isDeleteModalOpen}>
-      <DialogContent className="w-[calc(100vw-2rem)] rounded-md">
+      <DialogContent className="w-[calc(100vw-2rem)] rounded-md [&_button.close-button]:hidden">
         <DialogHeader>
-          <DialogTitle className="font-lora font-normal italic">
+          <DialogTitle className="font-maitree font-semibold">
             Essa ação não pode ser desfeita.
           </DialogTitle>
+          <DialogDescription className="font-maitree font-semibold">
+            Você tem certeza que deseja deletar esta conversa?
+          </DialogDescription>
         </DialogHeader>
-
-        <DialogDescription className="font-maitree">
-          Você tem certeza que deseja deletar esta conversa?
-        </DialogDescription>
 
         <DialogFooter>
           <DialogTrigger asChild>

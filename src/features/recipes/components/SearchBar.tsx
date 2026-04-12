@@ -65,6 +65,7 @@ export function SearchBar({
       aria-label="Buscar receitas"
     >
       <input
+        name="search"
         type="text"
         placeholder={placeholder}
         value={term}

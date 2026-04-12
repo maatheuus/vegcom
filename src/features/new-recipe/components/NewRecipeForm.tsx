@@ -208,7 +208,7 @@ export default function NewRecipeForm({}: Props) {
               type="button"
               variant="text"
               onClick={prevStep}
-              disabled={currentStep === 1}
+              disabled={currentStep === 1 || isPending}
               className="flex cursor-pointer items-center gap-2 border border-green-500 disabled:pointer-events-auto disabled:cursor-not-allowed"
             >
               <ArrowBendUpLeftIcon size={16} />
@@ -231,7 +231,7 @@ export default function NewRecipeForm({}: Props) {
                 className="flex cursor-pointer items-center gap-2 bg-green-500 hover:bg-green-800"
                 disabled={isPending}
               >
-                {isPending ? "Criando..." : "Criar Receita"}
+                {isPending ? "Publicando..." : "Publicar Receita"}
                 <SealCheckIcon size={16} />
               </Button>
             )}

@@ -9,7 +9,6 @@ interface Props extends HTMLAttributes<HTMLDivElement> {
   description?: string;
   action?: string;
   redirectHref?: string;
-  type?: "banner";
   showIcon?: boolean;
 }
 
@@ -19,60 +18,55 @@ export default function AuthenticatedBlocker({
   action = "Fazer login",
   redirectHref = "/login",
   className,
-  type = "banner",
   showIcon = true,
   ...props
 }: Props) {
-  if (type === "banner") {
-    return (
-      <div
-        className={clsx(
-          "flex flex-col items-center justify-between gap-4 rounded-2xl bg-white px-2 py-4 shadow-sm sm:flex-row sm:px-5",
-          className,
-        )}
-        {...props}
-      >
-        <div className="flex items-center gap-x-3">
-          {showIcon && (
-            <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-green-100">
-              <LockSimpleIcon
-                size={16}
-                weight="fill"
-                className="text-green-500"
-              />
-            </div>
-          )}
-
-          <div className="flex flex-col gap-0.5 text-center sm:text-left">
-            <span className="font-lora text-sm font-semibold text-green-500">
-              {title}
-            </span>
-            {description && (
-              <span className="font-maitree text-xs text-green-200">
-                {description}
-              </span>
-            )}
+  return (
+    <div
+      className={clsx(
+        "flex flex-col flex-wrap items-center justify-center gap-4 rounded-2xl bg-white px-2 py-4 shadow-sm sm:px-5",
+        className,
+      )}
+      {...props}
+    >
+      <div className="flex items-center gap-x-3">
+        {showIcon && (
+          <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-green-100">
+            <LockSimpleIcon
+              size={16}
+              weight="fill"
+              className="text-green-500"
+            />
           </div>
-        </div>
+        )}
 
-        <div className="flex shrink-0 items-center gap-2">
-          <Link
-            href="/signup"
-            className="font-maitree text-xs text-green-200 underline underline-offset-2 transition-colors hover:text-green-600"
-          >
-            Cadastrar-se
-          </Link>
-          <Link href={redirectHref}>
-            <Button
-              variant="default"
-              className="font-maitree h-8 gap-x-1.5 rounded-xl px-4 text-xs font-medium"
-            >
-              {action}
-              <ArrowRightIcon size={13} weight="bold" />
-            </Button>
-          </Link>
+        <div className="flex flex-col gap-0.5 text-center sm:text-left">
+          <span className="font-lora text-sm font-semibold text-green-500">
+            {title}
+          </span>
+          {description && (
+            <span className="font-maitree text-xs text-green-200">
+              {description}
+            </span>
+          )}
         </div>
       </div>
-    );
-  }
+
+      <div className="flex shrink-0 items-center gap-4">
+        <Button.Link
+          href={redirectHref}
+          className="font-maitree h-8 gap-x-1.5 rounded-xl bg-green-500 px-4 text-xs font-medium"
+        >
+          {action}
+          <ArrowRightIcon size={14} weight="bold" />
+        </Button.Link>
+        <Link
+          href="/signup"
+          className="font-maitree text-xs text-green-200 underline underline-offset-2 transition-colors hover:text-green-600"
+        >
+          Cadastrar-se
+        </Link>
+      </div>
+    </div>
+  );
 }

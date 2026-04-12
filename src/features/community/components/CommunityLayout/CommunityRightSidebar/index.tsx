@@ -12,7 +12,7 @@ export default function CommunityRightSidebar() {
   });
 
   return (
-    <aside className="sticky top-20 hidden h-full w-[260px] shrink-0 self-start overflow-hidden border-l border-green-200/50 bg-green-50 lg:block">
+    <aside className="sticky top-20 hidden h-full w-full max-w-[260px] shrink-0 self-start overflow-hidden border-l border-green-200/50 bg-green-50 lg:block">
       <Col className="h-full gap-y-4 overflow-y-auto py-2 pl-5">
         <ChatWidget />
         <RecipeSuggestions data={data} isLoading={isLoading} />

@@ -36,7 +36,7 @@ export default function Page() {
         id: -2,
         chatId: 0,
         role: "user",
-        content: content,
+        content,
         isRead: true,
         metadata: null,
         createdAt: new Date().toISOString(),
@@ -44,12 +44,7 @@ export default function Page() {
     ]);
 
     try {
-      const response = await generateResponse({
-        query: content,
-        chatId: 0,
-      });
-
-      const metadata = response;
+      const metadata = await generateResponse({ query: content });
 
       if (metadata && metadata.chatId) {
         setIsNavigating(true);

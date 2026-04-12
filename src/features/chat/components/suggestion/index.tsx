@@ -7,26 +7,35 @@ import { useGSAP } from "@gsap/react";
 import { LightbulbFilamentIcon } from "@phosphor-icons/react";
 import clsx from "clsx";
 import gsap from "gsap";
-import { useRouter, useSearchParams } from "next/navigation";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useRouter } from "next/navigation";
+import { useMemo, useRef, useState } from "react";
 import SuggestionCard from "./SuggestionCard";
 import { suggestions } from "./utils";
 
 export interface Suggestion {
   id: string;
-  key: "vegan" | "vegetarian" | "cooking";
+  key: "all" | "vegan" | "vegetarian" | "cooking";
   category: string;
   title: string;
   description: string;
   prompt: string;
 }
 
-export default function SuggestionsPage() {
-  const router = useRouter();
-  const searchParams = useSearchParams();
+interface SuggestionsPageProps {
+  onSuggestionClick?: () => void;
+}
 
-  const paramCategory = searchParams.get("category") || "all";
-  const [selectedKey, setSelectedKey] = useState<string>(paramCategory);
+type ReduceSugestion = {
+  mix: Suggestion[];
+  counts: Record<string, number>;
+};
+
+export default function SuggestionsPage({
+  onSuggestionClick,
+}: SuggestionsPageProps) {
+  const router = useRouter();
+  const [selectedSuggestion, setSelectedSuggestion] =
+    useState<Suggestion["key"]>("all");
 
   const containerRef = useRef<HTMLDivElement>(null);
   const pillRef = useRef<HTMLDivElement>(null);
@@ -42,20 +51,15 @@ export default function SuggestionsPage() {
     [],
   );
 
-  const handleCategoryChange = (key: string) => {
-    if (key === selectedKey) return;
-    setSelectedKey(key);
-    const params = new URLSearchParams(searchParams.toString());
-    params.set("category", key);
-    router.replace(`?${params.toString()}`, { scroll: false });
+  const handleCategoryChange = (key: Suggestion["key"] | null) => {
+    if (!key) return;
+
+    setSelectedSuggestion(key);
   };
 
   const displayedSuggestions = useMemo(() => {
-    if (selectedKey === "all") {
-      return suggestions.reduce<{
-        mix: Suggestion[];
-        counts: Record<string, number>;
-      }>(
+    if (selectedSuggestion === "all") {
+      return suggestions.reduce<ReduceSugestion>(
         (acc, curr) => {
           const count = acc.counts[curr.key] || 0;
           if (count < 2) {
@@ -68,26 +72,28 @@ export default function SuggestionsPage() {
       ).mix;
     }
 
-    return suggestions.filter((s) => s.key === selectedKey);
-  }, [selectedKey]);
+    return suggestions.filter((s) => s.key === selectedSuggestion);
+  }, [selectedSuggestion]);
 
   const handleSuggestionClick = (suggestion: Suggestion) => {
+    if (onSuggestionClick) {
+      onSuggestionClick();
+    }
+
     router.push(
       `/chat?tab=chat&prompt=${encodeURIComponent(suggestion.prompt)}`,
     );
   };
 
-  useEffect(() => {
-    if (paramCategory !== selectedKey) {
-      setSelectedKey(paramCategory);
-    }
-  }, [paramCategory, selectedKey]);
-
   useGSAP(
     () => {
       if (buttonsRef.current.length !== categories.length) return;
-      const activeIndex = categories.findIndex((c) => c.key === selectedKey);
+
+      const activeIndex = categories.findIndex(
+        (c) => c.key === selectedSuggestion,
+      );
       const activeButton = buttonsRef.current[activeIndex];
+
       if (!activeButton || !pillRef.current) return;
 
       activeButton.scrollIntoView({
@@ -98,14 +104,16 @@ export default function SuggestionsPage() {
 
       gsap.to(pillRef.current, {
         x: activeButton.offsetLeft,
+        y: activeButton.offsetTop,
         width: activeButton.offsetWidth,
         height: activeButton.offsetHeight,
-        duration: 0.6,
-        ease: "back.out(1.4)",
-        overwrite: true,
+        duration: 0.4,
+        ease: "power3.out",
+        force3D: true,
+        overwrite: "auto",
       });
     },
-    { scope: containerRef, dependencies: [selectedKey, categories] },
+    { scope: containerRef, dependencies: [selectedSuggestion, categories] },
   );
 
   return (
@@ -114,11 +122,12 @@ export default function SuggestionsPage() {
         <ScrollArea orientation="horizontal" className="w-full pb-4">
           <div
             ref={containerRef}
-            className="relative flex w-full items-center gap-x-2 rounded-full bg-green-50 p-1.5"
+            className="relative flex w-full items-center gap-x-2 rounded-full bg-green-50 px-3 py-1.5"
           >
             <div
               ref={pillRef}
-              className="absolute top-0 left-0 my-1.5 h-[calc(100%-0.75rem)] rounded-full bg-green-500 shadow-md will-change-[transform,width,height]"
+              className="pointer-events-none absolute top-0 left-0 rounded-full bg-green-500 shadow-sm will-change-transform"
+              style={{ height: 0, width: 0 }}
             />
             {categories.map(({ key, label }, index) => (
               <button
@@ -126,10 +135,10 @@ export default function SuggestionsPage() {
                 ref={(el) => {
                   buttonsRef.current[index] = el;
                 }}
-                onClick={() => handleCategoryChange(key)}
+                onClick={() => handleCategoryChange(key as Suggestion["key"])}
                 className={clsx(
                   "font-lora relative z-10 cursor-pointer rounded-full px-4 py-2 text-sm whitespace-nowrap italic transition-colors duration-300 md:text-base",
-                  selectedKey === key
+                  selectedSuggestion === key
                     ? "font-semibold text-green-50"
                     : "text-green-500/70 hover:text-green-500",
                 )}
@@ -141,12 +150,16 @@ export default function SuggestionsPage() {
         </ScrollArea>
       </div>
 
-      <main className="space-y-8 pb-10 sm:px-6 md:space-y-10 lg:px-8">
+      <main className="space-y-8 px-3 pb-10 md:space-y-10 md:px-6 lg:px-8">
         <div className="text-center">
-          <Text className="font-maitree font-semibold text-green-500">
-            {selectedKey === "all"
+          <Text
+            as="span"
+            type={Text.Type.BodyTwo}
+            className="font-maitree font-semibold text-green-500"
+          >
+            {selectedSuggestion === "all"
               ? "Selecione um tópico para iniciar uma conversa."
-              : `Sugestões sobre ${categories.find((c) => c.key === selectedKey)?.label}`}
+              : `Sugestões sobre ${categories.find((c) => c.key === selectedSuggestion)?.label}`}
           </Text>
         </div>
 

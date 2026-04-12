@@ -16,6 +16,7 @@ import {
 import clsx from "clsx";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useUnreadAnnouncement } from "../../hooks/useUnreadAnnouncement";
 import type { CommunityPostType } from "../../types";
 import { Divider, SectionLabel } from "./SubComponents";
 
@@ -71,6 +72,7 @@ export default function CommunitySidebar({
   onTabChange,
 }: CommunitySidebarProps) {
   const pathname = usePathname();
+  const { hasUnread, markAsRead } = useUnreadAnnouncement(selectedTab);
 
   return (
     <aside
@@ -88,7 +90,7 @@ export default function CommunitySidebar({
         willChange: "max-width, margin-right, opacity, transform",
       }}
     >
-      <div className="relative h-full w-[220px] border-r border-green-200/50 bg-green-50">
+      <div className="relative h-full w-full max-w-[220px] border-r border-green-200/50 bg-green-50">
         <Col className="h-full gap-y-1 overflow-y-auto py-2 pr-1">
           <SectionLabel>Navegar</SectionLabel>
 
@@ -121,27 +123,45 @@ export default function CommunitySidebar({
 
           <SectionLabel>Feed</SectionLabel>
 
-          {FEED_TABS.map(({ key, label, icon: Icon }) => (
-            <button
-              key={key}
-              onClick={() => onTabChange(key)}
-              className={`flex w-full cursor-pointer items-center gap-x-2.5 rounded-lg px-2 py-2 transition-colors duration-150 ${
-                selectedTab === key
-                  ? "bg-green-200/30 text-green-600"
-                  : "text-green-500/70 hover:bg-green-100/60 hover:text-green-500"
-              }`}
-            >
-              <Icon size={16} className="shrink-0" />
-              <Text
-                as="span"
-                type={Text.Type.BodyFive}
-                weight={Text.Weight.Medium}
-                className="font-lora italic"
+          {FEED_TABS.map(({ key, label, icon: Icon }) => {
+            const isAnnouncementTab = key === "ANNOUNCEMENT";
+
+            return (
+              <button
+                key={key}
+                onClick={() => {
+                  if (isAnnouncementTab) markAsRead();
+                  onTabChange(key);
+                }}
+                className={`flex w-full cursor-pointer items-center gap-x-2.5 rounded-lg px-2 py-2 transition-colors duration-150 ${
+                  selectedTab === key
+                    ? "bg-green-200/30 text-green-600"
+                    : "text-green-500/70 hover:bg-green-100/60 hover:text-green-500"
+                }`}
               >
-                {label}
-              </Text>
-            </button>
-          ))}
+                <span className="relative">
+                  <Icon
+                    size={16}
+                    className={clsx(
+                      "shrink-0",
+                      isAnnouncementTab && "-scale-x-100",
+                    )}
+                  />
+                  {isAnnouncementTab && hasUnread && (
+                    <span className="absolute top-1/2 -right-1 size-1 -translate-y-1/2 rounded-full bg-red-500" />
+                  )}
+                </span>
+                <Text
+                  as="span"
+                  type={Text.Type.BodyFive}
+                  weight={Text.Weight.Medium}
+                  className="font-lora italic"
+                >
+                  {label}
+                </Text>
+              </button>
+            );
+          })}
 
           {curiositiesData.length > 0 && (
             <>
@@ -165,7 +185,7 @@ export default function CommunitySidebar({
 
               <Link
                 href="/curiosities"
-                className="font-maitree px-2 text-xs text-green-500/40 transition-colors hover:text-green-500"
+                className="font-maitree px-2 text-xs text-green-500/60 transition-colors hover:text-green-500"
               >
                 Ver todas →
               </Link>

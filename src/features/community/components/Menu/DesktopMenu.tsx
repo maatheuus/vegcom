@@ -48,7 +48,7 @@ export default function DesktopMenu({
                   onMouseLeave={() => setHoveredItem("")}
                 >
                   <div className="relative z-[1] flex items-center gap-x-1">
-                    <Icon size={20} className="size-5" />
+                    <Icon size={18} />
                     <span className="font-lora text-base font-medium text-nowrap text-current italic">
                       {label}
                     </span>
@@ -73,11 +73,11 @@ export default function DesktopMenu({
         {isLoggedIn && (
           <Link href={upgradeLink.href} className="group/plant contents">
             <Row
-              className={`${cls.baseButton} items-center justify-center rounded-lg bg-green-200 p-2 text-green-50 group-hover/plant:bg-green-100`}
+              className={`${cls.baseButton} items-center justify-center rounded-lg bg-green-200 p-1 text-green-50 group-hover/plant:bg-green-100`}
             >
               <upgradeLink.icon
-                size={20}
-                className="size-5 group-hover/plant:text-green-200"
+                size={18}
+                className="group-hover/plant:text-green-200"
               />
               {!isPremium && (
                 <span
@@ -91,10 +91,10 @@ export default function DesktopMenu({
         )}
 
         <DropdownMenu>
-          <DropdownMenuTrigger className="group/user flex cursor-pointer items-center gap-x-2 rounded-lg border-0 bg-green-100 p-2 transition-colors duration-300 outline-none hover:bg-green-200">
+          <DropdownMenuTrigger className="group/user flex cursor-pointer items-center gap-x-2 rounded-lg border-0 bg-green-100 p-1 transition-colors duration-300 outline-none hover:bg-green-200">
             <UserCircleIcon
-              size={20}
-              className="size-5 text-green-200 group-hover/user:text-green-50"
+              size={18}
+              className="text-green-200 group-hover/user:text-green-50"
             />
             {isLoggedIn && (
               <span

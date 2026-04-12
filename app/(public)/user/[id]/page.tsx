@@ -18,14 +18,13 @@ export default async function Page({ params }: Props) {
   const user = response.data;
   return (
     <Layout.Default className="style-scrollbar">
-      <div className="body__container-lg flex flex-col gap-y-5 py-6">
+      <div className="body__container-lg--no-padding flex w-full flex-col gap-y-5 py-0">
         <BackButton />
-      <div className="mx-auto flex w-full max-w-5xl flex-col gap-y-5 py-6">
-        <UserProfileHeader user={user} />
-        <UserProfileTabsClient user={user} />
-      </div>
+        <div className="mx-auto flex w-full max-w-5xl flex-col gap-y-5 py-6">
+          <UserProfileHeader user={user} />
+          <UserProfileTabsClient user={user} />
+        </div>
       </div>
     </Layout.Default>
   );
 }
-
