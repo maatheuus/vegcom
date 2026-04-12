@@ -17,6 +17,7 @@ import {
   ShareNetworkIcon,
 } from "@phosphor-icons/react";
 import { useEffect, useState } from "react";
+import MarkdownRenderer from "./MarkdownRenderer";
 import RecipeEmbed, { type GeneratedRecipe } from "../embeds/RecipeEmbed";
 import type { MessageGroup } from "../utils/groupMessages";
 
@@ -72,14 +73,24 @@ const MessageBubble: React.FC<MessageBubbleProps> = ({
               : "bg-green-100 text-green-900"
           }`}
         >
-          <Text
-            as="p"
-            className="font-maitree text-sm leading-relaxed whitespace-pre-wrap"
-          >
-            {currentMessage.metadata?.error ||
-              currentMessage.metadata?.messageContent ||
-              currentMessage.content}
-          </Text>
+          {isUser ? (
+            <Text
+              as="p"
+              className="font-maitree text-sm leading-relaxed whitespace-pre-wrap"
+            >
+              {currentMessage.metadata?.error ||
+                currentMessage.metadata?.messageContent ||
+                currentMessage.content}
+            </Text>
+          ) : (
+            <MarkdownRenderer
+              content={
+                currentMessage.metadata?.error ||
+                currentMessage.metadata?.messageContent ||
+                currentMessage.content
+              }
+            />
+          )}
 
           {generatedRecipes && generatedRecipes.length > 0 && !isUser && (
             <div className="mt-4 flex w-full flex-col gap-3">
