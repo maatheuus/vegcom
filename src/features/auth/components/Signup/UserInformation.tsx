@@ -57,8 +57,6 @@ const formSchema = z.object({
         "Seja sincero: você queima água ou já faz até fermentação natural?",
     }),
 
-  meetUs: z.string().optional(),
-
   preference: z
     .union([
       z.enum([Preference.VEGAN, Preference.VEGETARIAN, Preference.OTHER]),
@@ -80,7 +78,6 @@ const UserInformation: FC<React.ComponentProps<"form">> = ({
     resolver: zodResolver(formSchema),
     defaultValues: {
       aboutInfo: formData.aboutInfo || "",
-      meetUs: formData.meetUs || "",
       preference: (formData.preference || "") as z.infer<
         typeof formSchema
       >["preference"],

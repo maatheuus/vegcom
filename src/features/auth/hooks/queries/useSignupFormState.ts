@@ -30,7 +30,6 @@ async function submitSignupForm(data: Omit<SignupFormData, "currentStep">) {
       preference: data.preference!,
       culinaryLevel: data.culinaryLevel!,
       location: data.location!,
-      meetUs: data.meetUs,
     },
   };
   await getSignup(payload);
