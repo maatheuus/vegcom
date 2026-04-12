@@ -6,7 +6,7 @@ export function SectionLabel({ children }: { children: React.ReactNode }) {
       as="p"
       type={Text.Type.BodyFive}
       weight={Text.Weight.Bold}
-      className="font-maitree px-2 tracking-widest text-green-500/40 uppercase"
+      className="font-maitree px-2 tracking-widest text-green-500/50 uppercase"
     >
       {children}
     </Text>

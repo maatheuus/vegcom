@@ -279,7 +279,7 @@ export const defaultValues = {
   recipe_title: "",
   recipe_description: "",
   recipe_preparationTime: "",
-  recipe_preparationHours: "0",
+  recipe_preparationHours: "",
   recipe_preparationMinutes: "",
   recipe_servings: "",
   recipe_category: "",

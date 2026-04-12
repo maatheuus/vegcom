@@ -37,7 +37,7 @@ const RecipeSuggestions = memo(
           </Text>
           <Link
             href="/recipes"
-            className="ml-auto text-green-500/40 transition-colors hover:text-green-500"
+            className="ml-auto text-green-500/60 transition-colors hover:text-green-500"
           >
             <ArrowBendUpRightIcon size={13} />
           </Link>
@@ -56,9 +56,9 @@ const RecipeSuggestions = memo(
           <Text
             as="p"
             type={Text.Type.BodyFive}
-            className="font-maitree text-green-500/40"
+            className="font-maitree text-green-500/60"
           >
-            Nenhuma receita disponível.
+            Parece que a geladeira está vazia.
           </Text>
         ) : (
           <Col className="gap-y-1.5">
@@ -90,11 +90,11 @@ const RecipeSuggestions = memo(
                     </Text>
                     {recipe.cookTime && (
                       <Row className="items-center gap-x-1">
-                        <ClockIcon size={10} className="text-green-500/40" />
+                        <ClockIcon size={10} className="text-green-500/60" />
                         <Text
                           as="span"
                           type={Text.Type.BodyFive}
-                          className="font-maitree text-green-500/40"
+                          className="font-maitree text-green-500/60"
                         >
                           {recipe.cookTime}
                         </Text>

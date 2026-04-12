@@ -73,7 +73,7 @@ export default function Tabs({
             <span className="relative">
               {tab.icon}
               {(tab as Tab).showNotification && (
-                <span className="after:absolute after:top-1/2 after:-right-1 after:h-1.5 after:w-1.5 after:-translate-y-1/2 after:rounded-full after:bg-red-500 after:content-['']" />
+                <span className="absolute top-1/2 -right-1.5 size-1.5 -translate-y-1/2 rounded-full bg-red-500" />
               )}
             </span>
             <span
