@@ -50,7 +50,7 @@ export function UserPreferenceBadge({
       <Icon weight="fill" className="size-3.5" />
       <Text
         as="span"
-        type={Text.Type.BodySix}
+        type={Text.Type.BodyFive}
         weight={Text.Weight.Medium}
         className="text-inherit"
       >

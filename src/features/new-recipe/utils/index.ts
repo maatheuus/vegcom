@@ -25,6 +25,7 @@ export const TIPS_BY_STEP: Record<number, string[]> = {
   ],
   5: [
     "A primeira foto será a de destaque da receita.",
+    "Arraste as imagens para reorganizá-las.",
     "Adicione fotos do prato pronto.",
     "Mostre detalhes da textura.",
     "Fotos do processo também ajudam muito!",

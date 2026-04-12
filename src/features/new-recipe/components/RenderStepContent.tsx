@@ -7,7 +7,6 @@ import {
 } from "@/shared/ui/Form";
 import { Input } from "@/shared/ui/Input";
 import Textarea from "@/shared/ui/TextArea";
-import { useState } from "react";
 import DynamicFields from "./DynamicFields";
 import GroupFields from "./GroupFields";
 import ImageUploadArea from "./ImageUploadArea";
@@ -20,7 +19,7 @@ export default function RenderStepContent({
   currentStep: number;
   form: NewRecipeForm;
 }) {
-  const [useDefaultImages, setUseDefaultImages] = useState(false);
+  // const [useDefaultImages, setUseDefaultImages] = useState(false);
 
   switch (currentStep) {
     case 1:
@@ -117,7 +116,7 @@ export default function RenderStepContent({
             <ImageUploadArea
               form={form}
               className="flex h-full"
-              useDefaultTestingImages={useDefaultImages}
+              // useDefaultTestingImages={useDefaultImages}
             />
           </DynamicFields>
         </div>

@@ -193,6 +193,11 @@ export default function GroupFields({
                 ? "Instruções"
                 : "Dicas do Chef"
           }
+          rightContent={
+            type === "cookingNotes" && (
+              <span className="text-sm text-green-500/70">Opcional</span>
+            )
+          }
           className="flex flex-1 flex-col"
         >
           <FormField

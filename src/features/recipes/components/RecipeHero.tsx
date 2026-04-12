@@ -123,43 +123,61 @@ export function RecipeHero({ className, hightlightedRecipe }: RecipeHeroProps) {
 
         <div className="absolute inset-0 flex w-full flex-col justify-end gap-y-4 p-4 sm:p-6 md:p-8">
           <div className="translate-y-0 opacity-100 transition-all duration-500 ease-out lg:translate-y-10 lg:opacity-0 lg:group-hover:translate-y-0 lg:group-hover:opacity-100">
-            <Text
-              as="h2"
-              type={Text.Type.HeadingOne}
-              weight={Text.Weight.Medium}
-              className="font-lora text-2xl leading-tight font-semibold text-green-50 sm:text-3xl md:text-4xl lg:text-5xl"
-            >
-              {title}
-            </Text>
+            {title && (
+              <Text
+                as="h2"
+                type={Text.Type.HeadingOne}
+                weight={Text.Weight.Medium}
+                className="font-lora text-2xl leading-tight font-semibold text-green-50 sm:text-3xl md:text-4xl lg:text-5xl"
+              >
+                {title}
+              </Text>
+            )}
 
-            <Text
-              as="p"
-              type={Text.Type.BodyOne}
-              weight={Text.Weight.Medium}
-              className="font-maitree mt-2 line-clamp-3 text-sm text-green-50/90 sm:text-base md:text-lg"
-            >
-              {description}
-            </Text>
+            {description && (
+              <Text
+                as="p"
+                type={Text.Type.BodyOne}
+                weight={Text.Weight.Medium}
+                className="font-maitree mt-2 line-clamp-3 text-sm text-green-50/90 sm:text-base md:text-lg"
+              >
+                {description}
+              </Text>
+            )}
           </div>
 
           <div className="mt-3 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
             <div className="font-maitree flex translate-y-0 flex-wrap items-center gap-x-2 font-semibold text-green-50 opacity-100 transition-all delay-100 duration-500 ease-out sm:gap-x-6 lg:translate-y-6 lg:opacity-0 lg:group-hover:translate-y-0 lg:group-hover:opacity-100">
-              {averageRating && (
+              {Boolean(averageRating) ? (
                 <div className="flex gap-1">
                   <StarRating
                     rating={averageRating}
                     iconClassName="!text-green-50 !w-4 !h-4 sm:!w-5 sm:h-5"
+                    aria-hidden="true"
+                  />
+                </div>
+              ) : (
+                <div className="flex gap-1">
+                  <StarRating
+                    rating={0}
+                    iconClassName="!text-green-50 !w-4 !h-4 sm:!w-5 sm:h-5"
+                    aria-hidden="true"
                   />
                 </div>
               )}
-              <div className="flex items-center gap-1 text-sm sm:text-sm">
-                <ClockIcon className="h-4 w-4 sm:h-5 sm:w-5" />
-                <span>{cookTime}</span>
-              </div>
-              <div className="flex items-center gap-1 text-sm sm:text-sm">
-                <UsersIcon className="h-4 w-4 sm:h-5 sm:w-5" />
-                <span>{quantity} porções</span>
-              </div>
+
+              {cookTime && (
+                <div className="flex items-center gap-1 text-sm sm:text-sm">
+                  <ClockIcon className="h-4 w-4 sm:h-5 sm:w-5" />
+                  <span>{cookTime}</span>
+                </div>
+              )}
+              {quantity && (
+                <div className="flex items-center gap-1 text-sm sm:text-sm">
+                  <UsersIcon className="h-4 w-4 sm:h-5 sm:w-5" />
+                  <span>{quantity} porções</span>
+                </div>
+              )}
               {views && (
                 <div className="flex items-center gap-1 text-sm sm:text-sm">
                   <EyeIcon className="h-4 w-4 sm:h-5 sm:w-5" />

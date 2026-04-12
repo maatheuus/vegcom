@@ -7,7 +7,7 @@ const TOAST_LIMIT = 1;
 const TOAST_REMOVE_DELAY = 300;
 
 const getDurationByVariant = (variant?: string) => {
-  if (variant === "destructive") return 6000;
+  if (variant === "destructive" || variant === "error") return 6000;
   return 2500;
 };
 
@@ -182,11 +182,15 @@ function toast({ variant, ...props }: Toast) {
 
   const dismiss = () => dispatch({ type: "DISMISS_TOAST", toastId: id });
 
+  const componentVariant =
+    variant === "error" ? "destructive" : (variant as ToasterToast["variant"]);
+
   dispatch({
     type: "ADD_TOAST",
     toast: {
       ...props,
       id,
+      variant: componentVariant,
       open: true,
       duration,
       onOpenChange: (open: boolean) => {

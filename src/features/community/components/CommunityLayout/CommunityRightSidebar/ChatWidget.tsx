@@ -1,4 +1,5 @@
 import { useGetUser } from "@/features/auth/api/queries/getAuthApiClient";
+import MarkdownRenderer from "@/features/chat/components/chat/ChatHandler/MarkdownRenderer";
 import {
   useGenerateResponse,
   useGetUsageStats,
@@ -87,7 +88,7 @@ export default function ChatWidget() {
         {messages.length > 0 && (
           <Link
             href={chatId ? `/chat/${chatId}` : "/chat"}
-            className="font-maitree ml-auto text-xs text-green-500/40 transition-colors hover:text-green-500"
+            className="font-maitree ml-auto text-xs text-green-500/60 transition-colors hover:text-green-500"
           >
             Ver completo →
           </Link>
@@ -109,7 +110,8 @@ export default function ChatWidget() {
             type={Text.Type.BodyFive}
             className="font-maitree text-green-500/60"
           >
-            Tire dúvidas sobre receitas, ingredientes e vida vegana.
+            Tire dúvidas sobre receitas, ingredientes e a vida vegana e
+            vegetariana.
           </Text>
           <Link
             href="/login"
@@ -131,9 +133,10 @@ export default function ChatWidget() {
             <Text
               as="p"
               type={Text.Type.BodyFive}
-              className="font-maitree text-green-500/60"
+              className="font-maitree text-green-500/70"
             >
-              Tire dúvidas sobre receitas, ingredientes e vida vegana.
+              Tire dúvidas sobre receitas, ingredientes e a vida vegana e
+              vegetariana.
             </Text>
           ) : (
             <div className="hidden-scrollbar flex max-h-[260px] flex-col gap-y-2 overflow-y-auto overscroll-contain">
@@ -147,7 +150,7 @@ export default function ChatWidget() {
                       : "mr-4 bg-green-100/70 text-green-600",
                   )}
                 >
-                  {msg.content}
+                  <MarkdownRenderer content={msg.content} variant="compact" />
                 </div>
               ))}
 
@@ -189,7 +192,7 @@ export default function ChatWidget() {
             <Text
               as="p"
               type={Text.Type.BodyFive}
-              className="font-maitree text-green-500/40"
+              className="font-maitree text-green-500/60"
             >
               {isAtLimit
                 ? "Limite de mensagens atingido."
@@ -198,7 +201,7 @@ export default function ChatWidget() {
           )}
 
           <Row className="w-full items-center gap-x-1.5">
-            <div className="flex w-full items-center rounded-lg border border-green-200 bg-white/60 px-2.5 py-1.5 focus-within:border-green-200">
+            <div className="flex w-full items-center rounded-lg border border-green-200 bg-white/40 px-2.5 py-1.5 focus-within:border-green-200">
               <input
                 name="chat"
                 value={input}
@@ -206,13 +209,13 @@ export default function ChatWidget() {
                 onKeyDown={handleKeyDown}
                 placeholder={isAtLimit ? "Limite atingido" : "Pergunte algo..."}
                 disabled={isPending || isAtLimit}
-                className="font-maitree w-full min-w-0 bg-transparent text-xs text-green-500 placeholder:text-green-500/40 focus:outline-none disabled:opacity-50"
+                className="font-maitree w-full min-w-0 bg-transparent text-xs text-green-500 placeholder:text-green-500/80 focus:outline-none disabled:opacity-50"
               />
             </div>
             <button
               onClick={handleSend}
               disabled={!input.trim() || isPending || isAtLimit}
-              className="w-fit text-green-500/40 transition-colors hover:text-green-500 disabled:opacity-30"
+              className="w-fit text-green-500/50 transition-colors hover:text-green-500 disabled:opacity-50"
             >
               {isPending ? (
                 <CircleNotchIcon size={14} className="animate-spin" />

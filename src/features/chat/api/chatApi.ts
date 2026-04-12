@@ -17,7 +17,7 @@ const chatApi = {
   },
 
   getChats: async () => {
-    const { data } = await api.get<CreateChatResponse[]>("/chat/list");
+    const { data } = await api.get<CreateChatResponse>("/chat/list");
     return data;
   },
 

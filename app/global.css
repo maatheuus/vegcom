@@ -284,6 +284,37 @@
   }
 }
 
+.loading-dot {
+  @apply block bg-green-500 size-1.5 rounded-full;
+  animation: breathe 1.6s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+@keyframes breathe {
+
+  0%,
+  100% {
+    transform: scale(0.6);
+    opacity: 0.25;
+  }
+
+  50% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+@keyframes fadeSlide {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
 @keyframes caret-blink {
 
   0%,
