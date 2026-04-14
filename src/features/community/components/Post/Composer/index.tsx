@@ -141,10 +141,8 @@ export default function PostComposer({ className, disabled, ...props }: Props) {
   };
 
   return (
-    <Col className={clsx("relative", className)} {...props}>
-      {disabled && (
-        <AuthenticatedBlocker className="absolute inset-0 z-50 m-auto h-fit w-full max-w-[60%]" />
-      )}
+    <Col className={clsx("relative overflow-hidden", className)} {...props}>
+      {disabled && <AuthenticatedBlocker />}
       <div
         className={clsx(
           "relative transition-all duration-300",

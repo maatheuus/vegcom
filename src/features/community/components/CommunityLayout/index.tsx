@@ -160,10 +160,8 @@ export default function CommunityLayout({ className, ...props }: Props) {
         </Col>
       </Col>
 
-      {/* ── Right Sidebar ── */}
       <CommunityRightSidebar />
 
-      {/* ── Scroll-to-top FAB ── */}
       <Button.Icon
         variant="filled"
         onClick={handleRefresh}
@@ -174,6 +172,7 @@ export default function CommunityLayout({ className, ...props }: Props) {
           showScrollTop
             ? "translate-y-0 opacity-100"
             : "pointer-events-none translate-y-10 opacity-0",
+          !isAuthenticated && "max-md:hidden",
         )}
       />
     </Row>

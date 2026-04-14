@@ -83,12 +83,12 @@ export default function RecipeCard({
             {isFavorites && (
               <Button.Icon
                 onClick={handleFavorite}
-                className="flex items-center justify-center rounded-full bg-green-500/80 p-2 backdrop-blur-sm transition-colors hover:bg-green-500"
+                className="flex items-center justify-center rounded-full bg-green-50 p-2 backdrop-blur-sm transition-colors hover:bg-green-50/80"
                 aria-label="Desfavoritar receita"
                 icon={
                   <HeartIcon
                     weight={isRecipeFavorite ? "fill" : "regular"}
-                    className="size-6 text-green-50"
+                    className="size-6 text-green-500"
                   />
                 }
               />
@@ -102,8 +102,8 @@ export default function RecipeCard({
             isEditing ? `/new-recipe/${recipe.id}` : `/recipes/${recipe.slug}`
           }
         >
-          <Col className="flex-1 flex-col space-y-2 p-4 md:space-y-4">
-            <div className="space-y-2">
+          <Col className="flex h-full flex-1 flex-col gap-3 p-4">
+            <div className="space-y-1.5">
               <Text
                 as="h3"
                 weight={Text.Weight.SemiBold}
@@ -113,66 +113,53 @@ export default function RecipeCard({
               </Text>
 
               {recipe?.description && (
-                <p className="font-maitree text-black-100 line-clamp-3 text-sm">
+                <p className="font-maitree text-black-100 line-clamp-2 text-sm leading-relaxed">
                   {recipe?.description}
                 </p>
               )}
             </div>
 
-            <div className="mt-auto flex w-full items-center justify-between">
-              {Boolean(recipe?.averageRating) ? (
-                <div
-                  className="flex items-center"
-                  aria-label={`Avaliação: ${recipe?.averageRating} estrelas`}
-                >
-                  <StarRating
-                    rating={recipe?.averageRating}
-                    iconClassName="w-4 h-4"
-                    aria-hidden="true"
-                  />
-                </div>
-              ) : (
-                <div
-                  className="flex items-center"
-                  aria-label={`Avaliação de fallback estrelas`}
-                >
-                  <StarRating
-                    rating={0}
-                    iconClassName="w-4 h-4"
-                    aria-hidden="true"
-                  />
-                </div>
-              )}
+            <div className="mt-auto space-y-2.5 border-t border-green-200/60 pt-3">
+              <div
+                className="flex items-center"
+                aria-label={`Avaliação: ${recipe?.averageRating ?? 0} estrelas`}
+              >
+                <StarRating
+                  rating={recipe?.averageRating ?? 0}
+                  iconClassName="w-3.5 h-3.5"
+                  aria-hidden="true"
+                />
+              </div>
 
-              <div className="font-maitree text-black-100 flex items-center gap-x-4 text-xs font-semibold">
+              <div className="font-maitree flex flex-wrap items-center gap-1.5">
                 {recipe?.cookTime && (
-                  <div
-                    className="flex items-center gap-1"
+                  <span
+                    className="inline-flex items-center gap-1.5 rounded-full bg-green-500 px-2.5 py-1 text-xs font-medium text-green-50"
                     aria-label={`Tempo: ${recipe?.cookTime}`}
                   >
-                    <ClockIcon size={16} aria-hidden="true" />
-                    <span>{formatTimeLabel(recipe?.cookTime)}</span>
-                  </div>
+                    <ClockIcon size={12} aria-hidden="true" />
+                    {formatTimeLabel(recipe?.cookTime)}
+                  </span>
                 )}
 
                 {recipe?.quantity && (
-                  <div
-                    className="flex items-center gap-1"
+                  <span
+                    className="inline-flex items-center gap-1.5 rounded-full bg-green-500 px-2.5 py-1 text-xs font-medium text-green-50"
                     aria-label={`Serve: ${recipe?.quantity}`}
                   >
-                    <UsersIcon size={16} aria-hidden="true" />
-                    <span>{recipe?.quantity}</span>
-                  </div>
+                    <UsersIcon size={12} aria-hidden="true" />
+                    {recipe?.quantity}
+                  </span>
                 )}
 
                 {recipe?.views !== 0 && (
-                  <div
-                    className="flex items-center gap-1"
-                    aria-label={`Serve: ${recipe?.views}`}
+                  <span
+                    className="inline-flex items-center gap-1.5 rounded-full bg-green-500 px-2.5 py-1 text-xs font-medium text-green-50"
+                    aria-label={`Visualizações: ${recipe?.views}`}
                   >
-                    <EyeIcon size={16} aria-hidden="true" />
-                    <span>{recipe?.views}</span>
-                  </div>
+                    <EyeIcon size={12} aria-hidden="true" />
+                    {recipe?.views}
+                  </span>
                 )}
               </div>
             </div>

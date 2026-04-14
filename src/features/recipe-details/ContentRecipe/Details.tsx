@@ -4,8 +4,8 @@ import Text from "@/shared/ui/Text";
 import {
   ChefHatIcon,
   ClockIcon,
-  ForkKnifeIcon,
   TargetIcon,
+  UsersIcon,
 } from "@phosphor-icons/react/ssr";
 import { memo } from "react";
 import { formatCategoryLabel, formatDifficultyLabel } from "./utils";
@@ -34,7 +34,7 @@ const Details = memo(function Details({
       ariaLabel: `Tempo de preparo: ${cookTime}`,
     },
     {
-      icon: <ForkKnifeIcon className="h-5 w-5 text-green-500" />,
+      icon: <UsersIcon className="h-5 w-5 text-green-500" />,
       label: "Porções",
       value: quantity,
       ariaLabel: `Rendimento: ${quantity} porções`,
