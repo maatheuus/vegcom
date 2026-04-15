@@ -2,6 +2,7 @@
 
 import AccountLayout from "@/features/account/components/AccountLayout";
 import Header from "@/features/account/components/Header";
+import { useUpdateNotifications } from "@/features/account/hooks/mutations/useUpdateProfile";
 import { useGetUser } from "@/features/auth/api/queries/getAuthApiClient";
 import Button from "@/shared/ui/Button";
 import {
@@ -30,22 +31,21 @@ type NotificationSettingsForm = z.infer<typeof notificationSettingsSchema>;
 
 export default function NotificationSettings() {
   const [isEditing, setIsEditing] = useState(false);
-  const { data: _user } = useGetUser();
+  const { data: user } = useGetUser();
+  const { mutateAsync: updateNotifications, isPending } = useUpdateNotifications();
 
-  // In a real app, these default values would come from user?.emailPreferences
   const form = useForm<NotificationSettingsForm>({
     resolver: zodResolver(notificationSettingsSchema),
     defaultValues: {
-      recipeLike: true,
-      commentReply: true,
-      commentLike: true,
-      marketing: false,
+      recipeLike: user?.emailPreferences?.recipeLike ?? true,
+      commentReply: user?.emailPreferences?.commentReply ?? true,
+      commentLike: user?.emailPreferences?.commentLike ?? true,
+      marketing: user?.emailPreferences?.marketing ?? false,
     },
   });
 
-  const onSubmit = (values: NotificationSettingsForm) => {
-    console.log("Saving notification settings:", values);
-    // Here we would call the API to update preferences
+  const onSubmit = async (values: NotificationSettingsForm) => {
+    await updateNotifications(values);
     setIsEditing(false);
   };
 
@@ -68,8 +68,9 @@ export default function NotificationSettings() {
             size="default"
             onClick={onCancel}
             aria-hidden={!isEditing}
+            disabled={isPending}
             className={clsx(
-              "font-maitree cursor-pointer border-none bg-transparent transition-all duration-300",
+              "font-maitree cursor-pointer border-none bg-transparent transition-all duration-300 disabled:cursor-not-allowed disabled:bg-transparent",
               isEditing
                 ? "visible z-10 translate-x-0 opacity-100"
                 : "pointer-events-none invisible z-0 translate-x-24 opacity-0",
@@ -87,10 +88,11 @@ export default function NotificationSettings() {
             }
             variant="filled"
             size="default"
+            disabled={isPending}
             onClick={() =>
               isEditing ? form.handleSubmit(onSubmit)() : setIsEditing(true)
             }
-            className="font-maitree cursor-pointer bg-green-200 py-2"
+            className="font-maitree cursor-pointer bg-green-200 py-2 disabled:cursor-not-allowed"
           >
             {isEditing ? "Salvar Preferências" : "Editar Preferências"}
           </Button.Icon>

@@ -17,6 +17,7 @@ import {
   ImagesIcon,
   UsersIcon,
 } from "@phosphor-icons/react";
+import clsx from "clsx";
 import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
@@ -46,7 +47,11 @@ export default function RecipeCard({
   return (
     <>
       <div
-        className={`group relative grid h-full w-full max-w-full overflow-hidden rounded-xl border border-green-200 bg-green-50 shadow-sm transition-all hover:shadow-md lg:max-w-[334px] ${className || ""}`}
+        className={clsx(
+          "group relative grid h-full w-full max-w-full overflow-hidden rounded-xl border border-green-200 bg-green-50 shadow-sm transition-all hover:shadow-md",
+          className,
+          isFavorites ? "lg:max-w-none" : "lg:max-w-[334px]",
+        )}
       >
         <div className="relative aspect-[16/9] h-full w-full overflow-hidden">
           <Image

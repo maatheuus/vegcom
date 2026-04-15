@@ -3,7 +3,7 @@ import Button from "@/shared/ui/Button";
 import Col from "@/shared/ui/Layout/Helpers/Col";
 import Row from "@/shared/ui/Layout/Helpers/Row";
 import Text from "@/shared/ui/Text";
-import { SparkleIcon } from "@phosphor-icons/react";
+import { SealCheckIcon, SparkleIcon } from "@phosphor-icons/react";
 import { useTransition } from "react";
 import { createCheckoutSession } from "../../apiSubscription/queries/getSubscriptionApiServer";
 import type { GetProductsResponse } from "../../types/subscription";
@@ -16,9 +16,10 @@ interface Props {
 
 const features = [
   "Acesso ilimitado a todas as receitas",
-  "Crie e compartilhe receitas sem limites",
-  "Salve quantas receitas favoritas quiser",
-  "Mais liberdade ao falar no nosso Chat",
+  "Crie até mais receitas e compartilhe com a comunidade",
+  "Salve quantas receitas quiser",
+  "Mais sessões de chat com a nossa IA para te ajudar a criar receitas incríveis",
+  "Mais mensagens por semana com a IA para tirar dúvidas e receber sugestões personalizadas",
 ];
 
 export default function NotSubscribedView({
@@ -29,7 +30,6 @@ export default function NotSubscribedView({
 }: Props) {
   const [isPending, startTransition] = useTransition();
 
-  console.log("produ:", { productsData, user });
   const product = productsData?.[0];
   const price = product?.default_price;
 
@@ -166,14 +166,22 @@ function Card({ title, description, list, children }: CardProps) {
         {children && children}
 
         {list && (
-          <ul className="grid grid-cols-1 gap-4 md:grid-cols-2">
+          <ul className="flex flex-col gap-2">
             {list.map((item, idx) => (
-              <li key={idx} className="flex items-start gap-3">
+              <li
+                key={idx}
+                className="flex items-start gap-3 rounded-lg transition-colors hover:bg-green-100/60"
+              >
+                <SealCheckIcon
+                  size={18}
+                  weight="fill"
+                  className="mt-0.5 shrink-0 text-green-500"
+                />
                 <Text
                   as="span"
                   type={Text.Type.BodyThree}
                   weight={Text.Weight.Medium}
-                  className="font-maitree text-green-200"
+                  className="font-maitree text-green-600"
                 >
                   {item}
                 </Text>

@@ -161,6 +161,7 @@
   .style-scrollbar::-webkit-scrollbar,
   .style-scrollbar div::-webkit-scrollbar {
     width: 6px;
+    height: 6px;
   }
 
   .style-scrollbar::-webkit-scrollbar-track,
@@ -285,8 +286,16 @@
 }
 
 .loading-dot {
-  @apply block bg-green-500 size-1.5 rounded-full;
+  @apply block size-1.5 rounded-full;
   animation: breathe 1.6s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+.loading-dot--dark {
+  @apply bg-green-500;
+}
+
+.loading-dot--light {
+  @apply bg-green-50;
 }
 
 @keyframes breathe {

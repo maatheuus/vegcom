@@ -17,6 +17,7 @@ import {
   PaginationPrevious,
 } from "@/shared/ui/Pagination";
 import { useQuery } from "@tanstack/react-query";
+import clsx from "clsx";
 import { useSearchParams } from "next/navigation";
 import { useMemo } from "react";
 import RecipeEmptyState from "./RecipeEmptyState";
@@ -168,7 +169,12 @@ export default function RecipeActions({ isFavorites }: Props) {
             <RecipeFilter />
           </div>
 
-          <Grid className="grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 md:gap-6 lg:gap-8">
+          <Grid
+            className={clsx(
+              "grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 md:gap-6 lg:gap-8",
+              isFavorites && "lg:grid-cols-2 lg:gap-6 xl:grid-cols-3",
+            )}
+          >
             {currentItemsRecipe.map((recipe) => (
               <RecipeCard
                 key={recipe.id}

@@ -1,4 +1,4 @@
-import Loading from "@/shared/components/ui/Loading";
+import Loading from "@/shared/components/ui/Loadings/Loading";
 import { Suspense } from "react";
 import RecipeActionsClient from "./RecipeActionsClient";
 
