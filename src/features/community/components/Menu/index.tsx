@@ -31,6 +31,7 @@ export default function Menu() {
   return (
     <div className="body__container-lg sticky top-4 z-50 mx-auto mb-16 h-auto w-full md:mb-18">
       <motion.nav
+        id="main-nav"
         layout
         initial={false}
         animate={{ height: isMenuOpen ? "auto" : "3.625rem" }}
@@ -40,7 +41,7 @@ export default function Menu() {
           isMenuOpen || hasScrolled ? "shadow-xl" : "",
         )}
       >
-        <div className="desktop:p-3 desktop:flex desktop:items-center h-full p-2">
+        <div className="h-full p-2 lg:flex lg:items-center lg:p-3">
           <motion.div layout="position" className="flex w-full items-center">
             <Row className="h-full w-full items-center justify-between gap-x-4">
               <Link href={menuConfig.brand.href} className="block flex-1">

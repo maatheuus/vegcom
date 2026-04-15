@@ -1,4 +1,5 @@
 import CommunityLayout from "@/features/community/components/CommunityLayout";
+import OnboardingTour from "@/shared/components/ui/OnboardingTour";
 import Layout from "@/shared/ui/Layout/";
 import { Metadata } from "next";
 
@@ -27,7 +28,7 @@ export default function Home() {
   };
 
   return (
-    <Layout.Default noFooter className="hidden-scrollbar">
+    <Layout.Default noFooter className="hidden-scrollbar" extraChildren={<OnboardingTour />}>
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}

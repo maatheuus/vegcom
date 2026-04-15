@@ -32,7 +32,7 @@ export function MobileMenuTrigger({
   const { upgradeLink } = menuConfig;
 
   return (
-    <div className="desktop:hidden flex items-center gap-x-2">
+    <div className="flex items-center gap-x-2 lg:hidden">
       {isLoggedIn && (
         <Link href={upgradeLink.href} className="group/plant contents">
           <Row
@@ -55,6 +55,7 @@ export function MobileMenuTrigger({
 
       <MotionConfig transition={{ duration: 0.4, ease: "easeInOut" }}>
         <motion.button
+          id="mobile-menu-trigger"
           initial={false}
           animate={isMenuOpen ? "open" : "closed"}
           onClick={toggleMenu}

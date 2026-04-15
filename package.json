@@ -53,6 +53,7 @@
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "date-fns": "^4.1.0",
+    "driver.js": "^1.4.0",
     "emoji-mart": "^5.6.0",
     "framer-motion": "^12.23.22",
     "gsap": "^3.12.7",
