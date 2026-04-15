@@ -11,7 +11,6 @@ export type SignupFormData = {
   email?: string;
   password?: string;
   aboutInfo?: string;
-  meetUs?: string;
   preference?: Preference;
   location?: string;
   culinaryLevel?: CulinaryLevel;

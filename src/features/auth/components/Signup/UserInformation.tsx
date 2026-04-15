@@ -31,8 +31,8 @@ import Text from "@/shared/ui/Text";
 import Textarea from "@/shared/ui/TextArea";
 
 import { CulinaryLevel, Preference } from "@/features/account";
+import LoadingDots from "@/shared/components/ui/Loadings/LoadingDots";
 import type { CitySearchResult } from "@/shared/lib/api/cities";
-import { CircleNotchIcon } from "@phosphor-icons/react";
 import { type FC } from "react";
 import SubmitButton from "../SubmitButton/SubmitButton";
 
@@ -266,7 +266,7 @@ const UserInformation: FC<React.ComponentProps<"form">> = ({
             disabled={isSubmitting}
             isLoading={isSubmitting}
           >
-            <CircleNotchIcon className="!h-6 !w-6 animate-spin" />
+            <LoadingDots dotColor="light" />
           </SubmitButton>
         </Col>
       </form>

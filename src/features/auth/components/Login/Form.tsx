@@ -1,6 +1,7 @@
 "use client";
 
 import { AUTH_ERRORS } from "@/shared/api/errors/codes";
+import LoadingDots from "@/shared/components/ui/Loadings/LoadingDots";
 import { toast } from "@/shared/hooks/use-toast";
 import {
   Form,
@@ -12,12 +13,7 @@ import {
 import { InputIcon } from "@/shared/ui/Input";
 import Col from "@/shared/ui/Layout/Helpers/Col";
 import { zodResolver } from "@hookform/resolvers/zod";
-import {
-  AtIcon,
-  CircleNotchIcon,
-  EyeClosedIcon,
-  EyesIcon,
-} from "@phosphor-icons/react";
+import { AtIcon, EyeClosedIcon, EyesIcon } from "@phosphor-icons/react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState, useTransition } from "react";
@@ -156,7 +152,7 @@ export default function LoginForm() {
           </div>
         </Col>
         <SubmitButton text="Entrar" isLoading={isPending}>
-          <CircleNotchIcon size={24} className="animate-spin" />
+          <LoadingDots dotColor="light" />
         </SubmitButton>
       </form>
     </Form>

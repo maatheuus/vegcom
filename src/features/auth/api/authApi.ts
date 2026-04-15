@@ -1,6 +1,6 @@
 import { api } from "@/shared/api/axios/axiosInstance";
 import type { AuthResponse, LoginCredentials, SignupData } from "../types";
-import type { ApiResponse, User, UserInformations } from "./types";
+import type { ApiResponse, EmailPreferences, User, UserInformations } from "./types";
 
 export interface UpdateProfilePayload {
   name?: string;
@@ -9,7 +9,6 @@ export interface UpdateProfilePayload {
 }
 
 export interface UpdatePasswordPayload {
-  userId: number;
   currentPassword: string;
   newPassword: string;
 }
@@ -55,7 +54,30 @@ export const authApi = {
     const { data: responseData } = await api.put<{
       success: boolean;
       message: string;
-    }>("/auth/update-password", payload);
+    }>("/auth/update-password", {
+      currentPassword: payload.currentPassword,
+      newPassword: payload.newPassword,
+    });
+    return responseData;
+  },
+
+  updateNotifications: async (payload: EmailPreferences) => {
+    const { data: responseData } = await api.put<{
+      success: boolean;
+      message: string;
+    }>("/auth/me/notifications", payload);
+    return responseData;
+  },
+
+  deleteAccount: async (password: string) => {
+    const { data: responseData } = await api.request<{
+      success: boolean;
+      message: string;
+    }>({
+      method: "DELETE",
+      url: "/auth/me",
+      data: { password },
+    });
     return responseData;
   },
 
