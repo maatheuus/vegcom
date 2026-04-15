@@ -141,7 +141,7 @@ export default function PostComposer({ className, disabled, ...props }: Props) {
   };
 
   return (
-    <Col className={clsx("relative overflow-hidden", className)} {...props}>
+    <Col id="post-composer" className={clsx("relative overflow-hidden", className)} {...props}>
       {disabled && <AuthenticatedBlocker />}
       <div
         className={clsx(

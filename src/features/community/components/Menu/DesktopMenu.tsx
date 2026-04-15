@@ -34,13 +34,14 @@ export default function DesktopMenu({
   return (
     <>
       {/* Nav Links */}
-      <Row className="desktop:flex hidden w-full flex-1 justify-end gap-x-4">
+      <Row className="hidden w-full flex-1 justify-end gap-x-4 lg:flex">
         <Row className="items-center justify-center gap-x-4">
           {centerLinks.map(({ href, icon: Icon, label }) => {
             const isActive = pathname.startsWith(href) && href !== "/";
             return (
               <Link key={href} href={href} className="contents">
                 <div
+                  id={`nav-link-${href.replace("/", "").replace("-", "") || "community"}`}
                   className={`relative w-full cursor-pointer py-1 ${
                     isActive ? "text-green-500" : "text-green-200"
                   }`}
@@ -69,7 +70,7 @@ export default function DesktopMenu({
       </Row>
 
       {/* Right Actions */}
-      <Row className="desktop:flex hidden items-center gap-x-2">
+      <Row className="hidden items-center gap-x-2 lg:flex">
         {isLoggedIn && (
           <Link href={upgradeLink.href} className="group/plant contents">
             <Row

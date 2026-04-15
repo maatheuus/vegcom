@@ -1,0 +1,175 @@
+@reference "../../../app/global.css";
+
+
+
+/* ─── Popover container ────────────────────────────────────────────────────── */
+.driver-popover {
+  background-color: #fffdf4 !important;
+  border: 1px solid #ecf9dd !important;
+  border-radius: 16px !important;
+  box-shadow:
+    0 8px 32px rgba(27, 78, 48, 0.18),
+    0 2px 8px rgba(27, 48, 27, 0.08) !important;
+  padding: 24px !important;
+  min-width: 300px !important;
+  max-width: 360px !important;
+  font-family: var(--font-maitree, serif) !important;
+}
+
+/* ─── Arrow — match popover background ────────────────────────────────────── */
+.driver-popover-arrow-side-left {
+  border-left-color: #fffdf4 !important;
+}
+
+.driver-popover-arrow-side-right {
+  border-right-color: #fffdf4 !important;
+}
+
+.driver-popover-arrow-side-top {
+  border-top-color: #fffdf4 !important;
+}
+
+.driver-popover-arrow-side-bottom {
+  border-bottom-color: #fffdf4 !important;
+}
+
+/* ─── Title ────────────────────────────────────────────────────────────────── */
+.driver-popover-title {
+  font-family: var(--font-lora, Georgia, serif) !important;
+  font-size: 18px !important;
+  font-weight: 600 !important;
+  font-style: italic !important;
+  color: #1b4e30 !important;
+  margin-bottom: 8px !important;
+  line-height: 1.3 !important;
+}
+
+/* ─── Description ──────────────────────────────────────────────────────────── */
+.driver-popover-description {
+  font-size: 14px !important;
+  color: #276b37 !important;
+  line-height: 1.6 !important;
+  margin-bottom: 0 !important;
+}
+
+/* ─── Footer ───────────────────────────────────────────────────────────────── */
+.driver-popover-footer {
+  margin-top: 20px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  gap: 8px !important;
+}
+
+/* ─── Progress text ────────────────────────────────────────────────────────── */
+.driver-popover-progress-text {
+  font-family: var(--font-lora, Georgia, serif) !important;
+  font-size: 12px !important;
+  font-style: italic !important;
+  color: #276b37 !important;
+  opacity: 0.7 !important;
+  flex: 1 !important;
+}
+
+/* ─── Button base ──────────────────────────────────────────────────────────── */
+.driver-popover-navigation-btns {
+  display: flex !important;
+  gap: 8px !important;
+}
+
+.driver-popover-prev-btn,
+.driver-popover-next-btn,
+.driver-popover-done-btn {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 6px !important;
+  padding: 7px 14px !important;
+  border-radius: 10px !important;
+  font-family: var(--font-lora, Georgia, serif) !important;
+  font-size: 13px !important;
+  font-style: italic !important;
+  font-weight: 500 !important;
+  cursor: pointer !important;
+  border: none !important;
+  transition:
+    background-color 0.2s ease,
+    opacity 0.2s ease !important;
+  text-shadow: none !important;
+  line-height: 1 !important;
+}
+
+/* ─── Prev button ──────────────────────────────────────────────────────────── */
+.driver-popover-prev-btn {
+  background-color: #ecf9dd !important;
+  color: #1b4e30 !important;
+}
+
+.driver-popover-prev-btn:hover {
+  background-color: #d4f0bb !important;
+}
+
+
+/* ─── Next button ──────────────────────────────────────────────────────────── */
+.driver-popover-next-btn {
+  background-color: #276b37 !important;
+  color: #fffdf4 !important;
+}
+
+.driver-popover-next-btn:hover {
+  background-color: #1b4e30 !important;
+}
+
+
+
+/* ─── Done button ──────────────────────────────────────────────────────────── */
+.driver-popover-done-btn {
+  background-color: #276b37 !important;
+  color: #fffdf4 !important;
+}
+
+.driver-popover-done-btn:hover {
+  background-color: #1b4e30 !important;
+}
+
+/* ─── Close button ─────────────────────────────────────────────────────────── */
+.driver-popover-close-btn {
+  position: absolute !important;
+  top: 14px !important;
+  right: 14px !important;
+  width: 26px !important;
+  height: 26px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  border-radius: 8px !important;
+  background-color: #ecf9dd !important;
+  border: none !important;
+  cursor: pointer !important;
+  transition: background-color 0.2s ease !important;
+  font-size: 0 !important;
+  /* hide the default × text */
+  color: transparent !important;
+}
+
+.driver-popover-close-btn:hover {
+  background-color: #d4f0bb !important;
+}
+
+/* X icon — Phosphor X */
+.driver-popover-close-btn::before {
+  content: "" !important;
+  display: block !important;
+  width: 14px !important;
+  height: 14px !important;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 256 256'%3E%3Cpath fill='%231b4e30' d='M205.66 194.34a8 8 0 0 1-11.32 11.32L128 139.31l-66.34 66.35a8 8 0 0 1-11.32-11.32L116.69 128 50.34 61.66a8 8 0 0 1 11.32-11.32L128 116.69l66.34-66.35a8 8 0 0 1 11.32 11.32L139.31 128Z'/%3E%3C/svg%3E") !important;
+  background-repeat: no-repeat !important;
+  background-size: contain !important;
+}
+
+/* ─── Disabled (first step) prev button ────────────────────────────────────── */
+.driver-popover-prev-btn:disabled,
+.driver-popover-prev-btn[disabled] {
+  opacity: 0.35 !important;
+  cursor: not-allowed !important;
+}
