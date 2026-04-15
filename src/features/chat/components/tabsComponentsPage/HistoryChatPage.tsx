@@ -59,8 +59,6 @@ export default function HistoryChatPage({ chats: { data } }: Props) {
       );
   }, [data, bunceQuery]);
 
-  console.log("visibleChats", visibleChats);
-
   const openChatInTab = (id: string) => {
     router.push(`/chat/${id}`);
   };

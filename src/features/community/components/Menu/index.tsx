@@ -26,7 +26,7 @@ export default function Menu() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  const userName = user?.name.split(" ").slice(0, 2).join(" ") ;
+  const userName = user?.name.split(" ").slice(0, 2).join(" ");
 
   return (
     <div className="body__container-lg sticky top-4 z-50 mx-auto mb-16 h-auto w-full md:mb-18">
@@ -41,10 +41,8 @@ export default function Menu() {
         )}
       >
         <div className="desktop:p-3 desktop:flex desktop:items-center h-full p-2">
-          {/* Topbar — brand + menus */}
           <motion.div layout="position" className="flex w-full items-center">
             <Row className="h-full w-full items-center justify-between gap-x-4">
-              {/* Brand */}
               <Link href={menuConfig.brand.href} className="block flex-1">
                 <div className="flex items-center gap-x-1">
                   <Image

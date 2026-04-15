@@ -17,7 +17,6 @@ export interface SignupInformationsFormData {
   culinaryLevel: CulinaryLevel;
   location: string;
   preference: Preference;
-  meetUs?: string;
 }
 
 export interface AuthResponse {

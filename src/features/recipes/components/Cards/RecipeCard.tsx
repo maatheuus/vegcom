@@ -135,7 +135,7 @@ export default function RecipeCard({ recipe, className }: Props) {
                   aria-label={
                     isSaved ? "Desfavoritar receita" : "Favoritar receita"
                   }
-                  className="flex items-center justify-center rounded-full bg-green-50 p-2 transition-colors hover:bg-green-500/80"
+                  className="flex items-center justify-center rounded-full bg-green-50 p-2 transition-colors hover:bg-green-50/80"
                   onClick={handleFavorite}
                   icon={
                     !isMounted ? (

@@ -153,7 +153,7 @@ export default function AuthenticatedBlocker({
   return (
     <div
       className={clsx(
-        "absolute h-full overflow-hidden rounded-2xl border border-gray-200/70 bg-[#F4EFE4]",
+        "absolute h-full w-full overflow-hidden rounded-2xl border border-gray-200/70 bg-[#F4EFE4]",
         className,
       )}
       {...props}
