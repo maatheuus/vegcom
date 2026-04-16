@@ -62,11 +62,6 @@ export const createPost = async (
 ): Promise<PostCardDataProps> => {
   return serverFetch<PostCardDataProps>("/community", {
     method: "POST",
-    headers: {
-      ...(payload instanceof FormData
-        ? { "Content-Type": "multipart/form-data" }
-        : { "Content-Type": "application/json" }),
-    },
     body: payload,
   });
 };

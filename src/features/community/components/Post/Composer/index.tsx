@@ -1,5 +1,6 @@
 import { createPost } from "@/features/community/api/communityApi";
 import AuthenticatedBlocker from "@/shared/components/ui/AuthenticatedBlocker";
+import { useToast } from "@/shared/hooks/use-toast";
 import { usePostComposerEditor } from "@/shared/hooks/usePostComposerEditor";
 import { Input } from "@/shared/ui/Input";
 import Col from "@/shared/ui/Layout/Helpers/Col";
@@ -24,6 +25,7 @@ interface Props extends HTMLAttributes<HTMLDivElement> {
 
 export default function PostComposer({ className, disabled, ...props }: Props) {
   const { editor } = usePostComposerEditor();
+  const { toast } = useToast();
   const imageInputRef = useRef<HTMLInputElement | null>(null);
   const postTitleRef = useRef<HTMLInputElement | null>(null);
   const [isTransitioning, startTransition] = useTransition();
@@ -46,17 +48,32 @@ export default function PostComposer({ className, disabled, ...props }: Props) {
       const currentCount = attachments.length;
       const newImagesCount = files.length;
 
-      if (currentCount + newImagesCount > 4) {
-        alert("Você só pode adicionar até 4 imagens por post.");
-        if (imageInputRef.current) {
-          imageInputRef.current.value = "";
-        }
+      const slotsAvailable = 4 - currentCount;
+
+      if (slotsAvailable <= 0) {
+        toast({
+          title: "Limite de imagens atingido",
+          description:
+            "Você pode adicionar no máximo 4 imagens por publicação.",
+          variant: "destructive",
+        });
+        if (imageInputRef.current) imageInputRef.current.value = "";
         return;
+      }
+
+      const filesToAdd = Array.from(files).slice(0, slotsAvailable);
+
+      if (filesToAdd.length < newImagesCount) {
+        toast({
+          title: "Algumas imagens não foram adicionadas",
+          description: `Apenas ${filesToAdd.length} ${filesToAdd.length > 1 ? "imagens foram adicionadas" : "imagem foi adicionada"} para não ultrapassar o limite.`,
+          variant: "destructive",
+        });
       }
 
       const newAttachments: PostImageAttachment[] = [];
 
-      Array.from(files).forEach((file) => {
+      filesToAdd.forEach((file) => {
         if (file.type.startsWith("image/")) {
           const previewSrc = URL.createObjectURL(file);
 
@@ -99,15 +116,21 @@ export default function PostComposer({ className, disabled, ...props }: Props) {
     startTransition(async () => {
       if (attachments.length > 0) {
         const formData = new FormData();
-        formData.append("postTitle", title);
-        formData.append("type", type);
         formData.append(
-          "postContent[postResources][content]",
-          editor.getText(),
-        );
-        formData.append(
-          "postContent[postResources][contentHTML]",
-          editor.getHTML(),
+          "data",
+          JSON.stringify({
+            postTitle: title,
+            type,
+            postContent: {
+              postResources: {
+                content: editor.getText(),
+                contentHTML: editor.getHTML(),
+                images: [],
+                links: [],
+              },
+            },
+            postTags: [],
+          }),
         );
 
         attachments.forEach((attachment) => {
@@ -141,7 +164,11 @@ export default function PostComposer({ className, disabled, ...props }: Props) {
   };
 
   return (
-    <Col id="post-composer" className={clsx("relative overflow-hidden", className)} {...props}>
+    <Col
+      id="post-composer"
+      className={clsx("relative overflow-hidden", className)}
+      {...props}
+    >
       {disabled && <AuthenticatedBlocker />}
       <div
         className={clsx(

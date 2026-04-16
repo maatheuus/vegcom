@@ -5,7 +5,7 @@ import { redirect } from "next/navigation";
 const BASE_URL = process.env.NEXT_PUBLIC_API_URL;
 
 interface FetchOptions extends Omit<RequestInit, "body"> {
-  body?: object;
+  body?: object | FormData;
   skipRedirectOn401?: boolean;
 }
 
@@ -32,8 +32,11 @@ export const serverFetch = async <T>(
     redirect("/login");
   }
 
+  const isFormData = options.body instanceof FormData;
+
   const headers: HeadersInit = {
-    "Content-Type": "application/json",
+    // For FormData, let the browser set Content-Type with the correct boundary
+    ...(!isFormData && { "Content-Type": "application/json" }),
     ...options.headers,
   };
 
@@ -44,8 +47,8 @@ export const serverFetch = async <T>(
   const response = await fetch(`${BASE_URL}${endpoint}`, {
     ...options,
     headers,
-    body: options.body ? JSON.stringify(options.body) : undefined,
-    cache: "no-store", // Disable cache for authenticated requests
+    body: isFormData ? options.body : options.body ? JSON.stringify(options.body) : undefined,
+    cache: "no-store",
   });
 
   if (!response.ok) {

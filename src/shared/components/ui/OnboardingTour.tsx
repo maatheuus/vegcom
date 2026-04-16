@@ -70,14 +70,14 @@ const mobileSteps = [
     popover: {
       title: "Bem-vindo a VegCom 🌱",
       description:
-        "A VegCom é uma comunidade vegana onde você pode compartilhar receitas, publicações, descobrir curiosidades e conversar com nossa IA. Vamos te mostrar tudo!",
+        "A VegCom é uma comunidade para quem vive ou quer explorar o universo vegano e vegetariano. Aqui você compartilha receitas, publica experiências, descobre curiosidades e conta com uma IA pensada para esse estilo de vida.",
     },
   },
   {
     popover: {
       title: "Faça uma publicação ✍️",
       description:
-        "Compartilhe posts com a comunidade! Após fazer login, toque no botão verde (+) no canto inferior direito para criar sua primeira publicação.",
+        "Compartilhe posts com a comunidade! Depois de fazer login, toque no botão verde (+) no canto inferior direito para criar sua primeira publicação.",
     },
   },
   {
@@ -85,7 +85,7 @@ const mobileSteps = [
     popover: {
       title: "Menu de navegação",
       description:
-        "Toque aqui para abrir o menu e acessar todas as seções do VegCom. Clique em Próximo para continuar.",
+        "Toque aqui para abrir o menu e acessar todas as áreas da VegCom. Clique em Próximo para continuar.",
       side: "bottom" as const,
       align: "end" as const,
     },
@@ -95,7 +95,7 @@ const mobileSteps = [
     popover: {
       title: "Receitas 🍽️",
       description:
-        "Explore centenas de receitas veganas criadas pela comunidade. Filtre por ingrediente, categoria ou tempo de preparo.",
+        "Explore receitas veganas e vegetarianas compartilhadas pela comunidade. Encontre opções por ingrediente, categoria ou tempo de preparo.",
       side: "bottom" as const,
       align: "start" as const,
     },
@@ -105,7 +105,7 @@ const mobileSteps = [
     popover: {
       title: "Nova receita 👨‍🍳",
       description:
-        "Tem uma receita incrível? Compartilhe com a comunidade! Adicione ingredientes, modo de preparo e fotos.",
+        "Tem uma receita especial? Compartilhe com a comunidade adicionando ingredientes, modo de preparo e fotos.",
       side: "bottom" as const,
       align: "start" as const,
     },
@@ -113,9 +113,9 @@ const mobileSteps = [
   {
     element: "#mobile-nav-link-chat",
     popover: {
-      title: "Chat com IA 🤖",
+      title: "IA vegana e vegetariana 🤖",
       description:
-        "Converse com nosso assistente! Tire dúvidas sobre veganismo, vegetarianismo, peça sugestões de receitas ou dicas de nutrição.",
+        "Receba ajuda de uma IA focada em veganismo e vegetarianismo. Tire dúvidas, peça sugestões de receitas e tenha respostas mais alinhadas com a sua alimentação, sem precisar se esforçar muito.",
       side: "bottom" as const,
       align: "start" as const,
     },
@@ -125,7 +125,7 @@ const mobileSteps = [
     popover: {
       title: "Curiosidades 💡",
       description:
-        "Aprenda fatos interessantes sobre veganismo, sustentabilidade e alimentação saudável. Novo conteúdo toda semana!",
+        "Descubra conteúdos sobre veganismo, vegetarianismo, sustentabilidade e alimentação consciente.",
       side: "bottom" as const,
       align: "start" as const,
     },
@@ -137,7 +137,7 @@ const desktopSteps = [
     popover: {
       title: "Bem-vindo a VegCom 🌱",
       description:
-        "A VegCom é uma comunidade vegana onde você pode compartilhar receitas, publicações, descobrir curiosidades e conversar com nossa IA. Vamos te mostrar tudo!",
+        "A VegCom é uma comunidade para quem vive ou quer explorar o universo vegano e vegetariano. Aqui você compartilha receitas, publica experiências, descobre curiosidades e conta com uma IA pensada para esse estilo de vida.",
     },
   },
   {
@@ -145,7 +145,7 @@ const desktopSteps = [
     popover: {
       title: "Faça uma publicação",
       description:
-        "Aqui você cria e compartilha posts com a comunidade. Escreva suas experiências, dúvidas ou descobertas sobre o mundo vegano e vegetariano.",
+        "Aqui você cria e compartilha posts com a comunidade. Divida experiências, dúvidas, descobertas e dicas sobre o mundo vegano e vegetariano.",
       side: "bottom" as const,
       align: "center" as const,
     },
@@ -155,7 +155,7 @@ const desktopSteps = [
     popover: {
       title: "Receitas 🍽️",
       description:
-        "Explore centenas de receitas veganas criadas pela comunidade. Filtre por ingrediente, categoria ou tempo de preparo.",
+        "Explore receitas veganas e vegetarianas compartilhadas pela comunidade. Encontre opções por ingrediente, categoria ou tempo de preparo.",
       side: "bottom" as const,
       align: "center" as const,
     },
@@ -165,7 +165,7 @@ const desktopSteps = [
     popover: {
       title: "Nova receita 👨‍🍳",
       description:
-        "Tem uma receita incrível? Compartilhe com a comunidade! Adicione ingredientes, modo de preparo e fotos.",
+        "Tem uma receita especial? Compartilhe com a comunidade adicionando ingredientes, modo de preparo e fotos.",
       side: "bottom" as const,
       align: "center" as const,
     },
@@ -173,9 +173,9 @@ const desktopSteps = [
   {
     element: "#nav-link-chat",
     popover: {
-      title: "Chat com IA 🤖",
+      title: "IA vegana e vegetariana 🤖",
       description:
-        "Converse com nosso assistente! Tire dúvidas sobre veganismo, vegetarianismo, peça sugestões de receitas ou dicas de nutrição.",
+        "Receba ajuda de uma IA focada em veganismo e vegetarianismo. Tire dúvidas, peça sugestões de receitas e tenha respostas mais alinhadas com a sua alimentação, sem precisar se esforçar muito.",
       side: "bottom" as const,
       align: "center" as const,
     },
@@ -185,7 +185,7 @@ const desktopSteps = [
     popover: {
       title: "Curiosidades 💡",
       description:
-        "Aprenda fatos interessantes sobre veganismo, sustentabilidade e alimentação saudável. Novo conteúdo toda semana!",
+        "Descubra conteúdos sobre veganismo, vegetarianismo, sustentabilidade e alimentação consciente.",
       side: "bottom" as const,
       align: "center" as const,
     },
