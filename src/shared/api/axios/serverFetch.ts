@@ -47,7 +47,7 @@ export const serverFetch = async <T>(
   const response = await fetch(`${BASE_URL}${endpoint}`, {
     ...options,
     headers,
-    body: isFormData ? options.body : options.body ? JSON.stringify(options.body) : undefined,
+    body: isFormData ? (options.body as FormData) : options.body ? JSON.stringify(options.body) : undefined,
     cache: "no-store",
   });
 
