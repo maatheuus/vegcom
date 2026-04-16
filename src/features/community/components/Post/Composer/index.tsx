@@ -1,6 +1,7 @@
 import { createPost } from "@/features/community/api/communityApi";
 import AuthenticatedBlocker from "@/shared/components/ui/AuthenticatedBlocker";
 import { useToast } from "@/shared/hooks/use-toast";
+import { compressImages } from "@shared/lib/compressImage";
 import { usePostComposerEditor } from "@/shared/hooks/usePostComposerEditor";
 import { Input } from "@/shared/ui/Input";
 import Col from "@/shared/ui/Layout/Helpers/Col";
@@ -115,6 +116,9 @@ export default function PostComposer({ className, disabled, ...props }: Props) {
 
     startTransition(async () => {
       if (attachments.length > 0) {
+        const compressedFiles = await compressImages(
+          attachments.map((a) => a.file),
+        );
         const formData = new FormData();
         formData.append(
           "data",
@@ -133,8 +137,8 @@ export default function PostComposer({ className, disabled, ...props }: Props) {
           }),
         );
 
-        attachments.forEach((attachment) => {
-          formData.append("images", attachment.file);
+        compressedFiles.forEach((file) => {
+          formData.append("images", file);
         });
 
         await createPost(formData);

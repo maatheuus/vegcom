@@ -1,4 +1,5 @@
 import { api } from "@/shared/api/axios/axiosInstance";
+import { compressImages } from "@shared/lib/compressImage";
 import type { CreateRecipeResponse } from "../../recipes/api/types";
 
 export interface CreateRecipeFormData {
@@ -18,11 +19,12 @@ export interface CreateRecipeFormData {
 
 const newRecipeApi = {
   createRecipe: async (data: CreateRecipeFormData, images: File[]) => {
+    const compressed = await compressImages(images);
     const formData = new FormData();
 
     formData.append("data", JSON.stringify(data));
 
-    images.forEach((image) => {
+    compressed.forEach((image) => {
       formData.append("images", image);
     });
 

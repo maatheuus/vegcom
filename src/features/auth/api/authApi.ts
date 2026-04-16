@@ -1,4 +1,5 @@
 import { api } from "@/shared/api/axios/axiosInstance";
+import { compressImage } from "@shared/lib/compressImage";
 import type { AuthResponse, LoginCredentials, SignupData } from "../types";
 import type { ApiResponse, EmailPreferences, User, UserInformations } from "./types";
 
@@ -82,8 +83,9 @@ export const authApi = {
   },
 
   uploadAvatar: async (file: File) => {
+    const compressed = await compressImage(file);
     const formData = new FormData();
-    formData.append("file", file);
+    formData.append("file", compressed);
 
     const { data: responseData } = await api.post<{
       success: boolean;
