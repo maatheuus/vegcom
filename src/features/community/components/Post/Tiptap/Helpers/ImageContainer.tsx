@@ -11,14 +11,21 @@ export interface PostImageAttachment {
 
 interface ImageContainerProps {
   images: PostImageAttachment[];
+  isLoading?: boolean;
   onRemoveImage: (id: string) => void;
 }
 
-const ImageContainer = ({ images, onRemoveImage }: ImageContainerProps) => {
+const ImageContainer = ({
+  images,
+  isLoading,
+  onRemoveImage,
+}: ImageContainerProps) => {
   if (images.length === 0) return null;
 
   return (
-    <div className="mt-3 w-full overflow-x-auto p-1">
+    <div
+      className={`mt-3 w-full overflow-x-auto p-1 ${isLoading ? "pointer-events-none opacity-50" : ""}`}
+    >
       <Row className="w-max gap-3 transition-all">
         {images.map((image) => (
           <div key={image.id} className="group relative">
