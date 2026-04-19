@@ -44,7 +44,7 @@ export default function RecipeCard({ recipe, className }: Props) {
     setIsSaved(userHasSaved);
   }, [currentUser?.id, recipe?.likes]);
 
-  const isUserRecipe = recipe?.userId === currentUser?.id;
+  const isUserRecipe = isMounted && recipe?.userId === currentUser?.id;
 
   const handleFavorite = async (e: React.MouseEvent) => {
     e.preventDefault();

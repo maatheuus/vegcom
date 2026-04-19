@@ -53,6 +53,10 @@ export function RecipeHero({ className, hightlightedRecipe }: RecipeHeroProps) {
     slug,
   } = recipe;
 
+  const hasAvailableFilters =
+    availableFilters != null &&
+    Object.values(availableFilters).some((v) => v != null);
+
   const image = images[0];
   const { data: currentUser } = useGetUser();
   const isUserRecipe = userId === currentUser?.id;
@@ -197,41 +201,43 @@ export function RecipeHero({ className, hightlightedRecipe }: RecipeHeroProps) {
       </Link>
 
       {/* Filter Select */}
-      <div className="absolute top-4 right-4 z-10 md:top-8 md:right-8">
-        <Select
-          value={selectedFilter || "Filtrar"}
-          onValueChange={handleFilterChange}
-        >
-          <SelectTrigger className="w-auto gap-2 rounded-lg border-0 bg-black/40 px-3 py-1.5 text-sm font-medium backdrop-blur-md transition-colors hover:bg-black/50 [&_span]:data-[slot=select-value]:!text-white [&_svg]:!text-white">
-            {availableFilters && (
-              <SelectValue
-                placeholder="Filtrar"
-                defaultValue={selectedFilter || "Filtrar"}
-              />
-            )}
-          </SelectTrigger>
-          <SelectContent className="w-56 rounded-lg border-0 bg-green-50 ring-1 shadow-xl ring-black/5">
-            {filterOptions.map((option) => {
-              const isAvailable =
-                availableFilters?.[
-                  option.value as keyof GetAvailableFiltersResponse["data"]
-                ];
+      {hasAvailableFilters && (
+          <div className="absolute top-4 right-4 z-10 md:top-8 md:right-8">
+            <Select
+              value={selectedFilter || "Filtrar"}
+              onValueChange={handleFilterChange}
+            >
+              <SelectTrigger className="w-auto gap-2 rounded-lg border-0 bg-black/40 px-3 py-1.5 text-sm font-medium backdrop-blur-md transition-colors hover:bg-black/50 [&_span]:data-[slot=select-value]:!text-white [&_svg]:!text-white">
+                {availableFilters && (
+                  <SelectValue
+                    placeholder="Filtrar"
+                    defaultValue={selectedFilter || "Filtrar"}
+                  />
+                )}
+              </SelectTrigger>
+              <SelectContent className="w-56 rounded-lg border-0 bg-green-50 ring-1 shadow-xl ring-black/5">
+                {filterOptions.map((option) => {
+                  const isAvailable =
+                    availableFilters?.[
+                      option.value as keyof GetAvailableFiltersResponse["data"]
+                    ];
 
-              if (!isAvailable) return null;
+                  if (!isAvailable) return null;
 
-              return (
-                <SelectItem
-                  key={option.value}
-                  value={option.value}
-                  className="my-2 cursor-pointer px-4 py-2 text-sm text-green-500 last:my-0 focus:bg-green-200/60 focus:text-green-50 data-[state=checked]:bg-green-500 data-[state=checked]:font-medium data-[state=checked]:text-green-50"
-                >
-                  {option.label}
-                </SelectItem>
-              );
-            })}
-          </SelectContent>
-        </Select>
-      </div>
+                  return (
+                    <SelectItem
+                      key={option.value}
+                      value={option.value}
+                      className="my-2 cursor-pointer px-4 py-2 text-sm text-green-500 last:my-0 focus:bg-green-200/60 focus:text-green-50 data-[state=checked]:bg-green-500 data-[state=checked]:font-medium data-[state=checked]:text-green-50"
+                    >
+                      {option.label}
+                    </SelectItem>
+                  );
+                })}
+              </SelectContent>
+            </Select>
+          </div>
+        )}
     </div>
   );
 }
