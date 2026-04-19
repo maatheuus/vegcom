@@ -1,6 +1,7 @@
 import { type DetailedRecipe } from "@/features/recipes/api/types";
 import Row from "@/shared/ui/Layout/Helpers/Row";
 import Text from "@/shared/ui/Text";
+import Link from "next/link";
 import { Fragment } from "react";
 
 import {
@@ -18,7 +19,7 @@ export default function RowHeaderData({ recipe }: { recipe?: DetailedRecipe }) {
 
   const {
     views,
-    user: { name: authorName },
+    user: { id: authorId, name: authorName },
     averageRating: rating,
     totalComments: commentsCount,
   } = recipe;
@@ -79,18 +80,31 @@ export default function RowHeaderData({ recipe }: { recipe?: DetailedRecipe }) {
         {item.separator ? (
           <div className="hidden size-1 rounded-full bg-green-500 opacity-50 md:block" />
         ) : (
-          <Row className="gap-x-2" role="listitem" aria-label={item.ariaLabel}>
+          <Row className="gap-x-2 items-center" role="listitem" aria-label={item.ariaLabel}>
             {Icon && (
               <Icon className="text-green-500" size={18} aria-hidden="true" />
             )}
-            <Text
-              as="span"
-              type={Text.Type.BodyFive}
-              weight={Text.Weight.Medium}
-              className="text-green-500"
-            >
-              {item.label}
-            </Text>
+            {item.key === "author" ? (
+              <Link href={`/user/${authorId}`}>
+                <Text
+                  as="span"
+                  type={Text.Type.BodyFive}
+                  weight={Text.Weight.Medium}
+                  className="text-green-500 underline-offset-2 hover:underline"
+                >
+                  {item.label}
+                </Text>
+              </Link>
+            ) : (
+              <Text
+                as="span"
+                type={Text.Type.BodyFive}
+                weight={Text.Weight.Medium}
+                className="text-green-500"
+              >
+                {item.label}
+              </Text>
+            )}
           </Row>
         )}
       </Fragment>

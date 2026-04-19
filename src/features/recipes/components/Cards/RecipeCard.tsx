@@ -1,8 +1,8 @@
 import type { Recipe } from "@/entities/recipe/types";
 import { useGetUser } from "@/features/auth/api/queries/getAuthApiClient";
-import StarRating from "@/features/community/components/StarRating";
 import {
   formatCategoryLabel,
+  formatDifficultyLabel,
   formatTimeLabel,
 } from "@/features/recipe-details/ContentRecipe/utils";
 import Button from "@/shared/ui/Button";
@@ -12,17 +12,18 @@ import ImageCarouselModal, {
 import Col from "@/shared/ui/Layout/Helpers/Col";
 import Text from "@/shared/ui/Text";
 import {
+  ChefHatIcon,
   ClockIcon,
   EyeIcon,
   HeartIcon,
   ImagesIcon,
-  UsersIcon,
 } from "@phosphor-icons/react/ssr";
 import clsx from "clsx";
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState, useTransition } from "react";
 import { favoriteRecipe } from "../../api/queries/getRecipesApiServer";
+import { Divider } from "@/features/community/components/Sidebar/SubComponents";
 
 interface Props {
   recipe: Recipe;
@@ -73,7 +74,7 @@ export default function RecipeCard({ recipe, className }: Props) {
       <Col className={`relative size-full max-w-full ${className || ""}`}>
         <Col
           className={clsx(
-            "group relative size-full max-w-full overflow-hidden rounded-xl border border-green-500 bg-green-50 shadow-sm transition-all hover:shadow-md",
+            "group relative size-full max-w-full overflow-hidden rounded-xl border border-green-200/50 bg-green-50 transition-all hover:-translate-y-0.5 hover:border-green-200",
           )}
         >
           <div className="relative aspect-square max-h-[220px] overflow-hidden">
@@ -105,14 +106,15 @@ export default function RecipeCard({ recipe, className }: Props) {
               </button>
             )}
 
+            <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent" />
             <div className="absolute top-0 right-0 flex w-full items-center justify-between p-2">
-              <div className="z-10 flex h-6 items-center justify-center rounded-full bg-green-500 px-3">
+              <div className="z-10 flex h-6 items-center justify-center rounded-full bg-white/90 px-3 backdrop-blur-md">
                 {Boolean(recipe.category) && (
                   <Text
                     as="span"
                     type={Text.Type.BodyFive}
-                    weight={Text.Weight.SemiBold}
-                    className="font-maitree rounded-full text-green-50"
+                    weight={Text.Weight.Normal}
+                    className="font-lora rounded-full text-green-500 italic"
                   >
                     {formatCategoryLabel(recipe.category)}
                   </Text>
@@ -120,12 +122,12 @@ export default function RecipeCard({ recipe, className }: Props) {
               </div>
 
               {isUserRecipe ? (
-                <div className="z-10 flex h-6 items-center justify-center rounded-full bg-green-500 px-3 backdrop-blur-sm">
+                <div className="z-10 flex h-6 items-center justify-center rounded-full bg-white/90 px-3 backdrop-blur-md">
                   <Text
                     as="span"
                     type={Text.Type.BodyFive}
                     weight={Text.Weight.SemiBold}
-                    className="font-maitree text-green-50"
+                    className="font-lora rounded-full text-green-500 italic"
                   >
                     Sua receita
                   </Text>
@@ -181,45 +183,40 @@ export default function RecipeCard({ recipe, className }: Props) {
               )}
             </div>
 
-            <div className="mt-auto space-y-2.5 border-t border-green-100/80 pt-3">
-              <div
-                className="flex items-center"
-                aria-label={`Avaliação: ${recipe?.averageRating ?? 0} estrelas`}
-              >
-                <StarRating
-                  rating={recipe?.averageRating ?? 0}
-                  iconClassName="w-3.5 h-3.5"
-                  aria-hidden="true"
-                />
-              </div>
-
-              <div className="font-maitree flex flex-wrap items-center gap-1.5">
+            <div className="mt-auto border-t border-green-100/80 pt-3">
+              <div className="font-maitree flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-green-600">
                 {Boolean(recipe.cookTime) && (
                   <span
-                    className="inline-flex items-center gap-1.5 rounded-full bg-green-500 px-2.5 py-1 text-xs font-medium text-green-50"
+                    className="inline-flex items-center gap-1"
                     aria-label={`Tempo: ${recipe?.cookTime}`}
                   >
-                    <ClockIcon size={12} aria-hidden="true" />
+                    <ClockIcon size={13} aria-hidden="true" />
                     {formatTimeLabel(recipe?.cookTime)}
                   </span>
                 )}
-                {Boolean(recipe.quantity) && (
+                <span className="text-xs text-green-500 opacity-50">•</span>
+
+                {Boolean(recipe.difficulty) && (
                   <span
-                    className="inline-flex items-center gap-1.5 rounded-full bg-green-500 px-2.5 py-1 text-xs font-medium text-green-50"
-                    aria-label={`Serve: ${recipe?.quantity}`}
+                    className="inline-flex items-center gap-1"
+                    aria-label={`Dificuldade: ${recipe?.difficulty}`}
                   >
-                    <UsersIcon size={12} aria-hidden="true" />
-                    {recipe?.quantity}
+                    <ChefHatIcon size={13} aria-hidden="true" />
+                    {formatDifficultyLabel(recipe?.difficulty)}
                   </span>
                 )}
                 {Boolean(recipe.views) && (
-                  <span
-                    className="inline-flex items-center gap-1.5 rounded-full bg-green-500 px-2.5 py-1 text-xs font-medium text-green-50"
-                    aria-label={`Visualizações: ${recipe?.views}`}
-                  >
-                    <EyeIcon size={12} aria-hidden="true" />
-                    {recipe?.views}
-                  </span>
+                  <>
+                    <span className="text-xs text-green-500 opacity-50">•</span>
+
+                    <span
+                      className="inline-flex items-center gap-1"
+                      aria-label={`Visualizações: ${recipe?.views}`}
+                    >
+                      <EyeIcon size={13} aria-hidden="true" />
+                      {recipe?.views}
+                    </span>
+                  </>
                 )}
               </div>
             </div>

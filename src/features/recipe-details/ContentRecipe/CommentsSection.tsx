@@ -96,9 +96,7 @@ const CommentsSection = memo(function CommentsSection({
     createComment(
       {
         recipeId,
-        text:
-          newReview.trim() ||
-          `Avaliação de ${newRating} estrela${newRating > 1 ? "s" : ""}`,
+        ...(newReview.trim() && { text: newReview.trim() }),
         rating: newRating,
       },
       {

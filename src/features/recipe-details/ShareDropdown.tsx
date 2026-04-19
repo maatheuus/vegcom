@@ -86,7 +86,7 @@ const ShareDropdown = memo(function ShareDropdown({
       variant: "success",
     });
     setIsOpen(false);
-  }, [shareUrl]);
+  }, [shareUrl, title]);
 
   return (
     <div

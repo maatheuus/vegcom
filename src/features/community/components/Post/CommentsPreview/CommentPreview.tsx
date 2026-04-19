@@ -44,13 +44,13 @@ export default function CommentPreview({
       </Row>
 
       {visible.map((comment, idx) => (
-        <Row key={idx} className="items-start gap-x-2">
+        <Row key={idx} className="items-center gap-x-2">
           <Avatar className="mt-0.5 size-5 shrink-0">
             <AvatarImage
               src={comment.user?.urlImage ?? ""}
               alt={comment.user?.name}
             />
-            <AvatarFallback className="text-[8px]">
+            <AvatarFallback className="!text-[10px]">
               {comment.user?.name ? getInitials(comment.user.name) : "U"}
             </AvatarFallback>
           </Avatar>
