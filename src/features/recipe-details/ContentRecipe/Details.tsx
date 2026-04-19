@@ -1,4 +1,4 @@
-import { MealType, type Difficulty } from "@/features/recipes/api/types";
+import { type Difficulty, MealType } from "@/features/recipes/api/types";
 import Col from "@/shared/ui/Layout/Helpers/Col";
 import Text from "@/shared/ui/Text";
 import {
@@ -12,10 +12,10 @@ import { formatCategoryLabel, formatDifficultyLabel } from "./utils";
 
 interface Props extends React.HTMLAttributes<HTMLDivElement> {
   className?: string;
-  cookTime: string;
-  quantity: string;
-  difficulty: Difficulty;
-  category: MealType;
+  cookTime?: string;
+  quantity?: string;
+  difficulty?: Difficulty;
+  category?: MealType | string;
 }
 
 const Details = memo(function Details({
@@ -42,33 +42,35 @@ const Details = memo(function Details({
     {
       icon: <TargetIcon className="h-5 w-5 text-green-500" />,
       label: "Dificuldade",
-      value: formatDifficultyLabel(difficulty),
+      value: difficulty ? formatDifficultyLabel(difficulty) : undefined,
       ariaLabel: `Nível de dificuldade: ${difficulty}`,
     },
     {
       icon: <ChefHatIcon className="h-5 w-5 text-green-500" />,
       label: "Categoria",
-      value: formatCategoryLabel(category),
+      value: category ? formatCategoryLabel(category) : undefined,
       ariaLabel: `Categoria: ${category}`,
     },
   ];
 
   return (
     <div
-      className={`grid w-full grid-cols-2 gap-4 self-center md:grid-cols-4 ${className ? className : ""}`}
+      className={`grid w-full grid-cols-2 gap-4 self-center md:flex ${className ? className : ""}`}
       role="list"
       aria-label="Detalhes da receita"
       {...props}
     >
-      {details.map((detail, index) => (
-        <Detail
-          key={index}
-          icon={detail.icon}
-          label={detail.label}
-          value={String(detail.value)}
-          ariaLabel={detail.ariaLabel}
-        />
-      ))}
+      {details
+        .filter((d) => d.value)
+        .map((detail, index) => (
+          <Detail
+            key={index}
+            icon={detail.icon}
+            label={detail.label}
+            value={detail.value!}
+            ariaLabel={detail.ariaLabel}
+          />
+        ))}
     </div>
   );
 });
@@ -88,17 +90,17 @@ const Detail = memo(function Detail({
 }: DetailProps) {
   return (
     <Col
-      className="items-center justify-center gap-1 rounded-xl bg-green-50 p-4 px-4 shadow-sm"
+      className="flex-1 items-center justify-center gap-1 rounded-xl bg-green-50 p-4 px-4 shadow-sm"
       role="listitem"
       aria-label={ariaLabel}
     >
       {icon && <span aria-hidden="true">{icon}</span>}
-      {label && (
+      {Boolean(label) && (
         <Text type={Text.Type.BodyFive} className="font-maitree text-green-500">
           {label}
         </Text>
       )}
-      {value && (
+      {Boolean(value) && (
         <Text
           as="span"
           type={Text.Type.BodyThree}
