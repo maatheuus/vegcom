@@ -1,6 +1,8 @@
+import { queryClient } from "@shared/tanstack/QueryClientWrapper";
 import axios from "axios";
 
 const TOKEN_STORAGE_KEY = "vegcom_access_token";
+const AUTH_SCOPED_STORAGE_KEYS = [TOKEN_STORAGE_KEY, "vegcom-new-recipe-images"];
 
 export function getAccessToken(): string | null {
   if (typeof window === "undefined") return null;
@@ -14,7 +16,7 @@ export function setAccessToken(token: string): void {
 
 export function removeAccessToken(): void {
   if (typeof window === "undefined") return;
-  window.localStorage.removeItem(TOKEN_STORAGE_KEY);
+  AUTH_SCOPED_STORAGE_KEYS.forEach((key) => window.localStorage.removeItem(key));
 }
 
 export const api = axios.create({
@@ -55,6 +57,7 @@ api.interceptors.response.use(
 
     if (status === 401) {
       removeAccessToken();
+      queryClient.clear();
     }
 
     if (status === 429) {

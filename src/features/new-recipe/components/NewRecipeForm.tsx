@@ -11,7 +11,6 @@ import { Form } from "@/shared/ui/Form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { SealCheckIcon } from "@phosphor-icons/react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import type { ComponentProps } from "react";
 import { useCallback, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { useCreateNewRecipe } from "../api/queries/getNewRecipesApiClient";
@@ -24,11 +23,7 @@ import FluctuantTip from "./FluctuantTip";
 import RenderStepContent from "./RenderStepContent";
 import StepIndicator from "./StepIndicator";
 
-interface Props extends ComponentProps<"div"> {
-  className?: string;
-}
-
-export default function NewRecipeForm({}: Props) {
+export default function NewRecipeForm() {
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
@@ -244,7 +239,7 @@ export default function NewRecipeForm({}: Props) {
                   (currentStep === 1 &&
                     form.watch("recipe_images").length === 0)
                 }
-                className="flex cursor-pointer items-center gap-2 bg-green-200 transition-colors duration-200 hover:bg-green-500"
+                className="flex cursor-pointer items-center gap-2 bg-green-500 transition-colors duration-200 hover:bg-green-200"
               >
                 {nextLabels[currentStep]}
               </Button>
