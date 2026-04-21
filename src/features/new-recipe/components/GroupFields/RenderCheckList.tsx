@@ -17,12 +17,13 @@ export default function RenderCheckList({
   const listRef = useRef<HTMLDivElement>(null);
 
   return (
-    <div ref={listRef} className="h-full max-h-[320px] overflow-y-scroll">
-      <Col className={clsx("items-start gap-y-2 pr-4", className)}>
+    <div ref={listRef} className="h-full">
+      <Col className={clsx("items-start gap-y-2", className)}>
         {items.map((item, idx) => (
           <div key={item.id} className="w-full">
             <RenderCheckListItem
               key={item.id}
+              showDraggingIcon={items.length >= 2}
               item={item}
               idx={idx}
               onDeleteItem={(id) => onDeleteItem?.(id)}

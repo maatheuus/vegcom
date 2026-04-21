@@ -1,4 +1,3 @@
-import Button from "@/shared/ui/Button";
 import {
   FormControl,
   FormField,
@@ -12,11 +11,10 @@ import {
   SortableContext,
   verticalListSortingStrategy,
 } from "@dnd-kit/sortable";
-import { PlusCircleIcon } from "@phosphor-icons/react";
+import { ArrowsDownUpIcon, PlusCircleIcon } from "@phosphor-icons/react";
 import { Fragment, useCallback } from "react";
 import { useWatch } from "react-hook-form";
 
-import DynamicFields from "../DynamicFields";
 import type { Props } from "../ImageUploadArea";
 import RenderCheckList from "./RenderCheckList";
 
@@ -181,86 +179,40 @@ export default function GroupFields({
     ? [specificType]
     : (["ingredients", "instructions", "cookingNotes"] as RecipeType[]);
 
+  const titleMap: Record<RecipeType, string> = {
+    ingredients: "Ingredientes",
+    instructions: "Modo de preparo",
+    cookingNotes: "Dicas do Chef",
+  };
+
+  const placeholderMap: Record<RecipeType, string> = {
+    ingredients: "Adicionar ingrediente...",
+    instructions: "Descrever passo...",
+    cookingNotes: "Adicionar dica...",
+  };
+
   return (
     <Fragment>
       {typesToRender.map((type) => (
-        <DynamicFields
-          key={type}
-          title={
-            type === "ingredients"
-              ? "Ingredientes"
-              : type === "instructions"
-                ? "Instruções"
-                : "Dicas do Chef"
-          }
-          rightContent={
-            type === "cookingNotes" && (
-              <span className="text-sm text-green-500/70">Opcional</span>
-            )
-          }
-          className="flex flex-1 flex-col"
-        >
-          <FormField
-            control={form.control}
-            name={
-              type === "ingredients"
-                ? "new_recipe_ingredient_text"
-                : type === "instructions"
-                  ? "new_recipe_instruction_text"
-                  : "new_recipe_cookingNote_text"
-            }
-            render={({ field }) => {
-              return (
-                <FormItem>
-                  <div className="flex flex-row-reverse gap-x-2 border-x-0 border-t-0 border-b border-green-200">
-                    <Button.Icon
-                      onClick={(e) => {
-                        e.preventDefault();
-                        handleAddItemToList(field.value || "", type);
-                      }}
-                      disabled={isAddDisabled(
-                        field.value || "",
-                        current[type].length,
-                      )}
-                      variant="text"
-                      type="button"
-                      className="m-0 cursor-pointer gap-x-1 px-0 font-semibold text-green-500/70 hover:bg-transparent hover:text-green-500 md:pr-5.5"
-                      leftIcon={<PlusCircleIcon size={16} />}
-                    />
-                    <FormControl>
-                      <Input
-                        type="text"
-                        placeholder="Novo ingrediente..."
-                        className="border-0 px-0 focus:border-green-200 focus:!ring-0"
-                        value={field.value || ""}
-                        onChange={(e) => {
-                          const value = e.target.value;
-                          field.onChange(value);
-                        }}
-                        name={field.name}
-                        ref={field.ref}
-                        onKeyDown={(e) => {
-                          if (e.key === "Enter") {
-                            e.preventDefault();
-                            if (
-                              !isAddDisabled(
-                                field.value || "",
-                                current[type].length,
-                              )
-                            ) {
-                              handleAddItemToList(field.value || "", type);
-                              field.value = "";
-                            }
-                          }
-                        }}
-                      />
-                    </FormControl>
-                  </div>
-                  <FormMessage className="!mb-0" />
-                </FormItem>
-              );
-            }}
-          />
+        <div key={type} className="flex flex-1 flex-col gap-4">
+          <div className="flex items-center gap-3">
+            <h2 className="font-lora text-lg font-bold text-green-900">
+              {titleMap[type]}
+            </h2>
+            {current[type].length > 0 && (
+              <span className="rounded-full bg-green-100 px-2.5 py-0.5 text-xs font-medium text-green-700">
+                {current[type].length}{" "}
+                {type === "ingredients"
+                  ? current[type].length === 1
+                    ? "item"
+                    : "itens"
+                  : current[type].length === 1
+                    ? "passo"
+                    : "passos"}
+              </span>
+            )}
+          </div>
+
           <DndContext
             collisionDetection={closestCenter}
             onDragEnd={(e) => handleDragEnd(e, type)}
@@ -275,7 +227,93 @@ export default function GroupFields({
               />
             </SortableContext>
           </DndContext>
-        </DynamicFields>
+
+          {current[type].length >= 2 && (
+            <p className="flex items-center gap-1 text-xs font-medium text-green-500">
+              <ArrowsDownUpIcon size={12} />
+              Arraste para reordenar
+            </p>
+          )}
+
+          {/* Add input + button */}
+          <FormField
+            control={form.control}
+            name={
+              type === "ingredients"
+                ? "new_recipe_ingredient_text"
+                : type === "instructions"
+                  ? "new_recipe_instruction_text"
+                  : "new_recipe_cookingNote_text"
+            }
+            render={({ field }) => {
+              return (
+                <FormItem
+                  className={current[type].length === 10 ? "hidden" : "block"}
+                >
+                  <div className="flex flex-col items-end gap-2">
+                    <FormControl>
+                      <Input
+                        type="text"
+                        placeholder={placeholderMap[type]}
+                        className="rounded-xl! border-green-200 text-sm"
+                        value={field.value || ""}
+                        onChange={(e) => field.onChange(e.target.value)}
+                        name={field.name}
+                        ref={field.ref}
+                        onKeyDown={(e) => {
+                          if (e.key === "Enter") {
+                            e.preventDefault();
+                            if (
+                              !isAddDisabled(
+                                field.value || "",
+                                current[type].length,
+                              )
+                            ) {
+                              handleAddItemToList(field.value || "", type);
+                            }
+                          }
+                        }}
+                      />
+                    </FormControl>
+                    <button
+                      type="button"
+                      onClick={(e) => {
+                        e.preventDefault();
+                        handleAddItemToList(field.value || "", type);
+                      }}
+                      disabled={isAddDisabled(
+                        field.value || "",
+                        current[type].length,
+                      )}
+                      className="flex shrink-0 cursor-pointer items-center gap-1.5 rounded-xl border border-green-200 bg-green-50 px-3 py-2 text-xs font-medium text-green-700 transition hover:border-green-400 hover:bg-green-100 disabled:cursor-not-allowed disabled:opacity-40"
+                    >
+                      <PlusCircleIcon size={14} />
+                      Adicionar
+                    </button>
+                  </div>
+                  <FormMessage className="!mb-0" />
+                </FormItem>
+              );
+            }}
+          />
+
+          {/* Array-level error (min items validation) */}
+          <FormField
+            control={form.control}
+            name={
+              type === "ingredients"
+                ? "recipe_ingredients"
+                : type === "instructions"
+                  ? "recipe_instructions"
+                  : "recipe_cookingNotes"
+            }
+            render={() => (
+              <FormItem>
+                <FormMessage className="text-right" />
+              </FormItem>
+            )}
+          />
+        </div>
       ))}
     </Fragment>
   );
