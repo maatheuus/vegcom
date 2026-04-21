@@ -187,7 +187,7 @@ export default function PostCardRoot({
                 src={data.user?.urlImage || ""}
                 alt={data.user?.name || "user image"}
               />
-              <AvatarFallback className="text-xs capitalize md:text-base">
+              <AvatarFallback className="text-xs capitalize">
                 {data.user?.name ? getInitials(data.user.name) : "U"}
               </AvatarFallback>
             </Avatar>

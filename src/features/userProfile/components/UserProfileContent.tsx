@@ -179,9 +179,16 @@ export function UserProfileContent({
               currentPosts.map((post) => {
                 const content = post.postContent.postResources?.content;
                 const contentHTML = post.postContent.postResources?.contentHTML;
+                const postWithAvatar = {
+                  ...post,
+                  user: {
+                    ...post.user,
+                    urlImage: post.user.urlImage || user.informations.avatarUrl || "",
+                  },
+                };
 
                 return (
-                  <PostCardRoot key={post.id} data={post} className="!mt-0">
+                  <PostCardRoot key={post.id} data={postWithAvatar} className="!mt-0">
                     <Col className="h-fit w-full gap-y-1 text-green-500">
                       <Text
                         as="h2"

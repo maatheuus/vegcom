@@ -39,7 +39,7 @@ export default function ContentRecipe({ recipe }: Props) {
       >
         {recipe.steps.ingredients && recipe.steps.ingredients.length > 0 && (
           <ChecklistSection
-            title="Ingredients"
+            title="Ingredientes"
             type="ingredients"
             storageKey="checklist-ingredients"
             items={recipe.steps.ingredients}
@@ -48,7 +48,7 @@ export default function ContentRecipe({ recipe }: Props) {
 
         {recipe.steps.instructions && recipe.steps.instructions.length > 0 && (
           <ChecklistSection
-            title="Instructions"
+            title="Instruções"
             type="instructions"
             storageKey="checklist-instructions"
             items={recipe.steps.instructions}
@@ -57,7 +57,7 @@ export default function ContentRecipe({ recipe }: Props) {
 
         {recipe.steps.cookingNotes && recipe.steps.cookingNotes.length > 0 && (
           <ChecklistSection
-            title="Cooking Notes"
+            title="Dicas do Chef"
             type="cookingNotes"
             items={recipe.steps.cookingNotes}
           />

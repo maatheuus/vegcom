@@ -22,7 +22,7 @@ interface TypeConfig {
   interactive: boolean;
 }
 
-export const formatCategoryLabel = (category: MealType) => {
+export const formatCategoryLabel = (category: MealType | string) => {
   if (!category) return;
 
   const categoryLabel = category.toUpperCase();
@@ -40,6 +40,8 @@ export const formatCategoryLabel = (category: MealType) => {
       return "Lanches";
     case MealType.GENERAL:
       return "Geral";
+    default:
+      return category;
   }
 };
 

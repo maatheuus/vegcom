@@ -5,8 +5,8 @@
 // Request Payloads
 export interface CreateCommentPayload {
   recipeId: number;
-  text: string;
-  rating: number; // 0-5
+  text?: string;
+  rating: number; // 1-5
 }
 
 export interface UpdateCommentPayload {

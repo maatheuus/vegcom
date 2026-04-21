@@ -12,6 +12,17 @@ type TriggerProps = {
   toggleMenu: () => void;
 };
 
+// Componente auxiliar para não repetirmos código nos traços do SVG
+const Path = (props: any) => (
+  <motion.path
+    fill="transparent"
+    strokeWidth="2.5" // Espessura da linha (ajuste se quiser mais grosso ou fino)
+    stroke="currentColor" // Herda a cor do text-* do elemento pai
+    strokeLinecap="round"
+    {...props}
+  />
+);
+
 export function MobileMenuTrigger({
   isLoggedIn,
   isPremium,
@@ -21,7 +32,7 @@ export function MobileMenuTrigger({
   const { upgradeLink } = menuConfig;
 
   return (
-    <div className="desktop:hidden flex items-center gap-x-2">
+    <div className="flex items-center gap-x-2 lg:hidden">
       {isLoggedIn && (
         <Link href={upgradeLink.href} className="group/plant contents">
           <Row
@@ -44,39 +55,34 @@ export function MobileMenuTrigger({
 
       <MotionConfig transition={{ duration: 0.4, ease: "easeInOut" }}>
         <motion.button
-          layout="position"
+          id="mobile-menu-trigger"
           initial={false}
           animate={isMenuOpen ? "open" : "closed"}
           onClick={toggleMenu}
-          className="group/menu relative flex min-h-9 min-w-9 flex-col items-center justify-center rounded-lg bg-green-100 transition-colors duration-300 hover:bg-green-200"
+          className="group/menu relative flex h-9 w-9 items-center justify-center rounded-lg bg-green-100 px-1.5 text-green-600 transition-colors duration-300 hover:bg-green-200 hover:text-green-50"
         >
-          {[
-            {
-              style: { top: "35%", left: "50%", x: "-50%", y: "-50%" },
-              variants: {
-                open: { rotate: 45, top: "50%" },
-                closed: { rotate: 0, top: "35%" },
-              },
-            },
-            {
-              style: { top: "50%", left: "50%", x: "-50%", y: "-50%" },
-              variants: { open: { opacity: 0 }, closed: { opacity: 1 } },
-            },
-            {
-              style: { bottom: "35%", left: "50%", x: "-50%", y: "50%" },
-              variants: {
-                open: { rotate: -45, bottom: "50%" },
-                closed: { rotate: 0, bottom: "35%" },
-              },
-            },
-          ].map((bar, i) => (
-            <motion.span
-              key={i}
-              className="absolute h-0.5 w-5 rounded-full bg-green-600 group-hover/menu:bg-green-50"
-              style={bar.style}
-              variants={bar.variants}
+          <svg width="20" height="20" viewBox="0 0 24 24">
+            <Path
+              variants={{
+                closed: { d: "M 3 6 L 21 6" },
+                open: { d: "M 5 19 L 19 5" },
+              }}
             />
-          ))}
+            <Path
+              d="M 3 12 L 21 12"
+              variants={{
+                closed: { opacity: 1, pathLength: 1 },
+                open: { opacity: 0, pathLength: 0 },
+              }}
+              transition={{ duration: 0.2 }}
+            />
+            <Path
+              variants={{
+                closed: { d: "M 3 18 L 21 18" },
+                open: { d: "M 5 5 L 19 19" },
+              }}
+            />
+          </svg>
         </motion.button>
       </MotionConfig>
     </div>

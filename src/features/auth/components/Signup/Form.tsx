@@ -17,10 +17,10 @@ import Col from "@/shared/ui/Layout/Helpers/Col";
 
 import { useCheckEmail } from "@/features/auth/api/queries/getAuthApiClient";
 import { useSignupFormState } from "@/features/auth/hooks/queries/useSignupFormState";
+import LoadingDots from "@/shared/components/ui/Loadings/LoadingDots";
 import useDebounce from "@/shared/hooks/useDebounce";
 import {
   AtIcon,
-  CircleNotchIcon,
   EyeClosedIcon,
   EyesIcon,
   UserCircleDashedIcon,
@@ -212,7 +212,7 @@ const SignupForm: FC<ComponentProps<"form">> = ({ className, ...props }) => {
         </Col>
         <Col className="mt-4 items-center gap-2">
           <SubmitButton text="Seguinte">
-            <CircleNotchIcon className="!h-6 !w-6 animate-spin" />
+            <LoadingDots dotColor="light" />
           </SubmitButton>
         </Col>
       </form>

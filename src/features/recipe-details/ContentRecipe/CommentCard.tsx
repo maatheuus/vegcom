@@ -1,5 +1,6 @@
 import { getInitials } from "@/features/account/components/utils";
 import type { CommentData } from "@/features/comments";
+import StarRating from "@/features/community/components/StarRating";
 import { Avatar, AvatarFallback } from "@/shared/ui/Avatar";
 import Button from "@/shared/ui/Button";
 import Col from "@/shared/ui/Layout/Helpers/Col";
@@ -79,9 +80,14 @@ export default function CommentCard({
           </Button.Icon>
         </Row>
       </Row>
-      <Text type={Text.Type.BodyFour} className="text-green-900">
-        {comment.text}
-      </Text>
+      {comment.rating > 0 && (
+        <StarRating rating={comment.rating} iconClassName="!w-4 !h-4" />
+      )}
+      {comment.text && (
+        <Text type={Text.Type.BodyFour} className="text-green-900">
+          {comment.text}
+        </Text>
+      )}
     </Col>
   );
 }

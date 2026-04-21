@@ -24,6 +24,13 @@ export interface SubscriptionData {
   currency: string;
 }
 
+export interface EmailPreferences {
+  recipeLike: boolean;
+  commentReply: boolean;
+  commentLike: boolean;
+  marketing: boolean;
+}
+
 export interface User {
   id: number;
   name: string;
@@ -31,6 +38,8 @@ export interface User {
   subscription?: SubscriptionData;
   recipesCount: number;
   informations: UserInformations;
+  emailPreferences?: EmailPreferences;
+  passwordUpdatedAt?: string;
   savedRecipes: { id: number; savedRecipeId: number }[];
   recipes: Record<string, number>[];
   chats: Chat[];
@@ -47,7 +56,6 @@ export function hasActiveSubscription(
 }
 
 export interface UserInformations {
-  meetUs: string;
   location: string;
   aboutInfo: string;
   preference: Preference;

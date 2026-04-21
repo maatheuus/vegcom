@@ -1,8 +1,13 @@
-import { createPost } from "@/features/community/api/communityApi";
+import {
+  createPostClient,
+  createPostWithImages,
+} from "@/features/community/api/communityApiClient";
 import AuthenticatedBlocker from "@/shared/components/ui/AuthenticatedBlocker";
+import { useToast } from "@/shared/hooks/use-toast";
 import { usePostComposerEditor } from "@/shared/hooks/usePostComposerEditor";
 import { Input } from "@/shared/ui/Input";
 import Col from "@/shared/ui/Layout/Helpers/Col";
+import { compressImages } from "@shared/lib/compressImage";
 import { EditorContent } from "@tiptap/react";
 import clsx from "clsx";
 import {
@@ -24,6 +29,7 @@ interface Props extends HTMLAttributes<HTMLDivElement> {
 
 export default function PostComposer({ className, disabled, ...props }: Props) {
   const { editor } = usePostComposerEditor();
+  const { toast } = useToast();
   const imageInputRef = useRef<HTMLInputElement | null>(null);
   const postTitleRef = useRef<HTMLInputElement | null>(null);
   const [isTransitioning, startTransition] = useTransition();
@@ -38,6 +44,8 @@ export default function PostComposer({ className, disabled, ...props }: Props) {
     }
   }, [editor, disabled]);
 
+  const MAX_TOTAL_MB = 10;
+
   const handleImageUpload = useCallback(
     (event: React.ChangeEvent<HTMLInputElement>) => {
       const files = event.target.files;
@@ -46,17 +54,49 @@ export default function PostComposer({ className, disabled, ...props }: Props) {
       const currentCount = attachments.length;
       const newImagesCount = files.length;
 
-      if (currentCount + newImagesCount > 4) {
-        alert("Você só pode adicionar até 4 imagens por post.");
-        if (imageInputRef.current) {
-          imageInputRef.current.value = "";
-        }
+      const slotsAvailable = 4 - currentCount;
+
+      if (slotsAvailable <= 0) {
+        toast({
+          title: "Limite de imagens atingido",
+          description:
+            "Você pode adicionar no máximo 4 imagens por publicação.",
+          variant: "destructive",
+        });
+        if (imageInputRef.current) imageInputRef.current.value = "";
+        return;
+      }
+
+      const filesToAdd = Array.from(files).slice(0, slotsAvailable);
+
+      if (filesToAdd.length < newImagesCount) {
+        toast({
+          title: "Algumas imagens não foram adicionadas",
+          description: `Apenas ${filesToAdd.length} ${filesToAdd.length > 1 ? "imagens foram adicionadas" : "imagem foi adicionada"} para não ultrapassar o limite.`,
+          variant: "destructive",
+        });
+      }
+
+      const existingTotalBytes = attachments.reduce(
+        (sum, a) => sum + a.file.size,
+        0,
+      );
+      const newTotalBytes =
+        existingTotalBytes + filesToAdd.reduce((sum, f) => sum + f.size, 0);
+
+      if (newTotalBytes > MAX_TOTAL_MB * 1024 * 1024) {
+        toast({
+          title: "Imagens muito grandes",
+          description: `O total das imagens não pode ultrapassar ${MAX_TOTAL_MB}MB. Escolha imagens menores.`,
+          variant: "destructive",
+        });
+        if (imageInputRef.current) imageInputRef.current.value = "";
         return;
       }
 
       const newAttachments: PostImageAttachment[] = [];
 
-      Array.from(files).forEach((file) => {
+      filesToAdd.forEach((file) => {
         if (file.type.startsWith("image/")) {
           const previewSrc = URL.createObjectURL(file);
 
@@ -74,7 +114,7 @@ export default function PostComposer({ className, disabled, ...props }: Props) {
         imageInputRef.current.value = "";
       }
     },
-    [attachments.length],
+    [attachments],
   );
 
   const handleRemoveImage = useCallback((id: string) => {
@@ -90,6 +130,9 @@ export default function PostComposer({ className, disabled, ...props }: Props) {
     [editor],
   );
 
+  const SLOW_WARN_MS = 10_000;
+  const ABORT_MS = 30_000;
+
   const handleSubmit = async () => {
     if (disabled || !editor) return;
 
@@ -98,53 +141,109 @@ export default function PostComposer({ className, disabled, ...props }: Props) {
 
     startTransition(async () => {
       if (attachments.length > 0) {
+        const compressedFiles = await compressImages(
+          attachments.map((a) => a.file),
+        );
+
         const formData = new FormData();
-        formData.append("postTitle", title);
-        formData.append("type", type);
         formData.append(
-          "postContent[postResources][content]",
-          editor.getText(),
-        );
-        formData.append(
-          "postContent[postResources][contentHTML]",
-          editor.getHTML(),
-        );
-
-        attachments.forEach((attachment) => {
-          formData.append("images", attachment.file);
-        });
-
-        await createPost(formData);
-      } else {
-        await createPost({
-          postTitle: title,
-          type,
-          postContent: {
-            postResources: {
-              content: editor.getText(),
-              contentHTML: editor.getHTML(),
-              images: [],
-              links: [],
+          "data",
+          JSON.stringify({
+            postTitle: title,
+            type,
+            postContent: {
+              postResources: {
+                content: editor.getText(),
+                contentHTML: editor.getHTML(),
+                images: [],
+                links: [],
+              },
             },
-          },
+            postTags: [],
+          }),
+        );
+
+        compressedFiles.forEach((file) => {
+          formData.append("images", file);
         });
+
+        const controller = new AbortController();
+
+        const slowTimer = setTimeout(() => {
+          toast({
+            title: "Enviando...",
+            description:
+              "O envio está demorando mais que o esperado. Por favor, aguarde.",
+            duration: 5000,
+          });
+        }, SLOW_WARN_MS);
+
+        const abortTimer = setTimeout(() => {
+          controller.abort();
+        }, ABORT_MS);
+
+        try {
+          // // TODO: remover delay de teste
+          // await new Promise<void>((resolve, reject) => {
+          //   const t = setTimeout(resolve, 60_000);
+          //   controller.signal.addEventListener("abort", () => {
+          //     clearTimeout(t);
+          //     reject(new DOMException("Aborted", "AbortError"));
+          //   });
+          // });
+          await createPostWithImages(formData, controller.signal);
+          window.dispatchEvent(new CustomEvent("community:post-created"));
+        } catch (err) {
+          const isAbort =
+            err instanceof Error &&
+            (err.name === "CanceledError" || err.name === "AbortError");
+          toast({
+            title: isAbort ? "Tempo esgotado" : "Erro ao publicar",
+            description: isAbort
+              ? "O envio demorou mais de 30 segundos e foi cancelado. Tente com imagens menores."
+              : "Não foi possível publicar. Tente novamente.",
+            variant: "destructive",
+          });
+          return;
+        } finally {
+          clearTimeout(slowTimer);
+          clearTimeout(abortTimer);
+        }
+      } else {
+        try {
+          await createPostClient({
+            postTitle: title,
+            type,
+            postContent: {
+              postResources: {
+                content: editor.getText(),
+                contentHTML: editor.getHTML(),
+                images: [],
+                links: [],
+              },
+            },
+            postTags: [],
+          });
+          window.dispatchEvent(new CustomEvent("community:post-created"));
+        } catch {
+          toast({
+            title: "Erro ao publicar",
+            description: "Não foi possível publicar. Tente novamente.",
+            variant: "destructive",
+          });
+          return;
+        }
       }
-
-      window.dispatchEvent(new CustomEvent("community:post-created"));
     });
-
-    editor.commands.clearContent();
-    setAttachments([]);
-    if (postTitleRef.current) {
-      postTitleRef.current.value = "";
-    }
   };
 
   return (
-    <Col className={clsx("relative", className)} {...props}>
-      {disabled && (
-        <AuthenticatedBlocker className="absolute inset-0 z-50 m-auto h-fit w-full max-w-[60%]" />
-      )}
+    <Col
+      id="post-composer"
+      className={clsx("relative overflow-hidden", className)}
+      {...props}
+    >
+      {disabled && <AuthenticatedBlocker />}
       <div
         className={clsx(
           "relative transition-all duration-300",
@@ -156,21 +255,23 @@ export default function PostComposer({ className, disabled, ...props }: Props) {
           <div className={clsx("relative transition-all duration-300")}>
             <PostComposerTextArea editor={editor}>
               <ImageContainer
+                isLoading={disabled || isTransitioning}
                 images={attachments}
                 onRemoveImage={handleRemoveImage}
               />
               <Input
                 ref={postTitleRef}
-                disabled={disabled}
+                disabled={disabled || isTransitioning}
                 type="text"
                 placeholder="Título do post"
-                className="font-lora border-none px-0 !text-xl leading-none font-medium tracking-tight text-green-500 placeholder:text-green-500/80 focus:!ring-0 sm:!text-2xl/tight"
+                className="font-lora border-none px-0 !text-xl leading-none font-medium tracking-tight text-green-500 placeholder:text-green-500/80 focus:!ring-0 disabled:opacity-50 sm:!text-2xl/tight"
                 maxLength={50}
               />
 
               <EditorContent
                 editor={editor}
                 className={clsx(
+                  isTransitioning && "pointer-events-none opacity-50",
                   "hidden-scrollbar font-maitree h-auto max-h-[20rem] min-h-24 w-full overflow-y-auto py-2 text-green-500",
                   "[&_.is-editor-empty]:before:content-[attr(data-placeholder)]",
                   "[&_.is-editor-empty]:before:absolute",
@@ -205,7 +306,7 @@ export default function PostComposer({ className, disabled, ...props }: Props) {
           multiple
           onChange={handleImageUpload}
           className="hidden"
-          disabled={isImageLimitReached}
+          disabled={isImageLimitReached || isTransitioning}
         />
       </div>
     </Col>

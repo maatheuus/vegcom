@@ -14,7 +14,7 @@ import DialogImage from "./DialogImage";
 
 export interface ImageItem {
   id: string;
-  file: File;
+  file: File | null;
   preview: string;
   name: string;
   loading?: boolean;

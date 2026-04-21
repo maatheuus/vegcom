@@ -1,7 +1,10 @@
 import type { Recipe } from "@/entities/recipe/types";
 import { useGetUser } from "@/features/auth/api/queries/getAuthApiClient";
-import StarRating from "@/features/community/components/StarRating";
-import { formatCategoryLabel } from "@/features/recipe-details/ContentRecipe/utils";
+import {
+  formatCategoryLabel,
+  formatDifficultyLabel,
+  formatTimeLabel,
+} from "@/features/recipe-details/ContentRecipe/utils";
 import Button from "@/shared/ui/Button";
 import ImageCarouselModal, {
   type CarouselImage,
@@ -9,17 +12,18 @@ import ImageCarouselModal, {
 import Col from "@/shared/ui/Layout/Helpers/Col";
 import Text from "@/shared/ui/Text";
 import {
+  ChefHatIcon,
   ClockIcon,
   EyeIcon,
   HeartIcon,
   ImagesIcon,
-  UsersIcon,
 } from "@phosphor-icons/react/ssr";
 import clsx from "clsx";
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState, useTransition } from "react";
 import { favoriteRecipe } from "../../api/queries/getRecipesApiServer";
+import { Divider } from "@/features/community/components/Sidebar/SubComponents";
 
 interface Props {
   recipe: Recipe;
@@ -41,7 +45,7 @@ export default function RecipeCard({ recipe, className }: Props) {
     setIsSaved(userHasSaved);
   }, [currentUser?.id, recipe?.likes]);
 
-  const isUserRecipe = recipe?.userId === currentUser?.id;
+  const isUserRecipe = isMounted && recipe?.userId === currentUser?.id;
 
   const handleFavorite = async (e: React.MouseEvent) => {
     e.preventDefault();
@@ -70,7 +74,7 @@ export default function RecipeCard({ recipe, className }: Props) {
       <Col className={`relative size-full max-w-full ${className || ""}`}>
         <Col
           className={clsx(
-            "group relative size-full max-w-full overflow-hidden rounded-xl border border-green-500 bg-green-50 shadow-sm transition-all hover:shadow-md",
+            "group relative size-full max-w-full overflow-hidden rounded-xl border border-green-200/50 bg-green-50 transition-all hover:-translate-y-0.5 hover:border-green-200",
           )}
         >
           <div className="relative aspect-square max-h-[220px] overflow-hidden">
@@ -102,14 +106,15 @@ export default function RecipeCard({ recipe, className }: Props) {
               </button>
             )}
 
+            <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent" />
             <div className="absolute top-0 right-0 flex w-full items-center justify-between p-2">
-              <div className="z-10 flex h-6 items-center justify-center rounded-full bg-green-500 px-3">
+              <div className="z-10 flex h-6 items-center justify-center rounded-full bg-white/90 px-3 backdrop-blur-md">
                 {Boolean(recipe.category) && (
                   <Text
                     as="span"
                     type={Text.Type.BodyFive}
-                    weight={Text.Weight.SemiBold}
-                    className="font-maitree rounded-full text-green-50"
+                    weight={Text.Weight.Normal}
+                    className="font-lora rounded-full text-green-500 italic"
                   >
                     {formatCategoryLabel(recipe.category)}
                   </Text>
@@ -117,12 +122,12 @@ export default function RecipeCard({ recipe, className }: Props) {
               </div>
 
               {isUserRecipe ? (
-                <div className="z-10 flex h-6 items-center justify-center rounded-full bg-green-500 px-3 backdrop-blur-sm">
+                <div className="z-10 flex h-6 items-center justify-center rounded-full bg-white/90 px-3 backdrop-blur-md">
                   <Text
                     as="span"
                     type={Text.Type.BodyFive}
                     weight={Text.Weight.SemiBold}
-                    className="font-maitree text-green-50"
+                    className="font-lora rounded-full text-green-500 italic"
                   >
                     Sua receita
                   </Text>
@@ -132,23 +137,23 @@ export default function RecipeCard({ recipe, className }: Props) {
                   aria-label={
                     isSaved ? "Desfavoritar receita" : "Favoritar receita"
                   }
-                  className="flex items-center justify-center rounded-full bg-green-500/80 p-2 transition-colors hover:bg-green-500"
+                  className="flex items-center justify-center rounded-full bg-green-50 p-2 transition-colors hover:bg-green-50/80"
                   onClick={handleFavorite}
                   icon={
                     !isMounted ? (
                       <HeartIcon
                         weight="regular"
-                        className="size-6 text-green-50"
+                        className="size-6 text-green-500"
                       />
                     ) : isSaved ? (
                       <HeartIcon
                         weight="fill"
-                        className="size-6 text-green-50"
+                        className="size-6 text-green-500"
                       />
                     ) : (
                       <HeartIcon
                         weight="regular"
-                        className="size-6 text-green-50"
+                        className="size-6 text-green-500"
                       />
                     )
                   }
@@ -159,77 +164,59 @@ export default function RecipeCard({ recipe, className }: Props) {
 
           <Link
             href={`/recipes/${recipe?.slug}`}
-            className="grid h-full flex-[1] space-y-2 p-4 md:space-y-4"
+            className="flex h-full flex-[1] flex-col gap-3 p-4"
           >
-            <div className="space-y-2">
+            <div className="space-y-1.5">
               {Boolean(recipe.title) && (
                 <Text
                   as="h3"
                   weight={Text.Weight.SemiBold}
-                  className="font-lora line-clamp-1 text-lg font-semibold text-green-500"
+                  className="font-lora line-clamp-1 truncate text-lg font-semibold text-green-500"
                 >
                   {recipe?.title}
                 </Text>
               )}
               {Boolean(recipe.description) && (
-                <p className="font-maitree text-black-100 line-clamp-2 text-sm">
+                <p className="font-maitree text-black-100 line-clamp-2 text-sm leading-relaxed">
                   {recipe?.description}
                 </p>
               )}
             </div>
 
-            <div className="mt-auto flex w-full items-center justify-between">
-              {Boolean(recipe.averageRating) ? (
-                <div
-                  className="flex items-center"
-                  aria-label={`Avaliação: ${recipe?.averageRating} estrelas`}
-                >
-                  <StarRating
-                    rating={recipe?.averageRating}
-                    iconClassName="w-4 h-4"
-                    aria-hidden="true"
-                  />
-                </div>
-              ) : (
-                <div
-                  className="flex items-center"
-                  aria-label={`Fallback de estrelas`}
-                >
-                  <StarRating
-                    rating={0}
-                    iconClassName="w-4 h-4"
-                    aria-hidden="true"
-                  />
-                </div>
-              )}
-
-              <div className="font-maitree text-black-100 flex items-center gap-x-2 text-xs font-semibold">
+            <div className="mt-auto border-t border-green-100/80 pt-3">
+              <div className="font-maitree flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-green-600">
                 {Boolean(recipe.cookTime) && (
-                  <div
-                    className="flex items-center gap-1"
+                  <span
+                    className="inline-flex items-center gap-1"
                     aria-label={`Tempo: ${recipe?.cookTime}`}
                   >
-                    <ClockIcon size={16} aria-hidden="true" />
-                    <span>{recipe?.cookTime}</span>
-                  </div>
+                    <ClockIcon size={13} aria-hidden="true" />
+                    {formatTimeLabel(recipe?.cookTime)}
+                  </span>
                 )}
-                {Boolean(recipe.quantity) && (
-                  <div
-                    className="flex items-center gap-1"
-                    aria-label={`Serve: ${recipe?.quantity}`}
+                <span className="text-xs text-green-500 opacity-50">•</span>
+
+                {Boolean(recipe.difficulty) && (
+                  <span
+                    className="inline-flex items-center gap-1"
+                    aria-label={`Dificuldade: ${recipe?.difficulty}`}
                   >
-                    <UsersIcon size={16} aria-hidden="true" />
-                    <span>{recipe?.quantity}</span>
-                  </div>
+                    <ChefHatIcon size={13} aria-hidden="true" />
+                    {formatDifficultyLabel(recipe?.difficulty)}
+                  </span>
                 )}
                 {Boolean(recipe.views) && (
-                  <div
-                    className="flex items-center gap-1"
-                    aria-label={`Serve: ${recipe?.views || 0}`}
-                  >
-                    <EyeIcon size={16} aria-hidden="true" />
-                    <span>{recipe?.views || 0}</span>
-                  </div>
+                  <>
+                    <span className="text-xs text-green-500 opacity-50">•</span>
+
+                    <span
+                      className="inline-flex items-center gap-1"
+                      aria-label={`Visualizações: ${recipe?.views}`}
+                    >
+                      <EyeIcon size={13} aria-hidden="true" />
+                      {recipe?.views}
+                    </span>
+                  </>
                 )}
               </div>
             </div>

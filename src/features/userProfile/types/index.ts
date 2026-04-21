@@ -5,7 +5,9 @@ import { PostCardDataProps } from "@/shared/types";
 export interface UserProfileDetails {
   id: string;
   name: string;
+  createdAt: string;
   informations: UserInformations;
+  savedRecipes: { id: number; savedRecipeId: number }[];
   recipes: Recipe[];
   posts: PostCardDataProps[];
 }

@@ -5,6 +5,7 @@ import EmptyState from "@/shared/ui/EmptyState";
 import Text from "@/shared/ui/Text";
 import { HeartIcon, PlusIcon } from "@phosphor-icons/react";
 import { BroomIcon } from "@phosphor-icons/react/dist/ssr";
+import clsx from "clsx";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useCallback } from "react";
 
@@ -82,8 +83,8 @@ export default function RecipeEmptyState({
     <EmptyState
       title={
         isFavorites
-          ? "Sua coleção de delícias está vazia"
-          : "Sua cozinha parece um pouco solitária"
+          ? "Sua coleção de delícias está vazia!"
+          : "Sua cozinha parece um pouco vazia!"
       }
       description={
         isFavorites
@@ -92,8 +93,9 @@ export default function RecipeEmptyState({
       }
       action={
         <Button.Link
-          href={isFavorites ? "/recipes" : "/new-recipe"}
+          href="/recipes"
           leftIcon={isFavorites ? <HeartIcon /> : <PlusIcon />}
+          className={clsx("py-2", !isFavorites ? "hidden" : "")}
         >
           {isFavorites ? "Explorar receitas" : "Adicionar Receita"}
         </Button.Link>

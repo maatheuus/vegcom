@@ -68,7 +68,6 @@ export default async function page({ params }: Props) {
       })) || [],
   };
 
-  console.log("recipe:", recipe);
   return (
     <Layout.Default className="style-scrollbar h-auto">
       <script

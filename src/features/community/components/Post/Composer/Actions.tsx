@@ -115,8 +115,9 @@ export default function PostComposerActions({
         <Row className="items-center gap-x-1">
           <Button.Icon
             variant="text"
+            disabled={disabled}
             className={clsx(
-              "h-8 w-8 p-0 text-green-200 transition-colors duration-200 hover:bg-green-50 hover:text-green-500",
+              "h-8 w-8 p-0 text-green-200 transition-colors duration-200 hover:bg-green-50 hover:text-green-500 disabled:opacity-50",
               editor?.isActive("bold") && "bg-green-100 text-green-500",
             )}
             onClick={() => editor?.chain().focus().toggleBold().run()}
@@ -124,8 +125,9 @@ export default function PostComposerActions({
           />
           <Button.Icon
             variant="text"
+            disabled={disabled}
             className={clsx(
-              "h-8 w-8 p-0 text-green-200 transition-colors duration-200 hover:bg-green-50 hover:text-green-500",
+              "h-8 w-8 p-0 text-green-200 transition-colors duration-200 hover:bg-green-50 hover:text-green-500 disabled:opacity-50",
               editor?.isActive("italic") && "bg-green-100 text-green-500",
             )}
             onClick={() => editor?.chain().focus().toggleItalic().run()}
@@ -133,8 +135,9 @@ export default function PostComposerActions({
           />
           <Button.Icon
             variant="text"
+            disabled={disabled}
             className={clsx(
-              "h-8 w-8 p-0 text-green-200 transition-colors duration-200 hover:bg-green-50 hover:text-green-500",
+              "h-8 w-8 p-0 text-green-200 transition-colors duration-200 hover:bg-green-50 hover:text-green-500 disabled:opacity-50",
               editor?.isActive("strike") && "bg-green-100 text-green-500",
             )}
             onClick={() => editor?.chain().focus().toggleStrike().run()}

@@ -204,21 +204,25 @@ export const newRecipeFormSchema = z.object({
     .min(10, { message: "Uma boa receita merece uma descrição bacana." })
     .max(500, { message: "Vamos manter a descrição mais objetiva 😉" }),
 
-  recipe_ingredients: z.array(
-    z.object({
-      id: z.string(),
-      label: z.string(),
-      value: z.string(),
-    }),
-  ),
+  recipe_ingredients: z
+    .array(
+      z.object({
+        id: z.string(),
+        label: z.string(),
+        value: z.string(),
+      }),
+    )
+    .min(2, { message: "Adicione no mínimo dois ingredientes." }),
 
-  recipe_instructions: z.array(
-    z.object({
-      id: z.string(),
-      label: z.string(),
-      value: z.string(),
-    }),
-  ),
+  recipe_instructions: z
+    .array(
+      z.object({
+        id: z.string(),
+        label: z.string(),
+        value: z.string(),
+      }),
+    )
+    .min(2, { message: "Adicione pelo menos dois passos no modo de preparo." }),
 
   recipe_cookingNotes: z
     .array(
@@ -255,7 +259,7 @@ export const newRecipeFormSchema = z.object({
     .array(
       z.object({
         id: z.string(),
-        file: z.instanceof(File),
+        file: z.instanceof(File).nullable(),
         preview: z.string(),
         name: z.string(),
       }),

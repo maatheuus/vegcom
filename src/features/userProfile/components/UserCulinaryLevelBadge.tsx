@@ -48,7 +48,7 @@ export function UserCulinaryLevelBadge({
   return (
     <div
       className={cn(
-        "flex items-center gap-1.5 rounded-full border px-2.5 py-0.5 text-xs font-medium shadow-sm transition-all duration-300 hover:shadow-md",
+        "flex items-center gap-1.5 rounded-full border px-2.5 py-0.5 text-xs font-medium transition-all duration-300 hover:shadow-md",
         config.className,
         className,
       )}

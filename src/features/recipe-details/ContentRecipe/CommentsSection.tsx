@@ -96,9 +96,7 @@ const CommentsSection = memo(function CommentsSection({
     createComment(
       {
         recipeId,
-        text:
-          newReview.trim() ||
-          `Avaliação de ${newRating} estrela${newRating > 1 ? "s" : ""}`,
+        ...(newReview.trim() && { text: newReview.trim() }),
         rating: newRating,
       },
       {
@@ -195,7 +193,7 @@ const CommentsSection = memo(function CommentsSection({
       ) : (
         <Link
           href="/login"
-          className="flex w-full items-center justify-center rounded-md border border-green-200 py-4 transition-colors duration-200 hover:border-green-300 hover:bg-green-100"
+          className="flex w-full items-center justify-center rounded-md border border-green-200 py-2.5 transition-colors duration-200 hover:border-green-300 hover:bg-green-100"
         >
           <Text type={Text.Type.BodyThree} className="text-green-500">
             Faça login para deixar um comentário

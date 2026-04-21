@@ -14,7 +14,7 @@ interface Props {
   scrollContainerRef: React.RefObject<HTMLDivElement | null>;
 }
 
-const POSTS_LIMIT = 10;
+const POSTS_LIMIT = 6;
 
 export default function CommunitySelectedTab({
   selectedTab,
@@ -108,6 +108,7 @@ export default function CommunitySelectedTab({
               title="Veja mais posts da comunidade"
               description="Faça login para acessar todos os posts sem limite."
               className="mx-auto w-full max-w-[calc(100%-2rem)] drop-shadow-md"
+              type="minimal"
               showIcon={false}
             />
           </div>

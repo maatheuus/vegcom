@@ -1,6 +1,7 @@
 import LogoLoader from "@/features/account/components/(recipes)/LogoLoader";
 import type { LastMessage } from "@/features/chat/api/types";
 import type { UsageStats } from "@/shared/api/ai/ai";
+import LoadingDots from "@/shared/components/ui/Loadings/LoadingDots";
 import Button from "@/shared/ui/Button";
 import Col from "@/shared/ui/Layout/Helpers/Col";
 import Text from "@/shared/ui/Text";
@@ -209,25 +210,7 @@ export default function ChatWindow({
                   })
                 )}
 
-                {isGenerating && (
-                  <div
-                    className="flex items-center gap-[5px] rounded-[20px] bg-green-50/55 px-4 py-3"
-                    style={{ animation: "fadeSlide 0.3s ease-out both" }}
-                  >
-                    <span
-                      className="loading-dot"
-                      style={{ animationDelay: "0ms" }}
-                    />
-                    <span
-                      className="loading-dot"
-                      style={{ animationDelay: "160ms" }}
-                    />
-                    <span
-                      className="loading-dot"
-                      style={{ animationDelay: "320ms" }}
-                    />
-                  </div>
-                )}
+                {isGenerating && <LoadingDots haveBackground />}
               </div>
               <div ref={messagesEndRef} />
             </div>

@@ -34,13 +34,14 @@ export default function DesktopMenu({
   return (
     <>
       {/* Nav Links */}
-      <Row className="desktop:flex hidden w-full flex-1 justify-end gap-x-4">
+      <Row className="hidden w-full flex-1 justify-end gap-x-4 lg:flex">
         <Row className="items-center justify-center gap-x-4">
           {centerLinks.map(({ href, icon: Icon, label }) => {
             const isActive = pathname.startsWith(href) && href !== "/";
             return (
               <Link key={href} href={href} className="contents">
                 <div
+                  id={`nav-link-${href.replace("/", "").replace("-", "") || "community"}`}
                   className={`relative w-full cursor-pointer py-1 ${
                     isActive ? "text-green-500" : "text-green-200"
                   }`}
@@ -69,11 +70,11 @@ export default function DesktopMenu({
       </Row>
 
       {/* Right Actions */}
-      <Row className="desktop:flex hidden items-center gap-x-2">
+      <Row className="hidden items-center gap-x-2 lg:flex">
         {isLoggedIn && (
           <Link href={upgradeLink.href} className="group/plant contents">
             <Row
-              className={`${cls.baseButton} items-center justify-center rounded-lg bg-green-200 p-1 text-green-50 group-hover/plant:bg-green-100`}
+              className={`${cls.baseButton} items-center justify-center rounded-lg bg-green-200 p-1.5 text-green-50 group-hover/plant:bg-green-100`}
             >
               <upgradeLink.icon
                 size={18}
@@ -91,7 +92,7 @@ export default function DesktopMenu({
         )}
 
         <DropdownMenu>
-          <DropdownMenuTrigger className="group/user flex cursor-pointer items-center gap-x-2 rounded-lg border-0 bg-green-100 p-1 transition-colors duration-300 outline-none hover:bg-green-200">
+          <DropdownMenuTrigger className="group/user flex cursor-pointer items-center gap-x-2 rounded-lg border-0 bg-green-100 p-1.5 transition-colors duration-300 outline-none hover:bg-green-200">
             <UserCircleIcon
               size={18}
               className="text-green-200 group-hover/user:text-green-50"
@@ -149,7 +150,7 @@ export default function DesktopMenu({
         </DropdownMenu>
 
         {isLoggedIn && (
-          <NotificationPopup className="[&_div]:px-2 [&_div]:py-1.5" />
+          <NotificationPopup className="[&_div]:px-1.5 [&_div]:py-1.5" />
         )}
       </Row>
     </>

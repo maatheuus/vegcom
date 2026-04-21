@@ -1,9 +1,9 @@
 "use client";
 
 import { useSignupFormState } from "@/features/auth/hooks/queries/useSignupFormState";
+import LoadingDots from "@/shared/components/ui/Loadings/LoadingDots";
 import { toast } from "@/shared/hooks/use-toast";
 import Col from "@/shared/ui/Layout/Helpers/Col";
-import { CircleNotchIcon } from "@phosphor-icons/react";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 import SubmitButton from "../../../SubmitButton/SubmitButton";
@@ -48,7 +48,7 @@ export default function SuccessPage() {
             signUp(formData);
           }}
         >
-          <CircleNotchIcon className="!h-6 !w-6 animate-spin" />
+          <LoadingDots dotColor="light" />
         </SubmitButton>
       </Col>
     </SignupCard>

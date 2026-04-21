@@ -9,23 +9,26 @@ export function cn(...inputs: ClassValue[]) {
 export const dateFormatDistanceLocale: Locale = {
   code: "pt-BR",
   formatDistance: (token, count) => {
-    const formatDistanceLocale = {
-      lessThanXSeconds: "há menos de %s seg",
-      xSeconds: "há %s seg",
+    const p = (n: number, singular: string, plural: string) =>
+      n === 1 ? singular : plural;
+
+    const formatDistanceLocale: Record<string, string> = {
+      lessThanXSeconds: `há menos de %s ${p(count, "segundo", "segundos")}`,
+      xSeconds: `há %s ${p(count, "segundo", "segundos")}`,
       halfAMinute: "há meio minuto",
-      lessThanXMinutes: "há menos de %s min",
-      xMinutes: "há %s min",
-      aboutXHours: "há cerca de %s h",
-      xHours: "há %s h",
-      xDays: "há %s d",
-      aboutXWeeks: "há cerca de %s sem",
-      xWeeks: "há %s sem",
-      aboutXMonths: "há cerca de %s meses",
-      xMonths: "há %s meses",
-      aboutXYears: "há cerca de %s ano",
-      xYears: "há %s ano",
-      overXYears: "há mais de %s ano",
-      almostXYears: "há quase %s ano",
+      lessThanXMinutes: `há menos de %s ${p(count, "minuto", "minutos")}`,
+      xMinutes: `há %s ${p(count, "minuto", "minutos")}`,
+      aboutXHours: `há cerca de %s ${p(count, "hora", "horas")}`,
+      xHours: `há %s ${p(count, "hora", "horas")}`,
+      xDays: `há %s ${p(count, "dia", "dias")}`,
+      aboutXWeeks: `há cerca de %s ${p(count, "semana", "semanas")}`,
+      xWeeks: `há %s ${p(count, "semana", "semanas")}`,
+      aboutXMonths: `há cerca de %s ${p(count, "mês", "meses")}`,
+      xMonths: `há %s ${p(count, "mês", "meses")}`,
+      aboutXYears: `há cerca de %s ${p(count, "ano", "anos")}`,
+      xYears: `há %s ${p(count, "ano", "anos")}`,
+      overXYears: `há mais de %s ${p(count, "ano", "anos")}`,
+      almostXYears: `há quase %s ${p(count, "ano", "anos")}`,
     };
 
     return formatDistanceLocale[token].replace("%s", count.toString());

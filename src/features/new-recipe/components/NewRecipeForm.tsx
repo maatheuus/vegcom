@@ -8,37 +8,22 @@ import { useToast } from "@/shared/hooks/use-toast";
 import { usePersistentForm } from "@/shared/hooks/usePersistentForm";
 import Button from "@/shared/ui/Button";
 import { Form } from "@/shared/ui/Form";
-import { ScrollArea } from "@/shared/ui/scroll-area";
-import Text from "@/shared/ui/Text";
 import { zodResolver } from "@hookform/resolvers/zod";
-import {
-  ArrowBendUpLeftIcon,
-  ArrowBendUpRightIcon,
-  BasketIcon,
-  ChefHatIcon,
-  CookingPotIcon,
-  ImagesSquareIcon,
-  NotePencilIcon,
-  SealCheckIcon,
-} from "@phosphor-icons/react";
+import { SealCheckIcon } from "@phosphor-icons/react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import type { ComponentProps, ElementType } from "react";
-import { useCallback } from "react";
+import { useCallback, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { useCreateNewRecipe } from "../api/queries/getNewRecipesApiClient";
 import {
   TIPS_BY_STEP,
   transformFormToApiPayload,
-  validateStep,
   type NewRecipeFormValues,
 } from "../utils";
 import FluctuantTip from "./FluctuantTip";
 import RenderStepContent from "./RenderStepContent";
-interface Props extends ComponentProps<"div"> {
-  className?: string;
-}
+import StepIndicator from "./StepIndicator";
 
-export default function NewRecipeForm({}: Props) {
+export default function NewRecipeForm() {
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
@@ -47,8 +32,9 @@ export default function NewRecipeForm({}: Props) {
     defaultValues: { ...defaultValues },
   });
   const { mutateAsync: createNewRecipe, isPending } = useCreateNewRecipe();
-
   const { toast } = useToast();
+  const IMAGE_STORAGE_KEY = "vegcom-new-recipe-images";
+  const IMAGE_TTL_MS = 30 * 60 * 1000;
 
   const { clearStorage } = usePersistentForm(form, {
     key: "vegcom-new-recipe-form",
@@ -56,39 +42,119 @@ export default function NewRecipeForm({}: Props) {
     excludeFields: ["recipe_images"],
   });
 
-  const values = form.getValues();
+  useEffect(() => {
+    const images = form.getValues("recipe_images");
+    const cover = images?.[0];
+    if (cover?.preview?.startsWith("data:")) {
+      localStorage.setItem(
+        IMAGE_STORAGE_KEY,
+        JSON.stringify({
+          preview: cover.preview,
+          name: cover.name,
+          id: cover.id,
+          ts: Date.now(),
+        }),
+      );
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [form.watch("recipe_images")]);
+
+  useEffect(() => {
+    const restore = async () => {
+      try {
+        const raw = localStorage.getItem(IMAGE_STORAGE_KEY);
+        if (!raw) return;
+        const { preview, name, id, ts } = JSON.parse(raw);
+        if (Date.now() - ts > IMAGE_TTL_MS) {
+          localStorage.removeItem(IMAGE_STORAGE_KEY);
+          return;
+        }
+        const currentImages = form.getValues("recipe_images") ?? [];
+        if (currentImages.length === 0 && preview) {
+          try {
+            const res = await fetch(preview);
+            const blob = await res.blob();
+            const file = new File([blob], name, { type: blob.type });
+            form.setValue("recipe_images", [{ id, file, preview, name }]);
+          } catch {
+            form.setValue("recipe_images", [{ id, file: null, preview, name }]);
+          }
+        }
+      } catch {
+        // ignore
+      }
+    };
+    restore();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   const currentStep = Number(searchParams.get("step")) || 1;
-  const totalSteps = 5;
+  const totalSteps = 3;
 
   const createQueryString = useCallback(
     (name: string, value: string) => {
       const params = new URLSearchParams(searchParams.toString());
       params.set(name, value);
-
       return params.toString();
     },
     [searchParams],
   );
 
-  const nextStep = () => {
-    if (validateStep(currentStep, values, toast)) {
-      const nextStepValue = Math.min(currentStep + 1, totalSteps);
-      router.push(
-        pathname + "?" + createQueryString("step", String(nextStepValue)),
-      );
+  const goToStep = useCallback(
+    (step: number) => {
+      router.push(pathname + "?" + createQueryString("step", String(step)));
+    },
+    [router, pathname, createQueryString],
+  );
+
+  const stepFields: Record<number, (keyof NewRecipeFormValues)[]> = {
+    1: [
+      "recipe_title",
+      "recipe_description",
+      "recipe_preparationMinutes",
+      "recipe_servings",
+      "recipe_category",
+      "recipe_difficulty",
+      "recipe_images",
+    ],
+    2: ["recipe_ingredients", "recipe_instructions"],
+    3: [],
+  };
+
+  const nextStep = async () => {
+    const valid = await form.trigger(stepFields[currentStep]);
+    if (valid) {
+      goToStep(Math.min(currentStep + 1, totalSteps));
     }
   };
 
   const prevStep = () => {
-    const prevStepValue = Math.max(currentStep - 1, 1);
-    router.push(
-      pathname + "?" + createQueryString("step", String(prevStepValue)),
-    );
+    goToStep(Math.max(currentStep - 1, 1));
   };
 
   const handlePublish = async () => {
-    if (validateStep(currentStep, values, toast)) {
+    const valid = await form.trigger(stepFields[currentStep]);
+
+    if (valid) {
       const formData = form.getValues();
+
+      formData.recipe_images = await Promise.all(
+        formData.recipe_images.map(async (img) => {
+          if (img.file !== null) return img;
+          if (!img.preview?.startsWith("data:")) return img;
+          try {
+            const res = await fetch(img.preview);
+            const blob = await res.blob();
+            return {
+              ...img,
+              file: new File([blob], img.name, { type: blob.type }),
+            };
+          } catch {
+            return img;
+          }
+        }),
+      );
+
       const payload = transformFormToApiPayload(formData);
 
       try {
@@ -96,6 +162,7 @@ export default function NewRecipeForm({}: Props) {
 
         if (success) {
           clearStorage();
+          localStorage.removeItem(IMAGE_STORAGE_KEY);
           toast({
             title: "Receita criada com sucesso!",
             description:
@@ -115,123 +182,75 @@ export default function NewRecipeForm({}: Props) {
     }
   };
 
-  const steps = [
-    {
-      label: "Informações Básicas",
-      icon: ChefHatIcon,
-    },
-    {
-      label: "Ingredientes",
-      icon: BasketIcon,
-    },
-    {
-      label: "Instruções",
-      icon: CookingPotIcon,
-    },
-    {
-      label: "Dicas do Chef",
-      icon: NotePencilIcon,
-    },
-    {
-      label: "Imagens",
-      icon: ImagesSquareIcon,
-    },
-  ];
+  const backLabels: Record<number, string> = {
+    2: "← Fundamentos",
+    3: "← A receita",
+  };
+
+  const nextLabels: Record<number, string> = {
+    1: "Próximo: A receita →",
+    2: "Próximo: Revisar & publicar →",
+  };
 
   return (
     <div>
       <FluctuantTip tips={TIPS_BY_STEP[currentStep]} />
-      <div className="border-b border-green-100">
-        <div className="md:py-6">
-          <ScrollArea orientation="horizontal" className="w-full pb-4">
-            <div className="flex w-full min-w-[600px] items-start justify-between gap-2 text-center md:min-w-0">
-              {steps.map((step, index) => {
-                const label = step.label;
-                const Icon = step.icon as unknown as ElementType;
 
-                return (
-                  <div
-                    key={index}
-                    className="flex flex-1 items-center justify-center gap-2"
-                  >
-                    <div className="flex flex-col items-center gap-1">
-                      <div
-                        className={`font-lora flex min-h-8 min-w-8 items-center justify-center rounded-full transition-colors ${
-                          currentStep > index + 1
-                            ? "bg-green-600 font-semibold text-white"
-                            : currentStep === index + 1
-                              ? "bg-green-500 text-green-50"
-                              : "bg-green-100 text-green-500"
-                        }`}
-                      >
-                        {currentStep > index + 1 ? (
-                          <SealCheckIcon size={20} />
-                        ) : (
-                          <span className="text-xl">
-                            <Icon />
-                          </span>
-                        )}
-                      </div>
-                      <Text
-                        className={`font-lora text-xs ${
-                          currentStep === index + 1
-                            ? "text-green-600"
-                            : currentStep > index + 1
-                              ? "text-green-500"
-                              : "text-green-600"
-                        }`}
-                      >
-                        {label}
-                      </Text>
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
-          </ScrollArea>
-        </div>
+      <div className="mb-6">
+        <StepIndicator currentStep={currentStep} />
       </div>
 
-      <div className="h-full py-8">
-        <div className="mx-auto h-full max-w-4xl">
-          <Form {...form}>
-            <form
-              className="block h-full w-full md:min-h-[420px]"
-              onSubmit={(e) => e.preventDefault()}
-            >
-              <RenderStepContent currentStep={currentStep} form={form} />
-            </form>
-          </Form>
+      <div className="mx-auto h-full md:max-w-[95%]">
+        <Form {...form}>
+          <form
+            className="block h-full w-full"
+            onSubmit={(e) => e.preventDefault()}
+          >
+            <RenderStepContent currentStep={currentStep} form={form} />
+          </form>
+        </Form>
 
-          <div className="mt-6 flex items-center justify-between">
+        <div className="mt-6 flex items-center justify-between">
+          {currentStep > 1 ? (
             <Button
               type="button"
               variant="text"
               onClick={prevStep}
-              disabled={currentStep === 1 || isPending}
-              className="flex cursor-pointer items-center gap-2 border border-green-500 disabled:pointer-events-auto disabled:cursor-not-allowed"
+              disabled={isPending}
+              className="flex cursor-pointer items-center gap-2 border border-green-200 transition-colors duration-200 hover:opacity-80"
             >
-              <ArrowBendUpLeftIcon size={16} />
-              Anterior
+              {backLabels[currentStep]}
             </Button>
+          ) : (
+            <div />
+          )}
+
+          <div className="flex items-center gap-3">
+            <span className="text-xs text-green-500/60">
+              Etapa {currentStep} de {totalSteps}
+            </span>
 
             {currentStep < totalSteps ? (
               <Button
                 type="button"
                 onClick={nextStep}
-                className="flex cursor-pointer items-center gap-2 bg-green-500 hover:bg-green-600"
+                disabled={
+                  isPending ||
+                  (currentStep === 1 &&
+                    form.watch("recipe_images").length === 0)
+                }
+                className="flex cursor-pointer items-center gap-2 bg-green-500 transition-colors duration-200 hover:bg-green-200"
               >
-                Próximo
-                <ArrowBendUpRightIcon size={16} />
+                {nextLabels[currentStep]}
               </Button>
             ) : (
               <Button
                 type="button"
                 onClick={handlePublish}
-                className="flex cursor-pointer items-center gap-2 bg-green-500 hover:bg-green-800"
+                className="flex cursor-pointer items-center gap-2 bg-green-200 transition-colors duration-200 hover:bg-green-500"
                 disabled={isPending}
               >
-                {isPending ? "Publicando..." : "Publicar Receita"}
+                {isPending ? "Publicando..." : "Publicar receita"}
                 <SealCheckIcon size={16} />
               </Button>
             )}
