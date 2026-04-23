@@ -32,7 +32,11 @@ import Row from "@/shared/ui/Layout/Helpers/Row";
 import type { Recipe } from "@/entities/recipe";
 import RecipeDetailsHeader from "@/features/recipe-details/RecipeDetailsHeader";
 import type { DetailedRecipe } from "@/features/recipes/api/types";
-import { filterRecipes, normalizeText, sortRecipes } from "@/features/recipes/lib/filterUtils";
+import {
+  filterRecipes,
+  normalizeText,
+  sortRecipes,
+} from "@/features/recipes/lib/filterUtils";
 
 interface PageProps {
   searchParams: Promise<{
@@ -101,7 +105,7 @@ export default async function Page({ searchParams }: PageProps) {
   };
 
   return (
-    <Layout.Default className="style-scrollbar">
+    <Layout.Default className="style-scrollbar min-h-[90dvh]">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
