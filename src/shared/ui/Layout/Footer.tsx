@@ -1,4 +1,5 @@
 import { FeedbackModal } from "@/features/feedback/components/FeedbackModal";
+import { FooterAnthem } from "@/shared/ui/Layout/FooterAnthem";
 import Logo from "@/shared/ui/Logo";
 import Text from "@/shared/ui/Text";
 import Link from "next/link";
@@ -33,20 +34,24 @@ export function Footer() {
       </div>
 
       <div className="body__container-lg--no-padding relative">
-        <div className="grid grid-cols-2 gap-8 md:grid-cols-4 md:gap-6">
-          <div className="col-span-2 flex flex-col gap-3 md:col-span-1">
+        <FooterAnthem />
+        <div className="grid grid-cols-2 gap-8 md:grid-cols-4 md:gap-12">
+          <div className="col-span-2 flex flex-col items-center justify-between gap-0 sm:flex-row sm:gap-0 md:col-span-1 md:flex-col md:items-start">
             <Link
               href="/"
-              className="inline-flex items-center gap-2 transition-opacity hover:opacity-80"
+              className="w-full flex-1 transition-opacity hover:opacity-80"
             >
-              <Logo size={32} />
-              <span className="font-lora text-2xl font-bold md:text-xl">
-                VegCom
-              </span>
+              <Logo
+                white
+                className="w-full max-md:justify-start max-sm:justify-center"
+                imgClassName="h-28 w-auto md:h-24 md:w-full scale-[2] sm:scale-[1.8] md:scale-[2]"
+                width={256}
+                height={256}
+              />
             </Link>
             <Text
               type={Text.Type.BodyThree}
-              className="max-w-xs text-sm text-green-100"
+              className="flex-1 text-center text-sm text-green-100"
             >
               Conectando apaixonados pela culinária. Descubra, compartilhe e
               cresça com a nossa comunidade.

@@ -62,8 +62,7 @@ export const metadata: Metadata = {
     },
   },
   icons: {
-    icon: "/favicon-leaf-fork.png",
-    apple: "/favicon-leaf-fork.png",
+    apple: "/apple-touch-icon.png",
   },
 };
 

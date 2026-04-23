@@ -15,11 +15,7 @@ export type NavLink = {
 };
 
 export const menuConfig = {
-  brand: {
-    label: "VegCom",
-    href: "/",
-    logo: "/favicon-leaf-fork.png",
-  },
+  brand: { href: "/", logo: "/logo-green.png" },
   centerLinks: [
     { label: "Receitas", href: "/recipes", icon: ChefHatIcon },
     { label: "Nova receita", href: "/new-recipe", icon: PlusCircleIcon },

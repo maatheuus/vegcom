@@ -1,26 +1,32 @@
-import { cn } from "@/shared/lib/utils";
+import clsx from "clsx";
 import Image from "next/image";
 
 export default function Logo({
   className,
-  size = 48,
+  imgClassName,
+  white,
+  width = 256,
+  height = 256,
   ...props
 }: {
   className?: string;
-  size?: number;
+  imgClassName?: string;
+  white?: boolean;
+  width?: number;
+  height?: number;
 }) {
   return (
     <div
       aria-label="Logo"
-      className={cn("flex items-center justify-center", className)}
+      className={clsx("flex items-center justify-center", className)}
       {...props}
     >
       <Image
-        src="/favicon-leaf-fork.png"
+        src={white ? "/logo-white.png" : "/logo-green.png"}
         alt="VegCom Logo"
-        width={size}
-        height={size}
-        className="object-contain"
+        width={width}
+        height={height}
+        className={clsx("object-contain", imgClassName)}
       />
     </div>
   );

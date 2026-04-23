@@ -49,13 +49,10 @@ export default function Menu() {
                   <Image
                     src={menuConfig.brand.logo}
                     alt="VegCom Logo"
-                    width={34}
-                    height={34}
-                    className="object-cover"
+                    width={156}
+                    height={56}
+                    className="max-h-14 scale-[1.2] object-cover"
                   />
-                  <span className="font-lora text-lg font-medium text-nowrap text-green-200 italic">
-                    {menuConfig.brand.label}
-                  </span>
                 </div>
               </Link>
 
