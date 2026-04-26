@@ -99,7 +99,7 @@ export default function DesktopMenu({
             />
             {isLoggedIn && (
               <span
-                className={`${cls.text} text-green-200 group-hover/user:text-green-50`}
+                className={`${cls.text} truncate text-green-200 group-hover/user:text-green-50`}
               >
                 {userName}
               </span>
