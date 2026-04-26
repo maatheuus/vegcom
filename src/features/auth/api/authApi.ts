@@ -82,6 +82,22 @@ export const authApi = {
     return responseData;
   },
 
+  forgotPassword: async (email: string) => {
+    const { data: responseData } = await api.post<{
+      success: boolean;
+      message: string;
+    }>("/auth/forget-password", { email });
+    return responseData;
+  },
+
+  resetPassword: async (token: string, newPassword: string) => {
+    const { data: responseData } = await api.post<{
+      success: boolean;
+      message: string;
+    }>("/auth/reset-password", { token, newPassword });
+    return responseData;
+  },
+
   uploadAvatar: async (file: File) => {
     const compressed = await compressImage(file);
     const formData = new FormData();

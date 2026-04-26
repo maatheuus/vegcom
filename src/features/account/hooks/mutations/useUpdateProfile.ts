@@ -4,6 +4,7 @@ import {
   authApi,
 } from "@/features/auth/api/authApi";
 import type { EmailPreferences } from "@/features/auth/api/types";
+import { authKeys } from "@/features/auth/api/queries/getAuthApiClient";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 export const useUpdateProfile = () => {
@@ -13,7 +14,7 @@ export const useUpdateProfile = () => {
     mutationFn: (payload: UpdateProfilePayload) =>
       authApi.updateProfile(payload),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["fetch_auth_user"] });
+      queryClient.invalidateQueries({ queryKey: authKeys.user });
     },
   });
 };
@@ -25,7 +26,7 @@ export const useUpdatePassword = () => {
     mutationFn: (payload: UpdatePasswordPayload) =>
       authApi.updatePassword(payload),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["fetch_auth_user"] });
+      queryClient.invalidateQueries({ queryKey: authKeys.user });
     },
   });
 };
@@ -43,7 +44,7 @@ export const useUpdateNotifications = () => {
     mutationFn: (payload: EmailPreferences) =>
       authApi.updateNotifications(payload),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["fetch_auth_user"] });
+      queryClient.invalidateQueries({ queryKey: authKeys.user });
     },
   });
 };

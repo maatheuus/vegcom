@@ -79,6 +79,7 @@ export default function Page() {
   });
 
   const onSubmit = async (values: z.infer<typeof updatePasswordFormSchema>) => {
+    if (!canChange) return;
     if (Object.keys(form.formState.errors).length > 0) return;
 
     try {

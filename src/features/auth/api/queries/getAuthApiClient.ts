@@ -66,3 +66,21 @@ export const useCheckEmail = () => {
     mutationFn: (email: string) => authApi.checkEmail(email),
   });
 };
+
+export const useForgotPassword = () => {
+  return useMutation({
+    mutationFn: (email: string) => authApi.forgotPassword(email),
+  });
+};
+
+export const useResetPassword = () => {
+  return useMutation({
+    mutationFn: ({
+      token,
+      newPassword,
+    }: {
+      token: string;
+      newPassword: string;
+    }) => authApi.resetPassword(token, newPassword),
+  });
+};
