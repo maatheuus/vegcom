@@ -13,12 +13,18 @@ export const metadata: Metadata = {
   },
 };
 
-export default function Page() {
+export default async function Page({
+  searchParams,
+}: {
+  searchParams: Promise<{ token?: string }>;
+}) {
+  const { token } = await searchParams;
+
   return (
     <>
       <AuthHeader />
       <Col className="mx-auto h-full w-full max-w-112 gap-y-3">
-        <ForgotPasswordCard className="z-20 scale-100" />
+        <ForgotPasswordCard token={token} className="z-20 scale-100" />
         <AuthFooter />
       </Col>
     </>

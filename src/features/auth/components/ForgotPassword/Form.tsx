@@ -1,6 +1,7 @@
 "use client";
 
-import { useToast } from "@/shared/hooks/use-toast";
+import LoadingDots from "@/shared/components/ui/Loadings/LoadingDots";
+import { toast } from "@/shared/hooks/use-toast";
 import {
   Form,
   FormControl,
@@ -10,11 +11,13 @@ import {
 } from "@/shared/ui/Form";
 import { InputIcon } from "@/shared/ui/Input";
 import Col from "@/shared/ui/Layout/Helpers/Col";
+import Text from "@/shared/ui/Text";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { AtIcon } from "@phosphor-icons/react";
-import { useRouter } from "next/navigation";
+import { useState, useTransition } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
+import { useForgotPassword } from "../../api/queries/getAuthApiClient";
 import SubmitButton from "../SubmitButton/SubmitButton";
 
 const formSchema = z.object({
@@ -22,29 +25,46 @@ const formSchema = z.object({
 });
 
 export default function ForgotPasswordForm() {
-  const router = useRouter();
-  const { toast } = useToast();
+  const [isPending, startTransition] = useTransition();
+  const [submitted, setSubmitted] = useState(false);
+  const forgotPasswordMutation = useForgotPassword();
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
-    defaultValues: {
-      email: "",
-    },
+    defaultValues: { email: "" },
   });
 
   async function handleForgotPassword(data: z.infer<typeof formSchema>) {
-    await new Promise((resolve) => setTimeout(resolve, 1500));
-
-    console.log("Forgot password data:", data);
-
-    toast({
-      title: "Email enviado!",
-      description:
-        "Se o email estiver cadastrado, você receberá um link de recuperação.",
-      variant: "success",
+    startTransition(async () => {
+      try {
+        await forgotPasswordMutation.mutateAsync(data.email);
+        setSubmitted(true);
+      } catch (error: unknown) {
+        const err = error as { code?: string };
+        if (err.code === "TOO_MANY_REQUESTS") {
+          toast({
+            title: "Muitas tentativas",
+            description: "Aguarde um momento antes de tentar novamente.",
+            variant: "destructive",
+          });
+          return;
+        }
+        setSubmitted(true);
+      }
     });
+  }
 
-    form.reset();
-    router.push("/login");
+  if (submitted) {
+    return (
+      <Col className="gap-2 px-5 pt-4 pb-8 text-center">
+        <Text
+          weight={Text.Weight.Normal}
+          className="font-lora text-black-100 !text-sm"
+        >
+          Se esse e-mail estiver cadastrado, você receberá as instruções em
+          breve.
+        </Text>
+      </Col>
+    );
   }
 
   return (
@@ -66,7 +86,7 @@ export default function ForgotPasswordForm() {
                       placeholder="Digite seu email"
                       autoComplete="email"
                       {...field}
-                      icon={<AtIcon size={18} />}
+                      icon={<AtIcon size={18} className="text-green-500" />}
                     />
                   </FormControl>
                   <FormMessage className="!mb-0">
@@ -77,7 +97,9 @@ export default function ForgotPasswordForm() {
             />
           </Col>
         </Col>
-        <SubmitButton text="Enviar link" />
+        <SubmitButton text="Enviar instruções" isLoading={isPending}>
+          <LoadingDots dotColor="light" />
+        </SubmitButton>
       </form>
     </Form>
   );
