@@ -8,15 +8,16 @@ Each folder in this directory is a self-contained feature module. It owns everyt
 |---------|---------|-------------|
 | [auth](auth/) | `/login`, `/signup`, `/forgot-password` | Authentication — login, multi-step signup, password reset, token management |
 | [recipes](recipes/) | `/recipes` | Recipe listing, search, filters, sort, and grid display |
-| [recipe-details](recipe-details/) | `/recipes/[slug]` | Full recipe detail view — save, share, view tracking |
-| [new-recipe](new-recipe/) | `/new-recipe` | Recipe creation form with Tiptap rich text editor and image upload |
-| [community](community/) | `/` | Community feed — post listing, API, and layout | New home page
-| [communityPost](communityPost/) | `/community` (nested) | Single post — interactions (like, comment), context provider |
-| [comments](comments/) | Used within recipe-details and community | Comment and reply API — read, create, like, delete |
-| [chat](chat/) | `/chat` | AI chat interface backed by Google Gemini |
-| [account](account/) | `/account/*` | Account settings, favorites, subscription, notifications, own recipes |
-| [curiosities](curiosities/) | `/curiosities` | Vegan/vegetarian facts and history timeline |
-| [userProfile](userProfile/) | `/user/[id]` | Public user profile view |
+| [recipe-details](recipe-details/) | `/recipes/[slug]` | Full recipe detail view — save, share, ratings, comments |
+| [new-recipe](new-recipe/) | `/new-recipe` | Multi-step recipe creation form with image upload and drag-and-drop |
+| [community](community/) | `/` | Home page — community feed, post listing, composer, sidebar, notifications |
+| [communityPost](communityPost/) | `/community/[id]/[slug]` | Single post detail — interactions (like, comment), context provider |
+| [comments](comments/) | Used within recipe-details and communityPost | Comment and reply API — read, create, like, delete |
+| [chat](chat/) | `/chat`, `/chat/[id]` | AI chat interface backed by Google Gemini — workspace + session history |
+| [account](account/) | `/account/*` | Account settings, subscription, notifications, own recipes |
+| [curiosities](curiosities/) | `/curiosities` | Vegan/vegetarian facts — fast facts section and history timeline |
+| [userProfile](userProfile/) | `/user/[id]` | Public user profile view with tabs |
+| [feedback](feedback/) | Used globally (modal) | In-app feedback form, submitted to `/api/feedback` |
 
 ## Folder Convention
 
@@ -27,7 +28,7 @@ Every feature follows this internal structure:
 ├── api/
 │   ├── <feature>Api.ts        # Raw Axios API calls
 │   ├── types.ts               # API request/response types
-│   └── queries/
+│   └── queries/               # (most features)
 │       ├── get<Feature>ApiClient.ts   # React Query hooks (client-side)
 │       └── get<Feature>ApiServer.ts   # Server-side fetch helpers
 ├── components/                # React components scoped to this feature
@@ -39,7 +40,7 @@ Every feature follows this internal structure:
 └── index.ts                   # Barrel export — public API of this feature
 ```
 
-Not every feature uses every layer — only the folders that are needed are created.
+Not every feature uses every layer — only the folders that are needed are created. Some features (e.g. `community`) place React Query hooks directly in `api/` alongside the raw API calls instead of using a `queries/` subfolder.
 
 ## Rules
 

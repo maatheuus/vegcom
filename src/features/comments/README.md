@@ -15,8 +15,12 @@ Provides the comment API layer used by both recipe detail pages and community po
 ```
 comments/
 ├── api/
-│   ├── commentsApi.ts      # Raw API calls: getComments, createComment, likeComment, deleteComment
-│   └── (query hooks)
+│   ├── commentsApi.ts                  # Raw API calls: getComments, createComment, likeComment, deleteComment
+│   ├── types.ts                        # Comment and reply type definitions
+│   ├── index.ts                        # API barrel export
+│   └── queries/
+│       ├── getCommentsApiClient.ts     # React Query hooks: useGetComments, useCreateComment, useLikeComment, useDeleteComment
+│       └── index.ts
 └── index.ts
 ```
 
@@ -36,7 +40,7 @@ Comments support one level of nesting via `parentId`. A comment with `parentId: 
 ## Usage
 
 This feature is consumed by:
-- `src/features/recipe-details/` — comment section below a recipe
-- `src/features/communityPost/` — inline comment section on community posts
+- `src/features/recipe-details/` — `CommentsSection` below a recipe
+- `src/features/communityPost/` — `PostComments` and `CommentComposer` on the post detail page
 
 Import comment hooks from this feature's `index.ts` and render the comment list/form in the consuming feature's component.

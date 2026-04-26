@@ -1,43 +1,51 @@
 # Feature: curiosities
 
-Renders the curiosities page at `/curiosities` — a timeline of vegan and vegetarian facts, milestones, and history.
+Renders the curiosities page at `/curiosities` — a page with vegan/vegetarian fast facts and a chronological history timeline.
 
 ## Responsibilities
 
-- Display a chronological timeline of vegan/vegetarian curiosities
-- Render each curiosity with title, description, date/era, and optional image
-- Smooth scroll navigation between timeline entries (Lenis)
+- Display a "Fast Facts" section with bite-sized vegan/vegetarian statistics and highlights
+- Render a `HistoryTimeline` with milestone entries sorted chronologically
+- Orchestrate the full curiosities page layout via `CuriositiesPage`
 
 ## Structure
 
 ```
 curiosities/
 ├── components/
-│   ├── CuriositiesTimeline.tsx     # Timeline container and layout
-│   ├── CuriosityCard.tsx           # Individual fact/milestone card
-│   └── (other display components)
-├── hooks/
-│   └── (data fetching hooks)
-├── types/
-│   └── index.ts
+│   ├── page/
+│   │   └── CuriositiesPage.tsx         # Root component — composes FastFacts + HistoryTimeline
+│   ├── FastFacts/
+│   │   └── index.tsx                   # Fast facts cards section
+│   ├── HistoryTimeline/
+│   │   └── index.tsx                   # Chronological timeline of milestones
+│   └── curiosites/
+│       └── utils.ts                    # Data helpers and formatting utilities
+├── types/index.ts
 └── index.ts
 ```
 
+## Sections
+
+### Fast Facts
+
+Short stat or highlight cards displayed at the top of the page. Static or lightly dynamic content.
+
+### History Timeline
+
+A vertical timeline of vegan/vegetarian history milestones. Each entry contains a year/era, title, and description. Scroll-triggered entrance animations are applied via GSAP.
+
 ## Data
 
-Curiosities are fetched from the backend or defined as static content. Each entry contains:
+Curiosity entries may be static (hardcoded) or fetched from the backend. Each entry shape:
 
 ```ts
 {
   id: string
   title: string
   description: string
-  year?: number | string    // Era or specific year
+  year?: number | string
   imageUrl?: string
-  category?: string         // e.g., "history", "science", "culture"
+  category?: string   // e.g., "history", "science", "culture"
 }
 ```
-
-## Scrolling
-
-The page uses **Lenis** for smooth scroll behavior, providing a polished timeline browsing experience. GSAP is used for scroll-triggered entrance animations on each curiosity card.

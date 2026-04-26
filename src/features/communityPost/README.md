@@ -1,55 +1,53 @@
 # Feature: communityPost
 
-Handles per-post interactions within the community feed — likes, comments, and deletion. Provides a React Context so interaction state is shared between a post's header, body, and action bar without prop drilling.
+Handles the full detail view of a single community post at `/community/[id]/[slug]`. Provides a React Context so interaction state is shared between all parts of the post without prop drilling.
 
 ## Responsibilities
 
+- Render the full post content
 - Like / unlike a post (optimistic update)
-- Show/hide comment section for a post
+- Show the comment section with comment composition
+- Reply to individual comments (via `MentionList` for @mentions)
 - Delete own post
-- Provide interaction state to all components within a single post via Context
+- Navigate back to the community feed
 
 ## Structure
 
 ```
 communityPost/
 ├── components/
-│   ├── PostHeader.tsx          # Author avatar, name, timestamp, delete menu
-│   ├── PostBody.tsx            # Rendered Tiptap content + images
-│   ├── PostActionBar.tsx       # Like button, comment toggle, share
-│   ├── PostCommentSection.tsx  # Inline comment list + comment form
-│   └── PostCard.tsx            # Assembles all parts into one post card
+│   ├── PostActions.tsx         # Like button, comment count, share, delete menu
+│   ├── PostComments.tsx        # Full comment list for this post
+│   ├── CommentComposer.tsx     # Rich text input for writing a new comment/reply
+│   ├── MentionList.tsx         # @mention suggestion dropdown in the composer
+│   ├── ReplyButton.tsx         # Inline reply trigger on a comment
+│   └── BackToCommunityButton.tsx # Navigation back to the feed
 ├── context/
-│   ├── PostInteractionContext.ts   # Context type definition
-│   └── PostInteractionProvider.tsx # Provider — holds liked state, comment visibility
-├── hooks/
-│   └── (post-level mutation hooks: like, delete)
-└── types/
-    └── index.ts
+│   ├── PostInteractionContext.tsx  # Context type and hook definition
+│   └── PostInteractionProvider.tsx # Provider — holds liked state, comment count
+└── (no separate types/ or hooks/ directories; logic lives in components and context)
 ```
 
 ## Context Pattern
 
-Each post card is wrapped in `PostInteractionProvider`, which holds:
+Each post detail page is wrapped in `PostInteractionProvider`, which holds:
 
 ```ts
 {
   isLiked: boolean
   likeCount: number
   toggleLike: () => void
-  isCommentOpen: boolean
-  toggleComments: () => void
 }
 ```
 
-Child components (`PostActionBar`, `PostCommentSection`, etc.) consume this context via `useContext(PostInteractionContext)` — no prop chains required.
+Child components (`PostActions`, etc.) consume this context via the hook exported from `PostInteractionContext.tsx` — no prop chains required.
 
-## Like Interaction
+## Comment Composition
 
-- `toggleLike()` fires `POST /community/posts/:id/like`
-- Uses optimistic update: UI updates immediately, rolls back on error
-- Prevents double-click spam with a pending state
+- `CommentComposer` supports @mention suggestions via `MentionList`
+- Replies are threaded one level deep — a reply targets a parent comment's `id`
+- Comment creation and liking are delegated to `src/features/comments/`
 
 ## Relationship with `community`
 
-`communityPost` components are rendered inside the feed managed by `community/`. The split allows the feed to stay focused on listing/creating while each post handles its own interaction state independently.
+`communityPost` renders the full post detail when a user clicks a card in the community feed managed by `community/`. The feed links to `/community/[id]/[slug]`; this feature owns that route's content.

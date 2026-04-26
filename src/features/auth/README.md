@@ -28,7 +28,8 @@ auth/
 │   ├── Heading/                    # Auth page title component
 │   ├── Login/
 │   │   ├── Card.tsx                # Login page card layout
-│   │   └── Form.tsx                # Login form (email + password)
+│   │   ├── Form.tsx                # Login form (email + password)
+│   │   └── BackgroundItems.tsx     # Decorative background SVG elements
 │   ├── Signup/
 │   │   ├── SignupFlow.tsx          # Orchestrates the multi-step signup
 │   │   ├── StepProgress.tsx        # Visual step indicator
@@ -37,16 +38,22 @@ auth/
 │   │   ├── UserInformation.tsx     # Step 3: profile details
 │   │   ├── CodeChecked.tsx         # Verification success indicator
 │   │   ├── SignupCard.tsx          # Shared card wrapper
-│   │   └── ProgressView/Steps/    # Individual step page components
+│   │   ├── BackgroundItems.tsx     # Decorative background SVG elements
+│   │   └── ProgressView/Steps/
+│   │       ├── FormPage.tsx
+│   │       ├── CodeConfirmPage.tsx
+│   │       ├── VerificationPage.tsx
+│   │       ├── UserInformationPage.tsx
+│   │       └── SuccessPage.tsx
 │   ├── ForgotPassword/
 │   │   ├── Card.tsx
 │   │   └── Form.tsx
 │   └── SubmitButton/               # Loading-aware submit button
 ├── hooks/
 │   ├── mutations/useSignup.ts      # Multi-step signup mutation
-│   └── queries/
-│       ├── useGetSignupUser.ts     # Fetch user during signup flow
-│       └── useSignupFormState.ts   # Manage signup step state
+│   ├── queries/useGetSignupUser.ts # Fetch user during signup flow
+│   ├── queries/useSignupFormState.ts # Manage signup step state
+│   └── useLogout.ts               # Clears token and React Query cache
 ├── types/index.ts
 ├── utils.ts                        # Auth utility helpers
 └── index.ts
@@ -59,7 +66,7 @@ auth/
 | `useGetUser()` | Query | Fetches the current authenticated user (`GET /auth/me`) |
 | `useSignin()` | Mutation | Logs in, stores `vegcom_access_token` in localStorage |
 | `useSignup()` | Mutation | Registers user; clears token (no auto-login) |
-| `useLogout()` | Mutation | Clears token and React Query cache |
+| `useLogout()` | — | Clears token and React Query cache (lives in `hooks/useLogout.ts`, not in `getAuthApiClient.ts`) |
 | `useCheckEmail()` | Mutation | Validates email availability during signup |
 
 ## Token Lifecycle

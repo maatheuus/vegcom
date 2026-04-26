@@ -34,11 +34,12 @@ VegCom is a platform for the vegan and vegetarian community to discover, share, 
 ```
 vegcom/
 ├── app/                  # Next.js App Router — routes and pages
-│   ├── (public)/         # Public pages (home, recipes, community)
+│   ├── (public)/         # Public pages (home/feed, recipes, curiosities, user profiles)
 │   │   └── (auth)/       # Auth pages (login, signup, forgot-password)
-│   └── (private)/        # Authenticated pages (account, chat, new-recipe)
+│   └── (private)/        # Authenticated pages (account, chat, new-recipe, payment)
 ├── src/
-│   ├── features/         # Feature-sliced modules (auth, recipes, community…)
+│   ├── features/         # Feature-sliced modules (auth, recipes, community, chat…)
+│   ├── components/       # Page-level components not tied to a single feature (landing/)
 │   ├── shared/           # Shared API clients, hooks, UI components, utils
 │   └── entities/         # Domain entity types (recipe, post, user)
 └── public/               # Static assets

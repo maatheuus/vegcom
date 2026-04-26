@@ -12,10 +12,10 @@ All pages accessible to unauthenticated users.
 
 | Route | File | Description |
 |-------|------|-------------|
-| `/` | `(public)/page.tsx` | Home page — featured recipe hero, recipe highlights |
+| `/` | `(public)/page.tsx` | Home page (community feed) — posts, likes, comments |
+| `/community/[id]/[slug]` | `(public)/community/[id]/[slug]/page.tsx` | Single community post detail |
 | `/recipes` | `(public)/recipes/page.tsx` | Recipe listing with search and filters |
 | `/recipes/[slug]` | `(public)/recipes/[slug]/page.tsx` | Individual recipe detail |
-| `/` | Community feed ((new home page)) — posts, likes, comments |
 | `/curiosities` | `(public)/curiosities/page.tsx` | Vegan/vegetarian facts and timeline |
 | `/user/[id]` | `(public)/user/[id]/page.tsx` | Public user profile |
 
@@ -38,9 +38,10 @@ Protected by middleware. Unauthenticated users are redirected to `/login`.
 | `/account/favorites` | `(private)/account/favorites/page.tsx` | Saved/favorited recipes |
 | `/account/recipes` | `(private)/account/recipes/page.tsx` | User's own created recipes |
 | `/account/subscription` | `(private)/account/subscription/page.tsx` | Subscription status and upgrade |
-| `/account/notifications` | `(private)/account/notifications/page.tsx` | Notification history |
-| `/chat` | `(private)/chat/page.tsx` | AI chat with Gemini assistant |
-| `/new-recipe` | `(private)/new-recipe/page.tsx` | Recipe creation form |
+| `/account/notifications` | `(private)/account/notifications/page.tsx` | Notification preferences |
+| `/chat` | `(private)/chat/page.tsx` | AI chat — new session / session list |
+| `/chat/[id]` | `(private)/chat/[id]/page.tsx` | Active chat session |
+| `/new-recipe` | `(private)/new-recipe/page.tsx` | Multi-step recipe creation form |
 | `/payment/success` | `(private)/payment/success/page.tsx` | Post-Stripe payment confirmation |
 
 ### `api/` — Next.js API Routes
@@ -48,6 +49,7 @@ Protected by middleware. Unauthenticated users are redirected to `/login`.
 | Route | Description |
 |-------|-------------|
 | `/api/logout` | Server-side logout handler (clears cookies if needed) |
+| `/api/feedback` | Receives in-app feedback submissions |
 
 ## Layouts
 
@@ -55,8 +57,10 @@ Protected by middleware. Unauthenticated users are redirected to `/login`.
 |------|-------|
 | `layout.tsx` (root) | Global layout — fonts, providers (React Query, Analytics), global CSS |
 | `(public)/layout.tsx` | Public layout — header and footer visible on all public pages |
+| `(public)/(auth)/layout.tsx` | Auth layout — minimal header/footer for login and signup pages |
 | `(private)/layout.tsx` | Private layout — wraps authenticated pages, includes `AuthGuard` |
 | `(private)/account/layout.tsx` | Account sidebar navigation shared by all `/account/*` pages |
+| `(private)/chat/layout.tsx` | Chat layout — sidebar + workspace split |
 
 ## Other Root Files
 
@@ -64,6 +68,7 @@ Protected by middleware. Unauthenticated users are redirected to `/login`.
 |------|---------|
 | `global.css` | Global CSS reset and base styles |
 | `not-found.tsx` | Custom 404 page |
+| `global-error.tsx` | Global error boundary for unhandled errors |
 | `robots.ts` | Robots.txt generation |
 | `sitemap.ts` | Dynamic sitemap generation |
 | `favicon.ico` | Site favicon |
@@ -73,4 +78,4 @@ Protected by middleware. Unauthenticated users are redirected to `/login`.
 - Pages are thin wrappers — they import feature components and pass route params/search params down.
 - Data fetching in server components uses `getXxxApiServer.ts` helpers from `src/features/`.
 - Client-side interactivity uses `"use client"` components from `src/features/`.
-- Dynamic route segments use `[slug]` (recipes) and `[id]` (users).
+- Dynamic route segments use `[slug]` (recipes) and `[id]` (users and chats).
