@@ -26,7 +26,7 @@ export default function PostCardAnnouncement({ data }: Props) {
         </Text>
 
         <div
-          className="font-maitree mt-2 text-base break-words text-green-500 [&>p]:text-justify [&>p]:hyphens-auto"
+          className="font-maitree mt-2 text-base break-words text-green-500 [&>p]:text-justify [&>p]:hyphens-auto [&>p:not(:empty)]:mb-2"
           lang="pt-BR"
           dangerouslySetInnerHTML={{
             __html: prepareHtmlContent(

@@ -71,6 +71,10 @@ export default function ChatHistorySidebar({
     (c) => c.id.toString() === chatIdToRename,
   );
 
+  const chatToDelete = visibleChats.find(
+    (c) => c.id.toString() === chatIdToDelete,
+  );
+
   const openChat = (id: string) => {
     router.push(`/chat/${id}`);
     onClose?.();
@@ -210,6 +214,7 @@ export default function ChatHistorySidebar({
       />
 
       <DeleteChatModal
+        chatName={chatToDelete?.title}
         chatIdToDelete={chatIdToDelete}
         isDeleteModalOpen={isDeleteModalOpen}
         handleIsDeleteModalOpen={setIsDeleteModalOpen}

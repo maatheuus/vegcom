@@ -1,4 +1,6 @@
-import { useDeleteChat } from "@/features/chat/api/queries/getChatApiClient";
+"use client";
+
+import { deletePost as deletePostApi } from "@/features/community/api/communityApi";
 import Button from "@/shared/ui/Button";
 import {
   Dialog,
@@ -9,34 +11,28 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/shared/ui/Dialog";
-import { Input } from "@/shared/ui/Input";
-import Text from "@/shared/ui/Text";
 import { useState, type Dispatch, type SetStateAction } from "react";
 
-interface DeleteChatModalProps {
-  chatIdToDelete: string | null;
-  chatName?: string;
+interface DeletePostDialogProps {
+  postId: number | string;
   isDeleteModalOpen: boolean;
   handleIsDeleteModalOpen: Dispatch<SetStateAction<boolean>>;
 }
-export default function DeleteChatModal({
-  chatIdToDelete,
-  chatName,
+
+export default function DeletePostDialog({
+  postId,
   isDeleteModalOpen,
   handleIsDeleteModalOpen,
-}: DeleteChatModalProps) {
-  const [confirmText, setConfirmText] = useState("");
-  const { mutate: deleteChat, isPending } = useDeleteChat();
+}: DeletePostDialogProps) {
+  const [isPending, setIsPending] = useState(false);
 
-  const handleChatDelete = (id: number) => {
-    deleteChat(id, {
-      onSuccess: () => {
-        handleIsDeleteModalOpen(false);
-      },
-    });
+  const handlePostDelete = async () => {
+    setIsPending(true);
+    await deletePostApi(String(postId));
+    window.dispatchEvent(new CustomEvent("community:post-deleted"));
+    setIsPending(false);
+    handleIsDeleteModalOpen(false);
   };
-
-  const isConfirmed = confirmText.trim().toLowerCase() === chatName?.trim().toLowerCase();
 
   return (
     <Dialog open={isDeleteModalOpen}>
@@ -46,32 +42,20 @@ export default function DeleteChatModal({
             Essa ação não pode ser desfeita.
           </DialogTitle>
           <DialogDescription className="font-maitree font-semibold">
-            Você tem certeza que deseja deletar esta conversa?
+            Você tem certeza que deseja deletar este post?
           </DialogDescription>
         </DialogHeader>
 
         <div className="py-2">
-          <Text
-            type={Text.Type.BodyFour}
-            className="font-maitree mb-2 text-green-800"
-          >
-            Digite <span className="font-bold">{chatName}</span> para confirmar
-          </Text>
-          <Input
-            value={confirmText}
-            onChange={(e) => setConfirmText(e.target.value)}
-            placeholder={chatName ?? "Nome da conversa"}
-            className="font-maitree rounded-md border border-green-500 px-3 py-2 text-sm text-green-500 placeholder:text-green-500/90 focus:ring-0 focus:outline-none"
-          />
+          <p className="font-maitree text-center text-sm text-green-600">
+            Tem certeza?
+          </p>
         </div>
 
         <DialogFooter>
           <DialogTrigger asChild>
             <Button
-              onClick={() => {
-                handleIsDeleteModalOpen(false);
-                setConfirmText("");
-              }}
+              onClick={() => handleIsDeleteModalOpen(false)}
               className="font-maitree cursor-pointer"
               type="submit"
               variant="secondary"
@@ -82,11 +66,11 @@ export default function DeleteChatModal({
           </DialogTrigger>
           <DialogTrigger asChild>
             <Button
-              onClick={() => handleChatDelete(Number(chatIdToDelete))}
+              onClick={handlePostDelete}
               className="font-maitree cursor-pointer border border-transparent transition-colors duration-200 hover:border-green-500"
               type="submit"
               variant="text"
-              disabled={!isConfirmed || isPending}
+              disabled={isPending}
             >
               {isPending ? "Deletando..." : "Deletar"}
             </Button>

@@ -3,7 +3,6 @@
 import { getInitials } from "@/features/account/components/utils";
 import { useGetUser } from "@/features/auth/api/queries/getAuthApiClient";
 import {
-  deletePost,
   toggleLike,
   toggleSave,
 } from "@/features/community/api/communityApi";
@@ -39,6 +38,7 @@ import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import CommentPreview from "../CommentsPreview/CommentPreview";
 import { AvatarGroup } from "./AvatarGroup";
+import DeletePostDialog from "./DeletePostDialog";
 import ReportPostDialog from "./ReportPostDialog";
 
 interface Props extends React.HTMLAttributes<HTMLDivElement> {
@@ -58,6 +58,7 @@ export default function PostCardRoot({
   const { data: currentUser } = useGetUser();
 
   const [reportOpen, setReportOpen] = useState(false);
+  const [deleteOpen, setDeleteOpen] = useState(false);
   const [isLiked, setIsLiked] = useState(() => {
     if (data.likes && currentUser?.id) {
       return data.likes.some(
@@ -118,10 +119,9 @@ export default function PostCardRoot({
     setIsSaved(saved);
   };
 
-  const handleDelete = async (e: React.MouseEvent) => {
+  const handleDelete = (e: React.MouseEvent) => {
     e.stopPropagation();
-    await deletePost(String(data.id));
-    window.dispatchEvent(new CustomEvent("community:post-deleted"));
+    setDeleteOpen(true);
   };
 
   const handleReport = (e: React.MouseEvent) => {
@@ -358,6 +358,11 @@ export default function PostCardRoot({
         onOpenChange={setReportOpen}
         postId={data.id!}
         targetUserId={data.user?.id as number | undefined}
+      />
+      <DeletePostDialog
+        isDeleteModalOpen={deleteOpen}
+        handleIsDeleteModalOpen={setDeleteOpen}
+        postId={data.id!}
       />
     </Col>
   );

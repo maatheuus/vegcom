@@ -114,6 +114,9 @@ export default function HistoryChatPage({ chats: { data } }: Props) {
       />
 
       <DeleteChatModal
+        chatName={
+          visibleChats.find((c) => c.id === Number(chatIdToDelete))?.title
+        }
         chatIdToDelete={chatIdToDelete}
         isDeleteModalOpen={isDeleteModalOpen}
         handleIsDeleteModalOpen={setIsDeleteModalOpen}

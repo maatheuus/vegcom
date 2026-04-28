@@ -193,6 +193,10 @@ export default function PostComposer({ className, disabled, ...props }: Props) {
           // });
           await createPostWithImages(formData, controller.signal);
           window.dispatchEvent(new CustomEvent("community:post-created"));
+          // @ts-ignore
+          postTitleRef?.current?.value = "";
+          editor.commands.clearContent();
+          setAttachments([]);
         } catch (err) {
           const isAbort =
             err instanceof Error &&
@@ -225,6 +229,9 @@ export default function PostComposer({ className, disabled, ...props }: Props) {
             postTags: [],
           });
           window.dispatchEvent(new CustomEvent("community:post-created"));
+          // @ts-ignore
+          postTitleRef?.current?.value = "";
+          editor.commands.clearContent();
         } catch {
           toast({
             title: "Erro ao publicar",
@@ -264,7 +271,7 @@ export default function PostComposer({ className, disabled, ...props }: Props) {
                 disabled={disabled || isTransitioning}
                 type="text"
                 placeholder="Título do post"
-                className="font-lora border-none px-0 !text-xl font-semibold italic tracking-tight text-green-500 placeholder:text-green-500/80 focus:!ring-0 disabled:opacity-50"
+                className="font-lora border-none px-0 !text-xl font-semibold tracking-tight text-green-500 italic placeholder:text-green-500/80 focus:!ring-0 disabled:opacity-50"
                 maxLength={150}
               />
 

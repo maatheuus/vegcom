@@ -63,6 +63,14 @@ export default function HistoryChatPage({ chats: { data } }: Props) {
     router.push(`/chat/${id}`);
   };
 
+  const chatToRename = visibleChats.find(
+    (c) => c.id.toString() === chatIdToRename,
+  );
+
+  const chatToDelete = visibleChats.find(
+    (c) => c.id.toString() === chatIdToDelete,
+  );
+
   return (
     <>
       <Col className="h-full min-h-0 w-full">
@@ -188,6 +196,7 @@ export default function HistoryChatPage({ chats: { data } }: Props) {
       />
 
       <DeleteChatModal
+        chatName={chatToDelete?.title}
         chatIdToDelete={chatIdToDelete}
         isDeleteModalOpen={isDeleteModalOpen}
         handleIsDeleteModalOpen={setIsDeleteModalOpen}

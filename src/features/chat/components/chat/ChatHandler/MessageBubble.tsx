@@ -17,14 +17,15 @@ import {
   ShareNetworkIcon,
 } from "@phosphor-icons/react";
 import { useEffect, useState } from "react";
-import MarkdownRenderer from "./MarkdownRenderer";
 import RecipeEmbed, { type GeneratedRecipe } from "../embeds/RecipeEmbed";
 import type { MessageGroup } from "../utils/groupMessages";
+import MarkdownRenderer from "./MarkdownRenderer";
 
 interface MessageBubbleProps {
   group: MessageGroup;
   showActions?: boolean;
   onRegenerate?: () => void;
+  isRegenerateDisabled?: boolean;
   onShare?: (message: string) => void;
   onCopy?: (message: string) => void;
 }
@@ -32,6 +33,7 @@ interface MessageBubbleProps {
 const MessageBubble: React.FC<MessageBubbleProps> = ({
   group,
   onRegenerate,
+  isRegenerateDisabled = false,
 }) => {
   const isUser = group.role === "user";
 
@@ -43,7 +45,9 @@ const MessageBubble: React.FC<MessageBubbleProps> = ({
   }, [group.versions.length]);
 
   const currentMessage = group.versions[currentIndex];
-  const generatedRecipes = currentMessage.metadata?.recipes as GeneratedRecipe[] | undefined;
+  const generatedRecipes = currentMessage.metadata?.recipes as
+    | GeneratedRecipe[]
+    | undefined;
   const totalVersions = group.versions.length;
 
   const handleCopy = () => {
@@ -153,7 +157,8 @@ const MessageBubble: React.FC<MessageBubbleProps> = ({
                     <TooltipTrigger asChild>
                       <Button.Icon
                         onClick={onRegenerate}
-                        className="rounded p-1 text-green-500 transition-colors hover:bg-green-100"
+                        disabled={isRegenerateDisabled || totalVersions > 2}
+                        className="rounded p-1 text-green-500 transition-colors hover:bg-green-100 disabled:cursor-not-allowed disabled:opacity-40"
                         variant="text"
                         icon={<ArrowClockwiseIcon size={16} />}
                       />

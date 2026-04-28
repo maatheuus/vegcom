@@ -31,6 +31,7 @@ interface ChatWindowProps {
   isGenerating?: boolean;
   onSendMessage: (content: string) => Promise<void>;
   onRegenerate?: () => void;
+  isRegenerateDisabled?: boolean;
   onCancel?: () => void;
   defaultMessage?: string;
   usageStats?: UsageStats;
@@ -42,6 +43,7 @@ export default function ChatWindow({
   isGenerating = false,
   onSendMessage,
   onRegenerate,
+  isRegenerateDisabled = false,
   onCancel,
   defaultMessage = "",
   usageStats,
@@ -205,6 +207,7 @@ export default function ChatWindow({
                             ? onRegenerate
                             : undefined
                         }
+                        isRegenerateDisabled={isRegenerateDisabled}
                       />
                     );
                   })

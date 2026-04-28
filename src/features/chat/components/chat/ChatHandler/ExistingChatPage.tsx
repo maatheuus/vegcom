@@ -30,6 +30,7 @@ export default function ExistingChatPage({ chatId }: Props) {
 
   const [pendingUserMessage, setPendingUserMessage] =
     useState<LastMessage | null>(null);
+  const [regenerateCount, setRegenerateCount] = useState(0);
 
   const messages = chat?.data.messages || [];
 
@@ -55,6 +56,7 @@ export default function ExistingChatPage({ chatId }: Props) {
     };
 
     setPendingUserMessage(userMessage);
+    setRegenerateCount(0);
 
     try {
       const response = await generateResponse({
@@ -153,6 +155,8 @@ export default function ExistingChatPage({ chatId }: Props) {
             };
           },
         );
+
+        setRegenerateCount((c) => c + 1);
       }
     } catch (error) {
       console.error("Erro ao regenerar mensagem:", error);
@@ -172,6 +176,7 @@ export default function ExistingChatPage({ chatId }: Props) {
         isGenerating={isGenerating}
         onSendMessage={handleSendMessage}
         onRegenerate={handleRegenerateLastMessage}
+        isRegenerateDisabled={regenerateCount >= 2}
         usageStats={usageStats}
       />
     </Col>
