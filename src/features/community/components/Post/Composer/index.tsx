@@ -193,8 +193,9 @@ export default function PostComposer({ className, disabled, ...props }: Props) {
           // });
           await createPostWithImages(formData, controller.signal);
           window.dispatchEvent(new CustomEvent("community:post-created"));
-          // @ts-ignore
-          postTitleRef?.current?.value = "";
+          if (postTitleRef.current) {
+            postTitleRef.current.value = "";
+          }
           editor.commands.clearContent();
           setAttachments([]);
         } catch (err) {
@@ -229,8 +230,9 @@ export default function PostComposer({ className, disabled, ...props }: Props) {
             postTags: [],
           });
           window.dispatchEvent(new CustomEvent("community:post-created"));
-          // @ts-ignore
-          postTitleRef?.current?.value = "";
+          if (postTitleRef.current) {
+            postTitleRef.current.value = "";
+          }
           editor.commands.clearContent();
         } catch {
           toast({
