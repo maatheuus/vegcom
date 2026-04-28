@@ -264,8 +264,8 @@ export default function PostComposer({ className, disabled, ...props }: Props) {
                 disabled={disabled || isTransitioning}
                 type="text"
                 placeholder="Título do post"
-                className="font-lora border-none px-0 !text-xl leading-none font-medium tracking-tight text-green-500 placeholder:text-green-500/80 focus:!ring-0 disabled:opacity-50 sm:!text-2xl/tight"
-                maxLength={50}
+                className="font-lora border-none px-0 !text-xl font-semibold italic tracking-tight text-green-500 placeholder:text-green-500/80 focus:!ring-0 disabled:opacity-50"
+                maxLength={150}
               />
 
               <EditorContent
