@@ -89,7 +89,6 @@ const MessageBubble: React.FC<MessageBubbleProps> = ({
           ) : (
             <MarkdownRenderer
               content={
-                currentMessage.metadata?.error ||
                 currentMessage.metadata?.messageContent ||
                 currentMessage.content
               }

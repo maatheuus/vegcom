@@ -9,9 +9,13 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
 } from "@/shared/ui/Dialog";
-import { useState, type Dispatch, type SetStateAction } from "react";
+import {
+  useState,
+  type Dispatch,
+  type MouseEvent,
+  type SetStateAction,
+} from "react";
 
 interface DeletePostDialogProps {
   postId: number | string;
@@ -26,7 +30,8 @@ export default function DeletePostDialog({
 }: DeletePostDialogProps) {
   const [isPending, setIsPending] = useState(false);
 
-  const handlePostDelete = async () => {
+  const handlePostDelete = async (e?: MouseEvent) => {
+    e?.stopPropagation();
     setIsPending(true);
     await deletePostApi(String(postId));
     window.dispatchEvent(new CustomEvent("community:post-deleted"));
@@ -35,7 +40,7 @@ export default function DeletePostDialog({
   };
 
   return (
-    <Dialog open={isDeleteModalOpen}>
+    <Dialog open={isDeleteModalOpen} onOpenChange={handleIsDeleteModalOpen}>
       <DialogContent className="w-[calc(100vw-2rem)] rounded-md [&_button.close-button]:hidden">
         <DialogHeader>
           <DialogTitle className="font-maitree font-semibold">
@@ -46,35 +51,31 @@ export default function DeletePostDialog({
           </DialogDescription>
         </DialogHeader>
 
-        <div className="py-2">
-          <p className="font-maitree text-center text-sm text-green-600">
-            Tem certeza?
-          </p>
-        </div>
-
         <DialogFooter>
-          <DialogTrigger asChild>
-            <Button
-              onClick={() => handleIsDeleteModalOpen(false)}
-              className="font-maitree cursor-pointer"
-              type="submit"
-              variant="secondary"
-              disabled={isPending}
-            >
-              Cancelar
-            </Button>
-          </DialogTrigger>
-          <DialogTrigger asChild>
-            <Button
-              onClick={handlePostDelete}
-              className="font-maitree cursor-pointer border border-transparent transition-colors duration-200 hover:border-green-500"
-              type="submit"
-              variant="text"
-              disabled={isPending}
-            >
-              {isPending ? "Deletando..." : "Deletar"}
-            </Button>
-          </DialogTrigger>
+          <Button
+            onClick={(e) => {
+              e.stopPropagation();
+              e.preventDefault();
+              handleIsDeleteModalOpen(false);
+            }}
+            className="font-maitree cursor-pointer"
+            type="button"
+            variant="secondary"
+            disabled={isPending}
+          >
+            Cancelar
+          </Button>
+          <Button
+            onClick={() => {
+              handlePostDelete();
+            }}
+            className="font-maitree cursor-pointer border border-transparent transition-colors duration-200 hover:border-green-500"
+            type="button"
+            variant="text"
+            disabled={isPending}
+          >
+            {isPending ? "Deletando..." : "Deletar"}
+          </Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>

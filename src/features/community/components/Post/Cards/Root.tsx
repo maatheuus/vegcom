@@ -2,10 +2,7 @@
 
 import { getInitials } from "@/features/account/components/utils";
 import { useGetUser } from "@/features/auth/api/queries/getAuthApiClient";
-import {
-  toggleLike,
-  toggleSave,
-} from "@/features/community/api/communityApi";
+import { toggleLike, toggleSave } from "@/features/community/api/communityApi";
 import { toast } from "@/shared/hooks/use-toast";
 import { dateFormatDistanceLocale } from "@/shared/lib/utils";
 import type { PostCardDataProps } from "@/shared/types";
@@ -121,7 +118,9 @@ export default function PostCardRoot({
 
   const handleDelete = (e: React.MouseEvent) => {
     e.stopPropagation();
-    setDeleteOpen(true);
+    requestAnimationFrame(() => {
+      setDeleteOpen(true);
+    });
   };
 
   const handleReport = (e: React.MouseEvent) => {
@@ -172,7 +171,7 @@ export default function PostCardRoot({
 
   return (
     <Col
-      onClick={handleCardClick}
+      onClick={!deleteOpen && !reportOpen ? handleCardClick : undefined}
       className={clsx(
         "w-full cursor-pointer border-b-gray-100 py-5 transition-colors hover:bg-green-100/35 max-md:border-b md:rounded-2xl md:px-4 first-of-type:md:mt-4",
         className,

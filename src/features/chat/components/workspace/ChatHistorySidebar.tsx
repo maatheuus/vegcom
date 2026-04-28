@@ -1,7 +1,6 @@
 "use client";
 
 import { useGetChats } from "@/features/chat/api/queries/getChatApiClient";
-import type { CreateChatResponseData } from "@/features/chat/api/types";
 import DeleteChatModal from "@/features/chat/components/historyChats/modals/DeleteChat";
 import RenameChatModal from "@/features/chat/components/historyChats/modals/RenameChat";
 import useDebounce from "@/shared/hooks/useDebounce";
@@ -18,13 +17,11 @@ import {
 import Text from "@/shared/ui/Text";
 import {
   AlienIcon,
-  ChatCircleIcon,
   DotsThreeIcon,
   PencilSimpleIcon,
   PlusCircleIcon,
   TrashIcon,
 } from "@phosphor-icons/react";
-import { format } from "date-fns";
 import { usePathname, useRouter } from "next/navigation";
 import { useMemo, useState } from "react";
 
@@ -156,7 +153,9 @@ export default function ChatHistorySidebar({
                         weight={Text.Weight.SemiBold}
                         className="font-maitree truncate font-semibold text-green-500"
                       >
-                        {chat.title || "Nova conversa"}
+                        {chat.title === "null" || chat.title === undefined
+                          ? "Nova conversa"
+                          : chat.title}
                       </Text>
                     </div>
 

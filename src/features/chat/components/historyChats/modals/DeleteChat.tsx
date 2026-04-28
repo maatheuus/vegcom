@@ -32,11 +32,13 @@ export default function DeleteChatModal({
     deleteChat(id, {
       onSuccess: () => {
         handleIsDeleteModalOpen(false);
+        window.location.href = "/chat";
       },
     });
   };
 
-  const isConfirmed = confirmText.trim().toLowerCase() === chatName?.trim().toLowerCase();
+  const isConfirmed =
+    confirmText.trim().toLowerCase() === chatName?.trim().toLowerCase();
 
   return (
     <Dialog open={isDeleteModalOpen}>

@@ -65,7 +65,7 @@ export default function Page() {
                 id: -2,
                 chatId: newChatId,
                 role: "user",
-                content: content,
+                content,
                 isRead: true,
                 metadata: null,
                 createdAt: new Date().toISOString(),
