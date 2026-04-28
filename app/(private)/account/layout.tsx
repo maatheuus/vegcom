@@ -9,7 +9,7 @@ export default function layout({
   children: React.ReactNode;
 }>) {
   return (
-    <Layout.Default className="style-scrollbar h-auto">
+    <Layout.Default className="style-scrollbar h-auto min-h-[90dvh]">
       <div className="w-full space-y-8 pt-0 pb-8">
         <div className="flex items-center justify-between gap-x-4">
           <Suspense fallback={<></>}>

@@ -52,25 +52,21 @@ export class CitiesAPI {
 
     try {
       const response = await fetch(
-        `https://brasilapi.com.br/api/cptec/v1/cidade/${encodeURIComponent(query)}`,
+        `/api/cities?q=${encodeURIComponent(query)}`,
       );
 
-      if (response.status === 404) {
+      if (!response.ok) {
         return [];
       }
 
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-
-      const cities: { id: number; nome: string; estado: string }[] = await response.json();
+      const cities: { id: number; nome: string; estado: string; sigla: string }[] = await response.json();
 
       const results: CitySearchResult[] = cities.map((city) => ({
         id: city.id,
         nome: city.nome,
         estado: city.estado,
-        sigla: city.estado,
-        displayName: `${city.nome}, ${city.estado}`,
+        sigla: city.sigla,
+        displayName: `${city.nome}, ${city.sigla}`,
       }));
 
       this.cache.set(cacheKey, results);
