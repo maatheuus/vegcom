@@ -1,4 +1,4 @@
-import { updateChatTitle } from "@/features/chat/api/queries/getChatApiServer";
+import { useUpdateChatTitle } from "@/features/chat/api/queries/getChatApiClient";
 import Button from "@/shared/ui/Button";
 import {
   Dialog,
@@ -11,8 +11,8 @@ import {
 } from "@/shared/ui/Dialog";
 import { Input } from "@/shared/ui/Input";
 import {
+  useEffect,
   useState,
-  useTransition,
   type Dispatch,
   type SetStateAction,
 } from "react";
@@ -30,13 +30,20 @@ export default function RenameChatModal({
   handleIsRenameModalOpen,
 }: RenameChatModalProps) {
   const [renameText, setRenameText] = useState(chatName ?? "");
-  const [isPending, startTransition] = useTransition();
+  const { mutate: updateChatTitle, isPending } = useUpdateChatTitle();
+
+  useEffect(() => {
+    if (isRenameModalOpen) {
+      setRenameText(chatName ?? "");
+    }
+  }, [isRenameModalOpen, chatName]);
 
   const handleChatRename = (id: number, title: string) => {
-    startTransition(async () => {
-      await updateChatTitle({ id, title });
+    updateChatTitle({ id, title }, {
+      onSuccess: () => {
+        handleIsRenameModalOpen(false);
+      },
     });
-    handleIsRenameModalOpen(false);
   };
 
   return (

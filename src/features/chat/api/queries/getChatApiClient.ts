@@ -44,11 +44,31 @@ export const useUpdateChatTitle = () => {
 
   return useMutation({
     mutationFn: chatApi.updateChatTitle,
-    onSuccess: (_, variables) => {
-      queryClient.invalidateQueries({ queryKey: chatKeys.lists() });
-      queryClient.invalidateQueries({
-        queryKey: chatKeys.detail(variables.id),
+    onMutate: async (newChat) => {
+      await queryClient.cancelQueries({ queryKey: chatKeys.lists() });
+
+      const previousChats = queryClient.getQueryData(chatKeys.lists());
+
+      queryClient.setQueryData(chatKeys.lists(), (old: unknown) => {
+        const oldData = old as { data: Array<{ id: number; title: string }> } | undefined;
+        if (!oldData?.data) return old;
+        return {
+          ...oldData,
+          data: oldData.data.map((chat) =>
+            chat.id === newChat.id ? { ...chat, title: newChat.title } : chat,
+          ),
+        };
       });
+
+      return { previousChats };
+    },
+    onError: (_err, _variables, context) => {
+      if (context?.previousChats) {
+        queryClient.setQueryData(chatKeys.lists(), context.previousChats);
+      }
+    },
+    onSettled: () => {
+      queryClient.invalidateQueries({ queryKey: chatKeys.lists() });
     },
   });
 };
