@@ -32,6 +32,9 @@ export default function HistoryChatPage({ chats: { data } }: Props) {
   const [chatIdToDelete, setChatIdToDelete] = useState<string | null>(null);
   const [menuChatId, setMenuChatId] = useState<string | null>(null);
 
+  const resolveTitle = (title?: string) =>
+    title === "null" || !title ? "Nova conversa" : title;
+
   const visibleChats = useMemo(() => {
     return [...data]
       .sort(
@@ -105,18 +108,14 @@ export default function HistoryChatPage({ chats: { data } }: Props) {
       </div>
 
       <RenameChatModal
-        chatName={
-          visibleChats.find((c) => c.id === Number(chatIdToRename))?.title
-        }
+        chatName={resolveTitle(visibleChats.find((c) => c.id === Number(chatIdToRename))?.title)}
         chatIdToRename={chatIdToRename}
         isRenameModalOpen={isRenameModalOpen}
         handleIsRenameModalOpen={setIsRenameModalOpen}
       />
 
       <DeleteChatModal
-        chatName={
-          visibleChats.find((c) => c.id === Number(chatIdToDelete))?.title
-        }
+        chatName={resolveTitle(visibleChats.find((c) => c.id === Number(chatIdToDelete))?.title)}
         chatIdToDelete={chatIdToDelete}
         isDeleteModalOpen={isDeleteModalOpen}
         handleIsDeleteModalOpen={setIsDeleteModalOpen}
