@@ -23,7 +23,7 @@ const SuggestionCard: React.FC<{
             as="span"
             type={Text.Type.BodyFive}
             weight={Text.Weight.Medium}
-            className="font-lora inline-flex h-6 items-center justify-center rounded-full bg-green-500 px-3 text-center text-sm text-green-50"
+            className="font-lora inline-flex h-6 items-center justify-center rounded-full bg-green-500 px-3 text-center text-xs text-green-50 italic md:text-sm"
           >
             {suggestion.category}
           </Text>
@@ -31,7 +31,7 @@ const SuggestionCard: React.FC<{
 
         <Text
           as="h3"
-          weight={Text.Weight.Medium}
+          weight={Text.Weight.SemiBold}
           className="font-maitree text-lg text-green-500"
         >
           {suggestion.title}

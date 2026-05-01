@@ -19,12 +19,13 @@ export default function AuthHeader({
       className={clsx(
         "flex items-center justify-between pt-5 md:px-6",
         className,
+        !shouldGoBack && "justify-center",
       )}
       {...props}
     >
       <Link href="/" className="relative flex items-center justify-start">
         <span className="sr-only">página inicial</span>
-        <Logo />
+        <Logo className="-ml-8 h-14 w-[13rem]" />
       </Link>
 
       {shouldGoBack && (
@@ -33,7 +34,7 @@ export default function AuthHeader({
           className="relative flex items-center justify-start"
         >
           <span className="sr-only">Voltar para página anterior</span>
-          <ArrowArcLeftIcon size={32} className="text-green-500" />
+          <ArrowArcLeftIcon size={32} className="text-green-200" />
         </Link>
       )}
     </div>

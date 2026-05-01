@@ -29,10 +29,9 @@ export default function Menu() {
   const userName = user?.name.split(" ").slice(0, 2).join(" ");
 
   return (
-    <div className="body__container-lg sticky top-4 z-50 mx-auto mb-16 h-auto w-full md:mb-18">
+    <div className="body__container-lg sticky top-4 z-[99] mx-auto mb-16 h-auto w-full md:mb-18">
       <motion.nav
         id="main-nav"
-        layout
         initial={false}
         animate={{ height: isMenuOpen ? "auto" : "3.625rem" }}
         transition={{ type: "spring", stiffness: 300, damping: 30, mass: 0.8 }}
@@ -41,8 +40,8 @@ export default function Menu() {
           isMenuOpen || hasScrolled ? "shadow-xl" : "",
         )}
       >
-        <div className="h-full p-2 lg:flex lg:items-center lg:p-3">
-          <motion.div layout="position" className="flex w-full items-center">
+        <div className="h-full pr-2 md:p-2 lg:flex lg:items-center lg:p-3">
+          <div className="flex w-full items-center">
             <Row className="h-full w-full items-center justify-between gap-x-4">
               <Link href={menuConfig.brand.href} className="block flex-1">
                 <div className="flex items-center gap-x-1">
@@ -51,7 +50,7 @@ export default function Menu() {
                     alt="VegCom Logo"
                     width={156}
                     height={56}
-                    className="max-h-14 scale-[1.2] object-cover"
+                    className="max-h-14 scale-[1.4] object-cover md:scale-[1.2]"
                   />
                 </div>
               </Link>
@@ -69,7 +68,7 @@ export default function Menu() {
                 toggleMenu={() => setIsMenuOpen((v) => !v)}
               />
             </Row>
-          </motion.div>
+          </div>
 
           <MobileMenuDrawer
             isLoggedIn={isLoggedIn}
