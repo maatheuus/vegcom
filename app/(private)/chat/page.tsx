@@ -13,9 +13,9 @@ import {
 import Col from "@/shared/ui/Layout/Helpers/Col";
 import { useQueryClient } from "@tanstack/react-query";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useState } from "react";
+import { Suspense, useState } from "react";
 
-export default function Page() {
+function ChatPage() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const queryClient = useQueryClient();
@@ -104,5 +104,13 @@ export default function Page() {
         usageStats={usageStats}
       />
     </Col>
+  );
+}
+
+export default function Page() {
+  return (
+    <Suspense>
+      <ChatPage />
+    </Suspense>
   );
 }
