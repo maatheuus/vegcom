@@ -5,7 +5,15 @@ import {
   FormMessage,
 } from "@/shared/ui/Form";
 import { Input } from "@/shared/ui/Input";
-import { closestCenter, DndContext, type DragEndEvent } from "@dnd-kit/core";
+import {
+  closestCenter,
+  DndContext,
+  type DragEndEvent,
+  PointerSensor,
+  TouchSensor,
+  useSensor,
+  useSensors,
+} from "@dnd-kit/core";
 import {
   arrayMove,
   SortableContext,
@@ -19,6 +27,7 @@ import type { Props } from "../ImageUploadArea";
 import RenderCheckList from "./RenderCheckList";
 
 export type RecipeType = "ingredients" | "instructions" | "cookingNotes";
+const MAX_ITEMS = 20;
 
 type Item = {
   id: string;
@@ -92,8 +101,42 @@ export default function GroupFields({
     }
   };
 
+  const sensors = useSensors(
+    useSensor(PointerSensor, { activationConstraint: { distance: 5 } }),
+    useSensor(TouchSensor, {
+      activationConstraint: { delay: 0, tolerance: 5 },
+    }),
+  );
+
+  const handleEditItemInList = useCallback(
+    (id: string, newLabel: string, type: RecipeType) => {
+      const fieldName =
+        type === "ingredients"
+          ? "recipe_ingredients"
+          : type === "instructions"
+            ? "recipe_instructions"
+            : "recipe_cookingNotes";
+
+      const list: Item[] = form.getValues(fieldName) ?? [];
+      form.setValue(
+        fieldName,
+        list.map((item) =>
+          item.id === id
+            ? {
+                ...item,
+                label: newLabel,
+                value: newLabel.toLowerCase().replace(/\s+/g, "_"),
+              }
+            : item,
+        ),
+        { shouldDirty: true },
+      );
+    },
+    [form],
+  );
+
   const isAddDisabled = useCallback(
-    (value: string, listLength: number) => !value || listLength >= 10,
+    (value: string, listLength: number) => !value || listLength >= MAX_ITEMS,
     [],
   );
 
@@ -112,8 +155,11 @@ export default function GroupFields({
 
       if (value.trim() === "") return;
 
+      const randomUUID = Math.random().toString(36).substring(2, 10);
+      const id = `${fieldName}-${randomUUID}`;
+
       const newRecipeObject = {
-        id: crypto.randomUUID(),
+        id,
         label: value,
         value: value.toLowerCase().replace(/\s+/g, "_"),
       };
@@ -214,6 +260,7 @@ export default function GroupFields({
           </div>
 
           <DndContext
+            sensors={sensors}
             collisionDetection={closestCenter}
             onDragEnd={(e) => handleDragEnd(e, type)}
           >
@@ -224,6 +271,9 @@ export default function GroupFields({
               <RenderCheckList
                 items={current[type]}
                 onDeleteItem={(id) => handleDeleteItemFromList(id, type)}
+                onEditItem={(id, newLabel) =>
+                  handleEditItemInList(id, newLabel, type)
+                }
               />
             </SortableContext>
           </DndContext>
@@ -248,7 +298,9 @@ export default function GroupFields({
             render={({ field }) => {
               return (
                 <FormItem
-                  className={current[type].length === 10 ? "hidden" : "block"}
+                  className={
+                    current[type].length === MAX_ITEMS ? "hidden" : "block"
+                  }
                 >
                   <div className="flex flex-col items-end gap-2">
                     <FormControl>

@@ -212,48 +212,48 @@ const CommentsSection = memo(function CommentsSection({
         </Text>
       )}
 
-      {commentsError && (
+      {commentsError ? (
         <Col className="w-full items-center py-4">
           <Text type={Text.Type.BodyThree} className="text-red-500">
             Erro ao carregar comentários. Tente novamente.
           </Text>
         </Col>
+      ) : (
+        <div
+          role="list"
+          aria-label="Lista de comentários"
+          className="w-full space-y-8"
+        >
+          {isLoading ? (
+            <CommentSkeleton count={ITEMS_PER_PAGE} />
+          ) : currentItems.length > 0 ? (
+            currentItems.map((comment) => (
+              <CommentCard
+                key={comment.id}
+                comment={comment}
+                isLiked={comment.isLikedByCurrentUser}
+                onLike={() => handleLike(comment.id)}
+                currentUserId={currentUserId}
+                onDelete={
+                  currentUserId === comment.user?.id
+                    ? () => handleDelete(comment.id)
+                    : undefined
+                }
+              />
+            ))
+          ) : (
+            <Col className="items-center py-8 opacity-60">
+              <ChatTeardropTextIcon size={48} className="text-green-500" />
+              <Text
+                type={Text.Type.BodyThree}
+                className="mt-2 text-center text-green-500"
+              >
+                Nenhum comentário ainda. <br /> Seja o primeiro a comentar!
+              </Text>
+            </Col>
+          )}
+        </div>
       )}
-
-      <div
-        role="list"
-        aria-label="Lista de comentários"
-        className="w-full space-y-8"
-      >
-        {isLoading ? (
-          <CommentSkeleton count={ITEMS_PER_PAGE} />
-        ) : currentItems.length > 0 ? (
-          currentItems.map((comment) => (
-            <CommentCard
-              key={comment.id}
-              comment={comment}
-              isLiked={comment.isLikedByCurrentUser}
-              onLike={() => handleLike(comment.id)}
-              currentUserId={currentUserId}
-              onDelete={
-                currentUserId === comment.user?.id
-                  ? () => handleDelete(comment.id)
-                  : undefined
-              }
-            />
-          ))
-        ) : (
-          <Col className="items-center py-8 opacity-60">
-            <ChatTeardropTextIcon size={48} className="text-green-500" />
-            <Text
-              type={Text.Type.BodyThree}
-              className="mt-2 text-center text-green-500"
-            >
-              Nenhum comentário ainda. <br /> Seja o primeiro a comentar!
-            </Text>
-          </Col>
-        )}
-      </div>
 
       {shouldShowPagination && (
         <div className="block w-full">

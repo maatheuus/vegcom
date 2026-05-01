@@ -29,7 +29,7 @@ interface StepIndicatorProps {
 
 export default function StepIndicator({ currentStep }: StepIndicatorProps) {
   return (
-    <div className="hidden-scrollbar flex touch-pan-x gap-2 overflow-x-auto scroll-auto rounded-xl bg-green-500 p-2">
+    <div className="flex touch-pan-x gap-2 overflow-x-auto scroll-auto rounded-xl bg-green-500 p-2">
       {steps.map(({ title, subtitle, Icon }, index) => {
         const stepNum = index + 1;
         const isActive = currentStep === stepNum;
@@ -58,14 +58,14 @@ export default function StepIndicator({ currentStep }: StepIndicatorProps) {
 
             <div className="min-w-0">
               <p
-                className={`font-lora truncate text-base font-bold ${
+                className={`font-lora truncate text-sm font-bold md:text-base ${
                   isActive || isCompleted ? "text-green-500" : "text-green-50"
                 }`}
               >
                 {title}
               </p>
               <p
-                className={`truncate text-sm ${
+                className={`truncate text-xs md:text-sm ${
                   isActive || isCompleted
                     ? "text-green-500/70"
                     : "text-green-50/60"

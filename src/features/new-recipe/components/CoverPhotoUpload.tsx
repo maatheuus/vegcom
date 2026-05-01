@@ -5,6 +5,13 @@ import { Input } from "@/shared/ui/Input";
 import { CloudArrowUpIcon } from "@phosphor-icons/react";
 import Image from "next/image";
 import { useCallback } from "react";
+import { useWatch } from "react-hook-form";
+import type { Props } from "./ImageUploadArea";
+import {
+  DURATION_TOAST_IN_SEG,
+  MAX_IMAGE_SIZE_BYTES,
+  MAX_IMAGE_SIZE_MB,
+} from "./ImageUploadArea";
 
 function fileToBase64(file: File): Promise<string> {
   return new Promise((resolve, reject) => {
@@ -14,13 +21,6 @@ function fileToBase64(file: File): Promise<string> {
     reader.readAsDataURL(file);
   });
 }
-import { useWatch } from "react-hook-form";
-import type { Props } from "./ImageUploadArea";
-import {
-  DURATION_TOAST_IN_SEG,
-  MAX_IMAGE_SIZE_BYTES,
-  MAX_IMAGE_SIZE_MB,
-} from "./ImageUploadArea";
 
 export default function CoverPhotoUpload({ form }: Props) {
   const { toast } = useToast();
@@ -95,7 +95,7 @@ export default function CoverPhotoUpload({ form }: Props) {
         ) : (
           <label className="flex h-72 cursor-pointer flex-col items-center justify-center gap-3">
             <CloudArrowUpIcon size={40} className="text-green-800" />
-            <span className="font-lora text-sm text-green-500">
+            <span className="font-lora text-sm font-semibold text-green-500">
               Clique para adicionar uma foto
             </span>
             <Input

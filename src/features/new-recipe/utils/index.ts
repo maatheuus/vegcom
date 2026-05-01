@@ -1,4 +1,5 @@
 import { type CreateRecipeFormData } from "@/features/new-recipe/api/recipesApi";
+import type { DetailedRecipe } from "@/features/recipes/api/types";
 import { newRecipeFormSchema } from "@/features/recipes/components/utils";
 import type { UseFormReturn } from "react-hook-form";
 import { z } from "zod";
@@ -21,7 +22,10 @@ export const TIPS_BY_STEP: Record<number, string[]> = {
   ],
 };
 
-export const formatPreparationTime = (hours: string, minutes: string): string => {
+export const formatPreparationTime = (
+  hours: string,
+  minutes: string,
+): string => {
   const h = Number(hours) || 0;
   const m = Number(minutes) || 0;
   if (h > 0 && m > 0) return `${h}h ${m}min`;
@@ -30,9 +34,54 @@ export const formatPreparationTime = (hours: string, minutes: string): string =>
   return "—";
 };
 
-
 export type NewRecipeFormValues = z.infer<typeof newRecipeFormSchema>;
 export type NewRecipeForm = UseFormReturn<NewRecipeFormValues>;
+
+const parsePreparationTime = (
+  cookTime: string,
+): { hours: string; minutes: string } => {
+  const hMatch = cookTime.match(/(\d+)\s*h/);
+  const mMatch = cookTime.match(/(\d+)\s*min(uto)?s?/i);
+  return {
+    hours: hMatch ? hMatch[1] : "0",
+    minutes: mMatch ? mMatch[1] : "0",
+  };
+};
+
+export const recipeToFormValues = (
+  recipe: DetailedRecipe,
+): NewRecipeFormValues => {
+  const { hours, minutes } = parsePreparationTime(recipe.cookTime ?? "");
+
+  const toListItem = (label: string, index: number) => ({
+    id: `item-${index}-${Math.random().toString(36).substring(2, 7)}`,
+    label,
+    value: label.toLowerCase().replace(/\s+/g, "_"),
+  });
+
+  return {
+    recipe_title: recipe.title ?? "",
+    recipe_description: recipe.description ?? "",
+    recipe_preparationHours: hours,
+    recipe_preparationMinutes: minutes || "0",
+    recipe_preparationTime: recipe.cookTime ?? "",
+    recipe_servings: recipe.quantity ?? "",
+    recipe_category: recipe.category ?? "",
+    recipe_difficulty: recipe.difficulty ?? "",
+    recipe_ingredients: (recipe.steps?.ingredients ?? []).map(toListItem),
+    recipe_instructions: (recipe.steps?.instructions ?? []).map(toListItem),
+    recipe_cookingNotes: (recipe.steps?.cookingNotes ?? []).map(toListItem),
+    recipe_images: (recipe.images ?? []).map((url, i) => ({
+      id: `existing-img-${i}`,
+      file: null,
+      preview: url,
+      name: url.split("/").pop() ?? `imagem-${i + 1}`,
+    })),
+    new_recipe_ingredient_text: "",
+    new_recipe_instruction_text: "",
+    new_recipe_cookingNote_text: "",
+  };
+};
 
 export const transformFormToApiPayload = (
   formData: NewRecipeFormValues,
@@ -45,11 +94,10 @@ export const transformFormToApiPayload = (
   const data: CreateRecipeFormData = {
     title: formData.recipe_title,
     description: formData.recipe_description,
-    timeForPreparation: timeStr,
     quantity: formData.recipe_servings,
     cookTime: timeStr,
-    category: formData.recipe_category,
-    difficulty: formData.recipe_difficulty,
+    category: formData.recipe_category.toUpperCase(),
+    difficulty: formData.recipe_difficulty.toUpperCase(),
     steps: {
       ingredients: formData.recipe_ingredients.map((item) => item.label),
       instructions: formData.recipe_instructions.map((item) => item.label),

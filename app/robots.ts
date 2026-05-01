@@ -12,6 +12,7 @@ export default function robots(): MetadataRoute.Robots {
         "/account/",
         "/payment/",
         "/new-recipe/",
+        "/edit-recipe/",
         "/api/",
         "/*?*",
       ],

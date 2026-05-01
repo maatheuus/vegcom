@@ -7,12 +7,14 @@ import RenderCheckListItem from "./RenderCheckListItem";
 interface RenderCheckListProps extends ComponentProps<"div"> {
   items: { id: string; label: string; value: string }[];
   onDeleteItem?: (id: string) => void;
+  onEditItem?: (id: string, newLabel: string) => void;
 }
 
 export default function RenderCheckList({
   items,
   className,
   onDeleteItem,
+  onEditItem,
 }: RenderCheckListProps) {
   const listRef = useRef<HTMLDivElement>(null);
 
@@ -27,6 +29,7 @@ export default function RenderCheckList({
               item={item}
               idx={idx}
               onDeleteItem={(id) => onDeleteItem?.(id)}
+              onEditItem={(id, newLabel) => onEditItem?.(id, newLabel)}
             />
           </div>
         ))}

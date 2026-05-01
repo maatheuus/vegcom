@@ -10,7 +10,14 @@ import Text from "@/shared/ui/Text";
 import clsx from "clsx";
 import { memo } from "react";
 
-import { ClockCountdownIcon, XCircleIcon } from "@phosphor-icons/react";
+import {
+  ArrowRightIcon,
+  ClockCountdownIcon,
+  PencilSimpleIcon,
+  XCircleIcon,
+} from "@phosphor-icons/react";
+import { motion } from "framer-motion";
+import Link from "next/link";
 import { useGetUser } from "../auth/api/queries/getAuthApiClient";
 import DeleteRecipeButton from "./DeleteRecipeButton";
 import RowHeaderData from "./RowHeaderData";
@@ -54,7 +61,13 @@ const RecipeDetailsHeader = memo(function RecipeDetailsHeader({
 }: Props) {
   const { data: userData } = useGetUser();
 
-  const { reviewStatus, slug: recipeSlug, id: recipeId, userId: recipeUserId, title: recipeTitle } = recipe || {};
+  const {
+    reviewStatus,
+    slug: recipeSlug,
+    id: recipeId,
+    userId: recipeUserId,
+    title: recipeTitle,
+  } = recipe || {};
   const isOwner = !!userData && !!recipeUserId && userData.id === recipeUserId;
 
   return (
@@ -81,13 +94,58 @@ const RecipeDetailsHeader = memo(function RecipeDetailsHeader({
             aria-label="Ações da receita"
           >
             {isOwner && (
-              <DeleteRecipeButton recipeId={recipeId!} recipeTitle={recipeTitle} />
+              <DeleteRecipeButton
+                recipeId={recipeId!}
+                recipeTitle={recipeTitle}
+              />
             )}
             <SaveRecipeButton user={userData} recipeId={recipeId!} />
             <ShareDropdown title={String(title)} recipeSlug={recipeSlug} />
           </Row>
         )}
       </div>
+
+      {isOwner && isRecipePage && (
+        <motion.div initial="rest" whileHover="hover" animate="rest">
+          <Link
+            href={`/edit-recipe/${recipeSlug}`}
+            className="relative flex w-full items-center justify-between overflow-hidden rounded-2xl border border-green-200 bg-gradient-to-r from-green-50 to-green-100/40 px-5 py-3"
+          >
+            <motion.div
+              className="absolute inset-0 bg-gradient-to-r from-green-100 to-green-200/40"
+              variants={{ rest: { opacity: 0 }, hover: { opacity: 1 } }}
+              transition={{ duration: 0.25 }}
+            />
+
+            <div className="relative flex items-center gap-3">
+              <motion.div
+                className="flex h-8 w-8 items-center justify-center rounded-full bg-green-200/50"
+                variants={{ rest: { rotate: 0 }, hover: { rotate: -12 } }}
+                transition={{ type: "spring", stiffness: 400, damping: 20 }}
+              >
+                <PencilSimpleIcon size={14} weight="bold" className="text-green-600" />
+              </motion.div>
+              <div>
+                <p className="font-lora text-[10px] uppercase tracking-widest text-green-500/70">
+                  Você é o autor
+                </p>
+                <p className="font-lora text-sm font-semibold text-green-800">
+                  Editar receita
+                </p>
+              </div>
+            </div>
+
+            <motion.div
+              className="relative flex items-center gap-1.5 text-xs font-medium text-green-600"
+              variants={{ rest: { x: 0, opacity: 0.6 }, hover: { x: 4, opacity: 1 } }}
+              transition={{ type: "spring", stiffness: 400, damping: 25 }}
+            >
+              <span className="hidden sm:inline">Fazer alterações</span>
+              <ArrowRightIcon size={13} weight="bold" />
+            </motion.div>
+          </Link>
+        </motion.div>
+      )}
 
       {reviewStatus && reviewStatus !== ReviewStatus.PUBLISHED && (
         <div

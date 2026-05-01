@@ -37,10 +37,24 @@ export const useGetRecipeBySlug = (slug: string) => {
 export const useUpdateRecipe = () => {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: ({ id, data }: { id: number; data: UpdateRecipePayload }) =>
-      recipeApi.updateRecipe(id, data),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: recipeKeys.lists() });
+    mutationFn: ({
+      id,
+      data,
+      newImages,
+    }: {
+      id: number;
+      data: UpdateRecipePayload;
+      newImages?: File[];
+      slug?: string;
+    }) => recipeApi.updateRecipe(id, data, newImages),
+    onSuccess: (result, { slug }) => {
+      queryClient.invalidateQueries({ queryKey: recipeKeys.all });
+      const updatedSlug = result.data?.slug ?? slug;
+      if (updatedSlug) {
+        queryClient.invalidateQueries({
+          queryKey: recipeKeys.detailBySlug(updatedSlug),
+        });
+      }
     },
     onError: (error) => {
       console.error("Erro ao atualizar receita:", error);
