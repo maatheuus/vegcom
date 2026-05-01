@@ -34,14 +34,14 @@ const CardTitle = React.forwardRef<HTMLDivElement, CardTitleProps>(
   ({ as = "p", type, weight, children, className, ...props }, ref) => (
     <div
       ref={ref}
-      className={cn("font-semibold leading-none tracking-tight", className)}
+      className={cn("leading-none font-semibold tracking-tight", className)}
       {...props}
     >
       <Text as={as} type={type} weight={weight}>
         {children}
       </Text>
     </div>
-  )
+  ),
 );
 CardTitle.displayName = "CardTitle";
 
@@ -56,14 +56,14 @@ const CardDescription = React.forwardRef<HTMLDivElement, CardDescriptionProps>(
   ({ as = "p", type, weight, children, className, ...props }, ref) => (
     <div
       ref={ref}
-      className={cn("text-sm text-muted-foreground", className)}
+      className={cn("font-lora text-muted-foreground text-sm", className)}
       {...props}
     >
       <Text as={as} type={type} weight={weight}>
         {children}
       </Text>
     </div>
-  )
+  ),
 );
 CardDescription.displayName = "CardDescription";
 

@@ -92,8 +92,7 @@ const FluctuantTip = memo(function FluctuantTip({
   };
 
   return createPortal(
-    <div className="pointer-events-none fixed inset-0 z-[9999] overflow-hidden">
-      <motion.div
+    <motion.div
         drag
         dragMomentum={false}
         whileDrag={{ scale: 1.1, cursor: "grabbing" }}
@@ -102,7 +101,7 @@ const FluctuantTip = memo(function FluctuantTip({
           setIsOpen(false);
         }}
         onDragEnd={() => setTimeout(() => setIsDragging(false), 100)}
-        className="pointer-events-auto absolute cursor-grab touch-none"
+        className="pointer-events-auto fixed z-[9999] cursor-grab touch-none"
         style={{ right: 30, bottom: 100 }}
       >
         <div className="relative" ref={buttonRef}>
@@ -180,8 +179,7 @@ const FluctuantTip = memo(function FluctuantTip({
             )}
           </AnimatePresence>
         </div>
-      </motion.div>
-    </div>,
+      </motion.div>,
     document.body,
   );
 });

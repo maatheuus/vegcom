@@ -5,7 +5,6 @@ import type { CreateRecipeResponse } from "../../recipes/api/types";
 export interface CreateRecipeFormData {
   title: string;
   description: string;
-  timeForPreparation: string;
   cookTime: string;
   quantity: string;
   category: string;

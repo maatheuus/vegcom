@@ -48,7 +48,7 @@ export default function StepOne({ form }: { form: NewRecipeForm }) {
                   <Input
                     type="text"
                     placeholder="Lasanha de brócolis e tofu..."
-                    className="rounded-xl!"
+                    className="rounded-xl! font-semibold placeholder:font-normal"
                     onKeyDown={(e) => e.key === "Enter" && e.preventDefault()}
                     {...field}
                   />
@@ -67,7 +67,7 @@ export default function StepOne({ form }: { form: NewRecipeForm }) {
                 <FormControl>
                   <Textarea
                     placeholder="Cremosa, reconfortante e pronta em 30 minutos ao forno."
-                    className="min-h-[110px] max-w-full rounded-xl!"
+                    className="min-h-[110px] max-w-full rounded-xl! font-semibold placeholder:font-normal"
                     onKeyDown={(e) => e.key === "Enter" && e.preventDefault()}
                     {...field}
                   />
@@ -87,7 +87,8 @@ export default function StepOne({ form }: { form: NewRecipeForm }) {
                   <FormControl>
                     <Input
                       type="number"
-                      className="rounded-xl!"
+                      min={0}
+                      className="rounded-xl! font-semibold placeholder:font-normal"
                       placeholder="0"
                       {...field}
                     />
@@ -105,7 +106,8 @@ export default function StepOne({ form }: { form: NewRecipeForm }) {
                   <FormControl>
                     <Input
                       type="number"
-                      className="rounded-xl!"
+                      min={0}
+                      className="rounded-xl! font-semibold placeholder:font-normal"
                       placeholder="30"
                       {...field}
                     />
@@ -125,7 +127,8 @@ export default function StepOne({ form }: { form: NewRecipeForm }) {
                 <FormControl>
                   <Input
                     type="number"
-                    className="rounded-xl!"
+                    min={0}
+                    className="rounded-xl! font-semibold placeholder:font-normal"
                     placeholder="4 pessoas"
                     {...field}
                   />
@@ -147,7 +150,7 @@ export default function StepOne({ form }: { form: NewRecipeForm }) {
                     defaultValue={field.value}
                   >
                     <FormControl className="min-h-[42px]">
-                      <SelectTrigger className="font-lora rounded-xl! focus-within:ring-1">
+                      <SelectTrigger className="font-lora rounded-xl! focus-within:ring-1 [&_span]:data-[slot=select-value]:font-semibold">
                         <SelectValue placeholder="Categoria" />
                       </SelectTrigger>
                     </FormControl>
@@ -178,7 +181,7 @@ export default function StepOne({ form }: { form: NewRecipeForm }) {
                     defaultValue={field.value}
                   >
                     <FormControl className="min-h-[42px]">
-                      <SelectTrigger className="font-lora rounded-xl! focus-within:ring-1">
+                      <SelectTrigger className="font-lora rounded-xl! focus-within:ring-1 [&_span]:data-[slot=select-value]:font-semibold">
                         <SelectValue placeholder="Dificuldade" />
                       </SelectTrigger>
                     </FormControl>

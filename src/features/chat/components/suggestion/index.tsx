@@ -159,7 +159,7 @@ export default function SuggestionsPage({
           >
             {selectedSuggestion === "all"
               ? "Selecione um tópico para iniciar uma conversa."
-              : `Sugestões sobre ${categories.find((c) => c.key === selectedSuggestion)?.label}`}
+              : `Sugestões sobre: ${categories.find((c) => c.key === selectedSuggestion)?.label}`}
           </Text>
         </div>
 

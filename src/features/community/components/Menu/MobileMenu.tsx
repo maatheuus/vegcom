@@ -12,12 +12,11 @@ type TriggerProps = {
   toggleMenu: () => void;
 };
 
-// Componente auxiliar para não repetirmos código nos traços do SVG
 const Path = (props: any) => (
   <motion.path
     fill="transparent"
-    strokeWidth="2.5" // Espessura da linha (ajuste se quiser mais grosso ou fino)
-    stroke="currentColor" // Herda a cor do text-* do elemento pai
+    strokeWidth="2.5"
+    stroke="currentColor"
     strokeLinecap="round"
     {...props}
   />

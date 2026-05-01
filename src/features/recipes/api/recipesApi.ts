@@ -27,10 +27,13 @@ const recipeApi = {
     );
     return data;
   },
-  updateRecipe: async (id: number, data: UpdateRecipePayload) => {
-    const { data: responseData } = await api.put<CreateRecipeResponse>(
+  updateRecipe: async (id: number, data: UpdateRecipePayload, newImages?: File[]) => {
+    const formData = new FormData();
+    formData.append("data", JSON.stringify(data));
+    newImages?.forEach((file) => formData.append("images", file));
+    const { data: responseData } = await api.patch<CreateRecipeResponse>(
       `/recipes/update/${id}`,
-      data,
+      formData,
     );
     return responseData;
   },

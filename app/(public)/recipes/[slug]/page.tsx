@@ -48,6 +48,8 @@ export default async function page({ params }: Props) {
     notFound();
   }
 
+  console.log(recipe);
+
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "Recipe",

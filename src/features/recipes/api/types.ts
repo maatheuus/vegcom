@@ -61,7 +61,6 @@ export interface CreateRecipePayload {
   title: string;
   slug?: string;
   description: string;
-  timeForPreparation: string;
   cookTime: string;
   quantity: string;
   category: string;
@@ -72,8 +71,17 @@ export interface CreateRecipePayload {
   mealType?: MealType;
 }
 
-export interface UpdateRecipePayload extends Partial<CreateRecipePayload> {
-  userId: number;
+export interface UpdateRecipePayload {
+  title?: string;
+  description?: string;
+  cookTime?: string;
+  quantity?: string;
+  category?: string;
+  mealType?: MealType;
+  difficulty?: string;
+  isPublished?: boolean;
+  steps?: Partial<RecipeSteps>;
+  images?: string[];
 }
 
 export interface CreateRecipeResponse {
@@ -119,4 +127,3 @@ export interface GetRecipesByIdsResponse {
   success: boolean;
   data: DetailedRecipe[];
 }
-

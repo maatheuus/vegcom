@@ -153,7 +153,7 @@ export default function ReviewSummary({ form }: Props) {
         <div className="py-3">
           <div className="flex items-center justify-between">
             <span className="w-28 shrink-0 text-xs font-semibold tracking-wide text-green-500/60">
-              CATEGORIA
+              CATEGORIA &amp; DIFICULDADE
             </span>
             {editing !== "category" && (
               <span className="font-lora flex-1 px-2 text-sm text-green-800">
@@ -228,7 +228,7 @@ export default function ReviewSummary({ form }: Props) {
         <div className="py-3">
           <div className="flex items-center justify-between">
             <span className="w-28 shrink-0 text-xs font-semibold tracking-wide text-green-500/60">
-              TEMPO
+              TEMPO &amp; PORÇÕES
             </span>
             {editing !== "time" && (
               <span className="font-lora flex-1 px-2 text-sm text-green-800">

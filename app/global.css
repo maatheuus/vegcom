@@ -2,6 +2,11 @@
 
 @config "../tailwind.config.ts";
 
+/* Isolate nav from root view-transition to prevent positional shift on soft navigations */
+#main-nav {
+  view-transition-name: main-nav;
+}
+
 @layer base {
   :root {
     --background: #ffffff;
@@ -463,37 +468,99 @@
 
 /* ── Footer Anthem animations ─────────────────────────────────────── */
 @keyframes footer-glow-pulse {
-  0%, 100% { opacity: 0.6; transform: scale(1); }
-  50% { opacity: 1; transform: scale(1.08); }
+
+  0%,
+  100% {
+    opacity: 0.6;
+    transform: scale(1);
+  }
+
+  50% {
+    opacity: 1;
+    transform: scale(1.08);
+  }
 }
 
 @keyframes footer-grow-stem {
-  0% { stroke-dashoffset: 140; }
-  40%, 85% { stroke-dashoffset: 0; }
-  100% { stroke-dashoffset: 140; }
+  0% {
+    stroke-dashoffset: 140;
+  }
+
+  40%,
+  85% {
+    stroke-dashoffset: 0;
+  }
+
+  100% {
+    stroke-dashoffset: 140;
+  }
 }
 
 @keyframes footer-pop-leaf {
-  0%, 20% { opacity: 0; transform: scale(0.1); }
-  30% { opacity: 1; transform: scale(1.15); }
-  35%, 85% { opacity: 1; transform: scale(1); }
-  100% { opacity: 0; transform: scale(1); }
+
+  0%,
+  20% {
+    opacity: 0;
+    transform: scale(0.1);
+  }
+
+  30% {
+    opacity: 1;
+    transform: scale(1.15);
+  }
+
+  35%,
+  85% {
+    opacity: 1;
+    transform: scale(1);
+  }
+
+  100% {
+    opacity: 0;
+    transform: scale(1);
+  }
 }
 
 @keyframes footer-steam-rise {
-  0% { opacity: 0; transform: translateY(8px); }
-  30% { opacity: 0.8; }
-  100% { opacity: 0; transform: translateY(-24px); }
+  0% {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+
+  30% {
+    opacity: 0.8;
+  }
+
+  100% {
+    opacity: 0;
+    transform: translateY(-24px);
+  }
 }
 
 @keyframes footer-bowl-breathe {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-2px); }
+
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+
+  50% {
+    transform: translateY(-2px);
+  }
 }
 
 @keyframes footer-spark-twinkle {
-  0%, 100% { opacity: 0; transform: scale(0.3); }
-  50% { opacity: 0.9; transform: scale(1); }
+
+  0%,
+  100% {
+    opacity: 0;
+    transform: scale(0.3);
+  }
+
+  50% {
+    opacity: 0.9;
+    transform: scale(1);
+  }
 }
 
 .footer-anthem-illus {

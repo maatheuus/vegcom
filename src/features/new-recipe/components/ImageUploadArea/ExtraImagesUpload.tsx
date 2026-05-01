@@ -4,7 +4,11 @@ import { useToast } from "@/shared/hooks/use-toast";
 import { Input } from "@/shared/ui/Input";
 import { type DragEndEvent } from "@dnd-kit/core";
 import { arrayMove } from "@dnd-kit/sortable";
-import { CloudArrowUpIcon, PlusCircleIcon, XCircleIcon } from "@phosphor-icons/react";
+import {
+  CloudArrowUpIcon,
+  PlusCircleIcon,
+  XCircleIcon,
+} from "@phosphor-icons/react";
 import { useCallback, useMemo, useState } from "react";
 import { useWatch } from "react-hook-form";
 import ImageGallery from "./ImageGallery";
@@ -207,11 +211,13 @@ export default function ExtraImagesUpload({ form }: Props) {
   );
 
   return (
-    <div className="rounded-xl border-2 border-dashed border-green-200 bg-green-50/30 p-4 space-y-4">
+    <div className="space-y-4 rounded-xl border-2 border-dashed border-green-200 bg-green-50/30 p-4">
       {allExtraImages.length > 0 && (
         <div className="flex items-center justify-between">
-          <span className="font-lora text-xs italic text-green-500/60">
-            {allExtraImages.length}/{MAX_EXTRA} foto{allExtraImages.length !== 1 ? "s" : ""} adicionada{allExtraImages.length !== 1 ? "s" : ""}
+          <span className="font-lora text-xs text-green-500/60 italic">
+            {allExtraImages.length}/{MAX_EXTRA} foto
+            {allExtraImages.length !== 1 ? "s" : ""} adicionada
+            {allExtraImages.length !== 1 ? "s" : ""}
           </span>
           {hasSlots ? (
             <label className="cursor-pointer text-green-500 transition-colors hover:text-green-700">
@@ -244,7 +250,7 @@ export default function ExtraImagesUpload({ form }: Props) {
       {allExtraImages.length === 0 && (
         <label className="flex min-h-[10rem] cursor-pointer flex-col items-center justify-center gap-2 rounded-lg transition hover:bg-green-50/50">
           <CloudArrowUpIcon size={28} className="text-green-200" />
-          <span className="font-lora text-sm text-green-500/70 italic">
+          <span className="font-lora text-xs text-green-500/70 italic md:text-sm">
             Arraste e solte ou{" "}
             <strong className="cursor-pointer text-green-500">
               selecione suas imagens

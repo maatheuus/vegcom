@@ -197,12 +197,12 @@ export const newRecipeFormSchema = z.object({
   recipe_title: z
     .string()
     .min(4, { message: "O título precisa ter pelo menos 4 letras!" })
-    .max(100, { message: "Esse título tá meio longo demais, hein? 🤔" }),
+    .max(150, { message: "Esse título tá meio longo demais, hein? 🤔" }),
 
   recipe_description: z
     .string()
     .min(10, { message: "Uma boa receita merece uma descrição bacana." })
-    .max(500, { message: "Vamos manter a descrição mais objetiva 😉" }),
+    .max(600, { message: "Vamos manter a descrição mais objetiva 😉" }),
 
   recipe_ingredients: z
     .array(
@@ -222,7 +222,7 @@ export const newRecipeFormSchema = z.object({
         value: z.string(),
       }),
     )
-    .min(2, { message: "Adicione pelo menos dois passos no modo de preparo." }),
+    .min(2, { message: "Adicione no mínimo dois passos." }),
 
   recipe_cookingNotes: z
     .array(
