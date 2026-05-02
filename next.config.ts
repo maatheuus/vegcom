@@ -50,6 +50,8 @@ const nextConfig: NextConfig = {
       `connect-src ${connectSrc}`,
       // blob: required for Web Workers spawned by Next.js/webpack chunks
       "worker-src blob: 'self'",
+      // vercel.live toolbar renders inside an iframe
+      "frame-src https://vercel.live",
       "frame-ancestors 'self'",
       "base-uri 'self'",
       "form-action 'self'",

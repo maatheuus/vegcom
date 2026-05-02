@@ -92,7 +92,7 @@ export const typeConfig: Record<RecipeType, TypeConfig> = {
     },
     text: {
       lineThrough: true,
-      weight: "font-medium",
+      weight: "font-bold",
       color: "text-green-500",
       checkedColor: "text-green-200",
     },
@@ -105,7 +105,7 @@ export const typeConfig: Record<RecipeType, TypeConfig> = {
     text: {
       base: "!cursor-default",
       lineThrough: false,
-      weight: "font-medium",
+      weight: "font-bold",
       color: "text-green-500",
       checkedColor: "",
     },
