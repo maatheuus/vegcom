@@ -6,16 +6,25 @@ const nextConfig: NextConfig = {
 
   async headers() {
     const apiUrl = process.env.NEXT_PUBLIC_API_URL ?? "";
+    // Use only the origin so CSP doesn't block subpaths (e.g. /api/v1/auth/signin)
+    const apiOrigin = (() => {
+      try {
+        return apiUrl ? new URL(apiUrl).origin : "";
+      } catch {
+        return apiUrl;
+      }
+    })();
 
     const connectSrc = [
       "'self'",
-      apiUrl,
+      apiOrigin,
       "https://*.sentry.io",
       "https://www.google-analytics.com",
       "https://analytics.google.com",
       "https://www.googletagmanager.com",
       "https://vitals.vercel-insights.com",
       "https://va.vercel-scripts.com",
+      "https://vercel.live",
     ]
       .filter(Boolean)
       .join(" ");
@@ -23,7 +32,8 @@ const nextConfig: NextConfig = {
     const csp = [
       "default-src 'self'",
       // 'unsafe-inline' required: Google Analytics inline gtag script + Next.js hydration chunks
-      "script-src 'self' 'unsafe-inline' https://www.googletagmanager.com https://va.vercel-scripts.com",
+      // vercel.live required: Vercel toolbar/feedback widget injected at runtime
+      "script-src 'self' 'unsafe-inline' https://www.googletagmanager.com https://va.vercel-scripts.com https://vercel.live",
       "style-src 'self' 'unsafe-inline'",
       [
         "img-src 'self' data: blob:",
@@ -38,6 +48,8 @@ const nextConfig: NextConfig = {
       // next/font/google self-hosts fonts at build time → 'self' is sufficient
       "font-src 'self'",
       `connect-src ${connectSrc}`,
+      // blob: required for Web Workers spawned by Next.js/webpack chunks
+      "worker-src blob: 'self'",
       "frame-ancestors 'self'",
       "base-uri 'self'",
       "form-action 'self'",
