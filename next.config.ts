@@ -2,8 +2,67 @@ import type { NextConfig } from "next";
 import { withSentryConfig } from "@sentry/nextjs";
 
 const nextConfig: NextConfig = {
-  /* config options here */
   reactStrictMode: true,
+
+  async headers() {
+    const apiUrl = process.env.NEXT_PUBLIC_API_URL ?? "";
+
+    const connectSrc = [
+      "'self'",
+      apiUrl,
+      "https://*.sentry.io",
+      "https://www.google-analytics.com",
+      "https://analytics.google.com",
+      "https://www.googletagmanager.com",
+      "https://vitals.vercel-insights.com",
+      "https://va.vercel-scripts.com",
+    ]
+      .filter(Boolean)
+      .join(" ");
+
+    const csp = [
+      "default-src 'self'",
+      // 'unsafe-inline' required: Google Analytics inline gtag script + Next.js hydration chunks
+      "script-src 'self' 'unsafe-inline' https://www.googletagmanager.com https://va.vercel-scripts.com",
+      "style-src 'self' 'unsafe-inline'",
+      [
+        "img-src 'self' data: blob:",
+        "https://res.cloudinary.com",
+        "https://images.unsplash.com",
+        "https://plus.unsplash.com",
+        "https://picsum.photos",
+        "https://github.com",
+        "https://randomuser.me",
+        "https://www.google-analytics.com",
+      ].join(" "),
+      // next/font/google self-hosts fonts at build time → 'self' is sufficient
+      "font-src 'self'",
+      `connect-src ${connectSrc}`,
+      "frame-ancestors 'self'",
+      "base-uri 'self'",
+      "form-action 'self'",
+      "object-src 'none'",
+      "upgrade-insecure-requests",
+    ].join("; ");
+
+    return [
+      {
+        source: "/(.*)",
+        headers: [
+          { key: "X-Frame-Options", value: "SAMEORIGIN" },
+          { key: "X-Content-Type-Options", value: "nosniff" },
+          { key: "Referrer-Policy", value: "strict-origin-when-cross-origin" },
+          {
+            key: "Permissions-Policy",
+            value:
+              "camera=(), microphone=(), geolocation=(), interest-cohort=()",
+          },
+          { key: "Content-Security-Policy", value: csp },
+        ],
+      },
+    ];
+  },
+
   experimental: {
     viewTransition: true,
     useCache: true,
