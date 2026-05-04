@@ -109,6 +109,7 @@ const RecipeDetailsHeader = memo(function RecipeDetailsHeader({
         <motion.div initial="rest" whileHover="hover" animate="rest">
           <Link
             href={`/edit-recipe/${recipeSlug}`}
+            replace
             className="relative flex w-full items-center justify-between overflow-hidden rounded-2xl border border-green-200 bg-gradient-to-r from-green-50 to-green-100/40 px-5 py-3"
           >
             <motion.div

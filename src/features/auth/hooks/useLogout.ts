@@ -10,6 +10,8 @@ export function useLogout() {
   const handleLogout = () => {
     startTransition(async () => {
       await logout();
+      localStorage.removeItem("vegcom-new-recipe-form");
+      localStorage.removeItem("vegcom-new-recipe-images");
       window.location.href = "/login";
     });
   };

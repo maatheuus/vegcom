@@ -200,7 +200,7 @@ export default function NewRecipeForm({
             "Sua receita está em análise e será publicada após aprovação.",
           variant: "success",
         });
-        router.push(`/recipes/${data.slug}`);
+        router.replace(`/recipes/${data.slug}`);
       }
     } catch (error) {
       console.error("Erro ao criar receita:", error);
@@ -296,7 +296,7 @@ export default function NewRecipeForm({
           description: "Suas alterações foram salvas.",
           variant: "success",
         });
-        router.push(`/recipes/${updatedRecipe.slug}`);
+        router.replace(`/recipes/${updatedRecipe.slug}`);
       }
     } catch (error) {
       console.error("Erro ao atualizar receita:", error);
