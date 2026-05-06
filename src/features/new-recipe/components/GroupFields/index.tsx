@@ -306,6 +306,7 @@ export default function GroupFields({
                     <FormControl>
                       {type === "instructions" ? (
                         <textarea
+                          key={current[type].length}
                           placeholder={placeholderMap[type]}
                           className="font-maitree field-sizing-content w-full resize-none rounded-xl border border-green-200 bg-transparent px-3.5 py-2 text-sm text-green-500 transition-colors placeholder:text-green-200 focus-visible:ring-1 focus-visible:ring-green-200 focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50"
                           rows={1}
