@@ -34,6 +34,11 @@ const recipeApi = {
     const { data: responseData } = await api.patch<CreateRecipeResponse>(
       `/recipes/update/${id}`,
       formData,
+      {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      },
     );
     return responseData;
   },
