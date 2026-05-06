@@ -1,5 +1,6 @@
 "use client";
 
+import { useGetUser } from "@/features/auth/api/queries/getAuthApiClient";
 import { useUpdateRecipe } from "@/features/recipes/api/queries/getRecipesApiClient";
 import type {
   DetailedRecipe,
@@ -51,6 +52,7 @@ export default function NewRecipeForm({
     defaultValues: resolvedDefaults,
   });
 
+  const { data: currentUser } = useGetUser();
   const { mutateAsync: createNewRecipe, isPending: isCreating } =
     useCreateNewRecipe();
   const { mutateAsync: updateRecipe, isPending: isUpdating } =
@@ -168,6 +170,11 @@ export default function NewRecipeForm({
     const valid = await form.trigger(stepFields[currentStep]);
     if (!valid) return;
 
+    if (!currentUser?.id) {
+      toast({ title: "Usuário não identificado.", variant: "destructive" });
+      return;
+    }
+
     const formData = form.getValues();
 
     formData.recipe_images = await Promise.all(
@@ -187,7 +194,7 @@ export default function NewRecipeForm({
       }),
     );
 
-    const payload = transformFormToApiPayload(formData);
+    const payload = transformFormToApiPayload(formData, currentUser.id);
 
     try {
       const { data, success } = await createNewRecipe(payload);

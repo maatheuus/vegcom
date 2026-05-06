@@ -3,6 +3,7 @@ import { compressImages } from "@shared/lib/compressImage";
 import type { CreateRecipeResponse } from "../../recipes/api/types";
 
 export interface CreateRecipeFormData {
+  userId: number;
   title: string;
   description: string;
   cookTime: string;

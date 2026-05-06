@@ -85,6 +85,7 @@ export const recipeToFormValues = (
 
 export const transformFormToApiPayload = (
   formData: NewRecipeFormValues,
+  userId: number,
 ): { data: CreateRecipeFormData; images: File[] } => {
   const timeStr = formatPreparationTime(
     formData.recipe_preparationHours ?? "0",
@@ -92,6 +93,7 @@ export const transformFormToApiPayload = (
   );
 
   const data: CreateRecipeFormData = {
+    userId,
     title: formData.recipe_title,
     description: formData.recipe_description,
     quantity: formData.recipe_servings,
