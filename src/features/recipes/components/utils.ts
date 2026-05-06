@@ -274,7 +274,7 @@ export const newRecipeFormSchema = z.object({
   new_recipe_instruction_text: z
     .string()
     .min(3, { message: "Pelo menos uma instrução válida" })
-    .max(100, { message: "Esse instrução tá meio longo demais, hein? 🤔" }),
+    .max(450, { message: "Essa instrução está meio longa demais, hein?" }),
 
   new_recipe_cookingNote_text: z.string().optional(),
 });

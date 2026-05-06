@@ -20,7 +20,7 @@ import {
   verticalListSortingStrategy,
 } from "@dnd-kit/sortable";
 import { ArrowsDownUpIcon, PlusCircleIcon } from "@phosphor-icons/react";
-import { Fragment, useCallback } from "react";
+import { Fragment, useCallback, type Ref } from "react";
 import { useWatch } from "react-hook-form";
 
 import type { Props } from "../ImageUploadArea";
@@ -304,28 +304,53 @@ export default function GroupFields({
                 >
                   <div className="flex flex-col items-end gap-2">
                     <FormControl>
-                      <Input
-                        type="text"
-                        placeholder={placeholderMap[type]}
-                        className="rounded-xl! border-green-200 text-sm"
-                        value={field.value || ""}
-                        onChange={(e) => field.onChange(e.target.value)}
-                        name={field.name}
-                        ref={field.ref}
-                        onKeyDown={(e) => {
-                          if (e.key === "Enter") {
-                            e.preventDefault();
-                            if (
-                              !isAddDisabled(
-                                field.value || "",
-                                current[type].length,
-                              )
-                            ) {
-                              handleAddItemToList(field.value || "", type);
+                      {type === "instructions" ? (
+                        <textarea
+                          placeholder={placeholderMap[type]}
+                          className="font-maitree field-sizing-content w-full resize-none rounded-xl border border-green-200 bg-transparent px-3.5 py-2 text-sm text-green-500 transition-colors placeholder:text-green-200 focus-visible:ring-1 focus-visible:ring-green-200 focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50"
+                          rows={1}
+                          value={field.value || ""}
+                          onChange={(e) => field.onChange(e.target.value)}
+                          name={field.name}
+                          ref={field.ref as Ref<HTMLTextAreaElement>}
+                          onKeyDown={(e) => {
+                            if (e.key === "Enter" && !e.shiftKey) {
+                              e.preventDefault();
+                              if (
+                                !isAddDisabled(
+                                  field.value || "",
+                                  current[type].length,
+                                )
+                              ) {
+                                handleAddItemToList(field.value || "", type);
+                              }
                             }
-                          }
-                        }}
-                      />
+                          }}
+                        />
+                      ) : (
+                        <Input
+                          type="text"
+                          placeholder={placeholderMap[type]}
+                          className="rounded-xl! border-green-200 text-sm"
+                          value={field.value || ""}
+                          onChange={(e) => field.onChange(e.target.value)}
+                          name={field.name}
+                          ref={field.ref}
+                          onKeyDown={(e) => {
+                            if (e.key === "Enter") {
+                              e.preventDefault();
+                              if (
+                                !isAddDisabled(
+                                  field.value || "",
+                                  current[type].length,
+                                )
+                              ) {
+                                handleAddItemToList(field.value || "", type);
+                              }
+                            }
+                          }}
+                        />
+                      )}
                     </FormControl>
                     <button
                       type="button"
