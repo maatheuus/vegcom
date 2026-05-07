@@ -48,7 +48,7 @@ export default function ContentRecipe({ recipe }: Props) {
 
         {recipe.steps.instructions && recipe.steps.instructions.length > 0 && (
           <ChecklistSection
-            title="Instruções"
+            title="Modo de preparo"
             type="instructions"
             storageKey="checklist-instructions"
             items={recipe.steps.instructions}

@@ -122,7 +122,7 @@ export default function ChecklistSection({
             <Row
               key={idx}
               className={clsx(
-                "items-center gap-2",
+                "items-start gap-3",
                 config.interactive && "cursor-pointer",
               )}
               onClick={() => toggleCheck(idx)}

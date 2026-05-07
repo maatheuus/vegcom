@@ -5,6 +5,7 @@ const nextConfig: NextConfig = {
   reactStrictMode: true,
 
   async headers() {
+    const isDev = process.env.NODE_ENV === "development";
     const apiUrl = process.env.NEXT_PUBLIC_API_URL ?? "";
     // Use only the origin so CSP doesn't block subpaths (e.g. /api/v1/auth/signin)
     const apiOrigin = (() => {
@@ -32,8 +33,9 @@ const nextConfig: NextConfig = {
     const csp = [
       "default-src 'self'",
       // 'unsafe-inline' required: Google Analytics inline gtag script + Next.js hydration chunks
+      // 'unsafe-eval' required in dev only: Next.js webpack uses eval-based source maps
       // vercel.live required: Vercel toolbar/feedback widget injected at runtime
-      "script-src 'self' 'unsafe-inline' https://www.googletagmanager.com https://va.vercel-scripts.com https://vercel.live",
+      `script-src 'self' 'unsafe-inline'${isDev ? " 'unsafe-eval'" : ""} https://www.googletagmanager.com https://va.vercel-scripts.com https://vercel.live`,
       "style-src 'self' 'unsafe-inline'",
       [
         "img-src 'self' data: blob:",

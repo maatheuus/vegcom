@@ -2,11 +2,13 @@
 
 import RecipeCard from "@/features/account/components/(recipes)/RecipeCard";
 import { useGetUser } from "@/features/auth/api/queries/getAuthApiClient";
+import { hasActiveSubscription } from "@/features/auth/api/types";
 import { recipeApi } from "@/features/recipes/api/recipesApi";
 import type { DetailedRecipe } from "@/features/recipes/api/types";
 import { RecipeGridSkeleton } from "@/features/recipes/components/RecipeGridSkeleton";
 import { usePagination } from "@/shared/hooks/usePagination";
 import Grid from "@/shared/ui/Layout/Helpers/Grid";
+import Link from "next/link";
 import {
   Pagination,
   PaginationContent,
@@ -35,6 +37,9 @@ function normalizeSearchText(text: string): string {
     .normalize("NFD")
     .replace(/[\u0300-\u036f]/g, "");
 }
+
+const FREE_LIMIT = 3;
+const PREMIUM_LIMIT = 12;
 
 export default function RecipeActions({ isFavorites }: Props) {
   const { data: user, isLoading: isUserLoading } = useGetUser();
@@ -155,14 +160,47 @@ export default function RecipeActions({ isFavorites }: Props) {
     goToPage(1);
   }
 
+  const isSubscribed = hasActiveSubscription(user?.subscription);
+  const recipeLimit = isSubscribed ? PREMIUM_LIMIT : FREE_LIMIT;
+  const recipeCount = user?.recipesCount ?? 0;
+  const atLimit = !isFavorites && recipeCount >= recipeLimit;
+  const nearLimit = !isFavorites && !atLimit && recipeCount >= recipeLimit - 1;
+
   if (isLoading) {
     return (
       <RecipeGridSkeleton count={ITEMS_PER_PAGE} className="lg:grid-cols-3" />
     );
   }
 
+  const LimitBanner = !isFavorites && (
+    <div
+      className={clsx(
+        "flex w-full items-center justify-between gap-3 rounded-xl border px-4 py-3 text-sm",
+        atLimit
+          ? "border-amber-200 bg-amber-50 text-amber-800"
+          : nearLimit
+            ? "border-yellow-200 bg-yellow-50 text-yellow-800"
+            : "border-green-200 bg-green-50 text-green-800",
+      )}
+    >
+      <span className="font-medium">
+        {recipeCount}/{recipeLimit} receitas usadas
+        {atLimit && " — limite atingido"}
+      </span>
+      {!isSubscribed && (
+        <Link
+          href="/account/subscription"
+          className="shrink-0 rounded-lg bg-green-500 px-3 py-1 text-xs font-semibold text-white transition hover:bg-green-600"
+        >
+          Upgrade para Premium
+        </Link>
+      )}
+    </div>
+  );
+
   return (
     <>
+      {LimitBanner}
       {currentItemsRecipe && currentItemsRecipe.length > 0 ? (
         <>
           <div className="flex w-full flex-col items-start justify-start gap-4 md:flex-row md:justify-between">

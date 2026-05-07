@@ -270,6 +270,7 @@ export default function GroupFields({
             >
               <RenderCheckList
                 items={current[type]}
+                isTextarea={type === "instructions"}
                 onDeleteItem={(id) => handleDeleteItemFromList(id, type)}
                 onEditItem={(id, newLabel) =>
                   handleEditItemInList(id, newLabel, type)

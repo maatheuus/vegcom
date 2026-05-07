@@ -6,6 +6,7 @@ import RenderCheckListItem from "./RenderCheckListItem";
 
 interface RenderCheckListProps extends ComponentProps<"div"> {
   items: { id: string; label: string; value: string }[];
+  isTextarea?: boolean;
   onDeleteItem?: (id: string) => void;
   onEditItem?: (id: string, newLabel: string) => void;
 }
@@ -13,6 +14,7 @@ interface RenderCheckListProps extends ComponentProps<"div"> {
 export default function RenderCheckList({
   items,
   className,
+  isTextarea = false,
   onDeleteItem,
   onEditItem,
 }: RenderCheckListProps) {
@@ -28,6 +30,7 @@ export default function RenderCheckList({
               showDraggingIcon={items.length >= 2}
               item={item}
               idx={idx}
+              isTextarea={isTextarea}
               onDeleteItem={(id) => onDeleteItem?.(id)}
               onEditItem={(id, newLabel) => onEditItem?.(id, newLabel)}
             />
