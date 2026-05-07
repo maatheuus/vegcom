@@ -35,6 +35,7 @@ export const formatCategoryLabel = (category: MealType | string) => {
     case MealType.DINNER:
       return "Jantar";
     case MealType.DESSERT:
+    case "DESSERTS":
       return "Sobremesas";
     case MealType.SNACKS:
       return "Lanches";
