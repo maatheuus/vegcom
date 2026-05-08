@@ -2,7 +2,7 @@ import { useInfiniteQuery, useQueryClient } from "@tanstack/react-query";
 import { getPosts } from "../api/communityApi";
 import type { CommunityPostType } from "../types";
 
-const LIMIT = 10;
+export const LIMIT = 10;
 
 export default function useFetchPosts(selectedTab: CommunityPostType) {
   const queryClient = useQueryClient();

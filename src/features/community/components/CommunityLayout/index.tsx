@@ -13,6 +13,7 @@ import {
 } from "@phosphor-icons/react";
 import { useQueryClient } from "@tanstack/react-query";
 import clsx from "clsx";
+import dynamic from "next/dynamic";
 import {
   Suspense,
   useCallback,
@@ -22,8 +23,6 @@ import {
   type HtmlHTMLAttributes,
 } from "react";
 import type { CommunityPostType } from "../../types";
-import PostComposer from "../Post/Composer";
-import MobilePostComposer from "../Post/Composer/MobileComposer";
 import PostList from "../Post/List";
 import CommunitySidebar from "../Sidebar";
 import ToggleButton from "../Sidebar/ToggleButton";
@@ -33,6 +32,16 @@ import Resources from "../Tabs/Resources";
 import TabsClient from "../Tabs/TabsClient";
 import CommunityRightSidebar from "./CommunityRightSidebar";
 import CommunitySelectedTab from "./CommunitySelectedTab";
+
+const PostComposer = dynamic(() => import("../Post/Composer"), {
+  ssr: false,
+  loading: () => <div className="hidden shrink-0 md:block md:h-16" />,
+});
+
+const MobilePostComposer = dynamic(
+  () => import("../Post/Composer/MobileComposer"),
+  { ssr: false, loading: () => null },
+);
 
 interface Props extends HtmlHTMLAttributes<HTMLDivElement> {
   className?: string;

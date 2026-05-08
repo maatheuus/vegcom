@@ -1,6 +1,9 @@
+import { getPosts } from "@/features/community/api/communityApi";
 import CommunityLayout from "@/features/community/components/CommunityLayout";
+import { LIMIT } from "@/features/community/hooks/useFetchPosts";
 import OnboardingTour from "@/shared/components/ui/OnboardingTour";
 import Layout from "@/shared/ui/Layout/";
+import { dehydrate, HydrationBoundary, QueryClient } from "@tanstack/react-query";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -18,7 +21,19 @@ export const metadata: Metadata = {
   },
 };
 
-export default function Home() {
+export default async function Home() {
+  const queryClient = new QueryClient();
+  try {
+    await queryClient.prefetchInfiniteQuery({
+      queryKey: ["community-posts", "POST"],
+      queryFn: ({ pageParam }) =>
+        getPosts({ page: pageParam as number, limit: LIMIT, type: "POST" }),
+      initialPageParam: 1,
+    });
+  } catch {
+    // degrade gracefully — client will fetch on mount
+  }
+
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "CollectionPage",
@@ -34,7 +49,9 @@ export default function Home() {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
       <section className="col-start-1 col-end-16 h-full min-h-0">
-        <CommunityLayout className="h-full min-h-0" />
+        <HydrationBoundary state={dehydrate(queryClient)}>
+          <CommunityLayout className="h-full min-h-0" />
+        </HydrationBoundary>
       </section>
     </Layout.Default>
   );
