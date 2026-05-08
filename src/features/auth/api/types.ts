@@ -19,6 +19,7 @@ export interface SubscriptionData {
   stripeSubscriptionId: string;
   status: SubscriptionStatus;
   startedAt: string;
+  currentPeriodEnd: string;
   expiresAt: string | null;
   currentInvoiceAmount: number;
   currency: string;

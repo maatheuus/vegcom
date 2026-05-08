@@ -3,8 +3,9 @@ import Button from "@/shared/ui/Button";
 import Row from "@/shared/ui/Layout/Helpers/Row";
 import Text from "@/shared/ui/Text";
 import { formatCurrency } from "@/shared/utils";
+import { toast } from "@/shared/hooks/use-toast";
 import { SparkleIcon } from "@phosphor-icons/react/dist/ssr";
-import { addMonths, formatDate } from "date-fns";
+import { formatDate } from "date-fns";
 import { useTransition } from "react";
 import { createPortalSession } from "../../apiSubscription/queries/getSubscriptionApiServer";
 
@@ -24,11 +25,11 @@ export default function SubscribedView({ className, user, ...props }: Props) {
   const [isPending, startTransition] = useTransition();
 
   const getExpirationDate = () => {
-    if (user?.subscription?.expiresAt) {
-      return new Date(user?.subscription.expiresAt);
+    if (user.subscription?.expiresAt) {
+      return new Date(user.subscription.expiresAt);
     }
-    if (user?.subscription?.startedAt) {
-      return addMonths(new Date(user?.subscription.startedAt), 1);
+    if (user.subscription?.currentPeriodEnd) {
+      return new Date(user.subscription.currentPeriodEnd);
     }
     return new Date();
   };
@@ -36,10 +37,10 @@ export default function SubscribedView({ className, user, ...props }: Props) {
   const handleManageSubscription = () => {
     startTransition(async () => {
       try {
-        const result = await createPortalSession(user?.id);
+        const result = await createPortalSession(user.id);
         if (result.url) window.open(result.url, "_blank");
-      } catch (error) {
-        console.error(error);
+      } catch {
+        toast({ title: "Erro ao abrir o portal. Tente novamente.", variant: "destructive" });
       }
     });
   };
@@ -68,8 +69,8 @@ export default function SubscribedView({ className, user, ...props }: Props) {
               className="font-lora text-green-500"
             >
               {formatCurrency(
-                user?.subscription?.currency || "BRL",
-                user?.subscription?.currentInvoiceAmount || 0,
+                user.subscription?.currency || "BRL",
+                user.subscription?.currentInvoiceAmount || 0,
               )}
             </Text>
             <Text
