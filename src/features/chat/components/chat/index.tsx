@@ -286,6 +286,7 @@ export default function ChatWindow({
                       handleSubmit();
                     }
                   }}
+                  aria-label="Digite sua mensagem"
                   placeholder={
                     isLimitReached
                       ? "Limite semanal atingido..."

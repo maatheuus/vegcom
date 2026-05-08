@@ -28,6 +28,8 @@ const nextConfig: NextConfig = {
       "https://vercel.live",
       // emoji-mart fetches i18n locale files from jsdelivr when locale != "en"
       "https://cdn.jsdelivr.net",
+      // useCitiesSearch hook fetches directly from IBGE API in the browser
+      "https://servicodados.ibge.gov.br",
     ]
       .filter(Boolean)
       .join(" ");

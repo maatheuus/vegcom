@@ -209,7 +209,7 @@ export default function ChatWidget() {
                 onKeyDown={handleKeyDown}
                 placeholder={isAtLimit ? "Limite atingido" : "Pergunte algo..."}
                 disabled={isPending || isAtLimit}
-                className="font-maitree w-full min-w-0 bg-transparent text-xs text-green-500 placeholder:text-green-500/80 focus:outline-none disabled:opacity-50"
+                className="font-maitree w-full min-w-0 bg-transparent text-xs text-green-500 placeholder:text-green-500/80 focus:outline-none focus-visible:ring-1 focus-visible:ring-green-500 disabled:opacity-50"
               />
             </div>
             <button

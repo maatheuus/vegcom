@@ -108,6 +108,7 @@ const MessageBubble: React.FC<MessageBubbleProps> = ({
           <div className="invisible mt-1 flex h-6 w-full items-center justify-end px-2 opacity-0 transition-all duration-200 select-none group-hover:visible group-hover:opacity-100">
             <Button.Icon
               onClick={handleCopy}
+              aria-label="Copiar mensagem"
               className="rounded p-1 text-green-500 transition-colors hover:bg-green-100"
               variant="text"
               icon={
@@ -126,6 +127,7 @@ const MessageBubble: React.FC<MessageBubbleProps> = ({
                     setCurrentIndex((prev) => Math.max(0, prev - 1))
                   }
                   disabled={currentIndex === 0}
+                  aria-label="Versão anterior"
                   className="rounded-full p-1 transition-colors hover:bg-green-100 hover:text-green-900 disabled:cursor-not-allowed disabled:opacity-30"
                 >
                   <CaretLeftIcon size={14} weight="bold" />
@@ -142,6 +144,7 @@ const MessageBubble: React.FC<MessageBubbleProps> = ({
                     )
                   }
                   disabled={currentIndex === totalVersions - 1}
+                  aria-label="Próxima versão"
                   className="rounded-full p-1 transition-colors hover:bg-green-100 hover:text-green-900 disabled:cursor-not-allowed disabled:opacity-30"
                 >
                   <CaretRightIcon size={14} weight="bold" />
@@ -169,6 +172,7 @@ const MessageBubble: React.FC<MessageBubbleProps> = ({
 
               <Button.Icon
                 onClick={handleCopy}
+                aria-label="Copiar mensagem"
                 className="rounded p-1 text-green-500 transition-colors hover:bg-green-100"
                 variant="text"
                 icon={
@@ -182,6 +186,7 @@ const MessageBubble: React.FC<MessageBubbleProps> = ({
 
               <Button.Icon
                 onClick={handleShare}
+                aria-label="Compartilhar mensagem"
                 className="rounded p-1 text-green-500 transition-colors hover:bg-green-100"
                 variant="text"
                 icon={<ShareNetworkIcon size={16} />}

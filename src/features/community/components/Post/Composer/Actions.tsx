@@ -57,6 +57,7 @@ export default function PostComposerActions({
         <Row className="items-center gap-x-4">
           <Button.Icon
             variant="text"
+            aria-label="Adicionar imagem"
             className={clsx(
               "p-0",
               isImageLimitReached || disabled
@@ -72,6 +73,7 @@ export default function PostComposerActions({
             <PopoverTrigger asChild>
               <Button.Icon
                 variant="text"
+                aria-label="Adicionar emoji"
                 disabled={disabled}
                 className={clsx(
                   "p-0",
@@ -115,6 +117,7 @@ export default function PostComposerActions({
         <Row className="items-center gap-x-1">
           <Button.Icon
             variant="text"
+            aria-label="Negrito"
             disabled={disabled}
             className={clsx(
               "h-8 w-8 p-0 text-green-200 transition-colors duration-200 hover:bg-green-50 hover:text-green-500 disabled:opacity-50",
@@ -125,6 +128,7 @@ export default function PostComposerActions({
           />
           <Button.Icon
             variant="text"
+            aria-label="Itálico"
             disabled={disabled}
             className={clsx(
               "h-8 w-8 p-0 text-green-200 transition-colors duration-200 hover:bg-green-50 hover:text-green-500 disabled:opacity-50",
@@ -135,6 +139,7 @@ export default function PostComposerActions({
           />
           <Button.Icon
             variant="text"
+            aria-label="Tachado"
             disabled={disabled}
             className={clsx(
               "h-8 w-8 p-0 text-green-200 transition-colors duration-200 hover:bg-green-50 hover:text-green-500 disabled:opacity-50",
