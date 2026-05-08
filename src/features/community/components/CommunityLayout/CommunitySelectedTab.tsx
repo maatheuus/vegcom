@@ -1,6 +1,6 @@
 "use client";
 
-import LogoLoader from "@/features/account/components/(recipes)/LogoLoader";
+import PostCardSkeleton from "../Post/Cards/Skeleton";
 import { useGetUser } from "@/features/auth/api/queries/getAuthApiClient";
 import AuthenticatedBlocker from "@/shared/components/ui/AuthenticatedBlocker";
 import { useEffect, useRef } from "react";
@@ -77,9 +77,11 @@ export default function CommunitySelectedTab({
 
   if (isLoading) {
     return (
-      <div className="mx-auto mt-32 flex h-full items-center justify-center">
-        <LogoLoader loading={true} />
-      </div>
+      <>
+        <PostCardSkeleton />
+        <PostCardSkeleton />
+        <PostCardSkeleton />
+      </>
     );
   }
 
@@ -113,10 +115,8 @@ export default function CommunitySelectedTab({
 
       {!showBlocker && <div ref={sentinelRef} className="h-4 w-full" />}
 
-      {(isFetchingNextPage || isFetching) && !showBlocker && (
-        <div className="flex justify-center py-6">
-          <LogoLoader loading={true} />
-        </div>
+      {isFetchingNextPage && !showBlocker && (
+        <PostCardSkeleton />
       )}
     </div>
   );
