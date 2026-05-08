@@ -26,6 +26,8 @@ const nextConfig: NextConfig = {
       "https://vitals.vercel-insights.com",
       "https://va.vercel-scripts.com",
       "https://vercel.live",
+      // emoji-mart fetches i18n locale files from jsdelivr when locale != "en"
+      "https://cdn.jsdelivr.net",
     ]
       .filter(Boolean)
       .join(" ");
