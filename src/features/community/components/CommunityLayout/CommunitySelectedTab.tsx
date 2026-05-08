@@ -37,7 +37,7 @@ export default function CommunitySelectedTab({
 
   useEffect(() => {
     const handleRefetchPosts = () => {
-      queryClient.invalidateQueries({ queryKey: ["community-posts", selectedTab] });
+      queryClient.invalidateQueries({ queryKey: ["community-posts"] });
     };
     window.addEventListener("community:post-created", handleRefetchPosts);
     window.addEventListener("community:post-deleted", handleRefetchPosts);
@@ -45,7 +45,7 @@ export default function CommunitySelectedTab({
       window.removeEventListener("community:post-created", handleRefetchPosts);
       window.removeEventListener("community:post-deleted", handleRefetchPosts);
     };
-  }, [selectedTab, queryClient]);
+  }, [queryClient]);
 
   useEffect(() => {
     const sentinel = sentinelRef.current;
