@@ -22,6 +22,13 @@ export const sortByTitle = (a: Recipe, b: Recipe): number => {
 };
 
 /**
+ * Sort recipes by creation date (newest first)
+ */
+export const sortByCreatedAt = (a: Recipe, b: Recipe): number => {
+  return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
+};
+
+/**
  * Sort recipes by preparation time (shortest first)
  */
 export const sortByPrepTime = (a: Recipe, b: Recipe): number => {

@@ -25,23 +25,44 @@ export default function RecipeParent({
     );
   }
 
+  const quickRecipes = recipes.filter((r) => {
+    const match = r.cookTime?.toString().match(/(\d+)/);
+    return match ? parseInt(match[1]) <= 30 : false;
+  });
+
   return (
     <Col as="section" className="gap-y-10 md:gap-y-12">
       {featuredRecipe && <RecipeHero hightlightedRecipe={featuredRecipe} />}
-      <Suspense fallback={<RecipeGridSkeleton count={ITEMS_PER_PAGE} />}>
+      {/* <Suspense fallback={<RecipeGridSkeleton count={ITEMS_PER_PAGE} />}>
         <RecipeContent
           recipes={recipes}
           title="Mais Bem Avaliadas"
           queryKey="bestRated"
           sortBy="averageRating"
         />
-      </Suspense>
+      </Suspense> */}
       <Suspense fallback={<RecipeGridSkeleton count={ITEMS_PER_PAGE} />}>
         <RecipeContent
           recipes={recipes}
           title="Mais Vistas"
           queryKey="mostViewed"
           sortBy="views"
+        />
+      </Suspense>
+      <Suspense fallback={<RecipeGridSkeleton count={ITEMS_PER_PAGE} />}>
+        <RecipeContent
+          recipes={recipes}
+          title="Adicionadas Recentemente"
+          queryKey="recentlyAdded"
+          sortBy="createdAt"
+        />
+      </Suspense>
+      <Suspense fallback={<RecipeGridSkeleton count={ITEMS_PER_PAGE} />}>
+        <RecipeContent
+          recipes={quickRecipes}
+          title="Receitas Rápidas"
+          queryKey="quickRecipes"
+          sortBy="prepTime"
         />
       </Suspense>
     </Col>

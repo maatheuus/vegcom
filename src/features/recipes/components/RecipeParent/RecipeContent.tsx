@@ -4,6 +4,7 @@ import RecipeEmptyState from "@/features/recipes/components/RecipeEmptyState";
 import { RecipeGrid } from "@/features/recipes/components/RecipeGrid";
 import { RecipeGridSkeleton } from "@/features/recipes/components/RecipeGridSkeleton";
 import {
+  sortByCreatedAt,
   sortByPrepTime,
   sortByRating,
   sortByTitle,
@@ -25,7 +26,7 @@ import {
 import Text from "@/shared/ui/Text";
 import { ITEMS_PER_PAGE } from ".";
 
-export type SortType = "averageRating" | "views" | "title" | "prepTime" | "none";
+export type SortType = "averageRating" | "views" | "title" | "prepTime" | "createdAt" | "none";
 
 interface RecipeContentProps {
   title?: string;
@@ -50,6 +51,8 @@ export default function RecipeContent({
         return sortByTitle;
       case "prepTime":
         return sortByPrepTime;
+      case "createdAt":
+        return sortByCreatedAt;
       default:
         return undefined;
     }
