@@ -128,6 +128,13 @@ export default function Page() {
           message: "As senhas não coincidem",
         });
       }
+
+      if (err.code === "PASSWORD_UPDATE_TOO_SOON") {
+        form.setError("currentPassword", {
+          type: "manual",
+          message: err.message,
+        });
+      }
     }
   };
 
