@@ -23,8 +23,6 @@ export default function CommunitySelectedTab({
 }: Props) {
   const sentinelRef = useRef<HTMLDivElement>(null);
   const {
-    queryKey,
-    refetch,
     queryClient,
     data,
     isLoading,
@@ -37,18 +35,17 @@ export default function CommunitySelectedTab({
   const { data: userData } = useGetUser();
   const isAuthenticated = !!userData?.id;
 
-  const handleRefetchPosts = () => {
-    queryClient.invalidateQueries({ queryKey });
-  };
-
   useEffect(() => {
+    const handleRefetchPosts = () => {
+      queryClient.invalidateQueries({ queryKey: ["community-posts", selectedTab] });
+    };
     window.addEventListener("community:post-created", handleRefetchPosts);
     window.addEventListener("community:post-deleted", handleRefetchPosts);
     return () => {
       window.removeEventListener("community:post-created", handleRefetchPosts);
       window.removeEventListener("community:post-deleted", handleRefetchPosts);
     };
-  }, [selectedTab, queryKey, refetch]);
+  }, [selectedTab, queryClient]);
 
   useEffect(() => {
     const sentinel = sentinelRef.current;
