@@ -6,6 +6,7 @@ import RecipeContent from "./RecipeContent";
 
 import type { Recipe } from "@/entities/recipe";
 import { RecipeHero } from "@/features/recipes/components/RecipeHero";
+import { cookTimeToMinutes } from "@/features/recipes/lib/sortFunctions";
 
 export const ITEMS_PER_PAGE = 8;
 
@@ -25,10 +26,7 @@ export default function RecipeParent({
     );
   }
 
-  const quickRecipes = recipes.filter((r) => {
-    const match = r.cookTime?.toString().match(/(\d+)/);
-    return match ? parseInt(match[1]) <= 30 : false;
-  });
+  const quickRecipes = recipes.filter((r) => cookTimeToMinutes(r.cookTime) <= 30);
 
   return (
     <Col as="section" className="gap-y-10 md:gap-y-12">
