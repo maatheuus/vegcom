@@ -15,6 +15,7 @@ export const useGetRecipes = () => {
   return useQuery({
     queryKey: recipeKeys.lists(),
     queryFn: recipeApi.getRecipes,
+    staleTime: 1000 * 60 * 5,
   });
 };
 
@@ -23,6 +24,7 @@ export const useGetMyRecipes = () => {
     queryKey: recipeKeys.myRecipes(),
     queryFn: recipeApi.getMyRecipes,
     enabled: !!getAccessToken(),
+    staleTime: 1000 * 60 * 5,
   });
 };
 
@@ -31,6 +33,7 @@ export const useGetRecipeBySlug = (slug: string) => {
     queryKey: recipeKeys.detailBySlug(slug),
     queryFn: () => recipeApi.getRecipeBySlug(slug),
     enabled: !!slug,
+    staleTime: 1000 * 60 * 5,
   });
 };
 

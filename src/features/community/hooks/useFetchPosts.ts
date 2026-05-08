@@ -1,4 +1,3 @@
-import type { PostCardDataProps } from "@/shared";
 import { useInfiniteQuery, useQueryClient } from "@tanstack/react-query";
 import { getPosts } from "../api/communityApi";
 import type { CommunityPostType } from "../types";
@@ -20,30 +19,8 @@ export default function useFetchPosts(selectedTab: CommunityPostType) {
     refetch,
   } = useInfiniteQuery({
     queryKey,
-    queryFn: async ({ pageParam = 1 }) => {
-      const result = await getPosts({
-        page: pageParam as number,
-        limit: LIMIT,
-        type: selectedTab === "RESOURCE" ? undefined : selectedTab,
-      });
-
-      if (selectedTab === "RESOURCE") {
-        return {
-          ...result,
-          data: result.data.filter((post: PostCardDataProps) => {
-            const hasImages =
-              post.postContent?.postResources?.images &&
-              post.postContent.postResources.images.length > 0;
-            return (
-              (post as PostCardDataProps & { type?: string }).type ===
-                "RESOURCE" || hasImages
-            );
-          }),
-        };
-      }
-
-      return result;
-    },
+    queryFn: ({ pageParam = 1 }) =>
+      getPosts({ page: pageParam as number, limit: LIMIT, type: selectedTab }),
     initialPageParam: 1,
     staleTime: 1000 * 60 * 5,
     gcTime: 1000 * 60 * 10,

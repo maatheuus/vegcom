@@ -12,6 +12,7 @@ export const useGetProducts = () => {
     queryKey: subscriptionKeys.products(),
     queryFn: subscriptionApi.getProducts,
     enabled: !!getAccessToken(),
+    staleTime: 1000 * 60 * 5,
   });
 };
 

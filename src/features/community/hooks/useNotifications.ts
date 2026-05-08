@@ -43,6 +43,7 @@ export function useNotifications(page = 1, limit = 10) {
   const { data: notificationsData } = useQuery({
     queryKey: notificationKeys.list(page, limit),
     queryFn: () => notificationsApi.getNotifications(page, limit),
+    staleTime: 1000 * 60 * 5,
     placeholderData: {
       data: [],
       meta: { page: 1, limit: 10, total: 0, totalPages: 0 },
@@ -52,6 +53,7 @@ export function useNotifications(page = 1, limit = 10) {
   const { data: unreadCountData } = useQuery({
     queryKey: notificationKeys.unreadCount,
     queryFn: notificationsApi.getUnreadCount,
+    staleTime: 1000 * 60 * 5,
   });
 
   const markAsReadMutation = useMutation({

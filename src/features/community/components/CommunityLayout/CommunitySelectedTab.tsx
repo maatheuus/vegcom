@@ -38,8 +38,7 @@ export default function CommunitySelectedTab({
   const isAuthenticated = !!userData?.id;
 
   const handleRefetchPosts = () => {
-    queryClient.removeQueries({ queryKey });
-    refetch();
+    queryClient.invalidateQueries({ queryKey });
   };
 
   useEffect(() => {

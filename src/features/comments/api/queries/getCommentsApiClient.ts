@@ -18,6 +18,7 @@ export const useGetCommentsByRecipe = (recipeId: number) => {
     queryKey: commentKeys.byRecipe(recipeId),
     queryFn: () => commentsApi.getCommentsByRecipe(recipeId),
     enabled: !!recipeId,
+    staleTime: 1000 * 60 * 5,
   });
 };
 
@@ -29,6 +30,7 @@ export const useGetRecipeRating = (recipeId: number) => {
     queryKey: commentKeys.rating(recipeId),
     queryFn: () => commentsApi.getRecipeRating(recipeId),
     enabled: !!recipeId,
+    staleTime: 1000 * 60 * 5,
   });
 };
 

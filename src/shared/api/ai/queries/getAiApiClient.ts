@@ -35,5 +35,6 @@ export const useGetUsageStats = () => {
     queryKey: ["usage-stats"],
     queryFn: aiApi.getUsageStats,
     enabled: !!getAccessToken(),
+    staleTime: 1000 * 60 * 5,
   });
 };

@@ -14,6 +14,7 @@ export const useGetChats = () => {
     queryKey: chatKeys.lists(),
     queryFn: chatApi.getChats,
     enabled: !!getAccessToken(),
+    staleTime: 1000 * 60 * 5,
   });
 };
 
@@ -22,6 +23,7 @@ export const useGetChatById = (id: number) => {
     queryKey: chatKeys.detail(id),
     queryFn: () => chatApi.getChatById(id),
     enabled: !!id && !!getAccessToken(),
+    staleTime: 1000 * 60 * 5,
   });
 };
 
