@@ -56,23 +56,12 @@ export default function CommentPreview({
           </Avatar>
 
           <div className="min-w-0 flex-1 rounded-xl bg-green-100/50 px-2.5 py-1.5">
-            <Row className="flex-wrap items-baseline gap-x-1.5">
-              <Text
-                as="span"
-                type={Text.Type.BodyFive}
-                weight={Text.Weight.Bold}
-                className="font-maitree shrink-0 text-green-600"
-              >
-                {comment.user?.name}
-              </Text>
-              <Text
-                as="span"
-                type={Text.Type.BodyFive}
-                className="font-maitree line-clamp-2 text-green-500/80"
-              >
-                {comment.commentContent}
-              </Text>
-            </Row>
+            <p className="font-maitree line-clamp-2 break-words text-xs text-green-500/80">
+              <span className="font-bold text-green-600">
+                {comment.user?.name}{" "}
+              </span>
+              {comment.commentContent}
+            </p>
           </div>
         </Row>
       ))}
