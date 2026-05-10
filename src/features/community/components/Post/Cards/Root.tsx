@@ -32,7 +32,7 @@ import clsx from "clsx";
 import { formatDistance } from "date-fns";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useTransition } from "react";
 import CommentPreview from "../CommentsPreview/CommentPreview";
 import { AvatarGroup } from "./AvatarGroup";
 import DeletePostDialog from "./DeletePostDialog";
@@ -52,6 +52,7 @@ export default function PostCardRoot({
   ...props
 }: Props) {
   const router = useRouter();
+  const [isPending, startTransition] = useTransition();
   const { data: currentUser } = useGetUser();
 
   const [reportOpen, setReportOpen] = useState(false);
@@ -89,8 +90,14 @@ export default function PostCardRoot({
     { addSuffix: true, includeSeconds: true, locale: dateFormatDistanceLocale },
   );
 
+  useEffect(() => {
+    router.prefetch(postUrl);
+  }, [postUrl, router]);
+
   const handleCardClick = () => {
-    router.push(postUrl);
+    startTransition(() => {
+      router.push(postUrl);
+    });
   };
 
   const handleLike = async (e: React.MouseEvent) => {
@@ -174,6 +181,7 @@ export default function PostCardRoot({
       onClick={!deleteOpen && !reportOpen ? handleCardClick : undefined}
       className={clsx(
         "w-full cursor-pointer border-b-gray-100 py-5 transition-colors hover:bg-green-100/35 max-md:border-b md:rounded-2xl md:px-4 first-of-type:md:mt-4",
+        isPending && "pointer-events-none opacity-60",
         className,
       )}
       {...props}
