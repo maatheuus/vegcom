@@ -86,7 +86,7 @@ export default function PostComments({
 
                   <Text
                     type={Text.Type.BodyFour}
-                    className="font-maitree text-base leading-relaxed font-medium break-words break-all text-green-500"
+                    className="font-maitree text-base leading-relaxed font-medium break-words whitespace-pre-wrap text-green-500"
                   >
                     {comment.commentContent.split(/(@\w+)/g).map((part, i) =>
                       part.startsWith("@") ? (
