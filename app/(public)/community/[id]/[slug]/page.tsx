@@ -62,7 +62,10 @@ export default async function Page({ params }: Props) {
   const uniqueUsersMap = new Map<number, { id: number; name: string }>();
   post.comments?.comments.forEach((comment: PostComment) => {
     if (comment.user?.id && comment.user?.name) {
-      uniqueUsersMap.set(comment.user.id, { id: comment.user.id, name: comment.user.name });
+      uniqueUsersMap.set(comment.user.id, {
+        id: comment.user.id,
+        name: comment.user.name,
+      });
     }
   });
 
@@ -160,7 +163,7 @@ export default async function Page({ params }: Props) {
 
               {contentHTML ? (
                 <div
-                  className="font-maitree mt-2 text-base break-words text-green-500 [&>p]:text-justify [&>p]:hyphens-auto"
+                  className="font-maitree mt-2 text-base break-words text-green-500 [&>p]:hyphens-auto"
                   lang="pt-BR"
                   dangerouslySetInnerHTML={{
                     __html: prepareHtmlContent(contentHTML),

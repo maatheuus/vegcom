@@ -28,9 +28,7 @@ const formSchema = z
     newPassword: z
       .string()
       .min(6, { message: "A senha deve ter pelo menos 6 caracteres." }),
-    confirmPassword: z
-      .string()
-      .min(1, { message: "Confirme sua senha." }),
+    confirmPassword: z.string().min(1, { message: "Confirme sua senha." }),
   })
   .refine((data) => data.newPassword === data.confirmPassword, {
     message: "As senhas não coincidem.",
@@ -116,6 +114,7 @@ export default function ResetPasswordForm({ token }: ResetPasswordFormProps) {
                 <FormItem>
                   <FormControl>
                     <InputIcon
+                      iconClassName="bg-green-50"
                       type={showingPassword ? "text" : "password"}
                       placeholder="Nova senha"
                       autoComplete="new-password"
@@ -150,6 +149,7 @@ export default function ResetPasswordForm({ token }: ResetPasswordFormProps) {
                 <FormItem>
                   <FormControl>
                     <InputIcon
+                      iconClassName="bg-green-50"
                       type={showingConfirmPassword ? "text" : "password"}
                       placeholder="Confirmar nova senha"
                       autoComplete="new-password"

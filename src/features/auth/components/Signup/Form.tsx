@@ -143,6 +143,7 @@ const SignupForm: FC<ComponentProps<"form">> = ({ className, ...props }) => {
               <FormItem className="w-full">
                 <FormControl>
                   <InputIcon
+                    iconClassName="bg-green-50"
                     className="w-full text-green-500"
                     type="text"
                     placeholder="Nome completo"
@@ -167,6 +168,7 @@ const SignupForm: FC<ComponentProps<"form">> = ({ className, ...props }) => {
               <FormItem className="w-full">
                 <FormControl>
                   <InputIcon
+                    iconClassName="bg-green-50"
                     className="w-full text-green-500"
                     type="email"
                     placeholder="Email"
@@ -186,6 +188,7 @@ const SignupForm: FC<ComponentProps<"form">> = ({ className, ...props }) => {
               <FormItem className="w-full">
                 <FormControl>
                   <InputIcon
+                    iconClassName="bg-green-50"
                     className="w-full"
                     type={showingPassword ? "text" : "password"}
                     placeholder="Senha"

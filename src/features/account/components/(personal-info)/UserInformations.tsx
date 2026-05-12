@@ -31,6 +31,7 @@ import {
   TrashIcon,
 } from "@phosphor-icons/react";
 import Image from "next/image";
+import { AvatarPicker } from "../AvatarPicker";
 import FormInformation from "./FormInformation";
 
 type PersonalInfoFormValues = z.infer<typeof personalInfoFormSchema>;
@@ -52,6 +53,10 @@ export default function UserInformations({
   onImageChange,
 }: Props) {
   const [selectedImage, setSelectedImage] = useState<File | null>(null);
+  const [selectedPresetUrl, setSelectedPresetUrl] = useState<string | null>(
+    null,
+  );
+  const [isLoadingPreset, setIsLoadingPreset] = useState(false);
   const { fullName, email } = form.getValues();
   const [imagePreview, setImagePreview] = useState<string>(avatarUrl || "");
   const [isDialogOpen, setIsDialogOpen] = useState(false);
@@ -147,10 +152,53 @@ export default function UserInformations({
 
   const handleImageRemove = () => {
     setSelectedImage(null);
+    setSelectedPresetUrl(null);
     setImagePreview("");
     onImageChange(null);
     if (fileInputRef.current) {
       fileInputRef.current.value = "";
+    }
+  };
+
+  const handlePresetSelect = async (url: string) => {
+    setIsLoadingPreset(true);
+    try {
+      const res = await fetch(url);
+      const svgText = await res.text();
+      const svgBlob = new Blob([svgText], { type: "image/svg+xml" });
+      const svgObjectUrl = URL.createObjectURL(svgBlob);
+
+      const img = new window.Image();
+      img.crossOrigin = "anonymous";
+      await new Promise<void>((resolve, reject) => {
+        img.onload = () => resolve();
+        img.onerror = reject;
+        img.src = svgObjectUrl;
+      });
+
+      const canvas = document.createElement("canvas");
+      canvas.width = 200;
+      canvas.height = 200;
+      canvas.getContext("2d")!.drawImage(img, 0, 0, 200, 200);
+      URL.revokeObjectURL(svgObjectUrl);
+
+      const pngBlob = await new Promise<Blob>((resolve, reject) => {
+        canvas.toBlob(
+          (b) => (b ? resolve(b) : reject(new Error("canvas toBlob failed"))),
+          "image/png",
+        );
+      });
+
+      const file = new File([pngBlob], "avatar-preset.png", {
+        type: "image/png",
+      });
+      setSelectedPresetUrl(url);
+      setSelectedImage(file);
+      setImagePreview(url);
+    } catch {
+      toast({ title: "Erro ao carregar avatar", variant: "destructive" });
+    } finally {
+      setIsLoadingPreset(false);
     }
   };
 
@@ -321,6 +369,12 @@ export default function UserInformations({
                   PNG, JPG ou JPEG até 2MB
                 </Text>
               </div>
+
+              <AvatarPicker
+                selected={selectedPresetUrl}
+                onSelect={handlePresetSelect}
+                disabled={isLoadingPreset}
+              />
 
               <div className="flex justify-between gap-2">
                 {selectedImage && (

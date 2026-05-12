@@ -94,6 +94,7 @@ export default function LoginForm() {
                 <FormItem>
                   <FormControl>
                     <InputIcon
+                      iconClassName="bg-green-50"
                       type="email"
                       placeholder="Digite seu email"
                       autoComplete="email"
@@ -114,6 +115,7 @@ export default function LoginForm() {
                 <FormItem>
                   <FormControl>
                     <InputIcon
+                      iconClassName="bg-green-50"
                       type={showingPassword ? "text" : "password"}
                       placeholder="Digite sua senha"
                       autoComplete="current-password"

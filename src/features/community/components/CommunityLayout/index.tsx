@@ -32,10 +32,11 @@ import Resources from "../Tabs/Resources";
 import TabsClient from "../Tabs/TabsClient";
 import CommunityRightSidebar from "./CommunityRightSidebar";
 import CommunitySelectedTab from "./CommunitySelectedTab";
+import PostComposerSkeleton from "./PostComposerSkeleton";
 
 const PostComposer = dynamic(() => import("../Post/Composer"), {
   ssr: false,
-  loading: () => <div className="hidden shrink-0 md:block md:h-16" />,
+  loading: () => <PostComposerSkeleton />,
 });
 
 const MobilePostComposer = dynamic(

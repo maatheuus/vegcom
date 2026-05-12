@@ -30,6 +30,8 @@ const nextConfig: NextConfig = {
       "https://cdn.jsdelivr.net",
       // useCitiesSearch hook fetches directly from IBGE API in the browser
       "https://servicodados.ibge.gov.br",
+      // DiceBear avatar presets fetched client-side for canvas conversion
+      "https://api.dicebear.com",
     ]
       .filter(Boolean)
       .join(" ");
@@ -39,7 +41,7 @@ const nextConfig: NextConfig = {
       // 'unsafe-inline' required: Google Analytics inline gtag script + Next.js hydration chunks
       // 'unsafe-eval' required in dev only: Next.js webpack uses eval-based source maps
       // vercel.live required: Vercel toolbar/feedback widget injected at runtime
-      `script-src 'self' 'unsafe-inline'${isDev ? " 'unsafe-eval'" : ""} https://www.googletagmanager.com https://va.vercel-scripts.com https://vercel.live`,
+      `script-src 'self' 'unsafe-inline'${isDev ? " 'unsafe-eval'" : ""} https://www.googletagmanager.com https://va.vercel-scripts.com https://vercel.live https://cdn.jsdelivr.net`,
       "style-src 'self' 'unsafe-inline'",
       [
         "img-src 'self' data: blob:",
@@ -50,6 +52,7 @@ const nextConfig: NextConfig = {
         "https://github.com",
         "https://randomuser.me",
         "https://www.google-analytics.com",
+        "https://api.dicebear.com",
       ].join(" "),
       // next/font/google self-hosts fonts at build time → 'self' is sufficient
       "font-src 'self'",
@@ -94,35 +97,7 @@ const nextConfig: NextConfig = {
     remotePatterns: [
       {
         protocol: "https",
-        hostname: "picsum.photos",
-      },
-      {
-        protocol: "https",
-        hostname: "github.com",
-      },
-      {
-        protocol: "https",
-        hostname: "images.unsplash.com",
-      },
-      {
-        protocol: "https",
-        hostname: "randomuser.me",
-      },
-      {
-        protocol: "https",
-        hostname: "meusite.com",
-      },
-      {
-        protocol: "https",
-        hostname: "unsplash.com",
-      },
-      {
-        protocol: "https",
-        hostname: "plus.unsplash.com",
-      },
-      {
-        protocol: "https",
-        hostname: "res.cloudinary.com",
+        hostname: "**",
       },
     ],
   },

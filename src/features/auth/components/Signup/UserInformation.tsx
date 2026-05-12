@@ -113,7 +113,7 @@ const UserInformation: FC<React.ComponentProps<"form">> = ({
                   <Textarea
                     className="w-full text-green-500"
                     placeholder="Há 5 anos, decidi me tornar vegano e desde então estou sempre explorando novas receitas..."
-                    maxLength={154}
+                    maxLength={600}
                     {...field}
                   />
                 </FormControl>

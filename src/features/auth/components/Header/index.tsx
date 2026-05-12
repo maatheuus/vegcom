@@ -25,7 +25,7 @@ export default function AuthHeader({
     >
       <Link href="/" className="relative flex items-center justify-start">
         <span className="sr-only">página inicial</span>
-        <Logo className="-ml-8 h-14 w-[13rem]" />
+        <Logo className="-ml-8 h-14 w-[13rem]" priority />
       </Link>
 
       {shouldGoBack && (

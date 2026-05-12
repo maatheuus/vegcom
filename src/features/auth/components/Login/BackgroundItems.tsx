@@ -19,15 +19,18 @@ import { useEffect, useState } from "react";
 export default function BackgroundItems() {
   const [isMounted, setIsMounted] = useState(false);
   const [shouldLoad, setShouldLoad] = useState(false);
-  const tl = gsap.timeline({ defaults: { ease: "power2.inOut" } });
-  const mm = gsap.matchMedia();
   const randomIndexImage = Math.floor(Math.random() * 3);
   const randomImagesArray = [brazucaSitting, brazucaStanding, brazucaStanding1];
   const randomImage = randomImagesArray[randomIndexImage];
 
   useGSAP(() => {
+    if (!isMounted || !shouldLoad) return;
+
+    const tl = gsap.timeline({ defaults: { ease: "power2.inOut" } });
+    const mm = gsap.matchMedia();
+
     tl.fromTo(
-      " .dialog-2, .dialog-1, .arrow-1, .scribble4, .scribble3",
+      ".dialog-2, .dialog-1, .arrow-1",
       { y: -100, opacity: 0 },
       { y: 0, opacity: 1, duration: 1.2, stagger: 0.3, ease: "none" },
     );
@@ -92,7 +95,7 @@ export default function BackgroundItems() {
         });
       });
     });
-  }, []);
+  }, [isMounted, shouldLoad]);
 
   useEffect(() => {
     const checkViewport = () => {
@@ -115,7 +118,12 @@ export default function BackgroundItems() {
               randomImage.src.includes("sitting") && "brazuca-sitting",
             )}
           >
-            <Image src={randomImage} alt="brazuca standing" unoptimized />
+            <Image
+              src={randomImage}
+              alt="brazuca standing"
+              unoptimized
+              priority
+            />
           </div>
 
           <div className="line-bottom">

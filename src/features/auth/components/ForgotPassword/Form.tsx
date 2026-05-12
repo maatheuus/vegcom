@@ -82,6 +82,7 @@ export default function ForgotPasswordForm() {
                 <FormItem>
                   <FormControl>
                     <InputIcon
+                      iconClassName="bg-green-50"
                       type="email"
                       placeholder="Digite seu email"
                       autoComplete="email"

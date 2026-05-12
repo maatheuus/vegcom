@@ -160,7 +160,7 @@ export default function Page() {
                 : () => setIsEditing(true)
             }
             disabled={isPending}
-            className="font-maitree cursor-pointer bg-green-200 py-2"
+            className="font-maitree cursor-pointer bg-green-200 py-1"
           >
             {isPending
               ? "Salvando..."
@@ -209,7 +209,7 @@ export default function Page() {
             isEditing ? form.handleSubmit(_onSubmit) : () => setIsEditing(true)
           }
           disabled={isPending}
-          className="font-maitree cursor-pointer bg-green-200 py-2"
+          className="font-maitree cursor-pointer bg-green-200 py-1.5"
         >
           {isPending
             ? "Salvando..."

@@ -88,7 +88,7 @@ export default function ChatWorkspace({ children }: ChatWorkspaceProps) {
               exit={{ opacity: 0 }}
               transition={{ duration: 0.22 }}
               onClick={() => setIsSidebarOpen(false)}
-              className="fixed inset-0 z-50 bg-black/50 backdrop-blur-[2px] lg:hidden"
+              className="fixed inset-0 z-[99] bg-black/50 backdrop-blur-[2px] lg:hidden"
             />
             <motion.div
               key="drawer"
@@ -101,7 +101,7 @@ export default function ChatWorkspace({ children }: ChatWorkspaceProps) {
                 stiffness: 260,
                 mass: 0.85,
               }}
-              className="fixed inset-y-0 left-0 z-50 w-[82%] max-w-xs bg-green-50 shadow-2xl lg:hidden"
+              className="fixed inset-y-0 left-0 z-[99] w-[82%] max-w-xs bg-green-50 shadow-2xl lg:hidden"
             >
               <ChatHistorySidebar onClose={() => setIsSidebarOpen(false)} />
             </motion.div>
