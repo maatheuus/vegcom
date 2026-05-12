@@ -157,8 +157,8 @@ function StatCard({
   value: string;
 }) {
   return (
-    <Row className="items-center gap-3 rounded-xl border border-green-100 bg-green-50 px-4 py-3.5">
-      <div className="flex size-9 shrink-0 items-center justify-center rounded-lg border border-green-100 bg-white text-green-600">
+    <Row className="items-center gap-3 rounded-xl border border-green-200/20 bg-green-50 px-4 py-3.5">
+      <div className="flex size-9 shrink-0 items-center justify-center rounded-lg border border-green-200/20 text-green-600">
         {icon}
       </div>
       <Col className="gap-0.5">

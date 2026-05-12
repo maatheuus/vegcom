@@ -114,7 +114,7 @@ export function Footer() {
         </div>
 
         <div className="mt-8 flex flex-col items-center gap-2 border-t border-white/10 pt-6 text-center">
-          <div className="flex items-center gap-4">
+          <div className="flex flex-col items-center gap-2 sm:flex-row sm:gap-4">
             <Text
               type={Text.Type.BodyFour}
               className="font-lora text-sm text-green-100"
@@ -129,7 +129,7 @@ export function Footer() {
               </Link>{" "}
               Feito com 💚 para uma vida melhor.
             </Text>
-            <span className="text-green-100/40">·</span>
+            <span className="hidden text-green-100/40 sm:inline">·</span>
             <FeedbackModal />
           </div>
           <Text

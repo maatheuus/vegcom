@@ -6,10 +6,21 @@ import Row from "../Layout/Helpers/Row";
 type InputIconProps = {
   icon: React.JSX.Element;
   containerClassName?: string;
+  iconClassName?: string;
 } & React.ComponentProps<"input">;
 
 const InputIcon = React.forwardRef<HTMLInputElement, InputIconProps>(
-  ({ className, containerClassName, icon: Icon, type, ...props }, ref) => {
+  (
+    {
+      className,
+      iconClassName,
+      containerClassName,
+      icon: Icon,
+      type,
+      ...props
+    },
+    ref,
+  ) => {
     return (
       <Row
         className={cn(
@@ -26,7 +37,9 @@ const InputIcon = React.forwardRef<HTMLInputElement, InputIconProps>(
           ref={ref}
           {...props}
         />
-        <div className="absolute right-3.5 z-20">{Icon}</div>
+        <div className={cn("absolute right-3.5 z-20", iconClassName)}>
+          {Icon}
+        </div>
       </Row>
     );
   },

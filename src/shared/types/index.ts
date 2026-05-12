@@ -33,9 +33,13 @@ export interface PostImage {
 }
 
 export interface PostComment {
+  id: number | string;
+  content: string;
+  createdAt: Date | string;
   user: PostUserData;
   commentContent: string;
-  commentDate: string;
+  likes?: string[];
+  likesCount: number;
 }
 
 export interface PostCardDataProps {

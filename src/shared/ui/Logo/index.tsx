@@ -7,6 +7,7 @@ export default function Logo({
   white,
   width = 256,
   height = 256,
+  priority,
   ...props
 }: {
   className?: string;
@@ -14,6 +15,7 @@ export default function Logo({
   white?: boolean;
   width?: number;
   height?: number;
+  priority?: boolean;
 }) {
   return (
     <div
@@ -26,6 +28,7 @@ export default function Logo({
         alt="VegCom Logo"
         width={width}
         height={height}
+        priority={priority}
         className={clsx("object-contain", imgClassName)}
       />
     </div>
