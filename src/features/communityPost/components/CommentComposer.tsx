@@ -15,6 +15,7 @@ import {
 import { useQueryClient } from "@tanstack/react-query";
 import Mention from "@tiptap/extension-mention";
 import Placeholder from "@tiptap/extension-placeholder";
+import type { JSONContent } from "@tiptap/react";
 import {
   EditorContent,
   ReactRenderer,
@@ -27,10 +28,23 @@ import clsx from "clsx";
 import { useRouter } from "next/navigation";
 import { useImperativeHandle, useState, useTransition } from "react";
 import tippy, { type GetReferenceClientRect, type Instance } from "tippy.js";
-import MentionList from "./MentionList";
+import MentionList from "./Comments/MentionList";
+
+function extractMentionIds(editor: Editor | null): number[] {
+  if (!editor) return [];
+  const ids: number[] = [];
+  const walk = (node: JSONContent) => {
+    if (node.type === "mention" && typeof node.attrs?.id === "number") {
+      ids.push(node.attrs.id);
+    }
+    node.content?.forEach(walk);
+  };
+  editor.getJSON().content?.forEach(walk);
+  return [...new Set(ids)];
+}
 
 interface CommentComposerProps {
-  users?: { name: string }[];
+  users?: { id: number; name: string }[];
   user?: User;
   postId: string;
 }
@@ -96,11 +110,11 @@ export default function CommentComposer({
         suggestion: {
           items: ({ query }) =>
             users
-              .map((u) => u.name)
-              .filter((item) =>
-                item.toLowerCase().startsWith(query.toLowerCase()),
+              .filter((u) =>
+                u.name.toLowerCase().startsWith(query.toLowerCase()),
               )
-              .slice(0, 5),
+              .slice(0, 5)
+              .map((u) => ({ id: u.id, label: u.name })),
           render: () => {
             let component: ReactRenderer;
             let popup: Instance[];
@@ -153,7 +167,7 @@ export default function CommentComposer({
     editorProps: {
       attributes: {
         class:
-          "prose prose-sm focus:outline-none min-h-[110px] max-w-none text-gray-800 font-maitree px-4 pt-4 pb-2",
+          "prose prose-sm focus:outline-none min-h-[110px] max-w-none text-green-500 font-maitree px-4 pt-4 pb-2",
       },
     },
     onUpdate: ({ editor }) => {
@@ -164,11 +178,12 @@ export default function CommentComposer({
   useImperativeHandle(commentInputRef, () => ({
     focus: () => editor?.commands.focus(),
     insertMention: (username: string) => {
+      const user = users.find((u) => u.name === username);
       editor
         ?.chain()
         .focus()
         .insertContent([
-          { type: "mention", attrs: { id: username } },
+          { type: "mention", attrs: { id: user?.id ?? null, label: username } },
           { type: "text", text: " " },
         ])
         .run();
@@ -185,7 +200,11 @@ export default function CommentComposer({
     if (!comment.trim() || isPending) return;
     startTransition(async () => {
       try {
-        await createComment(postId, { commentContent: comment });
+        const mentionedUserIds = extractMentionIds(editor);
+        await createComment(postId, {
+          commentContent: comment,
+          mentionedUserIds,
+        });
         setIsCommentOpen(false);
         editor?.commands.clearContent();
         setComment("");

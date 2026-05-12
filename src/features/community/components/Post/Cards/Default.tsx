@@ -23,14 +23,14 @@ export default function PostCardDefault({ data }: Props) {
           as="h2"
           type={Text.Type.BodyTwo}
           weight={Text.Weight.Medium}
-          className="font-lora font-semibold italic"
+          className="font-lora font-semibold break-words italic"
         >
           {data.postTitle}
         </Text>
 
         {contentHTML ? (
           <div
-            className="font-maitree mt-2 text-base break-words text-green-500 [&>p]:text-justify [&>p]:hyphens-auto"
+            className="[&>p]:font-maitree mt-2 [&>p]:text-justify [&>p]:text-base [&>p]:break-words [&>p]:hyphens-auto [&>p]:whitespace-pre-wrap"
             lang="pt-BR"
             dangerouslySetInnerHTML={{
               __html: prepareHtmlContent(contentHTML),
@@ -41,7 +41,7 @@ export default function PostCardDefault({ data }: Props) {
             as="p"
             type={Text.Type.BodyFour}
             weight={Text.Weight.Normal}
-            className="font-maitree mt-2 text-justify text-base hyphens-auto whitespace-pre-wrap"
+            className="font-maitree mt-2 text-justify text-base break-words hyphens-auto whitespace-pre-wrap"
           >
             {content}
           </Text>

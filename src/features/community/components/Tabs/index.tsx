@@ -11,6 +11,7 @@ export interface Tab {
   icon: JSX.Element;
   component?: ElementType;
   showNotification?: boolean;
+  notificationVariant?: "dot" | "color";
 }
 
 export interface ChatTab {
@@ -70,17 +71,28 @@ export default function Tabs({
               isTransitioning && "pointer-events-none opacity-70",
             )}
           >
-            <span className="relative">
-              {tab.icon}
-              {(tab as Tab).showNotification && (
-                <span className="absolute top-1/2 -right-1.5 size-1.5 -translate-y-1/2 rounded-full bg-red-500 md:-right-1" />
+            <span
+              className={clsx(
+                "relative",
+                (tab as Tab).showNotification &&
+                  (tab as Tab).notificationVariant === "color" &&
+                  "[&_svg]:text-red-400",
               )}
+            >
+              {tab.icon}
+              {(tab as Tab).showNotification &&
+                (tab as Tab).notificationVariant !== "color" && (
+                  <span className="absolute top-1/2 -right-1.5 size-1.5 -translate-y-1/2 rounded-full bg-red-500 md:-right-1" />
+                )}
             </span>
             <span
               className={clsx(
                 "font-lora hidden italic group-hover:text-green-500 md:inline",
                 isChatLayout && "text-green-50",
                 isChatLayout && selectedTab === tab.key && "text-green-500",
+                (tab as Tab).showNotification &&
+                  (tab as Tab).notificationVariant === "color" &&
+                  "text-red-400 group-hover:text-red-500",
               )}
             >
               {tab.label}

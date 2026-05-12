@@ -1,5 +1,6 @@
 import Tabs, { type Tab } from ".";
 import { useUnreadAnnouncement } from "../../hooks/useUnreadAnnouncement";
+import { useUnreadResource } from "../../hooks/useUnreadResource";
 import type { CommunityPostType } from "../../types";
 
 interface Props {
@@ -13,17 +14,28 @@ export default function TabsClient({
   selectedTab,
   setSelectedTab,
 }: Props) {
-  const { hasUnread, markAsRead } = useUnreadAnnouncement(selectedTab);
+  const { hasUnread: hasUnreadAnnouncement, markAsRead: markAnnouncementRead } =
+    useUnreadAnnouncement(selectedTab);
+  const { hasUnread: hasUnreadResource, markAsRead: markResourceRead } =
+    useUnreadResource(selectedTab);
 
   const handleTabChange = (key: CommunityPostType) => {
     if (key === selectedTab) return;
-    if (key === "ANNOUNCEMENT") markAsRead();
+    if (key === "ANNOUNCEMENT") markAnnouncementRead();
+    if (key === "RESOURCE") markResourceRead();
     setSelectedTab(key);
   };
 
   const tabsWithNotification = tabs.map((tab) => {
     if (tab.key === "ANNOUNCEMENT") {
-      return { ...tab, showNotification: hasUnread };
+      return { ...tab, showNotification: hasUnreadAnnouncement };
+    }
+    if (tab.key === "RESOURCE") {
+      return {
+        ...tab,
+        showNotification: hasUnreadResource,
+        notificationVariant: "color" as const,
+      };
     }
     return tab;
   });

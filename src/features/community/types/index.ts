@@ -24,4 +24,5 @@ export interface CreatePostData {
 
 export interface CreateCommentData {
   commentContent: string;
+  mentionedUserIds?: number[];
 }

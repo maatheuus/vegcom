@@ -16,6 +16,32 @@ interface CommentPreviewProps {
 
 const MAX_VISIBLE = 2;
 
+export const MENTION_REGEX =
+  /@([A-ZÁÀÃÂÉÊÍÓÔÕÚÜÇ][a-zA-ZáàãâéêíóôõúüçÁÀÃÂÉÊÍÓÔÕÚÜÇ]*(?:\s+[A-ZÁÀÃÂÉÊÍÓÔÕÚÜÇ][a-zA-ZáàãâéêíóôõúüçÁÀÃÂÉÊÍÓÔÕÚÜÇ]*)*)/g;
+
+export function renderCommentContent(text: string) {
+  const parts: React.ReactNode[] = [];
+  let lastIndex = 0;
+  let match: RegExpExecArray | null;
+
+  MENTION_REGEX.lastIndex = 0;
+  while ((match = MENTION_REGEX.exec(text)) !== null) {
+    if (match.index > lastIndex) {
+      parts.push(text.slice(lastIndex, match.index));
+    }
+    parts.push(
+      <strong key={match.index} className="font-bold text-green-600">
+        @{match[1]}
+      </strong>,
+    );
+    lastIndex = match.index + match[0].length;
+  }
+  if (lastIndex < text.length) {
+    parts.push(text.slice(lastIndex));
+  }
+  return parts;
+}
+
 export default function CommentPreview({
   comments,
   totalCount,
@@ -56,11 +82,11 @@ export default function CommentPreview({
           </Avatar>
 
           <div className="min-w-0 flex-1 rounded-xl bg-green-100/50 px-2.5 py-1.5">
-            <p className="font-maitree line-clamp-2 break-words text-xs text-green-500/80">
+            <p className="font-maitree line-clamp-2 text-xs break-words text-green-500/80">
               <span className="font-bold text-green-600">
                 {comment.user?.name}{" "}
               </span>
-              {comment.commentContent}
+              {renderCommentContent(comment.commentContent)}
             </p>
           </div>
         </Row>

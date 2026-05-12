@@ -11,6 +11,7 @@ export type NotificationType =
   | "POST_LIKE"
   | "POST_COMMENT"
   | "FOLLOW"
+  | "MENTION"
   | "SYSTEM";
 
 export interface Notification {

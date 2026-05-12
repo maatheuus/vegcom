@@ -27,6 +27,8 @@ const getNotificationIcon = (type: NotificationType) => {
     case "COMMENT_REPLY":
     case "COMMENT_LIKE":
       return "💬";
+    case "MENTION":
+      return "🏷️";
     default:
       return "🔔";
   }
@@ -54,7 +56,8 @@ const NotificationPopup = memo(function NotificationPopup({
         notification.type === "COMMUNITY_COMMENT" ||
         notification.type === "COMMUNITY_POST" ||
         notification.type === "POST_COMMENT" ||
-        notification.type === "POST_LIKE"
+        notification.type === "POST_LIKE" ||
+        notification.type === "MENTION"
       ) {
         if (notification.entityId) {
           const postSlug =

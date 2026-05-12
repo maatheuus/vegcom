@@ -59,10 +59,10 @@ export default async function Page({ params }: Props) {
     return notFound();
   }
 
-  const uniqueUsersMap = new Map<string, { name: string }>();
+  const uniqueUsersMap = new Map<number, { id: number; name: string }>();
   post.comments?.comments.forEach((comment: PostComment) => {
-    if (comment.user && comment.user?.name) {
-      uniqueUsersMap.set(comment.user?.name, comment.user);
+    if (comment.user?.id && comment.user?.name) {
+      uniqueUsersMap.set(comment.user.id, { id: comment.user.id, name: comment.user.name });
     }
   });
 

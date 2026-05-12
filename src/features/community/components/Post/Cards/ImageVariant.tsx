@@ -35,7 +35,7 @@ export default function PostCardImage({ data }: Props) {
             as="h2"
             type={Text.Type.BodyTwo}
             weight={Text.Weight.Medium}
-            className="font-lora font-semibold"
+            className="font-lora break-words font-semibold"
           >
             {data.postTitle}
           </Text>
