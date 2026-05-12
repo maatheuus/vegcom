@@ -281,7 +281,7 @@ export default function PostComposer({ className, disabled, ...props }: Props) {
                 editor={editor}
                 className={clsx(
                   isTransitioning && "pointer-events-none opacity-50",
-                  "hidden-scrollbar font-maitree h-auto max-h-[20rem] min-h-24 w-full overflow-y-auto py-2 text-green-500",
+                  "hidden-scrollbar font-maitree h-auto max-h-[20rem] min-h-24 w-full overflow-y-auto py-2 text-green-500 break-all",
                   "[&_.is-editor-empty]:before:content-[attr(data-placeholder)]",
                   "[&_.is-editor-empty]:before:absolute",
                   "[&_.is-editor-empty]:before:text-green-500/80",

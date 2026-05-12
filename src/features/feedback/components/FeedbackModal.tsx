@@ -6,6 +6,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
+import { cn } from "@/shared/lib/utils";
 import Button from "@/shared/ui/Button";
 import {
   Dialog,
@@ -25,22 +26,28 @@ import {
   FormMessage,
 } from "@/shared/ui/Form";
 import { Input } from "@/shared/ui/Input";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/shared/ui/Select";
 import Textarea from "@/shared/ui/TextArea";
+
+const ASSUNTO_OPTIONS = [
+  { value: "Bug", label: "Bug", emoji: "🐛" },
+  { value: "Sugestão", label: "Sugestão", emoji: "💡" },
+  { value: "Receitas", label: "Receitas", emoji: "🍽️" },
+  { value: "Comunidade", label: "Comunidade", emoji: "👥" },
+  { value: "Assinatura", label: "Assinatura", emoji: "💳" },
+  { value: "Chat IA", label: "Chat IA", emoji: "🤖" },
+  { value: "Outro", label: "Outro", emoji: "✨" },
+] as const;
+
+type AssuntoValue = (typeof ASSUNTO_OPTIONS)[number]["value"];
 
 const feedbackSchema = z
   .object({
     nome: z.string().min(2, "Nome deve ter pelo menos 2 caracteres"),
     email: z.string().email("Email inválido"),
-    assunto: z.enum(["Problema", "Sugestão", "Outro"], {
-      required_error: "Selecione um assunto",
-    }),
+    assunto: z.enum(
+      ASSUNTO_OPTIONS.map((o) => o.value) as [AssuntoValue, ...AssuntoValue[]],
+      { required_error: "Selecione um assunto" },
+    ),
     assuntoOutro: z.string().optional(),
     mensagem: z
       .string()
@@ -108,12 +115,12 @@ export function FeedbackModal() {
   return (
     <Dialog onOpenChange={handleOpenChange}>
       <DialogTrigger asChild>
-        <button className="font-maitree cursor-pointer text-sm text-green-100 transition-colors hover:text-white">
+        <button className="font-maitree cursor-pointer rounded-full border border-white/30 bg-white/10 px-4 py-1.5 text-sm font-semibold text-white backdrop-blur-sm transition-all hover:border-white/60 hover:bg-white/20">
           Feedback
         </button>
       </DialogTrigger>
 
-      <DialogContent className="max-w-md">
+      <DialogContent className="max-w-md overflow-hidden">
         <DialogHeader>
           <DialogTitle>Enviar Feedback</DialogTitle>
           <DialogDescription>Conte-nos o que está pensando!</DialogDescription>
@@ -162,7 +169,11 @@ export function FeedbackModal() {
                           Nome
                         </FormLabel>
                         <FormControl>
-                          <Input placeholder="Seu nome" {...field} />
+                          <Input
+                            className="rounded-sm"
+                            placeholder="Seu nome"
+                            {...field}
+                          />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -180,6 +191,7 @@ export function FeedbackModal() {
                         </FormLabel>
                         <FormControl>
                           <Input
+                            className="rounded-sm"
                             type="email"
                             placeholder="seu@email.com"
                             {...field}
@@ -199,21 +211,26 @@ export function FeedbackModal() {
                         <FormLabel className="font-maitree text-sm font-medium text-green-200">
                           Assunto
                         </FormLabel>
-                        <Select
-                          onValueChange={field.onChange}
-                          value={field.value}
-                        >
-                          <FormControl>
-                            <SelectTrigger>
-                              <SelectValue placeholder="Selecione um assunto" />
-                            </SelectTrigger>
-                          </FormControl>
-                          <SelectContent>
-                            <SelectItem value="Problema">Problema</SelectItem>
-                            <SelectItem value="Sugestão">Sugestão</SelectItem>
-                            <SelectItem value="Outro">Outro</SelectItem>
-                          </SelectContent>
-                        </Select>
+                        <FormControl>
+                          <div className="flex flex-wrap gap-2">
+                            {ASSUNTO_OPTIONS.map((opt) => (
+                              <button
+                                key={opt.value}
+                                type="button"
+                                onClick={() => field.onChange(opt.value)}
+                                className={cn(
+                                  "font-maitree flex items-center gap-1.5 rounded-full border px-3 py-1 text-sm transition-all duration-150",
+                                  field.value === opt.value
+                                    ? "border-green-500 bg-green-500/10 font-semibold text-green-600"
+                                    : "border-green-100 text-green-500 hover:border-green-500/70 hover:text-green-500",
+                                )}
+                              >
+                                <span>{opt.emoji}</span>
+                                {opt.label}
+                              </button>
+                            ))}
+                          </div>
+                        </FormControl>
                         <FormMessage />
                       </FormItem>
                     )}
@@ -240,6 +257,7 @@ export function FeedbackModal() {
                               </FormLabel>
                               <FormControl>
                                 <Input
+                                  className="rounded-sm"
                                   placeholder="Descreva brevemente..."
                                   {...field}
                                 />
@@ -266,7 +284,7 @@ export function FeedbackModal() {
                             placeholder="Escreva sua mensagem aqui..."
                             showCharacterCount
                             maxLength={500}
-                            className="max-w-full"
+                            className="w-full resize-none break-all"
                             {...field}
                           />
                         </FormControl>

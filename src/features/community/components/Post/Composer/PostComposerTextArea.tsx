@@ -52,7 +52,7 @@ export default function PostComposerTextArea({
         {editor && (
           <div
             className={clsx(
-              "font-lora pointer-events-none absolute right-2 bottom-2 text-xs italic transition-colors",
+              "font-lora pointer-events-none absolute right-2 bottom-2 rounded-full bg-green-50 p-1 text-xs italic transition-colors",
               isAtLimit
                 ? "font-semibold text-red-500"
                 : isNearLimit

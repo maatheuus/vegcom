@@ -17,6 +17,7 @@ import clsx from "clsx";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useUnreadAnnouncement } from "../../hooks/useUnreadAnnouncement";
+import { useUnreadResource } from "../../hooks/useUnreadResource";
 import type { CommunityPostType } from "../../types";
 import { Divider, SectionLabel } from "./SubComponents";
 
@@ -72,7 +73,12 @@ export default function CommunitySidebar({
   onTabChange,
 }: CommunitySidebarProps) {
   const pathname = usePathname();
-  const { hasUnread, markAsRead } = useUnreadAnnouncement(selectedTab);
+  const {
+    hasUnread: hasUnreadAnnouncement,
+    markAsRead: markAnnouncementAsRead,
+  } = useUnreadAnnouncement(selectedTab);
+  const { hasUnread: hasUnreadResource, markAsRead: markResourceAsRead } =
+    useUnreadResource(selectedTab);
 
   return (
     <aside
@@ -125,12 +131,17 @@ export default function CommunitySidebar({
 
           {FEED_TABS.map(({ key, label, icon: Icon }) => {
             const isAnnouncementTab = key === "ANNOUNCEMENT";
+            const isResourceTab = key === "RESOURCE";
+            const hasResourceUnread = isResourceTab && hasUnreadResource;
+            const hasAnnouncementUnread =
+              isAnnouncementTab && hasUnreadAnnouncement;
 
             return (
               <button
                 key={key}
                 onClick={() => {
-                  if (isAnnouncementTab) markAsRead();
+                  if (isAnnouncementTab) markAnnouncementAsRead();
+                  if (isResourceTab) markResourceAsRead();
                   onTabChange(key);
                 }}
                 className={`flex w-full cursor-pointer items-center gap-x-2.5 rounded-lg px-2 py-2 transition-colors duration-150 ${
@@ -145,9 +156,10 @@ export default function CommunitySidebar({
                     className={clsx(
                       "shrink-0",
                       isAnnouncementTab && "-scale-x-100",
+                      hasResourceUnread && "text-red-400",
                     )}
                   />
-                  {isAnnouncementTab && hasUnread && (
+                  {hasAnnouncementUnread && (
                     <span className="absolute top-1/2 -right-1 size-1 -translate-y-1/2 rounded-full bg-red-500" />
                   )}
                 </span>
@@ -155,7 +167,10 @@ export default function CommunitySidebar({
                   as="span"
                   type={Text.Type.BodyFive}
                   weight={Text.Weight.Medium}
-                  className="font-lora italic"
+                  className={clsx(
+                    "font-lora italic",
+                    hasResourceUnread && "text-red-400",
+                  )}
                 >
                   {label}
                 </Text>

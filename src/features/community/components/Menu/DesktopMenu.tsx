@@ -106,7 +106,10 @@ export default function DesktopMenu({
             )}
           </DropdownMenuTrigger>
 
-          <DropdownMenuContent className="border-0 bg-green-100" align="end">
+          <DropdownMenuContent
+            className="border-0 bg-green-100 pt-2.5"
+            align="end"
+          >
             {!isLoggedIn ? (
               <>
                 <Link href="/login" className="contents">

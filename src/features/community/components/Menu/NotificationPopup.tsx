@@ -156,7 +156,7 @@ const NotificationPopup = memo(function NotificationPopup({
                 {unreadCount > 0 && (
                   <button
                     onClick={markAllAsRead}
-                    className="font-maitree hidden cursor-pointer text-sm text-green-200 transition-colors duration-200 hover:text-green-500 md:block"
+                    className="font-maitree cursor-pointer rounded-full border border-green-200 px-3 py-1 text-xs font-medium text-green-200 transition-all duration-200 hover:border-green-100 hover:text-green-500"
                   >
                     Marcar todas como lidas
                   </button>

@@ -47,7 +47,7 @@ export default function CommentRow({
             weight={Text.Weight.Medium}
             className="text-black-100 font-lora opacity-60"
           >
-            {formatDistance(new Date(comment.commentDate), new Date(), {
+            {formatDistance(new Date(comment.createdAt), new Date(), {
               addSuffix: true,
               locale: dateFormatDistanceLocale,
             })}
@@ -76,7 +76,7 @@ export default function CommentRow({
             type={Text.Type.BodyFour}
             className="font-maitree text-base leading-relaxed font-medium break-words whitespace-pre-wrap text-green-500"
           >
-            {renderCommentContent(body)}
+            {renderCommentContent(body || "")}
           </Text>
         </Col>
 

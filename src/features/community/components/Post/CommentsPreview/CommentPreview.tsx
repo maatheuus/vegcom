@@ -25,6 +25,9 @@ export function renderCommentContent(text: string) {
   let match: RegExpExecArray | null;
 
   MENTION_REGEX.lastIndex = 0;
+
+  if (!text) return null;
+
   while ((match = MENTION_REGEX.exec(text)) !== null) {
     if (match.index > lastIndex) {
       parts.push(text.slice(lastIndex, match.index));
@@ -86,7 +89,7 @@ export default function CommentPreview({
               <span className="font-bold text-green-600">
                 {comment.user?.name}{" "}
               </span>
-              {renderCommentContent(comment.commentContent)}
+              {renderCommentContent(comment?.content)}
             </p>
           </div>
         </Row>
