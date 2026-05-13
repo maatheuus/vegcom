@@ -5,7 +5,7 @@ import PostActions from "@/features/communityPost/components/PostActions";
 import PostComments from "@/features/communityPost/components/PostComments";
 import { PostInteractionProvider } from "@/features/communityPost/context/PostInteractionProvider";
 import type { PostComment } from "@/shared";
-import { dateFormatDistanceLocale } from "@/shared/lib/utils";
+import { dateFormatDistanceLocale, safeFormatDistance } from "@/shared/lib/utils";
 import { Avatar, AvatarFallback, AvatarImage } from "@/shared/ui/Avatar";
 import Layout from "@/shared/ui/Layout";
 import Col from "@/shared/ui/Layout/Helpers/Col";
@@ -13,7 +13,6 @@ import Row from "@/shared/ui/Layout/Helpers/Row";
 import LinkPreviewList from "@/shared/ui/PreviewLinks/LinkPreviewList";
 import Text from "@/shared/ui/Text";
 import { prepareHtmlContent } from "@/shared/utils";
-import { formatDistance } from "date-fns";
 import { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
@@ -68,15 +67,7 @@ export default async function Page({ params }: Props) {
 
   const uniqueUsers = Array.from(uniqueUsersMap.values());
 
-  const formattedPostDate = formatDistance(
-    new Date(post.postDate),
-    new Date(),
-    {
-      addSuffix: true,
-      includeSeconds: true,
-      locale: dateFormatDistanceLocale,
-    },
-  );
+  const formattedPostDate = safeFormatDistance(post.postDate, dateFormatDistanceLocale);
 
   const jsonLd = {
     "@context": "https://schema.org",

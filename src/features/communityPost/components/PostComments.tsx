@@ -3,13 +3,12 @@
 import { getInitials } from "@/features/account/components/utils";
 import { useGetUser } from "@/features/auth/api/queries/getAuthApiClient";
 import type { PostComment } from "@/shared";
-import { dateFormatDistanceLocale } from "@/shared/lib/utils";
+import { dateFormatDistanceLocale, safeFormatDistance } from "@/shared/lib/utils";
 import { Avatar, AvatarFallback, AvatarImage } from "@/shared/ui/Avatar";
 import EmptyState from "@/shared/ui/EmptyState";
 import Col from "@/shared/ui/Layout/Helpers/Col";
 import Row from "@/shared/ui/Layout/Helpers/Row";
 import Text from "@/shared/ui/Text";
-import { formatDistance } from "date-fns";
 import Link from "next/link";
 import CommentComposer from "./CommentComposer";
 import ReplyButton from "./ReplyButton";
@@ -73,14 +72,7 @@ export default function PostComments({
                       weight={Text.Weight.Medium}
                       className="text-black-100 font-lora opacity-60"
                     >
-                      {formatDistance(
-                        new Date(comment.commentDate),
-                        new Date(),
-                        {
-                          addSuffix: true,
-                          locale: dateFormatDistanceLocale,
-                        },
-                      )}
+                      {safeFormatDistance(comment.commentDate, dateFormatDistanceLocale)}
                     </Text>
                   </Row>
 

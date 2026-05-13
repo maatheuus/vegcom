@@ -4,7 +4,7 @@ import { getInitials } from "@/features/account/components/utils";
 import { useGetUser } from "@/features/auth/api/queries/getAuthApiClient";
 import { toggleLike, toggleSave } from "@/features/community/api/communityApi";
 import { toast } from "@/shared/hooks/use-toast";
-import { dateFormatDistanceLocale } from "@/shared/lib/utils";
+import { dateFormatDistanceLocale, safeFormatDistance } from "@/shared/lib/utils";
 import type { PostCardDataProps } from "@/shared/types";
 import { Avatar, AvatarFallback, AvatarImage } from "@/shared/ui/Avatar";
 import Button from "@/shared/ui/Button";
@@ -29,7 +29,6 @@ import {
   TrashIcon,
 } from "@phosphor-icons/react";
 import clsx from "clsx";
-import { formatDistance } from "date-fns";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useState, useTransition } from "react";
@@ -84,11 +83,7 @@ export default function PostCardRoot({
   const postSlug = slugify(data.postTitle);
   const postUrl = `/community/${data.id}/${postSlug}`;
 
-  const formattedPostDate = formatDistance(
-    new Date(data.postDate),
-    new Date(),
-    { addSuffix: true, includeSeconds: true, locale: dateFormatDistanceLocale },
-  );
+  const formattedPostDate = safeFormatDistance(data.postDate, dateFormatDistanceLocale);
 
   useEffect(() => {
     router.prefetch(postUrl);

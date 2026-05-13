@@ -15,6 +15,7 @@ export function useUnreadAnnouncement(selectedTab: CommunityPostType) {
         const posts = result.data;
         if (posts && posts.length > 0) {
           const postDate = new Date(posts[0].postDate);
+          if (isNaN(postDate.getTime())) return;
           const diffInHours =
             (Date.now() - postDate.getTime()) / (1000 * 60 * 60);
 
