@@ -5,8 +5,8 @@ import Col from "@/shared/ui/Layout/Helpers/Col";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Entre",
-  description: "Entre na sua conta na VegCom",
+  title: "Entrar na Conta",
+  description: "Acesse sua conta na VegCom e explore receitas veganas, a comunidade plant-based e muito mais.",
   robots: {
     index: false,
     follow: false,

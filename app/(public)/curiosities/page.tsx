@@ -3,14 +3,14 @@ import Layout from "@/shared/ui/Layout";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Curiosidades",
+  title: "Curiosidades sobre Veganismo e Sustentabilidade",
   description:
-    "Fique por dentro de curiosidades do mundo vegano e sustentável.",
+    "Fique por dentro de curiosidades fascinantes do mundo vegano, sustentabilidade, alimentação plant-based e direitos dos animais.",
   openGraph: {
-    title: "Curiosidades | VegCom",
+    title: "Curiosidades sobre Veganismo e Sustentabilidade | VegCom",
     description:
-      "Fique por dentro de curiosidades do mundo vegano e sustentável.",
-    url: "https://vegcom.life/curiosities",
+      "Fique por dentro de curiosidades fascinantes do mundo vegano, sustentabilidade, alimentação plant-based e direitos dos animais.",
+    url: "https://www.vegcom.life/curiosities",
   },
   alternates: {
     canonical: "/curiosities",
@@ -24,7 +24,7 @@ export default function page() {
     name: "Curiosidades Veganas | VegCom",
     description:
       "Curiosidades sobre veganismo, estilo de vida sustentável e direitos dos animais.",
-    url: "https://vegcom.life/curiosities",
+    url: "https://www.vegcom.life/curiosities",
   };
 
   return (

@@ -28,7 +28,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       description:
         recipe.description ||
         `Aprenda a fazer ${recipe.title} na comunidade VegCom.`,
-      url: `https://vegcom.life/recipes/${recipe.slug || slug}`,
+      url: `https://www.vegcom.life/recipes/${recipe.slug || slug}`,
       images: recipe.images?.length ? [{ url: recipe.images[0] }] : [],
     },
     alternates: {

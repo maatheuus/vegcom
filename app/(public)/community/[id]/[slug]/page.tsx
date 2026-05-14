@@ -38,7 +38,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     openGraph: {
       title: `${post.postTitle} | VegCom Community`,
       description: excerpt,
-      url: `https://vegcom.life/community/${id}/${slug}`,
+      url: `https://www.vegcom.life/community/${id}/${slug}`,
       images: post.postContent.postResources?.images?.length
         ? [{ url: post.postContent.postResources.images[0].src }]
         : [],

@@ -31,14 +31,11 @@ export const metadata: Metadata = {
   authors: [{ name: "Maat" }],
   creator: "VegCom",
   publisher: "VegCom",
-  metadataBase: new URL("https://vegcom.life"),
-  alternates: {
-    canonical: "/",
-  },
+  metadataBase: new URL("https://www.vegcom.life"),
   openGraph: {
     type: "website",
     locale: "pt_BR",
-    url: "https://vegcom.life",
+    url: "https://www.vegcom.life",
     title: "VegCom - Comunidade Vegana de Receitas e Conexões",
     description:
       "Descubra e compartilhe receitas veganas deliciosas, conecte-se com outros veganos e vegetarianos e explore o mundo da culinária vegana.",
