@@ -104,7 +104,7 @@ export default function DesktopMenu({
                 </span>
               </DropdownMenuTrigger>
 
-              <DropdownMenuContent className="border-0 bg-green-100" align="end">
+              <DropdownMenuContent className="border-0 z-99! bg-green-100" align="end">
                 <Link href="/account" className="contents">
                   <DropdownMenuItem
                     className={`${cls.text} cursor-pointer text-green-500`}
@@ -126,7 +126,7 @@ export default function DesktopMenu({
               </DropdownMenuContent>
             </DropdownMenu>
 
-            <NotificationPopup className="[&_div]:px-1.5 [&_div]:py-1.5" />
+            <NotificationPopup triggerClassName="px-1.5 py-1.5" />
           </>
         ) : (
           <Row className="items-center gap-x-1.5">
