@@ -21,6 +21,10 @@ export function safeFormatDistance(
   });
 }
 
+export function getSafeRedirect(next: string | null | undefined, fallback = "/"): string {
+  return next && next.startsWith("/") ? next : fallback;
+}
+
 export const dateFormatDistanceLocale: Locale = {
   code: "pt-BR",
   formatDistance: (token, count) => {

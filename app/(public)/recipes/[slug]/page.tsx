@@ -18,18 +18,30 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
   if (!recipe) return { title: "Receita não encontrada" };
 
+  const description =
+    recipe.description ||
+    `Aprenda a fazer ${recipe.title} na comunidade VegCom!`;
+  const url = `https://www.vegcom.life/recipes/${recipe.slug || slug}`;
+  const ogImage = recipe.images?.length
+    ? [{ url: recipe.images[0], width: 1200, height: 630, alt: recipe.title }]
+    : [];
+
   return {
     title: recipe.title,
-    description:
-      recipe.description ||
-      `Veja como preparar ${recipe.title} de forma simples e deliciosa.`,
+    description,
     openGraph: {
       title: `${recipe.title} | VegCom`,
-      description:
-        recipe.description ||
-        `Aprenda a fazer ${recipe.title} na comunidade VegCom.`,
-      url: `https://www.vegcom.life/recipes/${recipe.slug || slug}`,
-      images: recipe.images?.length ? [{ url: recipe.images[0] }] : [],
+      description,
+      url,
+      siteName: "VegCom",
+      type: "article",
+      images: ogImage,
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: `${recipe.title} | VegCom`,
+      description,
+      images: recipe.images?.length ? [recipe.images[0]] : [],
     },
     alternates: {
       canonical: `/recipes/${recipe.slug || slug}`,
@@ -47,8 +59,6 @@ export default async function page({ params }: Props) {
   if (!recipe) {
     notFound();
   }
-
-  console.log(recipe);
 
   const jsonLd = {
     "@context": "https://schema.org",

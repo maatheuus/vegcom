@@ -7,8 +7,7 @@ import Col from "@/shared/ui/Layout/Helpers/Col";
 import Row from "@/shared/ui/Layout/Helpers/Row";
 import Text from "@/shared/ui/Text";
 import { HeartIcon } from "@phosphor-icons/react";
-import { formatDistanceToNow } from "date-fns";
-import { ptBR } from "date-fns/locale";
+import { dateFormatDistanceLocale, safeFormatDistance } from "@/shared/lib/utils";
 
 interface Props {
   comment: CommentData;
@@ -25,10 +24,7 @@ export default function CommentCard({
   currentUserId,
   onDelete,
 }: Props) {
-  const timeAgo = formatDistanceToNow(new Date(comment.createdAt), {
-    addSuffix: true,
-    locale: ptBR,
-  });
+  const timeAgo = safeFormatDistance(comment.createdAt, dateFormatDistanceLocale);
 
   const isOwner = currentUserId === comment.user?.id;
 

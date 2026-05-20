@@ -11,8 +11,7 @@ import {
   StarIcon,
   UserIcon,
 } from "@phosphor-icons/react";
-import { formatDistanceToNow } from "date-fns";
-import { ptBR } from "date-fns/locale";
+import { dateFormatDistanceLocale, safeFormatDistance } from "@/shared/lib/utils";
 
 export default function RowHeaderData({ recipe }: { recipe?: DetailedRecipe }) {
   if (!recipe) return null;
@@ -24,10 +23,7 @@ export default function RowHeaderData({ recipe }: { recipe?: DetailedRecipe }) {
     totalComments: commentsCount,
   } = recipe;
 
-  const timeAgo = formatDistanceToNow(new Date(recipe?.createdAt), {
-    addSuffix: true,
-    locale: ptBR,
-  });
+  const timeAgo = safeFormatDistance(recipe?.createdAt, dateFormatDistanceLocale);
 
   const ROW_DATA = [
     {

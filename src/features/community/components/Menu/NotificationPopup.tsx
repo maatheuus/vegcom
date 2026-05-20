@@ -8,8 +8,7 @@ import Row from "@/shared/ui/Layout/Helpers/Row";
 import Text from "@/shared/ui/Text";
 import { BellIcon } from "@phosphor-icons/react";
 import clsx from "clsx";
-import { formatDistanceToNow } from "date-fns";
-import { ptBR } from "date-fns/locale";
+import { dateFormatDistanceLocale, safeFormatDistance } from "@/shared/lib/utils";
 import { AnimatePresence, motion } from "framer-motion";
 import { useRouter } from "next/navigation";
 import {
@@ -179,7 +178,7 @@ const NotificationPopup = memo(function NotificationPopup({
                       initial={{ opacity: 0, x: -20 }}
                       animate={{ opacity: 1, x: 0 }}
                       exit={{ opacity: 0, x: 20 }}
-                      transition={{ delay: index * 0.05 }}
+                      transition={{ delay: Math.min(index * 0.05, 0.3) }}
                       onClick={() => handleNotificationClick(notification)}
                       className={clsx(
                         "cursor-pointer border-b border-green-100 px-4 py-3 transition-colors duration-200",
@@ -211,13 +210,7 @@ const NotificationPopup = memo(function NotificationPopup({
                             type={Text.Type.BodySix}
                             className="font-maitree text-green-200"
                           >
-                            {formatDistanceToNow(
-                              new Date(notification.createdAt),
-                              {
-                                addSuffix: true,
-                                locale: ptBR,
-                              },
-                            )}
+                            {safeFormatDistance(notification.createdAt, dateFormatDistanceLocale)}
                           </Text>
                         </Col>
 

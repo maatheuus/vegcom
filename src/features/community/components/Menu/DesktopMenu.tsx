@@ -34,7 +34,7 @@ export default function DesktopMenu({
   return (
     <>
       {/* Nav Links */}
-      <Row className="hidden w-full flex-1 justify-end gap-x-4 lg:flex">
+      <Row className="hidden min-w-0 flex-1 justify-end gap-x-4 lg:flex">
         <Row className="items-center justify-center gap-x-4">
           {centerLinks.map(({ href, icon: Icon, label }) => {
             const isActive = pathname.startsWith(href) && href !== "/";
@@ -42,7 +42,7 @@ export default function DesktopMenu({
               <Link key={href} href={href} className="contents">
                 <div
                   id={`nav-link-${href.replace("/", "").replace("-", "") || "community"}`}
-                  className={`relative w-full cursor-pointer py-1 ${
+                  className={`relative cursor-pointer py-1 ${
                     isActive ? "text-green-500" : "text-green-200"
                   }`}
                   onMouseEnter={() => setHoveredItem(href)}
@@ -70,62 +70,41 @@ export default function DesktopMenu({
       </Row>
 
       {/* Right Actions */}
-      <Row className="hidden items-center gap-x-2 lg:flex">
-        {isLoggedIn && (
-          <Link href={upgradeLink.href} className="group/plant contents">
-            <Row
-              className={`${cls.baseButton} items-center justify-center rounded-lg bg-green-200 p-1.5 text-green-50 group-hover/plant:bg-green-100`}
-            >
-              <upgradeLink.icon
-                size={18}
-                className="group-hover/plant:text-green-200"
-              />
-              {!isPremium && (
-                <span
-                  className={`${cls.text} group-hover/plant:text-green-200`}
-                >
-                  {upgradeLink.label}
-                </span>
-              )}
-            </Row>
-          </Link>
-        )}
-
-        <DropdownMenu>
-          <DropdownMenuTrigger className="group/user flex cursor-pointer items-center gap-x-2 rounded-lg border-0 bg-green-100 p-1.5 transition-colors duration-300 outline-none hover:bg-green-200">
-            <UserCircleIcon
-              size={18}
-              className="text-green-200 group-hover/user:text-green-50"
-            />
-            {isLoggedIn && (
-              <span
-                className={`${cls.text} max-w-[8rem] truncate text-green-200 group-hover/user:text-green-50`}
+      <Row className="hidden shrink-0 items-center gap-x-2 lg:flex">
+        {isLoggedIn ? (
+          <>
+            <Link href={upgradeLink.href} className="group/plant contents">
+              <Row
+                className={`${cls.baseButton} items-center justify-center rounded-lg bg-green-200 p-1.5 text-green-50 group-hover/plant:bg-green-100`}
               >
-                {userName}
-              </span>
-            )}
-          </DropdownMenuTrigger>
+                <upgradeLink.icon
+                  size={18}
+                  className="group-hover/plant:text-green-200"
+                />
+                {!isPremium && (
+                  <span
+                    className={`${cls.text} group-hover/plant:text-green-200`}
+                  >
+                    {upgradeLink.label}
+                  </span>
+                )}
+              </Row>
+            </Link>
 
-          <DropdownMenuContent className="border-0 bg-green-100" align="end">
-            {!isLoggedIn ? (
-              <>
-                <Link href="/login" className="contents">
-                  <DropdownMenuItem
-                    className={`${cls.text} cursor-pointer text-green-500`}
-                  >
-                    Entrar
-                  </DropdownMenuItem>
-                </Link>
-                <Link href="/signup" className="contents">
-                  <DropdownMenuItem
-                    className={`${cls.text} cursor-pointer text-green-500`}
-                  >
-                    Cadastrar
-                  </DropdownMenuItem>
-                </Link>
-              </>
-            ) : (
-              <>
+            <DropdownMenu>
+              <DropdownMenuTrigger className="group/user flex cursor-pointer items-center gap-x-2 rounded-lg border-0 bg-green-100 p-1.5 transition-colors duration-300 outline-none hover:bg-green-200">
+                <UserCircleIcon
+                  size={18}
+                  className="text-green-200 group-hover/user:text-green-50"
+                />
+                <span
+                  className={`${cls.text} max-w-[8rem] truncate text-green-200 group-hover/user:text-green-50`}
+                >
+                  {userName}
+                </span>
+              </DropdownMenuTrigger>
+
+              <DropdownMenuContent className="border-0 bg-green-100" align="end">
                 <Link href="/account" className="contents">
                   <DropdownMenuItem
                     className={`${cls.text} cursor-pointer text-green-500`}
@@ -144,13 +123,41 @@ export default function DesktopMenu({
                     Sair
                   </DropdownMenuItem>
                 </button>
-              </>
-            )}
-          </DropdownMenuContent>
-        </DropdownMenu>
+              </DropdownMenuContent>
+            </DropdownMenu>
 
-        {isLoggedIn && (
-          <NotificationPopup className="[&_div]:px-1.5 [&_div]:py-1.5" />
+            <NotificationPopup className="[&_div]:px-1.5 [&_div]:py-1.5" />
+          </>
+        ) : (
+          <Row className="items-center gap-x-1.5">
+            <Link href="/login">
+              <motion.span
+                className="font-lora relative cursor-pointer px-3 py-1.5 text-sm font-medium text-green-500 italic"
+                whileHover="hover"
+              >
+                Entrar
+                <motion.span
+                  className="absolute bottom-1 left-3 right-3 h-[1.5px] origin-left rounded-full bg-green-200"
+                  variants={{
+                    hover: { scaleX: 1, opacity: 1 },
+                  }}
+                  initial={{ scaleX: 0, opacity: 0 }}
+                  transition={{ duration: 0.25 }}
+                />
+              </motion.span>
+            </Link>
+
+            <Link href="/signup">
+              <motion.span
+                className="font-lora flex cursor-pointer items-center rounded-xl bg-green-500 px-4 py-1.5 text-sm font-medium text-green-50 italic"
+                whileHover={{ backgroundColor: "var(--color-green-200)", scale: 1.02 }}
+                whileTap={{ scale: 0.97 }}
+                transition={{ duration: 0.2 }}
+              >
+                Cadastrar
+              </motion.span>
+            </Link>
+          </Row>
         )}
       </Row>
     </>
