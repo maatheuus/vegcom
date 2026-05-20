@@ -12,7 +12,10 @@ export default function useLinkPreviews(
   isLoading: boolean;
 } {
   const [previews, setPreviews] = useState<LinkPreviewData[]>([]);
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(() => {
+    const allContent = [content, ...(links ?? [])].join(" ");
+    return extractInternalLinks(allContent).length > 0;
+  });
 
   useEffect(() => {
     const allContent = [content, ...(links ?? [])].join(" ");
@@ -20,6 +23,7 @@ export default function useLinkPreviews(
 
     if (found.length === 0) {
       setPreviews([]);
+      setIsLoading(false);
       return;
     }
 

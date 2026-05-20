@@ -66,25 +66,24 @@ export default function PostActions({
 
     const url = `${window.location.origin}${postUrl}`;
 
-    const summary =
-      post.postContent.postResources.content.length > 150
-        ? `${post.postContent.postResources.content.substring(0, 150)}...`
-        : post.postContent.postResources.content;
+    const content = post.postContent.postResources?.content ?? "";
+    const summary = content.length > 150 ? `${content.substring(0, 150)}...` : content;
 
     const hashtags =
-      post.postTags.map((tag) => `#${tag.replace(/\s+/g, "")}`).join(" ") || "";
+      post.postTags?.map((tag) => `#${tag.replace(/\s+/g, "")}`).join(" ") ?? "";
+
+    const shareText = `Confira este post de ${post.user?.name}: "${post.postTitle}"\n\n${summary}${hashtags ? `\n\n${hashtags}` : ""}\n\n${url}`;
 
     const shareData = {
       title: post.postTitle,
-      text: `Confira este post de ${post.user?.name}: "${post.postTitle}"\n\n${summary}\n\n${hashtags}\n`,
-      url,
+      text: shareText,
     };
 
     try {
       if (navigator.share) {
         await navigator.share(shareData);
       } else {
-        await navigator.clipboard.writeText(`${shareData.text} ${url}`);
+        await navigator.clipboard.writeText(shareText);
         toast({
           title: "Sucesso",
           description: "Link e resumo copiados para a área de transferência!",
