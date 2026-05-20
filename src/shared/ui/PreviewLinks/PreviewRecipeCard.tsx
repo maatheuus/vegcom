@@ -17,7 +17,7 @@ export default function PreviewRecipeCard({
     <Link href={p.href} onClick={onClick} className="group block">
       <Row className="overflow-hidden rounded-xl border border-green-200 bg-green-50/60 transition-colors duration-200 hover:border-green-300 hover:bg-green-100/40">
         {p.image && (
-          <div className="relative h-20 w-20 shrink-0 overflow-hidden sm:h-24 sm:w-24">
+          <div className="relative h-auto min-h-20 w-20 shrink-0 overflow-hidden sm:h-24 sm:w-24">
             <Image
               src={p.image}
               alt={p.title}
