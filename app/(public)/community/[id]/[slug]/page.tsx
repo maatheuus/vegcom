@@ -28,20 +28,34 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
   if (!post) return { title: "Post não encontrado" };
 
+  const rawContent = post.postContent.postResources?.content ?? "";
   const excerpt =
-    post.postContent.postResources?.content?.substring(0, 160) ||
-    "Leia este post na nossa comunidade.";
+    rawContent
+      .replace(/https?:\/\/\S+/g, "")
+      .replace(/\s+/g, " ")
+      .trim()
+      .substring(0, 160) || "Leia este post na nossa comunidade.";
+
+  const ogImage = post.postContent.postResources?.images?.length
+    ? [{ url: post.postContent.postResources.images[0].src, width: 1200, height: 630 }]
+    : [];
 
   return {
     title: post.postTitle,
     description: excerpt,
     openGraph: {
-      title: `${post.postTitle} | VegCom Community`,
+      title: `${post.postTitle} | VegCom`,
       description: excerpt,
       url: `https://www.vegcom.life/community/${id}/${slug}`,
-      images: post.postContent.postResources?.images?.length
-        ? [{ url: post.postContent.postResources.images[0].src }]
-        : [],
+      siteName: "VegCom",
+      type: "article",
+      images: ogImage,
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: `${post.postTitle} | VegCom`,
+      description: excerpt,
+      images: ogImage.map((i) => i.url),
     },
   };
 }
