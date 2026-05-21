@@ -3,7 +3,7 @@ import { getRecipes } from "@/features/recipes/api/queries/getRecipesApiServer";
 import { MetadataRoute } from "next";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const baseUrl = "https://vegcom.life";
+  const baseUrl = "https://www.vegcom.life";
 
   // Static routes configuration
   const staticRoutes: MetadataRoute.Sitemap = [

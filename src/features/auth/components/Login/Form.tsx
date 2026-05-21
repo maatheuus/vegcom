@@ -15,7 +15,8 @@ import Col from "@/shared/ui/Layout/Helpers/Col";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { AtIcon, EyeClosedIcon, EyesIcon } from "@phosphor-icons/react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { getSafeRedirect } from "@/shared/lib/utils";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useState, useTransition } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -36,6 +37,7 @@ export default function LoginForm() {
   const [showingPassword, setShowingPassword] = useState<boolean>(false);
   const [isPending, startTransition] = useTransition();
   const router = useRouter();
+  const searchParams = useSearchParams();
   const signinMutation = useSignin();
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -59,7 +61,7 @@ export default function LoginForm() {
           description: "Você será redirecionado.",
           variant: "success",
         });
-        router.push("/");
+        router.push(getSafeRedirect(searchParams.get("next")));
       } catch (error: unknown) {
         console.error("Login error:", error);
         const err = error as { message?: string; code?: string };

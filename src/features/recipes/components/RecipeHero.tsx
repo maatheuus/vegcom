@@ -117,8 +117,9 @@ export function RecipeHero({ className, hightlightedRecipe }: RecipeHeroProps) {
             src={image}
             fill
             alt={title}
+            quality={90}
             className={clsx(
-              "h-full w-full object-cover transition-transform duration-700 ease-out group-hover:scale-110",
+              "h-full w-full object-cover transition-transform duration-700 ease-out group-hover:scale-110 [filter:saturate(1.12)_contrast(1.04)]",
               isLoading && "scale-105 blur-sm grayscale",
             )}
           />

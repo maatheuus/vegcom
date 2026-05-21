@@ -100,7 +100,7 @@ const RecipeDetailsHeader = memo(function RecipeDetailsHeader({
               />
             )}
             <SaveRecipeButton user={userData} recipeId={recipeId!} />
-            <ShareDropdown title={String(title)} recipeSlug={recipeSlug} />
+            <ShareDropdown title={title ?? recipeTitle ?? ""} recipeSlug={recipeSlug} />
           </Row>
         )}
       </div>

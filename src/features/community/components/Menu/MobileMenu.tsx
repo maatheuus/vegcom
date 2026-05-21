@@ -34,23 +34,13 @@ export function MobileMenuTrigger({
     <div className="flex items-center gap-x-2 lg:hidden">
       {isLoggedIn && (
         <Link href={upgradeLink.href} className="group/plant contents">
-          <Row
-            className={`${cls.baseButton} items-center justify-center rounded-lg bg-green-200 px-2 py-1 text-green-50 group-hover/plant:bg-green-100`}
-          >
-            <upgradeLink.icon
-              size={20}
-              className="size-5 group-hover/plant:text-green-200"
-            />
-            {!isPremium && (
-              <span className={`${cls.text} group-hover/plant:text-green-200`}>
-                {upgradeLink.label}
-              </span>
-            )}
-          </Row>
+          <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-green-200 text-green-50 transition-colors duration-300 hover:bg-green-100 hover:text-green-200">
+            <upgradeLink.icon size={18} />
+          </div>
         </Link>
       )}
 
-      {isLoggedIn && <NotificationPopup className="[&_div]:p-2" />}
+      {isLoggedIn && <NotificationPopup triggerClassName="h-9 w-9 justify-center items-center p-0 gap-0" />}
 
       <MotionConfig transition={{ duration: 0.4, ease: "easeInOut" }}>
         <motion.button
@@ -58,7 +48,7 @@ export function MobileMenuTrigger({
           initial={false}
           animate={isMenuOpen ? "open" : "closed"}
           onClick={toggleMenu}
-          className="group/menu relative flex h-9 w-9 items-center justify-center rounded-lg bg-green-100 px-1.5 text-green-600 transition-colors duration-300 hover:bg-green-200 hover:text-green-50"
+          className="group/menu relative flex h-9 w-9 items-center justify-center rounded-lg bg-green-100 text-green-600 transition-colors duration-300 hover:bg-green-200 hover:text-green-50 focus:outline-none"
         >
           <svg width="20" height="20" viewBox="0 0 24 24">
             <Path

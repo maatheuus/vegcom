@@ -5,7 +5,7 @@ import PostActions from "@/features/communityPost/components/PostActions";
 import PostComments from "@/features/communityPost/components/PostComments";
 import { PostInteractionProvider } from "@/features/communityPost/context/PostInteractionProvider";
 import type { PostComment } from "@/shared";
-import { dateFormatDistanceLocale } from "@/shared/lib/utils";
+import { dateFormatDistanceLocale, safeFormatDistance } from "@/shared/lib/utils";
 import { Avatar, AvatarFallback, AvatarImage } from "@/shared/ui/Avatar";
 import Layout from "@/shared/ui/Layout";
 import Col from "@/shared/ui/Layout/Helpers/Col";
@@ -13,7 +13,6 @@ import Row from "@/shared/ui/Layout/Helpers/Row";
 import LinkPreviewList from "@/shared/ui/PreviewLinks/LinkPreviewList";
 import Text from "@/shared/ui/Text";
 import { prepareHtmlContent } from "@/shared/utils";
-import { formatDistance } from "date-fns";
 import { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
@@ -29,20 +28,34 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
   if (!post) return { title: "Post não encontrado" };
 
+  const rawContent = post.postContent.postResources?.content ?? "";
   const excerpt =
-    post.postContent.postResources?.content?.substring(0, 160) ||
-    "Leia este post na nossa comunidade.";
+    rawContent
+      .replace(/https?:\/\/\S+/g, "")
+      .replace(/\s+/g, " ")
+      .trim()
+      .substring(0, 160) || "Leia este post na nossa comunidade.";
+
+  const ogImage = post.postContent.postResources?.images?.length
+    ? [{ url: post.postContent.postResources.images[0].src, width: 1200, height: 630 }]
+    : [];
 
   return {
     title: post.postTitle,
     description: excerpt,
     openGraph: {
-      title: `${post.postTitle} | VegCom Community`,
+      title: `${post.postTitle} | VegCom`,
       description: excerpt,
-      url: `https://vegcom.life/community/${id}/${slug}`,
-      images: post.postContent.postResources?.images?.length
-        ? [{ url: post.postContent.postResources.images[0].src }]
-        : [],
+      url: `https://www.vegcom.life/community/${id}/${slug}`,
+      siteName: "VegCom",
+      type: "article",
+      images: ogImage,
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: `${post.postTitle} | VegCom`,
+      description: excerpt,
+      images: ogImage.map((i) => i.url),
     },
   };
 }
@@ -71,15 +84,7 @@ export default async function Page({ params }: Props) {
 
   const uniqueUsers = Array.from(uniqueUsersMap.values());
 
-  const formattedPostDate = formatDistance(
-    new Date(post.postDate),
-    new Date(),
-    {
-      addSuffix: true,
-      includeSeconds: true,
-      locale: dateFormatDistanceLocale,
-    },
-  );
+  const formattedPostDate = safeFormatDistance(post.postDate, dateFormatDistanceLocale);
 
   const jsonLd = {
     "@context": "https://schema.org",

@@ -1,14 +1,14 @@
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Receitas",
+  title: "Receitas Veganas — Pratos, Sobremesas e Muito Mais",
   description:
-    "Explore nossa coleção de receitas veganas, desde pratos principais até sobremesas incríveis.",
+    "Explore nossa coleção de receitas veganas, desde pratos principais até sobremesas incríveis. Filtre por tipo de refeição, tempo de preparo e muito mais.",
   openGraph: {
-    title: "Receitas | VegCom",
+    title: "Receitas Veganas — Pratos, Sobremesas e Muito Mais | VegCom",
     description:
-      "Explore nossa coleção de receitas veganas, desde pratos principais até sobremesas incríveis.",
-    url: "https://vegcom.life/recipes",
+      "Explore nossa coleção de receitas veganas, desde pratos principais até sobremesas incríveis. Filtre por tipo de refeição, tempo de preparo e muito mais.",
+    url: "https://www.vegcom.life/recipes",
   },
   alternates: {
     canonical: "/recipes",
@@ -101,7 +101,7 @@ export default async function Page({ searchParams }: PageProps) {
     name: "Receitas Veganas | VegCom",
     description:
       "Explore nossa coleção de receitas veganas, desde pratos principais até sobremesas incríveis.",
-    url: "https://vegcom.life/recipes",
+    url: "https://www.vegcom.life/recipes",
   };
 
   return (

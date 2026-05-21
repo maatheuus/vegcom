@@ -4,7 +4,8 @@ import { useSignupFormState } from "@/features/auth/hooks/queries/useSignupFormS
 import LoadingDots from "@/shared/components/ui/Loadings/LoadingDots";
 import { toast } from "@/shared/hooks/use-toast";
 import Col from "@/shared/ui/Layout/Helpers/Col";
-import { useRouter } from "next/navigation";
+import { getSafeRedirect } from "@/shared/lib/utils";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect } from "react";
 import SubmitButton from "../../../SubmitButton/SubmitButton";
 import SignupCard from "../../SignupCard";
@@ -13,6 +14,8 @@ export default function SuccessPage() {
   const { formData, submitForm } = useSignupFormState();
   const { mutate: signUp, data, isPending, isSuccess, isError } = submitForm;
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const next = searchParams.get("next");
 
   useEffect(() => {
     if (isSuccess && data) {
@@ -21,8 +24,9 @@ export default function SuccessPage() {
         description: data.message,
         variant: "success",
       });
+      const destination = getSafeRedirect(next, data.redirect);
       const timeoutId = setTimeout(() => {
-        router.push(data.redirect);
+        router.push(destination);
       }, 2000);
       return () => clearTimeout(timeoutId);
     }
@@ -35,7 +39,7 @@ export default function SuccessPage() {
         variant: "destructive",
       });
     }
-  }, [isSuccess, isError, data, router]);
+  }, [isSuccess, isError, data, router, next]);
 
   return (
     <SignupCard title="Tudo certo por aqui! Você pode aproveitar o quanto você quiser, divirta-se!">

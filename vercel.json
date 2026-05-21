@@ -1,0 +1,10 @@
+{
+  "redirects": [
+    {
+      "source": "/:path*",
+      "has": [{ "type": "host", "value": "vegcom.life" }],
+      "destination": "https://www.vegcom.life/:path*",
+      "permanent": true
+    }
+  ]
+}

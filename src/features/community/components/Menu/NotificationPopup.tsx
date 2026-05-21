@@ -8,8 +8,10 @@ import Row from "@/shared/ui/Layout/Helpers/Row";
 import Text from "@/shared/ui/Text";
 import { BellIcon } from "@phosphor-icons/react";
 import clsx from "clsx";
-import { formatDistanceToNow } from "date-fns";
-import { ptBR } from "date-fns/locale";
+import {
+  dateFormatDistanceLocale,
+  safeFormatDistance,
+} from "@/shared/lib/utils";
 import { AnimatePresence, motion } from "framer-motion";
 import { useRouter } from "next/navigation";
 import {
@@ -36,8 +38,9 @@ const getNotificationIcon = (type: NotificationType) => {
 
 const NotificationPopup = memo(function NotificationPopup({
   className,
+  triggerClassName,
   ...props
-}: ComponentProps<"div">) {
+}: ComponentProps<"div"> & { triggerClassName?: string }) {
   const [isOpen, setIsOpen] = useState(false);
   const router = useRouter();
   const { notifications, unreadCount, markAsRead, markAllAsRead } =
@@ -115,7 +118,10 @@ const NotificationPopup = memo(function NotificationPopup({
       <Row
         ref={buttonRef}
         onClick={handleToggle}
-        className="relative flex w-full cursor-pointer gap-x-2 rounded-lg bg-green-100 p-2 transition-all duration-300 group-hover/bell:bg-green-200"
+        className={clsx(
+          "relative flex cursor-pointer gap-x-2 rounded-lg bg-green-100 p-2 transition-all duration-300 group-hover/bell:bg-green-200",
+          triggerClassName,
+        )}
         aria-label="Notificações"
         aria-expanded={isOpen}
         aria-haspopup="true"
@@ -182,7 +188,7 @@ const NotificationPopup = memo(function NotificationPopup({
                       initial={{ opacity: 0, x: -20 }}
                       animate={{ opacity: 1, x: 0 }}
                       exit={{ opacity: 0, x: 20 }}
-                      transition={{ delay: index * 0.05 }}
+                      transition={{ duration: 0.15 }}
                       onClick={() => handleNotificationClick(notification)}
                       className={clsx(
                         "cursor-pointer border-b border-green-100 px-4 py-3 transition-colors duration-200",
@@ -214,12 +220,9 @@ const NotificationPopup = memo(function NotificationPopup({
                             type={Text.Type.BodySix}
                             className="font-maitree text-green-200"
                           >
-                            {formatDistanceToNow(
-                              new Date(notification.createdAt),
-                              {
-                                addSuffix: true,
-                                locale: ptBR,
-                              },
+                            {safeFormatDistance(
+                              notification.createdAt,
+                              dateFormatDistanceLocale,
                             )}
                           </Text>
                         </Col>

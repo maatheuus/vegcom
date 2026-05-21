@@ -44,47 +44,32 @@ export default function PostActions({
   const postSlug = slugify(post.postTitle);
   const postUrl = `/community/${post.id}/${postSlug}`;
 
-  const handleShareOld = (e: React.MouseEvent) => {
-    e.stopPropagation();
-
-    const url = `${window.location.origin}${postUrl}`;
-    if (navigator.share) {
-      navigator
-        .share({
-          title: post.postTitle,
-          text: post.postContent.postResources?.content,
-          url,
-        })
-        .catch((error) => console.log("Error sharing", error));
-    } else {
-      console.log("Share not supported", url);
-    }
-  };
-
   const handleShare = async (e: React.MouseEvent) => {
     e.stopPropagation();
 
     const url = `${window.location.origin}${postUrl}`;
 
+    const cleanContent = (post.postContent.postResources?.content ?? "")
+      .replace(/https?:\/\/\S+/g, "")
+      .replace(/\s+/g, " ")
+      .trim();
+
     const summary =
-      post.postContent.postResources.content.length > 150
-        ? `${post.postContent.postResources.content.substring(0, 150)}...`
-        : post.postContent.postResources.content;
+      cleanContent.length > 150
+        ? `${cleanContent.substring(0, 150)}...`
+        : cleanContent;
 
     const hashtags =
-      post.postTags.map((tag) => `#${tag.replace(/\s+/g, "")}`).join(" ") || "";
+      post.postTags?.map((tag) => `#${tag.replace(/\s+/g, "")}`).join(" ") ??
+      "";
 
-    const shareData = {
-      title: post.postTitle,
-      text: `Confira este post de ${post.user?.name}: "${post.postTitle}"\n\n${summary}\n\n${hashtags}\n`,
-      url,
-    };
+    const clipboardText = `"${post.postTitle}"\n\n${summary}${hashtags ? `\n\n${hashtags}` : ""}\n\n${url}`;
 
     try {
       if (navigator.share) {
-        await navigator.share(shareData);
+        await navigator.share({ title: post.postTitle, url });
       } else {
-        await navigator.clipboard.writeText(`${shareData.text} ${url}`);
+        await navigator.clipboard.writeText(clipboardText);
         toast({
           title: "Sucesso",
           description: "Link e resumo copiados para a área de transferência!",

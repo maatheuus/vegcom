@@ -7,14 +7,14 @@ import { dehydrate, HydrationBoundary, QueryClient } from "@tanstack/react-query
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Comunidade",
+  title: "Comunidade Vegana — Posts, Discussões e Conexões",
   description:
-    "Conecte-se com outros veganos e vegetarianos, compartilhe experiências, dúvidas e descobertas na nossa comunidade.",
+    "Conecte-se com outros veganos e vegetarianos, compartilhe experiências, dúvidas e descobertas na nossa comunidade plant-based.",
   openGraph: {
-    title: "Comunidade | VegCom",
+    title: "Comunidade Vegana — Posts, Discussões e Conexões | VegCom",
     description:
-      "Conecte-se com outros veganos e vegetarianos, compartilhe experiências, dúvidas e descobertas na nossa comunidade.",
-    url: "https://vegcom.life/",
+      "Conecte-se com outros veganos e vegetarianos, compartilhe experiências, dúvidas e descobertas na nossa comunidade plant-based.",
+    url: "https://www.vegcom.life/",
   },
   alternates: {
     canonical: "/",
@@ -39,7 +39,7 @@ export default async function Home() {
     "@type": "CollectionPage",
     name: "Comunidade Vegana | VegCom",
     description: "Descubra grupos e discussões sobre veganismo.",
-    url: "https://vegcom.life/",
+    url: "https://www.vegcom.life/",
   };
 
   return (
