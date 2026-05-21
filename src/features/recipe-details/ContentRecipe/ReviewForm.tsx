@@ -14,6 +14,7 @@ interface ReviewFormProps {
   onPost: VoidFunction;
   isSubmitting?: boolean;
   error?: string;
+  hideRating?: boolean;
 }
 
 const ReviewForm = memo(function ReviewForm({
@@ -24,6 +25,7 @@ const ReviewForm = memo(function ReviewForm({
   onPost,
   isSubmitting = false,
   error,
+  hideRating = false,
 }: ReviewFormProps) {
   const handleReviewChange = useCallback(
     (e: React.ChangeEvent<HTMLTextAreaElement>) => {
@@ -40,7 +42,7 @@ const ReviewForm = memo(function ReviewForm({
     [onPost],
   );
 
-  const isFormValid = !error && rating > 0;
+  const isFormValid = !error && (hideRating ? review.trim().length >= 3 : rating > 0);
 
   return (
     <form
@@ -59,18 +61,20 @@ const ReviewForm = memo(function ReviewForm({
           Deixe um comentário
         </Text>
 
-        <div role="group" aria-labelledby="rating-label">
-          <Text id="rating-label" type={Text.Type.BodyFour} className="sr-only">
-            Avalie a receita
-          </Text>
-          <Row className="gap-1">
-            <RatingStars
-              value={rating}
-              onRatingChange={onRatingChange}
-              aria-label={`Avaliação: ${rating} estrelas`}
-            />
-          </Row>
-        </div>
+        {!hideRating && (
+          <div role="group" aria-labelledby="rating-label">
+            <Text id="rating-label" type={Text.Type.BodyFour} className="sr-only">
+              Avalie a receita
+            </Text>
+            <Row className="gap-1">
+              <RatingStars
+                value={rating}
+                onRatingChange={onRatingChange}
+                aria-label={`Avaliação: ${rating} estrelas`}
+              />
+            </Row>
+          </div>
+        )}
 
         <div role="group" aria-labelledby="review-label">
           <Text id="review-label" type={Text.Type.BodyFour} className="sr-only">

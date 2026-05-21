@@ -61,6 +61,10 @@ const CommentsSection = memo(function CommentsSection({
 
   const comments = commentsData?.data || [];
 
+  const hasAlreadyRated = !!currentUserId && comments.some(
+    (c) => c.user?.id === currentUserId && c.rating > 0,
+  );
+
   const {
     currentItems,
     currentPage,
@@ -81,7 +85,7 @@ const CommentsSection = memo(function CommentsSection({
   const isLoading = isLoadingComments || isPaginationLoading;
 
   const handlePostReview = useCallback(() => {
-    if (newRating === 0) return;
+    if (!hasAlreadyRated && newRating === 0) return;
     if (newReview.trim().length > 0 && newReview.trim().length < 3) return;
 
     if (!currentUserId) {
@@ -184,6 +188,7 @@ const CommentsSection = memo(function CommentsSection({
           onReviewChange={setNewReview}
           onPost={handlePostReview}
           isSubmitting={isCreating}
+          hideRating={hasAlreadyRated}
           error={
             newReview.trim().length > 0 && newReview.trim().length < 3
               ? "O comentário deve ter pelo menos 3 caracteres."
