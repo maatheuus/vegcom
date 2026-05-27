@@ -3,11 +3,11 @@ import ProgressProviderClient from "@/shared/components/ui/ProgressProviderClien
 import { NavigationHistoryProvider } from "@/shared/providers/NavigationHistoryProvider";
 import QueryClientWrapper from "@/shared/tanstack/QueryClientWrapper";
 import { Toaster } from "@/shared/ui/toaster";
+import "@assets/css/responsiveness.css";
 import { Analytics } from "@vercel/analytics/next";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import type { Metadata } from "next";
 import Script from "next/script";
-import "@assets/css/responsiveness.css";
 import "./global.css";
 
 export const metadata: Metadata = {
@@ -84,6 +84,25 @@ export default function RootLayout({
         </QueryClientWrapper>
         <SpeedInsights />
         <Analytics />
+
+        {/* <!-- Google tag (gtag.js) --> */}
+        <Script
+          id="google-gtm"
+          strategy="afterInteractive"
+          src="https://www.googletagmanager.com/gtag/js?id=AW-18183047572"
+        />
+        <Script
+          id="google-gtm"
+          strategy="afterInteractive"
+          dangerouslySetInnerHTML={{
+            __html: `
+              window.dataLayer = window.dataLayer || [];
+              function gtag(){dataLayer.push(arguments);}
+              gtag('js', new Date());
+              gtag('config', 'AW-18183047572');
+            `,
+          }}
+        />
 
         {/* Google tag (gtag.js) */}
         <Script
