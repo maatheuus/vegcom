@@ -7,13 +7,13 @@ import { dehydrate, HydrationBoundary, QueryClient } from "@tanstack/react-query
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Comunidade Vegana — Posts, Discussões e Conexões",
+  title: "Comunidade Vegana — Posts, Dicas e Conexões Plant-Based",
   description:
-    "Conecte-se com outros veganos e vegetarianos, compartilhe experiências, dúvidas e descobertas na nossa comunidade plant-based.",
+    "A maior comunidade vegana do Brasil! Explore posts, tire dúvidas sobre veganismo, compartilhe dicas e conecte-se com outros vegetarianos e veganos.",
   openGraph: {
-    title: "Comunidade Vegana — Posts, Discussões e Conexões | VegCom",
+    title: "Comunidade Vegana — Posts, Dicas e Conexões Plant-Based | VegCom",
     description:
-      "Conecte-se com outros veganos e vegetarianos, compartilhe experiências, dúvidas e descobertas na nossa comunidade plant-based.",
+      "A maior comunidade vegana do Brasil! Explore posts, tire dúvidas sobre veganismo, compartilhe dicas e conecte-se com outros vegetarianos e veganos.",
     url: "https://www.vegcom.life/",
   },
   alternates: {
@@ -38,8 +38,20 @@ export default async function Home() {
     "@context": "https://schema.org",
     "@type": "CollectionPage",
     name: "Comunidade Vegana | VegCom",
-    description: "Descubra grupos e discussões sobre veganismo.",
+    description: "Participe da maior comunidade vegana do Brasil. Compartilhe receitas, experiências e conecte-se com outros vegetarianos e veganos.",
     url: "https://www.vegcom.life/",
+  };
+
+  const websiteLd = {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    name: "VegCom",
+    url: "https://www.vegcom.life/",
+    potentialAction: {
+      "@type": "SearchAction",
+      target: "https://www.vegcom.life/recipes?q={search_term_string}",
+      "query-input": "required name=search_term_string",
+    },
   };
 
   return (
@@ -47,6 +59,10 @@ export default async function Home() {
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteLd) }}
       />
       <section className="col-start-1 col-end-16 h-full min-h-0">
         <HydrationBoundary state={dehydrate(queryClient)}>

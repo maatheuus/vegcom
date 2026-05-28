@@ -60,8 +60,13 @@ export default function ChecklistSection({
   }
 
   return (
-    <Col className={clsx("relative gap-y-4", className)} {...props}>
+    <Col
+      className={clsx("relative gap-y-4", className)}
+      as={type === "ingredients" ? "section" : "div"}
+      {...props}
+    >
       <Text
+        as="h2"
         type={Text.Type.BodyTwo}
         weight={Text.Weight.Bold}
         className="text-green-500 uppercase"
