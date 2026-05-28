@@ -62,7 +62,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 }
 
 export default async function Page({ params }: Props) {
-  const { id } = await params;
+  const { id, slug } = await params;
   const post = await getPostById(id);
 
   const content = post?.postContent.postResources?.content;
@@ -120,7 +120,7 @@ export default async function Page({ params }: Props) {
         "@type": "ListItem",
         position: 2,
         name: "Comunidade",
-        item: "https://www.vegcom.life/",
+        item: "https://www.vegcom.life",
       },
       {
         "@type": "ListItem",
