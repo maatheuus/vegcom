@@ -81,6 +81,13 @@ const nextConfig: NextConfig = {
               "camera=(), microphone=(), geolocation=(), interest-cohort=()",
           },
           { key: "Content-Security-Policy", value: csp },
+          {
+            key: "Link",
+            value: [
+              '</.well-known/api-catalog>; rel="api-catalog"',
+              '</.well-known/agent-skills/index.json>; rel="agent-skills"',
+            ].join(", "),
+          },
         ],
       },
     ];

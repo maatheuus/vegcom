@@ -2,6 +2,7 @@ import { lora, maitree, montserrat, rancho } from "@/assets/fonts";
 import ProgressProviderClient from "@/shared/components/ui/ProgressProviderClient";
 import { NavigationHistoryProvider } from "@/shared/providers/NavigationHistoryProvider";
 import QueryClientWrapper from "@/shared/tanstack/QueryClientWrapper";
+import { WebMCPProvider } from "@/shared/components/WebMCP";
 import { Toaster } from "@/shared/ui/toaster";
 import "@assets/css/responsiveness.css";
 import { Analytics } from "@vercel/analytics/next";
@@ -83,6 +84,7 @@ export default function RootLayout({
         <QueryClientWrapper>
           <NavigationHistoryProvider>
             <ProgressProviderClient>{children}</ProgressProviderClient>
+            <WebMCPProvider />
             <Toaster />
           </NavigationHistoryProvider>
         </QueryClientWrapper>
