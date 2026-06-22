@@ -1,6 +1,7 @@
 import { getPosts } from "@/features/community/api/communityApi";
 import CommunityLayout from "@/features/community/components/CommunityLayout";
 import { LIMIT } from "@/features/community/hooks/useFetchPosts";
+import GtagPageViewConversion from "@/shared/components/GtagPageViewConversion";
 import OnboardingTour from "@/shared/components/ui/OnboardingTour";
 import Layout from "@/shared/ui/Layout/";
 import { dehydrate, HydrationBoundary, QueryClient } from "@tanstack/react-query";
@@ -56,6 +57,7 @@ export default async function Home() {
 
   return (
     <Layout.Default noFooter className="hidden-scrollbar" extraChildren={<OnboardingTour />}>
+      <GtagPageViewConversion />
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}

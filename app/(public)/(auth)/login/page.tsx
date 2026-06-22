@@ -1,6 +1,7 @@
 import AuthFooter from "@/features/auth/components/Footer";
 import AuthHeader from "@/features/auth/components/Header";
 import LoginCard from "@/features/auth/components/Login/Card";
+import GtagPageViewConversion from "@/shared/components/GtagPageViewConversion";
 import Col from "@/shared/ui/Layout/Helpers/Col";
 import { Metadata } from "next";
 import { Suspense } from "react";
@@ -17,6 +18,7 @@ export const metadata: Metadata = {
 export default async function Page() {
   return (
     <>
+      <GtagPageViewConversion />
       <AuthHeader />
       <Col className="mx-auto h-full w-full max-w-112 gap-y-3">
         <Suspense>
