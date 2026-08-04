@@ -8,6 +8,7 @@ import {
   BookOpenIcon,
   ChefHatIcon,
   LightbulbFilamentIcon,
+  MapTrifoldIcon,
   MegaphoneIcon,
   PaperclipIcon,
   ScrollIcon,
@@ -44,6 +45,7 @@ const NAV_LINKS = [
   { href: "/", label: "Comunidade", icon: UsersFourIcon },
   { href: "/recipes", label: "Receitas", icon: ChefHatIcon },
   { href: "/curiosities", label: "Curiosidades", icon: LightbulbFilamentIcon },
+  { href: "/explore", label: "Explorar mapa", icon: MapTrifoldIcon, isNew: true },
 ];
 
 const FEED_TABS = [
@@ -100,7 +102,7 @@ export default function CommunitySidebar({
         <Col className="h-full gap-y-1 overflow-y-auto py-2 pr-1">
           <SectionLabel>Navegar</SectionLabel>
 
-          {NAV_LINKS.map(({ href, label, icon: Icon }) => {
+          {NAV_LINKS.map(({ href, label, icon: Icon, isNew }) => {
             const isActive = pathname === href;
             return (
               <Link key={href} href={href} className="contents">
@@ -120,6 +122,15 @@ export default function CommunitySidebar({
                   >
                     {label}
                   </Text>
+                  {isNew && (
+                    <span className="ml-auto inline-flex items-center gap-1 rounded-full bg-amber-100 px-1.5 py-0.5 text-[9px] font-bold uppercase tracking-wide text-amber-700">
+                      <span className="relative flex h-1 w-1" aria-hidden>
+                        <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-amber-500 opacity-70" />
+                        <span className="relative inline-flex h-1 w-1 rounded-full bg-amber-500" />
+                      </span>
+                      Novo
+                    </span>
+                  )}
                 </Row>
               </Link>
             );
