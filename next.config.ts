@@ -32,6 +32,8 @@ const nextConfig: NextConfig = {
       "https://servicodados.ibge.gov.br",
       // DiceBear avatar presets fetched client-side for canvas conversion
       "https://api.dicebear.com",
+      // Reverse geocoding: resolve address/city from map pin coordinates
+      "https://nominatim.openstreetmap.org",
     ]
       .filter(Boolean)
       .join(" ");
@@ -53,6 +55,8 @@ const nextConfig: NextConfig = {
         "https://randomuser.me",
         "https://www.google-analytics.com",
         "https://api.dicebear.com",
+        "https://*.tile.openstreetmap.org",
+        "https://*.basemaps.cartocdn.com",
       ].join(" "),
       // next/font/google self-hosts fonts at build time → 'self' is sufficient
       "font-src 'self'",
