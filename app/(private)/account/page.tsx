@@ -9,6 +9,10 @@ import {
 import { useUpdateProfile } from "@/features/account/hooks/mutations/useUpdateProfile";
 import { useUploadAvatar } from "@/features/account/hooks/mutations/useUploadAvatar";
 import type { UpdateProfilePayload } from "@/features/auth/api/authApi";
+import {
+  getIncompleteProfileFields,
+  profileCompletionFieldLabels,
+} from "@/features/auth/utils";
 import { toast } from "@/shared/hooks/use-toast";
 import Button from "@/shared/ui/Button";
 import Row from "@/shared/ui/Layout/Helpers/Row";
@@ -16,9 +20,10 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import {
   FloppyDiskIcon,
   PencilSimpleIcon,
+  WarningIcon,
 } from "@phosphor-icons/react/dist/ssr";
 import clsx from "clsx";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import type { z } from "zod";
 
@@ -39,6 +44,7 @@ export default function Page() {
     useUploadAvatar();
 
   const isPending = isUpdatingProfile || isUploadingAvatar;
+  const incompleteFields = getIncompleteProfileFields(user?.informations);
 
   const form = useForm<z.infer<typeof personalInfoFormSchema>>({
     resolver: zodResolver(personalInfoFormSchema),
@@ -56,6 +62,21 @@ export default function Page() {
   const [bioLength, setBioLength] = useState<number>(
     form.getValues().bio?.length || 0,
   );
+
+  useEffect(() => {
+    if (!user) return;
+
+    form.reset({
+      fullName: user.name,
+      email: user.email,
+      bio: user.informations?.aboutInfo ?? "",
+      preference: user.informations?.preference,
+      culinaryLevel: user.informations?.culinaryLevel,
+      location: user.informations?.location ?? "",
+      publicProfile: true,
+    });
+    setBioLength(user.informations?.aboutInfo?.length ?? 0);
+  }, [form, user]);
 
   const _formErros =
     form.formState.errors.bio ||
@@ -171,6 +192,43 @@ export default function Page() {
         </Row>
       </Header>
 
+      {incompleteFields.length > 0 && (
+        <div
+          role="status"
+          className="flex flex-col gap-3 rounded-xl border border-orange-200 bg-orange-50 px-4 py-3 sm:flex-row sm:items-center sm:justify-between"
+        >
+          <div className="flex items-start gap-2">
+            <WarningIcon
+              size={18}
+              weight="fill"
+              className="mt-0.5 shrink-0 text-orange-500"
+              aria-hidden
+            />
+            <div>
+              <p className="font-lora text-sm font-semibold text-orange-700">
+                Seu perfil está quase pronto
+              </p>
+              <p className="font-maitree mt-0.5 text-xs text-orange-600">
+                Falta informar{" "}
+                {incompleteFields
+                  .map((field) => profileCompletionFieldLabels[field])
+                  .join(", ")}
+                .
+              </p>
+            </div>
+          </div>
+          <Button
+            type="button"
+            variant="text"
+            size="default"
+            onClick={() => setIsEditing(true)}
+            className="font-maitree shrink-0 border border-orange-300 bg-orange-400 text-sm font-semibold text-white hover:bg-orange-500"
+          >
+            Completar perfil
+          </Button>
+        </div>
+      )}
+
       <UserInformations
         isEditing={!isEditing}
         form={form}
@@ -178,6 +236,7 @@ export default function Page() {
         avatarUrl={user?.informations?.avatarUrl}
         onImageChange={setSelectedImage}
         user={user}
+        incompleteFields={incompleteFields}
       />
       <Row className="ml-auto flex justify-end gap-x-2 md:hidden">
         <Button

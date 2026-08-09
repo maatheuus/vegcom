@@ -18,12 +18,14 @@ import { cls } from "./shared";
 type Props = {
   isLoggedIn: boolean;
   isPremium: boolean;
+  isProfileIncomplete: boolean;
   userName?: string;
 };
 
 export default function DesktopMenu({
   isLoggedIn,
   isPremium,
+  isProfileIncomplete,
   userName,
 }: Props) {
   const pathname = usePathname();
@@ -92,7 +94,7 @@ export default function DesktopMenu({
             </Link>
 
             <DropdownMenu>
-              <DropdownMenuTrigger className="group/user flex cursor-pointer items-center gap-x-2 rounded-lg border-0 bg-green-100 p-1.5 transition-colors duration-300 outline-none hover:bg-green-200">
+              <DropdownMenuTrigger className="group/user relative flex cursor-pointer items-center gap-x-2 rounded-lg border-0 bg-green-100 p-1.5 transition-colors duration-300 outline-none hover:bg-green-200">
                 <UserCircleIcon
                   size={18}
                   className="text-green-200 group-hover/user:text-green-50"
@@ -102,6 +104,17 @@ export default function DesktopMenu({
                 >
                   {userName}
                 </span>
+                {isProfileIncomplete && (
+                  <>
+                    <span
+                      className="absolute -top-1 -right-1 size-2.5 rounded-full bg-orange-400 ring-2 ring-green-50"
+                      aria-hidden
+                    />
+                    <span className="sr-only">
+                      Perfil incompleto: complete suas informações
+                    </span>
+                  </>
+                )}
               </DropdownMenuTrigger>
 
               <DropdownMenuContent className="border-0 z-99! bg-green-100" align="end">

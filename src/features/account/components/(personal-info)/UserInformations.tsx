@@ -14,6 +14,7 @@ import {
 import { toast } from "@/shared/hooks/use-toast";
 
 import type { User } from "@/features/auth/api/types";
+import type { ProfileCompletionField } from "@/features/auth/utils";
 import { Avatar, AvatarFallback, AvatarImage } from "@/shared/ui/Avatar";
 import Button from "@/shared/ui/Button";
 import {
@@ -42,6 +43,7 @@ interface Props extends React.HTMLAttributes<HTMLFormElement> {
   avatarUrl?: string;
   user: User;
   onImageChange: (file: File | null) => void;
+  incompleteFields: ProfileCompletionField[];
 }
 
 export default function UserInformations({
@@ -51,6 +53,7 @@ export default function UserInformations({
   avatarUrl,
   user,
   onImageChange,
+  incompleteFields,
 }: Props) {
   const [selectedImage, setSelectedImage] = useState<File | null>(null);
   const [selectedPresetUrl, setSelectedPresetUrl] = useState<string | null>(
@@ -278,6 +281,7 @@ export default function UserInformations({
               form={form}
               setBioLength={setBioLength}
               isEditing={isEditing}
+              incompleteFields={incompleteFields}
             />
           </Form>
         </div>

@@ -22,6 +22,7 @@ import { SearchCityLocation } from "@/shared/ui/SearchCityLocation";
 import Text from "@/shared/ui/Text";
 import Textarea from "@/shared/ui/TextArea";
 import { useState } from "react";
+import type { ProfileCompletionField } from "@/features/auth/utils";
 import {
   bioTooLongMessages,
   bioTooShortMessages,
@@ -37,6 +38,15 @@ interface Props extends React.HTMLAttributes<HTMLFormElement> {
   form: UseFormReturn<PersonalInfoFormValues>;
   setBioLength: (length: number) => void;
   isEditing?: boolean;
+  incompleteFields: ProfileCompletionField[];
+}
+
+function PendingProfileField() {
+  return (
+    <span className="ml-2 rounded-full bg-orange-100 px-2 py-0.5 text-xs font-semibold text-orange-600">
+      Pendente
+    </span>
+  );
 }
 
 export default function FormInformation({
@@ -44,6 +54,7 @@ export default function FormInformation({
   className,
   isEditing,
   setBioLength,
+  incompleteFields,
 }: Props) {
   const [bioErrorMessage, setBioErrorMessage] = useState<string | null>(null);
   const [bioErrorType, setBioErrorType] = useState<"short" | "long" | null>(
@@ -51,6 +62,8 @@ export default function FormInformation({
   );
 
   const { email, location, publicProfile, fullName } = form.getValues();
+  const isFieldIncomplete = (field: ProfileCompletionField) =>
+    incompleteFields.includes(field);
 
   return (
     <form className={`space-y-6 ${className || ""}`}>
@@ -109,8 +122,9 @@ export default function FormInformation({
             name="location"
             render={({ field }) => (
               <FormItem>
-                <FormLabel className="font-maitree text-base font-semibold text-green-500">
+                <FormLabel className="font-maitree flex items-center text-base font-semibold text-green-500">
                   Localização
+                  {isFieldIncomplete("location") && <PendingProfileField />}
                 </FormLabel>
                 <FormControl className="rounded-lg">
                   <SearchCityLocation
@@ -172,8 +186,9 @@ export default function FormInformation({
             name="preference"
             render={({ field }) => (
               <FormItem>
-                <FormLabel className="font-maitree text-base font-semibold text-green-500">
+                <FormLabel className="font-maitree flex items-center text-base font-semibold text-green-500">
                   Estilo de vida
+                  {isFieldIncomplete("preference") && <PendingProfileField />}
                 </FormLabel>
                 <FormControl>
                   <Select
@@ -209,8 +224,11 @@ export default function FormInformation({
             name="culinaryLevel"
             render={({ field }) => (
               <FormItem>
-                <FormLabel className="font-maitree text-base font-semibold text-green-500">
+                <FormLabel className="font-maitree flex items-center text-base font-semibold text-green-500">
                   Nível culinário
+                  {isFieldIncomplete("culinaryLevel") && (
+                    <PendingProfileField />
+                  )}
                 </FormLabel>
                 <FormControl>
                   <Select
@@ -246,8 +264,9 @@ export default function FormInformation({
         name="bio"
         render={({ field }) => (
           <FormItem className="relative">
-            <FormLabel className="font-maitree text-base font-semibold text-green-500">
+            <FormLabel className="font-maitree flex items-center text-base font-semibold text-green-500">
               Sobre você
+              {isFieldIncomplete("aboutInfo") && <PendingProfileField />}
             </FormLabel>
             <FormControl className="rounded-lg pr-6 pb-4">
               <Textarea

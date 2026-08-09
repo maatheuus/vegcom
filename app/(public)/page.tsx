@@ -1,4 +1,3 @@
-import { ExploreCard } from "@/features/directory";
 import { getPosts } from "@/features/community/api/communityApi";
 import CommunityLayout from "@/features/community/components/CommunityLayout";
 import { LIMIT } from "@/features/community/hooks/useFetchPosts";
@@ -67,10 +66,6 @@ export default async function Home() {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteLd) }}
       />
-      {/* Desktop vê o link "Explorar mapa" na sidebar; o pill cobre só mobile/tablet */}
-      <div className="col-span-full flex justify-center px-4 pt-3 pb-1 sm:pt-4 sm:pb-2 lg:hidden">
-        <ExploreCard />
-      </div>
       <section className="col-start-1 col-end-16 h-full min-h-0">
         <HydrationBoundary state={dehydrate(queryClient)}>
           <CommunityLayout className="h-full min-h-0" />

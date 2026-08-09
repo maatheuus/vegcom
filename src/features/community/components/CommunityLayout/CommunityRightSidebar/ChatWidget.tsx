@@ -1,5 +1,6 @@
 import { useGetUser } from "@/features/auth/api/queries/getAuthApiClient";
 import MarkdownRenderer from "@/features/chat/components/chat/ChatHandler/MarkdownRenderer";
+import { QuickLoginModal } from "@/features/directory/components/QuickLoginModal";
 import {
   useGenerateResponse,
   useGetUsageStats,
@@ -30,6 +31,7 @@ export default function ChatWidget() {
   const [input, setInput] = useState("");
   const [chatId, setChatId] = useState<number>(0);
   const [hasRecipes, setHasRecipes] = useState(false);
+  const [isLoginOpen, setIsLoginOpen] = useState(false);
   const { mutateAsync: generateResponse, isPending } = useGenerateResponse();
   const { data: usageStats } = useGetUsageStats();
 
@@ -113,8 +115,9 @@ export default function ChatWidget() {
             Tire dúvidas sobre receitas, ingredientes e a vida vegana e
             vegetariana.
           </Text>
-          <Link
-            href="/login"
+          <button
+            type="button"
+            onClick={() => setIsLoginOpen(true)}
             className="flex items-center gap-x-1.5 rounded-lg border border-green-200/60 bg-green-100/40 px-3 py-2 transition-colors hover:bg-green-100"
           >
             <LockSimpleIcon size={12} className="text-green-500/50" />
@@ -125,7 +128,7 @@ export default function ChatWidget() {
             >
               Faça login para usar o chat
             </Text>
-          </Link>
+          </button>
         </>
       ) : (
         <>
@@ -226,6 +229,13 @@ export default function ChatWidget() {
           </Row>
         </>
       )}
+      <QuickLoginModal
+        isOpen={isLoginOpen}
+        className="z-[2800]"
+        description="Seus dados continuam aqui. Entre e continue sua conversa."
+        onClose={() => setIsLoginOpen(false)}
+        onAuthenticated={() => setIsLoginOpen(false)}
+      />
     </Col>
   );
 }

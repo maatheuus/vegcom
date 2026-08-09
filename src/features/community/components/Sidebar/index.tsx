@@ -107,6 +107,7 @@ export default function CommunitySidebar({
             return (
               <Link key={href} href={href} className="contents">
                 <Row
+                  id={isNew ? "community-nav-link-explore" : undefined}
                   className={`items-center gap-x-2.5 rounded-lg px-2 py-2 transition-colors duration-150 ${
                     isActive
                       ? "bg-green-200/30 text-green-600"
