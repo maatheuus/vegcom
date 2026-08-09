@@ -2,9 +2,13 @@
 
 import { getAccessToken } from "@/shared/api/axios/axiosInstance";
 import { toast } from "@/shared/hooks/use-toast";
+import { Calendar } from "@/shared/ui/calendar";
+import { Popover, PopoverContent, PopoverTrigger } from "@/shared/ui/popover";
 import { SearchCityLocation } from "@/shared/ui/SearchCityLocation";
 import { isAxiosError } from "axios";
 import clsx from "clsx";
+import { format, isBefore, parseISO, startOfTomorrow } from "date-fns";
+import { ptBR } from "date-fns/locale";
 import { AnimatePresence, motion } from "framer-motion";
 import { CalendarDays, CheckCircle, X } from "lucide-react";
 import { useCallback, useEffect, useState } from "react";
@@ -40,10 +44,13 @@ export function AddEventModal({ isOpen, onClose, event }: AddEventModalProps) {
   const [isSuccess, setIsSuccess] = useState(false);
   const [isLoginOpen, setIsLoginOpen] = useState(false);
   const [isGeocoding, setIsGeocoding] = useState(false);
+  const [isDatePickerOpen, setIsDatePickerOpen] = useState(false);
   const { mutateAsync: createEvent, isPending: isSubmitting } =
     useCreateEvent();
   const { mutateAsync: updateEvent, isPending: isUpdating } = useUpdateEvent();
   const isEditing = Boolean(event);
+  const minimumEventDate = startOfTomorrow();
+  const selectedDate = date ? parseISO(date) : undefined;
 
   useEffect(() => {
     if (!isOpen) return;
@@ -54,6 +61,7 @@ export function AddEventModal({ isOpen, onClose, event }: AddEventModalProps) {
     setDescription(event?.description ?? "");
     setLink(event?.link ?? "");
     setIsSuccess(false);
+    setIsDatePickerOpen(false);
   }, [event, isOpen]);
 
   const reset = useCallback(() => {
@@ -70,6 +78,15 @@ export function AddEventModal({ isOpen, onClose, event }: AddEventModalProps) {
     async (e: React.FormEvent) => {
       e.preventDefault();
       if (!title.trim() || !date || !street.trim() || !city.trim()) return;
+      if (!isEditing && isBefore(parseISO(date), minimumEventDate)) {
+        toast({
+          variant: "destructive",
+          title: "Escolha uma data futura",
+          description:
+            "Novos eventos só podem ser adicionados a partir de amanhã.",
+        });
+        return;
+      }
       if (!getAccessToken()) {
         setIsLoginOpen(true);
         return;
@@ -159,6 +176,7 @@ export function AddEventModal({ isOpen, onClose, event }: AddEventModalProps) {
       link,
       event,
       isEditing,
+      minimumEventDate,
       createEvent,
       updateEvent,
       reset,
@@ -255,15 +273,53 @@ export function AddEventModal({ isOpen, onClose, event }: AddEventModalProps) {
                       >
                         Data <span className="ml-0.5 text-green-200">*</span>
                       </label>
-                      <input
-                        id="event-date"
-                        type="date"
-                        value={date}
-                        onChange={(e) => setDate(e.target.value)}
-                        className="w-full rounded-xl border border-green-200 bg-white px-3 py-2.5 text-sm text-green-800 focus:border-green-500 focus:ring-2 focus:ring-green-500/20 focus:outline-none"
-                      />
+                      <Popover
+                        open={isDatePickerOpen}
+                        onOpenChange={setIsDatePickerOpen}
+                      >
+                        <PopoverTrigger asChild>
+                          <button
+                            id="event-date"
+                            type="button"
+                            className="flex w-full items-center justify-between rounded-xl border border-green-200 bg-white px-3 py-2.5 text-left text-sm text-green-800 focus:border-green-500 focus:ring-2 focus:ring-green-500/20 focus:outline-none"
+                          >
+                            <span
+                              className={clsx(
+                                !selectedDate && "text-green-700",
+                              )}
+                            >
+                              {selectedDate
+                                ? format(selectedDate, "dd/MM/yyyy")
+                                : "Selecione a data"}
+                            </span>
+                            <CalendarDays
+                              className="size-4 text-green-600"
+                              aria-hidden
+                            />
+                          </button>
+                        </PopoverTrigger>
+                        <PopoverContent
+                          align="start"
+                          sideOffset={8}
+                          className="z-[1500] w-auto rounded-xl border border-green-100 bg-white p-0 shadow-xl"
+                        >
+                          <Calendar
+                            mode="single"
+                            selected={selectedDate}
+                            onSelect={(nextDate) => {
+                              if (!nextDate) return;
+                              setDate(format(nextDate, "yyyy-MM-dd"));
+                              setIsDatePickerOpen(false);
+                            }}
+                            defaultMonth={selectedDate ?? minimumEventDate}
+                            startMonth={minimumEventDate}
+                            disabled={{ before: minimumEventDate }}
+                            locale={ptBR}
+                          />
+                        </PopoverContent>
+                      </Popover>
                       <p className="text-xs leading-relaxed text-green-200">
-                        Eventos passados permanecem na agenda como histórico.
+                        Escolha uma data a partir de amanhã.
                       </p>
                     </div>
 
