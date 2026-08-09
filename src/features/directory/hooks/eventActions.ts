@@ -1,35 +1,33 @@
 import { toast } from "@/shared/hooks/use-toast";
 import type { DirectoryEvent } from "../types";
 
-/** Gera e baixa um arquivo .ics para adicionar o evento à agenda. */
-export function addToCalendar(event: DirectoryEvent) {
-  const start = new Date(event.date);
+function formatCalendarDate(date: Date) {
+  return date.toISOString().slice(0, 10).replaceAll("-", "");
+}
+
+/** Abre o Google Agenda com um evento de dia inteiro já preenchido. */
+export function addToGoogleCalendar(event: DirectoryEvent) {
+  const start = new Date(`${event.date.slice(0, 10)}T00:00:00Z`);
   const end = new Date(start);
-  end.setDate(end.getDate() + 1);
+  end.setUTCDate(end.getUTCDate() + 1);
+  const details = [event.description, event.link].filter(Boolean).join("\n\n");
+  const url = new URL("https://calendar.google.com/calendar/r/eventedit");
 
-  const format = (date: Date) =>
-    date
-      .toISOString()
-      .replace(/[-:]/g, "")
-      .replace(/\.\d{3}/, "");
+  url.searchParams.set("action", "TEMPLATE");
+  url.searchParams.set("text", event.title);
+  url.searchParams.set(
+    "dates",
+    `${formatCalendarDate(start)}/${formatCalendarDate(end)}`,
+  );
+  url.searchParams.set("details", details);
+  url.searchParams.set("location", event.location);
 
-  const escape = (value: string) =>
-    value.replace(/[\\,;]/g, "\\$&").replace(/\n/g, "\\n");
-
-  const ics = `BEGIN:VCALENDAR\nVERSION:2.0\nBEGIN:VEVENT\nUID:vegcom-event-${event.id}\nDTSTAMP:${format(new Date())}\nDTSTART:${format(start)}\nDTEND:${format(end)}\nSUMMARY:${escape(event.title)}\nLOCATION:${escape(event.location)}\nDESCRIPTION:${escape(event.description ?? "")}\nURL:${event.link ?? ""}\nEND:VEVENT\nEND:VCALENDAR`;
-
-  const url = URL.createObjectURL(new Blob([ics], { type: "text/calendar" }));
-  const link = document.createElement("a");
-  link.href = url;
-  link.download = `${event.title.toLowerCase().replace(/[^a-z0-9]+/gi, "-")}.ics`;
-  link.click();
-
-  URL.revokeObjectURL(url);
+  window.open(url.toString(), "_blank", "noopener,noreferrer");
 
   toast({
     variant: "success",
-    title: "Evento salvo",
-    description: "O arquivo para sua agenda foi baixado.",
+    title: "Google Agenda aberto",
+    description: "Revise os dados e salve o evento na sua agenda.",
   });
 }
 

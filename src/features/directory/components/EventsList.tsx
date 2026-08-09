@@ -33,6 +33,7 @@ import {
   CalendarPlus,
   ExternalLink,
   MapPin,
+  Navigation,
   Pencil,
   Plus,
   Share2,
@@ -44,9 +45,10 @@ import {
   useDeleteEvent,
   useEvents,
 } from "../api/queries/getDirectoryApiClient";
-import { addToCalendar, shareEvent } from "../hooks/eventActions";
+import { addToGoogleCalendar, shareEvent } from "../hooks/eventActions";
 import { useUrlParams } from "../hooks/useUrlParams";
 import type { DirectoryEvent } from "../types";
+import { getGoogleMapsDirectionsUrl } from "../utils/googleMaps";
 import { AddEventModal } from "./AddEventModal";
 
 const MONTHS = [
@@ -481,8 +483,13 @@ function EventCard({
   onDelete: () => void;
 }) {
   const date = new Date(event.date);
-  const handleCalendar = () => addToCalendar(event);
+  const handleCalendar = () => addToGoogleCalendar(event);
   const handleShare = () => shareEvent(event);
+  const directionsUrl = getGoogleMapsDirectionsUrl({
+    lat: event.lat,
+    lng: event.lng,
+    fallbackDestination: event.location,
+  });
   return (
     <motion.article
       initial={{ opacity: 0, y: 12 }}
@@ -526,11 +533,20 @@ function EventCard({
           </a>
         )}
         <div className="mt-4 flex flex-wrap gap-2 border-t border-green-100 pt-3">
+          <a
+            href={directionsUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-1.5 rounded-full border border-green-200 bg-green-100 px-3 py-1.5 text-xs font-bold text-green-500 transition hover:border-green-500 hover:bg-green-200 hover:text-green-50 focus-visible:ring-2 focus-visible:ring-green-200 focus-visible:ring-offset-2 focus-visible:outline-none"
+          >
+            <Navigation className="size-3.5" />
+            Como chegar
+          </a>
           <ActionButton
             onClick={handleCalendar}
             icon={<CalendarPlus className="size-3.5" />}
           >
-            Na agenda
+            Google Agenda
           </ActionButton>
           <ActionButton
             onClick={handleShare}

@@ -16,6 +16,7 @@ import {
 import { haversineDistance } from "../hooks/haversineDistance";
 import { useIsMobile } from "../hooks/useIsMobile";
 import type { Place, PlaceCategory } from "../types";
+import { getGoogleMapsDirectionsUrl } from "../utils/googleMaps";
 
 const CATEGORY_LABELS: Record<PlaceCategory, string> = {
   restaurant: "Restaurante",
@@ -57,6 +58,11 @@ export function PlaceDetailPanel({
   if (!place) return null;
 
   const status = STATUS_CONFIG[place.status];
+  const directionsUrl = getGoogleMapsDirectionsUrl({
+    lat: place.lat,
+    lng: place.lng,
+    fallbackDestination: place.details.address ?? place.name,
+  });
 
   const slideIn = isMobile
     ? { y: "100%", opacity: 0 }
@@ -220,6 +226,16 @@ export function PlaceDetailPanel({
                     ))}
                   </div>
                 )}
+
+                <a
+                  href={directionsUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center justify-center gap-2 rounded-xl bg-green-500 px-4 py-3 text-sm font-medium text-white transition-colors hover:bg-green-700 focus-visible:ring-2 focus-visible:ring-green-500 focus-visible:ring-offset-2 focus-visible:outline-none"
+                >
+                  <Navigation className="h-4 w-4" aria-hidden />
+                  Como chegar
+                </a>
 
                 {/* Report button */}
                 <button
