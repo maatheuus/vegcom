@@ -27,9 +27,14 @@ const CATEGORY_LABELS: Record<PlaceCategory, string> = {
 };
 
 const STATUS_CONFIG = {
+  pending: { label: "Em análise", class: "bg-amber-100 text-amber-700" },
   active: { label: "Ativo", class: "bg-green-100 text-green-700" },
   closed: { label: "Fechado", class: "bg-red-100 text-red-700" },
   moved: { label: "Mudou de endereço", class: "bg-amber-100 text-amber-700" },
+  no_longer_vegan: {
+    label: "Sem opções veganas",
+    class: "bg-red-100 text-red-700",
+  },
 } as const;
 
 interface PlaceDetailPanelProps {
@@ -131,6 +136,15 @@ export function PlaceDetailPanel({
 
               {/* Content */}
               <div className="flex flex-col gap-4 px-5 pt-4 pb-6">
+                {place.verification === "needs_review" && (
+                  <p
+                    className="rounded-xl border border-amber-200 bg-amber-50 px-3 py-2.5 text-sm leading-relaxed text-amber-800"
+                    role="status"
+                  >
+                    Relatos recentes indicam que este lugar pode ter mudado.
+                    Estamos verificando.
+                  </p>
+                )}
                 {place.details.description && (
                   <p className="text-sm leading-relaxed text-green-800">
                     {place.details.description}

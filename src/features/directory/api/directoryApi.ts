@@ -2,18 +2,18 @@ import { api } from "@/shared/api/axios/axiosInstance";
 import type {
   CreateDirectoryEventPayload,
   CreatePlacePayload,
+  CreatePlaceReportFollowUpPayload,
   CreatePlaceReportPayload,
   DirectoryEvent,
   DirectoryEventsPage,
   Place,
   PlaceCategory,
-  PlaceStatus,
+  PlaceReportReceipt,
   UpdateDirectoryEventPayload,
 } from "../types";
 
 export interface GetPlacesParams {
   category?: PlaceCategory;
-  status?: PlaceStatus;
 }
 
 export interface GetEventsParams {
@@ -36,10 +36,30 @@ export const directoryApi = {
   reportPlace: async ({
     placeId,
     ...payload
-  }: CreatePlaceReportPayload): Promise<Place> => {
-    const { data } = await api.post<Place>(
+  }: CreatePlaceReportPayload): Promise<PlaceReportReceipt> => {
+    const { data } = await api.post<PlaceReportReceipt>(
       `/directory/places/${placeId}/reports`,
       payload,
+    );
+    return data;
+  },
+
+  followUpOnPlaceReport: async (
+    payload: CreatePlaceReportFollowUpPayload,
+  ): Promise<{ received: true }> => {
+    const { data } = await api.post<{ received: true }>(
+      "/directory/reports/follow-up",
+      payload,
+    );
+    return data;
+  },
+
+  unsubscribeFromPlaceReport: async (
+    token: string,
+  ): Promise<{ received: true }> => {
+    const { data } = await api.post<{ received: true }>(
+      "/directory/reports/unsubscribe",
+      { token },
     );
     return data;
   },

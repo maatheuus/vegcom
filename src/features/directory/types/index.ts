@@ -1,4 +1,11 @@
-export type PlaceStatus = "active" | "closed" | "moved";
+export type PlaceStatus =
+  | "pending"
+  | "active"
+  | "closed"
+  | "moved"
+  | "no_longer_vegan";
+
+export type PlaceVerification = "verified" | "needs_review" | "unverified";
 export type PlaceCategory =
   | "restaurant"
   | "market"
@@ -7,12 +14,7 @@ export type PlaceCategory =
   | "entrepreneur"
   | "other";
 
-export type ReportType =
-  | "closed"
-  | "moved"
-  | "wrong_info"
-  | "price_change"
-  | "other";
+export type ReportType = "closed" | "moved" | "no_longer_vegan" | "wrong_info";
 
 export interface PlaceDetails {
   address?: string;
@@ -32,6 +34,8 @@ export interface Place {
   lat: number;
   lng: number;
   status: PlaceStatus;
+  verification: PlaceVerification;
+  movedToPlaceId?: number;
   details: PlaceDetails;
   createdAt: number;
   updatedAt: number;
@@ -93,6 +97,19 @@ export interface CreatePlaceReportPayload {
   placeId: number;
   type: ReportType;
   description?: string;
+  latitude?: number;
+  longitude?: number;
+  turnstileToken?: string;
+}
+
+export interface PlaceReportReceipt {
+  received: true;
+  followUpToken: string;
+}
+
+export interface CreatePlaceReportFollowUpPayload {
+  followUpToken: string;
+  email?: string;
 }
 
 export interface CreateDirectoryEventPayload {

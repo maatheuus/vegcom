@@ -47,7 +47,7 @@ export function EventMarkers({ events }: EventMarkersProps) {
                   <button
                     type="button"
                     onClick={() => addToCalendar(event)}
-                    className="inline-flex items-center gap-1.5 rounded-full border border-green-200 bg-green-100 px-3 py-1.5 text-xs font-bold text-green-500 transition hover:border-green-500 hover:bg-green-200"
+                    className="inline-flex items-center gap-1.5 rounded-full border border-green-200 bg-green-100 px-3 py-1.5 text-xs font-bold text-green-500 transition hover:border-green-500 hover:bg-green-200 hover:text-white"
                   >
                     <CalendarPlus className="size-3.5" />
                     Na agenda
@@ -55,7 +55,7 @@ export function EventMarkers({ events }: EventMarkersProps) {
                   <button
                     type="button"
                     onClick={() => shareEvent(event)}
-                    className="inline-flex items-center gap-1.5 rounded-full border border-green-200 bg-green-100 px-3 py-1.5 text-xs font-bold text-green-500 transition hover:border-green-500 hover:bg-green-200"
+                    className="inline-flex items-center gap-1.5 rounded-full border border-green-200 bg-green-100 px-3 py-1.5 text-xs font-bold text-green-500 transition hover:border-green-500 hover:bg-green-200 hover:text-white"
                   >
                     <Share2 className="size-3.5" />
                     Compartilhar

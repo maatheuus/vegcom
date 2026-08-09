@@ -207,7 +207,7 @@ export function AddPlaceModal({
       toast({
         variant: "success",
         title: "Local adicionado!",
-        description: "O novo ponto já aparece no mapa.",
+        description: "Nossa equipe verificará o cadastro antes de publicá-lo.",
       });
 
       setTimeout(() => {

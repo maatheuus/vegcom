@@ -45,6 +45,7 @@ import {
   useEvents,
 } from "../api/queries/getDirectoryApiClient";
 import { addToCalendar, shareEvent } from "../hooks/eventActions";
+import { useUrlParams } from "../hooks/useUrlParams";
 import type { DirectoryEvent } from "../types";
 import { AddEventModal } from "./AddEventModal";
 
@@ -79,8 +80,13 @@ export function EventsList({
   openAddModal = false,
   onAddModalRequestHandled,
 }: EventsListProps) {
-  const [upcomingPage, setUpcomingPage] = useState(1);
-  const [pastPage, setPastPage] = useState(1);
+  const { searchParams, setParams } = useUrlParams();
+  const [upcomingPage, setUpcomingPage] = useState(
+    Number(searchParams.get("up")) || 1,
+  );
+  const [pastPage, setPastPage] = useState(
+    Number(searchParams.get("past")) || 1,
+  );
   const {
     data: upcomingEventsPage,
     isLoading: isLoadingUpcoming,
@@ -104,8 +110,8 @@ export function EventsList({
   const { data: user } = useGetUser();
   const { mutateAsync: deleteEvent, isPending: isDeletingEvent } =
     useDeleteEvent();
-  const [month, setMonth] = useState("Todos");
-  const [city, setCity] = useState("Todas");
+  const [month, setMonth] = useState(searchParams.get("month") ?? "Todos");
+  const [city, setCity] = useState(searchParams.get("city") ?? "Todas");
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [editingEvent, setEditingEvent] = useState<DirectoryEvent | null>(null);
   const [eventToDelete, setEventToDelete] = useState<DirectoryEvent | null>(
@@ -143,6 +149,25 @@ export function EventsList({
     (city === "Todas" || getCity(event.location) === city);
   const upcoming = upcomingEvents.filter(matchesFilters);
   const past = pastEvents.filter(matchesFilters);
+
+  const handleFilterChange =
+    (urlKey: "month" | "city", allLabel: string, setValue: (v: string) => void) =>
+    (value: string) => {
+      setValue(value);
+      setUpcomingPage(1);
+      setPastPage(1);
+      setParams({
+        [urlKey]: value === allLabel ? null : value,
+        up: null,
+        past: null,
+      });
+    };
+
+  const handlePageChange =
+    (urlKey: "up" | "past", setPage: (p: number) => void) => (page: number) => {
+      setPage(page);
+      setParams({ [urlKey]: page === 1 ? null : String(page) });
+    };
 
   const handleDelete = async () => {
     if (!eventToDelete) return;
@@ -204,21 +229,13 @@ export function EventsList({
           <div className="flex gap-2">
             <SelectFilter
               value={month}
-              onChange={(value) => {
-                setMonth(value);
-                setUpcomingPage(1);
-                setPastPage(1);
-              }}
+              onChange={handleFilterChange("month", "Todos", setMonth)}
               label="Filtrar por mês"
               options={MONTHS}
             />
             <SelectFilter
               value={city}
-              onChange={(value) => {
-                setCity(value);
-                setUpcomingPage(1);
-                setPastPage(1);
-              }}
+              onChange={handleFilterChange("city", "Todas", setCity)}
               label="Filtrar por cidade"
               options={cities}
             />
@@ -246,7 +263,7 @@ export function EventsList({
                     page={upcomingPage}
                     totalPages={upcomingTotalPages}
                     isLoading={isFetchingUpcoming}
-                    onChange={setUpcomingPage}
+                    onChange={handlePageChange("up", setUpcomingPage)}
                     label="Paginação dos próximos eventos"
                   />
                 )}
@@ -268,7 +285,7 @@ export function EventsList({
                     page={pastPage}
                     totalPages={pastTotalPages}
                     isLoading={isFetchingPast}
-                    onChange={setPastPage}
+                    onChange={handlePageChange("past", setPastPage)}
                     label="Paginação dos eventos passados"
                   />
                 )}

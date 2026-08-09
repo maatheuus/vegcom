@@ -7,6 +7,7 @@ import Link from "next/link";
 import { useCallback, useMemo, useState } from "react";
 import { useEvents, usePlaces } from "../api/queries/getDirectoryApiClient";
 import { useGeolocation } from "../hooks/useGeolocation";
+import { useUrlParams } from "../hooks/useUrlParams";
 import type { Place, PlaceCategory } from "../types";
 import { AddPlaceModal } from "./AddPlaceModal";
 import { DirectoryLayout, type Tab } from "./DirectoryLayout";
@@ -37,7 +38,10 @@ function distanceInMeters(
 }
 
 export function DirectoryPage() {
-  const [activeTab, setActiveTab] = useState<Tab>("events");
+  const { searchParams, setParams } = useUrlParams();
+  const [activeTab, setActiveTab] = useState<Tab>(
+    searchParams.get("tab") === "map" ? "map" : "events",
+  );
   const [selectedPlace, setSelectedPlace] = useState<Place | null>(null);
   const [isPanelOpen, setIsPanelOpen] = useState(false);
   const [isReportModalOpen, setIsReportModalOpen] = useState(false);
@@ -177,11 +181,19 @@ export function DirectoryPage() {
     if (content !== "places") setPlaceCategory("all");
   }, []);
 
+  const handleTabChange = useCallback(
+    (tab: Tab) => {
+      setActiveTab(tab);
+      setParams({ tab: tab === "map" ? "map" : null });
+    },
+    [setParams],
+  );
+
   const handleViewEvents = useCallback(() => {
     setIsMapGuideOpen(false);
-    setActiveTab("events");
+    handleTabChange("events");
     setIsEventModalRequested(true);
-  }, []);
+  }, [handleTabChange]);
 
   const isMapView = activeTab === "map";
 
@@ -189,7 +201,7 @@ export function DirectoryPage() {
     <MotionConfig reducedMotion="user">
       <DirectoryLayout
         activeTab={activeTab}
-        onTabChange={setActiveTab}
+        onTabChange={handleTabChange}
         isMapView={isMapView && isMapExpanded}
       >
         {isMapView ? (
@@ -354,6 +366,7 @@ export function DirectoryPage() {
                 isOpen={isReportModalOpen}
                 placeId={selectedPlace.id}
                 placeName={selectedPlace.name}
+                userPosition={userPosition}
                 onClose={handleCloseReport}
               />
             )}

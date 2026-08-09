@@ -1,5 +1,6 @@
 import { DirectoryPage } from "@/features/directory";
 import type { Metadata } from "next";
+import { Suspense } from "react";
 
 const title = "Explorar Locais e Eventos Veganos — Mapa Interativo";
 const description =
@@ -59,7 +60,9 @@ export default function Explore() {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
-      <DirectoryPage />
+      <Suspense fallback={null}>
+        <DirectoryPage />
+      </Suspense>
     </>
   );
 }

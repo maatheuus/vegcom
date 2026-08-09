@@ -2,6 +2,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import type {
   CreateDirectoryEventPayload,
   CreatePlacePayload,
+  CreatePlaceReportFollowUpPayload,
   CreatePlaceReportPayload,
   UpdateDirectoryEventPayload,
 } from "../../types";
@@ -34,14 +35,16 @@ export const useCreatePlace = () => {
 };
 
 export const useReportPlace = () => {
-  const queryClient = useQueryClient();
-
   return useMutation({
     mutationFn: (payload: CreatePlaceReportPayload) =>
       directoryApi.reportPlace(payload),
-    onSuccess: async () => {
-      await queryClient.invalidateQueries({ queryKey: directoryKeys.places });
-    },
+  });
+};
+
+export const usePlaceReportFollowUp = () => {
+  return useMutation({
+    mutationFn: (payload: CreatePlaceReportFollowUpPayload) =>
+      directoryApi.followUpOnPlaceReport(payload),
   });
 };
 
