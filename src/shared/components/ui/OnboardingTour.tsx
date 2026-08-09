@@ -7,8 +7,20 @@ import { useEffect } from "react";
 
 const TOUR_KEY = "vegcom_onboarding_done";
 
+function isVisible(element: HTMLElement | null) {
+  if (!element) return false;
+
+  const { width, height } = element.getBoundingClientRect();
+  return (
+    width > 0 &&
+    height > 0 &&
+    window.getComputedStyle(element).display !== "none"
+  );
+}
+
 function isMobile() {
-  return window.innerWidth < 1024;
+  const trigger = document.getElementById("mobile-menu-trigger");
+  return isVisible(trigger);
 }
 
 async function openMobileMenuIfNeeded() {
@@ -47,7 +59,7 @@ export default function OnboardingTour() {
       onNextClick: async (_el, _step, { driver: d }) => {
         const currentIndex = d.getActiveIndex() ?? -1;
 
-        if (mobile && currentIndex === 2) {
+        if (mobile && currentIndex === 3) {
           await openMobileMenuIfNeeded();
         }
 
@@ -71,6 +83,16 @@ const mobileSteps = [
       title: "Bem-vindo a VegCom 🌱",
       description:
         "A VegCom é uma comunidade para quem vive ou quer explorar o universo vegano e vegetariano. Aqui você compartilha receitas, publica experiências, descobre curiosidades e conta com uma IA pensada para esse estilo de vida.",
+    },
+  },
+  {
+    element: "#community-map-tab",
+    popover: {
+      title: "Novo: mapa vegano 🗺️",
+      description:
+        "Encontre lugares e eventos para viver o veganismo pelo Brasil. Toque no ícone do mapa quando quiser explorar.",
+      side: "bottom" as const,
+      align: "center" as const,
     },
   },
   {
@@ -138,6 +160,16 @@ const desktopSteps = [
       title: "Bem-vindo a VegCom 🌱",
       description:
         "A VegCom é uma comunidade para quem vive ou quer explorar o universo vegano e vegetariano. Aqui você compartilha receitas, publica experiências, descobre curiosidades e conta com uma IA pensada para esse estilo de vida.",
+    },
+  },
+  {
+    element: "#community-nav-link-explore",
+    popover: {
+      title: "Novo: mapa vegano 🗺️",
+      description:
+        "Encontre lugares e eventos para viver o veganismo pelo Brasil. Clique aqui para começar a explorar.",
+      side: "right" as const,
+      align: "center" as const,
     },
   },
   {

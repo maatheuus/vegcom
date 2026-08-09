@@ -26,6 +26,7 @@ import HeaderComponent from "@/features/recipes/components/HeaderComponent";
 
 import RecipeParent from "@/features/recipes/components/RecipeParent";
 import { SearchBar } from "@/features/recipes/components/SearchBar";
+import GtagPageViewConversion from "@/shared/components/GtagPageViewConversion";
 import Layout from "@/shared/ui/Layout";
 import Row from "@/shared/ui/Layout/Helpers/Row";
 
@@ -106,6 +107,7 @@ export default async function Page({ searchParams }: PageProps) {
 
   return (
     <Layout.Default className="style-scrollbar min-h-[90dvh]">
+      <GtagPageViewConversion />
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}

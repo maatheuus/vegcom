@@ -9,7 +9,7 @@ export interface SignupData {
   name: string;
   email: string;
   password: string;
-  informations: SignupInformationsFormData;
+  informations?: SignupInformationsFormData;
 }
 
 export interface SignupInformationsFormData {

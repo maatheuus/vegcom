@@ -34,7 +34,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       .replace(/https?:\/\/\S+/g, "")
       .replace(/\s+/g, " ")
       .trim()
-      .substring(0, 160) || "Leia este post na nossa comunidade.";
+      .substring(0, 160) ||
+    `Participe da discussão sobre ${post.postTitle} na VegCom, a maior comunidade de veganismo e vegetarianismo do Brasil.`;
 
   const ogImage = post.postContent.postResources?.images?.length
     ? [{ url: post.postContent.postResources.images[0].src, width: 1200, height: 630 }]
@@ -61,7 +62,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 }
 
 export default async function Page({ params }: Props) {
-  const { id } = await params;
+  const { id, slug } = await params;
   const post = await getPostById(id);
 
   const content = post?.postContent.postResources?.content;
@@ -93,6 +94,7 @@ export default async function Page({ params }: Props) {
     author: {
       "@type": "Person",
       name: post.user?.name,
+      url: `https://www.vegcom.life/user/${post.user?.id}`,
     },
     datePublished: post.postDate,
     description: content || "Post de discussão na comunidade.",
@@ -104,6 +106,31 @@ export default async function Page({ params }: Props) {
     },
   };
 
+  const breadcrumbLd = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      {
+        "@type": "ListItem",
+        position: 1,
+        name: "Home",
+        item: "https://www.vegcom.life",
+      },
+      {
+        "@type": "ListItem",
+        position: 2,
+        name: "Comunidade",
+        item: "https://www.vegcom.life",
+      },
+      {
+        "@type": "ListItem",
+        position: 3,
+        name: post.postTitle,
+        item: `https://www.vegcom.life/community/${id}/${slug}`,
+      },
+    ],
+  };
+
   return (
     <PostInteractionProvider>
       <Layout.Default
@@ -113,6 +140,10 @@ export default async function Page({ params }: Props) {
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbLd) }}
         />
         <section className="hidden-scrollbar w-full overflow-scroll scroll-auto">
           <BackToCommunityButton />

@@ -1,5 +1,5 @@
-import type { NextConfig } from "next";
 import { withSentryConfig } from "@sentry/nextjs";
+import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
   reactStrictMode: true,
@@ -32,6 +32,8 @@ const nextConfig: NextConfig = {
       "https://servicodados.ibge.gov.br",
       // DiceBear avatar presets fetched client-side for canvas conversion
       "https://api.dicebear.com",
+      // Reverse geocoding: resolve address/city from map pin coordinates
+      "https://nominatim.openstreetmap.org",
     ]
       .filter(Boolean)
       .join(" ");
@@ -41,7 +43,7 @@ const nextConfig: NextConfig = {
       // 'unsafe-inline' required: Google Analytics inline gtag script + Next.js hydration chunks
       // 'unsafe-eval' required in dev only: Next.js webpack uses eval-based source maps
       // vercel.live required: Vercel toolbar/feedback widget injected at runtime
-      `script-src 'self' 'unsafe-inline'${isDev ? " 'unsafe-eval'" : ""} https://www.googletagmanager.com https://va.vercel-scripts.com https://vercel.live https://cdn.jsdelivr.net`,
+      `script-src 'self' 'unsafe-inline'${isDev ? " 'unsafe-eval'" : ""} https://www.googletagmanager.com https://va.vercel-scripts.com https://vercel.live https://cdn.jsdelivr.net https://challenges.cloudflare.com`,
       "style-src 'self' 'unsafe-inline'",
       [
         "img-src 'self' data: blob:",
@@ -53,6 +55,8 @@ const nextConfig: NextConfig = {
         "https://randomuser.me",
         "https://www.google-analytics.com",
         "https://api.dicebear.com",
+        "https://*.tile.openstreetmap.org",
+        "https://*.basemaps.cartocdn.com",
       ].join(" "),
       // next/font/google self-hosts fonts at build time → 'self' is sufficient
       "font-src 'self'",
@@ -60,7 +64,7 @@ const nextConfig: NextConfig = {
       // blob: required for Web Workers spawned by Next.js/webpack chunks
       "worker-src blob: 'self'",
       // vercel.live toolbar renders inside an iframe
-      "frame-src https://vercel.live",
+      "frame-src https://vercel.live https://challenges.cloudflare.com",
       "frame-ancestors 'self'",
       "base-uri 'self'",
       "form-action 'self'",
@@ -78,7 +82,7 @@ const nextConfig: NextConfig = {
           {
             key: "Permissions-Policy",
             value:
-              "camera=(), microphone=(), geolocation=(), interest-cohort=()",
+              "camera=(), microphone=(), geolocation=(self), interest-cohort=()",
           },
           { key: "Content-Security-Policy", value: csp },
           {

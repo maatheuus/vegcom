@@ -20,7 +20,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
   const description =
     recipe.description ||
-    `Aprenda a fazer ${recipe.title} na comunidade VegCom!`;
+    `Aprenda como fazer ${recipe.title} passo a passo na comunidade VegCom. Uma receita deliciosa de culinária vegana/plant-based para o seu dia a dia!`;
   const url = `https://www.vegcom.life/recipes/${recipe.slug || slug}`;
   const ogImage = recipe.images?.length
     ? [{ url: recipe.images[0], width: 1200, height: 630, alt: recipe.title }]
@@ -70,6 +70,7 @@ export default async function page({ params }: Props) {
       name: recipe?.user?.name || "Autor Desconhecido",
     },
     datePublished: recipe.createdAt,
+    dateModified: recipe.updatedAt || recipe.createdAt,
     description: recipe.description || `Como preparar ${recipe.title}.`,
     recipeIngredient: recipe?.steps?.ingredients || [],
     recipeInstructions:
@@ -78,6 +79,41 @@ export default async function page({ params }: Props) {
         name: `Passo ${index + 1}`,
         text: inst,
       })) || [],
+    totalTime: `PT${recipe.cookTime || "30"}M`,
+    recipeCategory: recipe.category,
+    recipeYield: recipe.quantity,
+    aggregateRating: recipe.averageRating
+      ? {
+          "@type": "AggregateRating",
+          ratingValue: recipe.averageRating,
+          reviewCount: recipe.totalComments || 1,
+        }
+      : undefined,
+  };
+
+  const breadcrumbLd = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      {
+        "@type": "ListItem",
+        position: 1,
+        name: "Home",
+        item: "https://www.vegcom.life",
+      },
+      {
+        "@type": "ListItem",
+        position: 2,
+        name: "Receitas",
+        item: "https://www.vegcom.life/recipes",
+      },
+      {
+        "@type": "ListItem",
+        position: 3,
+        name: recipe.title,
+        item: `https://www.vegcom.life/recipes/${recipe.slug || slug}`,
+      },
+    ],
   };
 
   return (
@@ -85,6 +121,10 @@ export default async function page({ params }: Props) {
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbLd) }}
       />
 
       <section className="space-y-2 md:space-y-4">

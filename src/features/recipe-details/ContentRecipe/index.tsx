@@ -21,6 +21,14 @@ export default function ContentRecipe({ recipe }: Props) {
   return (
     <div className="flex w-full flex-col gap-y-8">
       <Col className="gap-y-6">
+        <div className="sr-only">
+          <h2>Sobre esta receita de {recipe.title}</h2>
+          <p>
+            Esta é uma receita de culinária vegana e plant-based do tipo{" "}
+            {recipe.category}. É considerada de nível de dificuldade{" "}
+            {recipe.difficulty} e rende aproximadamente {recipe.quantity}.
+          </p>
+        </div>
         <Text as="p" type={Text.Type.BodyThree} className="text-green-500">
           {recipe.description}
         </Text>
