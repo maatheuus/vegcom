@@ -49,16 +49,23 @@ const CATEGORY_STYLES: Record<PlaceCategory, Omit<CategoryStyle, "icon">> = {
   other: { color: "#276b37", bg: "#fffdf4" },
 };
 
-function markerHtml(category: PlaceCategory, size: number): string {
+function markerHtml(
+  category: PlaceCategory,
+  size: number,
+  isSelected = false,
+): string {
   const style = CATEGORY_STYLES[category] ?? CATEGORY_STYLES.other;
   const paths = LUCIDE_PATHS[category] ?? LUCIDE_PATHS.other;
   const iconSize = Math.round(size * 0.5);
+  const shadow = isSelected
+    ? `0 0 0 3px #fffdf4,0 0 0 5px ${style.color},0 3px 10px rgba(27,78,48,0.28)`
+    : "0 3px 10px rgba(27,78,48,0.28)";
 
   return `<div style="
       width:${size}px;height:${size}px;border-radius:9999px;
       background:${style.bg};border:3px solid ${style.color};
       display:flex;align-items:center;justify-content:center;
-      box-shadow:0 3px 10px rgba(27,78,48,0.28);
+      box-shadow:${shadow};
     ">
     <svg xmlns="http://www.w3.org/2000/svg" width="${iconSize}" height="${iconSize}" viewBox="0 0 24 24"
       fill="none" stroke="${style.color}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -70,24 +77,61 @@ function markerHtml(category: PlaceCategory, size: number): string {
 const ICON_SIZE: [number, number] = [40, 40];
 const ICON_ANCHOR: [number, number] = [20, 40];
 
+// Ícones não-selecionados só variam por categoria (6 possibilidades); cache-os
+// para não reconstruir HTML + DivIcon por marcador a cada render.
+const markerIconCache = new Map<PlaceCategory, L.DivIcon>();
+
 export function createMarkerIcon(category: PlaceCategory): L.DivIcon {
-  return L.divIcon({
+  const cached = markerIconCache.get(category);
+  if (cached) return cached;
+
+  const icon = L.divIcon({
     html: markerHtml(category, 40),
     className: "",
     iconSize: ICON_SIZE,
     iconAnchor: ICON_ANCHOR,
     popupAnchor: [0, -40],
   });
+  markerIconCache.set(category, icon);
+  return icon;
 }
 
 export function createSelectedMarkerIcon(category: PlaceCategory): L.DivIcon {
   return L.divIcon({
-    html: markerHtml(category, 48),
+    html: markerHtml(category, 40, true),
     className: "selected-marker",
-    iconSize: [48, 48],
-    iconAnchor: [24, 48],
-    popupAnchor: [0, -48],
+    iconSize: ICON_SIZE,
+    iconAnchor: ICON_ANCHOR,
+    popupAnchor: [0, -40],
   });
+}
+
+let eventMarkerIcon: L.DivIcon | null = null;
+
+export function createEventMarkerIcon(): L.DivIcon {
+  if (eventMarkerIcon) return eventMarkerIcon;
+
+  const html = `<div style="
+      width:40px;height:40px;border-radius:9999px;
+      background:#276b37;border:3px solid #fffdf4;
+      display:flex;align-items:center;justify-content:center;
+      box-shadow:0 3px 10px rgba(27,78,48,0.35);
+    ">
+    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
+      fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M8 2v4M16 2v4M3 10h18"/>
+      <rect width="18" height="18" x="3" y="4" rx="2"/>
+      <path d="M8 14h.01M12 14h.01M16 14h.01M8 18h.01M12 18h.01"/>
+    </svg>
+  </div>`;
+  eventMarkerIcon = L.divIcon({
+    html,
+    className: "event-marker",
+    iconSize: ICON_SIZE,
+    iconAnchor: ICON_ANCHOR,
+    popupAnchor: [0, -40],
+  });
+  return eventMarkerIcon;
 }
 
 export function createPendingMarkerIcon(): L.DivIcon {

@@ -1,5 +1,6 @@
 "use client";
 
+import clsx from "clsx";
 import { CalendarDays, MapIcon, Sprout } from "lucide-react";
 import Link from "next/link";
 import styles from "../directory.module.css";
@@ -47,7 +48,7 @@ export function DirectoryLayout({
         className={`${styles.atlas} flex h-dvh flex-col overflow-hidden bg-green-50`}
       >
         <header className="flex shrink-0 items-center justify-between border-b border-green-200 bg-white px-4 py-2.5">
-          <div className="flex items-center gap-2 text-green-500"><span className="flex size-8 items-center justify-center rounded-full bg-green-100"><Sprout className="size-4" /></span><span className="font-lora text-lg italic">Mapa VegCom</span></div>
+          <div className="flex items-center gap-2 text-green-500"><span className="flex size-8 items-center justify-center rounded-full bg-green-100"><Sprout className="size-4" /></span><span className="font-lora text-base italic">VegCom em Movimento</span></div>
           <Link href="/" className="rounded-full border border-green-200 px-3 py-1.5 text-xs font-bold text-green-500 transition hover:bg-green-100">Comunidade</Link>
         </header>
         <main className="relative flex-1 overflow-hidden">{children}</main>
@@ -94,13 +95,13 @@ function BottomNav({
             role="tab"
             aria-selected={isActive}
             onClick={() => onTabChange(tab.key)}
-            className={[
+            className={clsx(
               "relative flex min-w-24 flex-col items-center gap-1 rounded-xl px-4 py-2 text-xs font-semibold transition-all duration-200",
               "focus-visible:ring-2 focus-visible:ring-green-200 focus-visible:ring-offset-2 focus-visible:outline-none",
               isActive
                 ? "bg-green-500 text-white shadow-[0_5px_14px_rgba(27,78,48,0.22)]"
                 : "text-green-200 hover:bg-green-100 hover:text-green-500",
-            ].join(" ")}
+            )}
           >
             {tab.icon}
             <span>{tab.label}</span>
@@ -129,13 +130,13 @@ function DesktopNavOverlay({
               role="tab"
               aria-selected={isActive}
               onClick={() => onTabChange(tab.key)}
-              className={[
+              className={clsx(
                 "inline-flex items-center gap-2 rounded-full px-5 py-2.5 text-sm font-semibold transition-all duration-200",
                 "focus-visible:ring-2 focus-visible:ring-green-200 focus-visible:ring-offset-2 focus-visible:outline-none",
                 isActive
                   ? "bg-green-500 text-white shadow-[0_4px_12px_rgba(27,78,48,0.25)]"
                   : "text-green-200 hover:bg-green-100 hover:text-green-500",
-              ].join(" ")}
+              )}
             >
               {tab.icon}
               <span>{tab.label}</span>
@@ -161,9 +162,9 @@ function DesktopTopBar({
           <Sprout className="size-5" aria-hidden />
         </span>
         <div>
-          <p className="font-lora text-lg leading-none italic">Mapa VegCom</p>
+          <p className="font-lora text-lg leading-none italic">VegCom em Movimento</p>
           <p className="mt-1 text-[10px] font-bold tracking-[0.16em] text-green-200 uppercase">
-            Guia coletivo
+            Guia e agenda coletiva
           </p>
         </div>
       </div>
@@ -181,13 +182,13 @@ function DesktopTopBar({
               role="tab"
               aria-selected={isActive}
               onClick={() => onTabChange(tab.key)}
-              className={[
+              className={clsx(
                 "inline-flex items-center gap-2 rounded-full px-4 py-2 text-sm font-semibold transition-all duration-200",
                 "focus-visible:ring-2 focus-visible:ring-green-200 focus-visible:ring-offset-2 focus-visible:outline-none",
                 isActive
                   ? "bg-green-500 text-white shadow-sm"
                   : "text-green-200 hover:text-green-500",
-              ].join(" ")}
+              )}
             >
               {tab.icon}
               <span>{tab.label}</span>

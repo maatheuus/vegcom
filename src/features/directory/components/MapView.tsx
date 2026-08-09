@@ -2,7 +2,7 @@
 
 import dynamic from "next/dynamic";
 import type { GeolocationState } from "../hooks/useGeolocation";
-import type { Place } from "../types";
+import type { DirectoryEvent, Place } from "../types";
 
 const MapContent = dynamic(
   () => import("./MapContent").then((m) => ({ default: m.MapContent })),
@@ -21,6 +21,7 @@ const MapContent = dynamic(
 
 interface MapViewProps {
   places: Place[];
+  events: DirectoryEvent[];
   selectedPlaceId: number | null;
   onPlaceSelect: (place: Place) => void;
   onMapClick: () => void;
@@ -33,6 +34,7 @@ interface MapViewProps {
 
 export function MapView({
   places,
+  events,
   selectedPlaceId,
   onPlaceSelect,
   onMapClick,
@@ -46,6 +48,7 @@ export function MapView({
     <div className="h-full w-full">
       <MapContent
         places={places}
+        events={events}
         selectedPlaceId={selectedPlaceId}
         onPlaceSelect={onPlaceSelect}
         onMapClick={onMapClick}

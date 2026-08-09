@@ -1,5 +1,6 @@
 "use client";
 
+import clsx from "clsx";
 import { motion } from "framer-motion";
 import { ArrowRight } from "lucide-react";
 import Link from "next/link";
@@ -18,12 +19,12 @@ export function ExploreCard() {
     >
       <Link
         href="/explore"
-        className={[
+        className={clsx(
           "group inline-flex items-center gap-2.5 rounded-full py-1.5 pl-3.5 pr-3 text-sm",
           "border border-green-200 bg-white/60 shadow-sm backdrop-blur-sm",
           "transition-all duration-300 hover:bg-white hover:shadow-md",
           "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green-200 focus-visible:ring-offset-2",
-        ].join(" ")}
+        )}
       >
         <span className="relative flex h-2 w-2 shrink-0" aria-hidden>
           <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-green-200 opacity-60" />

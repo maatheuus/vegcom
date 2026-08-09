@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback } from "react";
-import { Marker } from "react-leaflet";
+import { Marker, Tooltip } from "react-leaflet";
 import MarkerClusterGroup from "react-leaflet-cluster";
 import L from "leaflet";
 import { createMarkerIcon, createSelectedMarkerIcon } from "./markerIcons";
@@ -69,7 +69,17 @@ export function PlaceMarkersCluster({
             eventHandlers={{
               click: () => onPlaceSelect(place),
             }}
-          />
+          >
+            <Tooltip
+              className="place-marker-tooltip"
+              direction="top"
+              offset={[0, -24]}
+              opacity={1}
+              permanent={isSelected}
+            >
+              {place.name}
+            </Tooltip>
+          </Marker>
         );
       })}
     </MarkerClusterGroup>

@@ -1,12 +1,19 @@
 "use client";
 
 import { useEffect, useRef } from "react";
-import { MapContainer, Marker, TileLayer, useMap, ZoomControl } from "react-leaflet";
+import {
+  MapContainer,
+  Marker,
+  TileLayer,
+  useMap,
+  ZoomControl,
+} from "react-leaflet";
 import L from "leaflet";
 import { PlaceMarkersCluster } from "./PlaceMarkersCluster";
+import { EventMarkers } from "./EventMarkers";
 import { createPendingMarkerIcon } from "./markerIcons";
 import type { GeolocationState } from "../hooks/useGeolocation";
-import type { Place } from "../types";
+import type { DirectoryEvent, Place } from "../types";
 
 // Enquadra o Brasil inteiro (sem mostrar o continente todo)
 const BRAZIL_BOUNDS = L.latLngBounds([-33.87, -73.99], [5.27, -34.72]);
@@ -15,6 +22,7 @@ const USER_ZOOM = 11;
 
 interface MapContentProps {
   places: Place[];
+  events: DirectoryEvent[];
   selectedPlaceId: number | null;
   onPlaceSelect: (place: Place) => void;
   onMapClick: () => void;
@@ -27,6 +35,7 @@ interface MapContentProps {
 
 export function MapContent({
   places,
+  events,
   selectedPlaceId,
   onPlaceSelect,
   onMapClick,
@@ -53,6 +62,7 @@ export function MapContent({
         selectedPlaceId={selectedPlaceId}
         onPlaceSelect={onPlaceSelect}
       />
+      <EventMarkers events={events} />
       {userPosition && (
         <Marker
           position={userPosition}
@@ -79,7 +89,9 @@ function MapResizeObserver() {
   const map = useMap();
 
   useEffect(() => {
-    const observer = new ResizeObserver(() => map.invalidateSize({ animate: false }));
+    const observer = new ResizeObserver(() =>
+      map.invalidateSize({ animate: false }),
+    );
     observer.observe(map.getContainer());
     return () => observer.disconnect();
   }, [map]);
@@ -100,16 +112,23 @@ function InitialViewController({
   geoState: GeolocationState;
 }) {
   const map = useMap();
-  const applied = useRef(false);
+  const hasCenteredOnUser = useRef(false);
+  const hasFittedBrazil = useRef(false);
 
   useEffect(() => {
-    if (applied.current) return;
-
-    if (geoState === "success" && userPosition) {
-      applied.current = true;
+    if (geoState === "success" && userPosition && !hasCenteredOnUser.current) {
+      hasCenteredOnUser.current = true;
       map.flyTo(userPosition, USER_ZOOM, { duration: 1.4 });
-    } else if (geoState === "denied" || geoState === "error") {
-      applied.current = true;
+      return;
+    }
+
+    if (geoState === "skipped") {
+      map.fitBounds(BRAZIL_BOUNDS, { padding: [8, 8] });
+      return;
+    }
+
+    if (geoState !== "loading" && !hasFittedBrazil.current) {
+      hasFittedBrazil.current = true;
       map.fitBounds(BRAZIL_BOUNDS, { padding: [8, 8] });
     }
   }, [map, geoState, userPosition]);

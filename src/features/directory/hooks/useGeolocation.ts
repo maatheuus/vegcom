@@ -1,18 +1,26 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useCallback, useEffect, useState } from "react";
 
-export type GeolocationState = "idle" | "loading" | "success" | "denied" | "error";
+export type GeolocationState =
+  | "checking"
+  | "idle"
+  | "loading"
+  | "success"
+  | "denied"
+  | "error"
+  | "skipped";
 
 interface UseGeolocationReturn {
   position: [number, number] | null;
   state: GeolocationState;
   request: () => void;
+  skip: () => void;
 }
 
 export function useGeolocation(): UseGeolocationReturn {
   const [position, setPosition] = useState<[number, number] | null>(null);
-  const [state, setState] = useState<GeolocationState>("idle");
+  const [state, setState] = useState<GeolocationState>("checking");
 
   const request = useCallback(() => {
     if (!navigator.geolocation) {
@@ -39,8 +47,33 @@ export function useGeolocation(): UseGeolocationReturn {
   }, []);
 
   useEffect(() => {
-    request();
+    let isActive = true;
+
+    if (!navigator.permissions) {
+      setState("idle");
+      return;
+    }
+
+    navigator.permissions
+      .query({ name: "geolocation" })
+      .then((permission) => {
+        if (!isActive) return;
+        if (permission.state === "granted") {
+          request();
+        } else {
+          setState("idle");
+        }
+      })
+      .catch(() => {
+        if (isActive) setState("idle");
+      });
+
+    return () => {
+      isActive = false;
+    };
   }, [request]);
 
-  return { position, state, request };
+  const skip = useCallback(() => setState("skipped"), []);
+
+  return { position, state, request, skip };
 }

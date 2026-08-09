@@ -1,6 +1,6 @@
 "use client";
 
-import { Marker } from "react-leaflet";
+import { Marker, Tooltip } from "react-leaflet";
 import { createMarkerIcon, createSelectedMarkerIcon } from "./markerIcons";
 import type { Place, PlaceCategory } from "../types";
 
@@ -33,7 +33,17 @@ export function PlaceMarkers({
             eventHandlers={{
               click: () => onPlaceSelect(place),
             }}
-          />
+          >
+            <Tooltip
+              className="place-marker-tooltip"
+              direction="top"
+              offset={[0, -24]}
+              opacity={1}
+              permanent={isSelected}
+            >
+              {place.name}
+            </Tooltip>
+          </Marker>
         );
       })}
     </>

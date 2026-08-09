@@ -1,28 +1,32 @@
 "use client";
 
-import { useState, useCallback, useEffect } from "react";
+import { getAccessToken } from "@/shared/api/axios/axiosInstance";
+import { toast } from "@/shared/hooks/use-toast";
+import { SearchCityLocation } from "@/shared/ui/SearchCityLocation";
+import { isAxiosError } from "axios";
+import clsx from "clsx";
 import { AnimatePresence, motion } from "framer-motion";
 import {
-  X,
-  MapPin,
   CheckCircle,
-  UtensilsCrossed,
-  ShoppingBag,
-  Croissant,
   Coffee,
+  Croissant,
+  MapPin,
+  ShoppingBag,
   Store,
+  UtensilsCrossed,
+  X,
 } from "lucide-react";
-import type { PlaceCategory } from "../types";
-import { toast } from "@/shared/hooks/use-toast";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { useCreatePlace } from "../api/queries/getDirectoryApiClient";
+import { geocode } from "../hooks/geocode";
 import { useReverseGeocode } from "../hooks/useReverseGeocode";
-import { getAccessToken } from "@/shared/api/axios/axiosInstance";
-import { isAxiosError } from "axios";
+import type { PlaceCategory } from "../types";
 import { QuickLoginModal } from "./QuickLoginModal";
 
 interface AddPlaceModalProps {
   isOpen: boolean;
   coords: [number, number] | null;
+  onCoordsChange: (coords: [number, number]) => void;
   onClose: () => void;
 }
 
@@ -69,7 +73,12 @@ const PRICE_OPTIONS: { value: 1 | 2 | 3; symbol: string; label: string }[] = [
   { value: 3, symbol: "$$$", label: "Caro" },
 ];
 
-export function AddPlaceModal({ isOpen, coords, onClose }: AddPlaceModalProps) {
+export function AddPlaceModal({
+  isOpen,
+  coords,
+  onCoordsChange,
+  onClose,
+}: AddPlaceModalProps) {
   const [name, setName] = useState("");
   const [category, setCategory] = useState<PlaceCategory | null>(null);
   const [address, setAddress] = useState("");
@@ -78,9 +87,13 @@ export function AddPlaceModal({ isOpen, coords, onClose }: AddPlaceModalProps) {
   const [instagram, setInstagram] = useState("");
   const [description, setDescription] = useState("");
   const [schedule, setSchedule] = useState("");
-  const [priceRange, setPriceRange] = useState<1 | 2 | 3 | undefined>(undefined);
+  const [priceRange, setPriceRange] = useState<1 | 2 | 3 | undefined>(
+    undefined,
+  );
   const [isSuccess, setIsSuccess] = useState(false);
   const [isLoginOpen, setIsLoginOpen] = useState(false);
+  const [isUpdatingPosition, setIsUpdatingPosition] = useState(false);
+  const positionRequestId = useRef(0);
   const { mutateAsync: createPlace, isPending: isSubmitting } =
     useCreatePlace();
   const { result: geocoded, isLoading: isGeocoding } = useReverseGeocode(
@@ -99,6 +112,7 @@ export function AddPlaceModal({ isOpen, coords, onClose }: AddPlaceModalProps) {
   }, [geocoded]);
 
   const reset = useCallback(() => {
+    positionRequestId.current += 1;
     setName("");
     setCategory(null);
     setAddress("");
@@ -109,6 +123,7 @@ export function AddPlaceModal({ isOpen, coords, onClose }: AddPlaceModalProps) {
     setSchedule("");
     setPriceRange(undefined);
     setIsSuccess(false);
+    setIsUpdatingPosition(false);
   }, []);
 
   const handleClose = useCallback(() => {
@@ -116,10 +131,43 @@ export function AddPlaceModal({ isOpen, coords, onClose }: AddPlaceModalProps) {
     onClose();
   }, [reset, onClose]);
 
+  const handleCitySelect = useCallback(
+    async (selectedCity: { displayName: string }) => {
+      const selectedCityName = selectedCity.displayName;
+      const requestId = positionRequestId.current + 1;
+      positionRequestId.current = requestId;
+      setCity(selectedCityName);
+      setIsUpdatingPosition(true);
+
+      const cityCoords = await geocode(selectedCityName);
+      if (positionRequestId.current !== requestId) return;
+
+      setIsUpdatingPosition(false);
+
+      if (!cityCoords) {
+        toast({
+          variant: "destructive",
+          title: "Não foi possível atualizar a posição",
+          description: "O local manterá o ponto escolhido no mapa.",
+        });
+        return;
+      }
+
+      onCoordsChange([cityCoords.lat, cityCoords.lng]);
+    },
+    [onCoordsChange],
+  );
+
   const handleSubmit = useCallback(
     async (e: React.FormEvent) => {
       e.preventDefault();
-      if (!name.trim() || !category || !address.trim() || !city.trim() || !coords)
+      if (
+        !name.trim() ||
+        !category ||
+        !address.trim() ||
+        !city.trim() ||
+        !coords
+      )
         return;
       if (!getAccessToken()) {
         setIsLoginOpen(true);
@@ -145,7 +193,11 @@ export function AddPlaceModal({ isOpen, coords, onClose }: AddPlaceModalProps) {
         if (isUnauthorized) {
           setIsLoginOpen(true);
         } else {
-          toast({ variant: "destructive", title: "Não foi possível adicionar o local", description: "Tente novamente em instantes." });
+          toast({
+            variant: "destructive",
+            title: "Não foi possível adicionar o local",
+            description: "Tente novamente em instantes.",
+          });
         }
         return;
       }
@@ -208,14 +260,14 @@ export function AddPlaceModal({ isOpen, coords, onClose }: AddPlaceModalProps) {
           >
             {/* Header */}
             <div className="flex items-center justify-between border-b border-green-100 px-5 py-4">
-              <div className="flex items-center gap-2 text-green-700">
+              <div className="flex items-center gap-2 text-green-500">
                 <MapPin className="h-5 w-5 text-green-500" aria-hidden />
                 <h2 className="text-base font-semibold">Adicionar Local</h2>
               </div>
               <button
                 type="button"
                 onClick={handleClose}
-                className="rounded-full p-1 text-green-400 transition-colors hover:bg-green-100 hover:text-green-600 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green-500"
+                className="rounded-full p-1 text-green-200 transition-colors hover:bg-green-100 hover:text-green-600 focus-visible:ring-2 focus-visible:ring-green-500 focus-visible:outline-none"
                 aria-label="Fechar"
               >
                 <X className="h-5 w-5" />
@@ -229,19 +281,28 @@ export function AddPlaceModal({ isOpen, coords, onClose }: AddPlaceModalProps) {
                   animate={{ scale: 1 }}
                   transition={{ type: "spring", damping: 15, stiffness: 200 }}
                 >
-                  <CheckCircle className="h-16 w-16 text-green-500" aria-hidden />
+                  <CheckCircle
+                    className="h-16 w-16 text-green-500"
+                    aria-hidden
+                  />
                 </motion.div>
                 <p className="text-center text-lg font-semibold text-green-800">
                   Local adicionado!
                 </p>
               </div>
             ) : (
-              <form onSubmit={handleSubmit} className="flex flex-1 flex-col overflow-hidden">
-                <div className="flex-1 overflow-y-auto px-5 py-4">
+              <form
+                onSubmit={handleSubmit}
+                className="flex flex-1 flex-col overflow-hidden"
+              >
+                <div className="flex-1 overflow-y-auto px-3 py-4">
                   <div className="flex flex-col gap-4">
                     {coords && (
                       <div className="flex items-center gap-2 rounded-xl bg-green-50 px-3 py-2.5 text-xs text-green-700">
-                        <MapPin className="h-4 w-4 shrink-0 text-green-500" aria-hidden />
+                        <MapPin
+                          className="h-4 w-4 shrink-0 text-green-500"
+                          aria-hidden
+                        />
                         <span>
                           Posição escolhida:{" "}
                           <strong>
@@ -252,23 +313,34 @@ export function AddPlaceModal({ isOpen, coords, onClose }: AddPlaceModalProps) {
                     )}
 
                     <div className="flex flex-col gap-1.5">
-                      <label htmlFor="place-name" className="text-xs font-medium text-green-700">
-                        Nome <span className="ml-0.5 text-green-400">*</span>
+                      <label
+                        htmlFor="place-name"
+                        className="text-xs font-medium text-green-500"
+                      >
+                        Nome <span className="ml-0.5 text-green-200">*</span>
                       </label>
                       <input
                         id="place-name"
                         value={name}
                         onChange={(e) => setName(e.target.value)}
                         placeholder="Ex: Restaurante Verde Vida"
-                        className="w-full rounded-xl border border-green-200 bg-white px-3 py-2.5 text-sm text-green-800 placeholder:text-green-300 focus:border-green-500 focus:outline-none focus:ring-2 focus:ring-green-500/20"
+                        className="w-full rounded-xl border border-green-200 bg-white px-3 py-2.5 text-sm text-green-800 placeholder:text-green-300 focus:border-green-500 focus:ring-2 focus:ring-green-500/20 focus:outline-none"
                       />
+                      <p className="text-xs leading-relaxed text-green-200">
+                        Use o nome pelo qual as pessoas encontram o local.
+                      </p>
                     </div>
 
                     <div className="flex flex-col gap-1.5">
-                      <span className="text-xs font-medium text-green-700">
-                        Categoria <span className="ml-0.5 text-green-400">*</span>
+                      <span className="text-xs font-medium text-green-500">
+                        Categoria{" "}
+                        <span className="ml-0.5 text-green-200">*</span>
                       </span>
-                      <div className="flex flex-wrap gap-2" role="radiogroup" aria-label="Categoria">
+                      <div
+                        className="flex flex-wrap gap-2"
+                        role="radiogroup"
+                        aria-label="Categoria"
+                      >
                         {CATEGORY_OPTIONS.map((option) => {
                           const isActive = category === option.key;
                           return (
@@ -278,13 +350,13 @@ export function AddPlaceModal({ isOpen, coords, onClose }: AddPlaceModalProps) {
                               role="radio"
                               aria-checked={isActive}
                               onClick={() => setCategory(option.key)}
-                              className={[
+                              className={clsx(
                                 "inline-flex items-center gap-1.5 rounded-full px-3 py-1.5 text-sm font-medium transition-all duration-200",
-                                "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green-500 focus-visible:ring-offset-2",
+                                "focus-visible:ring-2 focus-visible:ring-green-500 focus-visible:ring-offset-2 focus-visible:outline-none",
                                 isActive
                                   ? "bg-green-500 text-white shadow-sm"
                                   : "bg-green-50 text-green-500 hover:bg-green-100",
-                              ].join(" ")}
+                              )}
                             >
                               {option.icon}
                               <span>{option.label}</span>
@@ -292,49 +364,61 @@ export function AddPlaceModal({ isOpen, coords, onClose }: AddPlaceModalProps) {
                           );
                         })}
                       </div>
+                      <p className="text-xs leading-relaxed text-green-200">
+                        A categoria define o ícone e ajuda visitantes a filtrar
+                        o mapa.
+                      </p>
                     </div>
 
                     <div className="flex flex-col gap-1.5">
-                      <label htmlFor="place-address" className="text-xs font-medium text-green-700">
-                        Endereço <span className="ml-0.5 text-green-400">*</span>
+                      <label
+                        htmlFor="place-address"
+                        className="text-xs font-medium text-green-500"
+                      >
+                        Endereço{" "}
+                        <span className="ml-0.5 text-green-200">*</span>
                       </label>
                       <input
                         id="place-address"
                         value={address}
                         onChange={(e) => setAddress(e.target.value)}
                         placeholder="Ex: Rua Augusta, 1500, Consolação"
-                        className="w-full rounded-xl border border-green-200 bg-white px-3 py-2.5 text-sm text-green-800 placeholder:text-green-300 focus:border-green-500 focus:outline-none focus:ring-2 focus:ring-green-500/20"
+                        className="w-full rounded-xl border border-green-200 bg-white px-3 py-2.5 text-sm text-green-800 placeholder:text-green-300 focus:border-green-500 focus:ring-2 focus:ring-green-500/20 focus:outline-none"
                       />
+                      <p className="text-xs leading-relaxed text-green-200">
+                        Inclua número ou referência para que o ponto fique claro
+                        no mapa.
+                      </p>
                     </div>
 
                     <div className="flex flex-col gap-1.5">
-                      <label htmlFor="place-city" className="text-xs font-medium text-green-700">
-                        Cidade <span className="ml-0.5 text-green-400">*</span>
-                        {geocoded?.city && (
-                          <span className="ml-1.5 font-normal text-green-400">
-                            — detectada pelo pin
-                          </span>
-                        )}
+                      <label className="text-xs font-medium text-green-500">
+                        Cidade <span className="ml-0.5 text-green-200">*</span>
                       </label>
-                      <div className="relative">
-                        <input
-                          id="place-city"
-                          value={city}
-                          onChange={(e) => setCity(e.target.value)}
-                          placeholder={
-                            isGeocoding ? "Detectando cidade..." : "Ex: São Paulo, SP"
-                          }
-                          className="w-full rounded-xl border border-green-200 bg-white px-3 py-2.5 text-sm text-green-800 placeholder:text-green-300 focus:border-green-500 focus:outline-none focus:ring-2 focus:ring-green-500/20"
-                        />
-                        {isGeocoding && (
-                          <span className="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 animate-spin rounded-full border-2 border-green-500 border-t-transparent" />
-                        )}
-                      </div>
+                      <SearchCityLocation
+                        value={city}
+                        onChange={setCity}
+                        onSelect={handleCitySelect}
+                        placeholder={
+                          isGeocoding
+                            ? "Detectando cidade..."
+                            : "Busque a cidade"
+                        }
+                        disabled={isUpdatingPosition}
+                        className="rounded-xl border-green-200 px-3 py-2.5 text-sm text-green-800 focus:border-green-500 focus:ring-2 focus:ring-green-500/20"
+                      />
+                      <p className="text-xs leading-relaxed text-green-200">
+                        Ao escolher uma cidade, o ponto vai para o centro dela.
+                        {isUpdatingPosition && " Atualizando posição..."}
+                      </p>
                     </div>
 
-                    <div className="grid grid-cols-2 gap-3">
+                    <div className="order-10 grid grid-cols-2 gap-3">
                       <div className="flex flex-col gap-1.5">
-                        <label htmlFor="place-phone" className="text-xs font-medium text-green-700">
+                        <label
+                          htmlFor="place-phone"
+                          className="text-xs font-medium text-green-500"
+                        >
                           Telefone
                         </label>
                         <input
@@ -343,13 +427,13 @@ export function AddPlaceModal({ isOpen, coords, onClose }: AddPlaceModalProps) {
                           value={phone}
                           onChange={(e) => setPhone(e.target.value)}
                           placeholder="(11) 99999-0000"
-                          className="w-full rounded-xl border border-green-200 bg-white px-3 py-2.5 text-sm text-green-800 placeholder:text-green-300 focus:border-green-500 focus:outline-none focus:ring-2 focus:ring-green-500/20"
+                          className="w-full rounded-xl border border-green-200 bg-white px-3 py-2.5 text-sm text-green-800 placeholder:text-green-300 focus:border-green-500 focus:ring-2 focus:ring-green-500/20 focus:outline-none"
                         />
                       </div>
                       <div className="flex flex-col gap-1.5">
                         <label
                           htmlFor="place-instagram"
-                          className="text-xs font-medium text-green-700"
+                          className="text-xs font-medium text-green-500"
                         >
                           Instagram
                         </label>
@@ -358,15 +442,19 @@ export function AddPlaceModal({ isOpen, coords, onClose }: AddPlaceModalProps) {
                           value={instagram}
                           onChange={(e) => setInstagram(e.target.value)}
                           placeholder="@perfil"
-                          className="w-full rounded-xl border border-green-200 bg-white px-3 py-2.5 text-sm text-green-800 placeholder:text-green-300 focus:border-green-500 focus:outline-none focus:ring-2 focus:ring-green-500/20"
+                          className="w-full rounded-xl border border-green-200 bg-white px-3 py-2.5 text-sm text-green-800 placeholder:text-green-300 focus:border-green-500 focus:ring-2 focus:ring-green-500/20 focus:outline-none"
                         />
                       </div>
                     </div>
+                    <p className="order-10 -mt-2 text-xs leading-relaxed text-green-200">
+                      Telefone e Instagram são opcionais, mas facilitam o
+                      contato direto.
+                    </p>
 
                     <div className="flex flex-col gap-1.5">
                       <label
                         htmlFor="place-description"
-                        className="text-xs font-medium text-green-700"
+                        className="text-xs font-medium text-green-500"
                       >
                         Descrição
                       </label>
@@ -376,15 +464,18 @@ export function AddPlaceModal({ isOpen, coords, onClose }: AddPlaceModalProps) {
                         onChange={(e) => setDescription(e.target.value)}
                         placeholder="Descreva o local..."
                         rows={3}
-                        className="w-full resize-none rounded-xl border border-green-200 bg-white px-3 py-2.5 text-sm text-green-800 placeholder:text-green-300 focus:border-green-500 focus:outline-none focus:ring-2 focus:ring-green-500/20"
+                        className="w-full resize-none rounded-xl border border-green-200 bg-white px-3 py-2.5 text-sm text-green-800 placeholder:text-green-300 focus:border-green-500 focus:ring-2 focus:ring-green-500/20 focus:outline-none"
                       />
+                      <p className="text-xs leading-relaxed text-green-200">
+                        Conte o que torna esse local útil para a comunidade.
+                      </p>
                     </div>
 
                     <div className="grid grid-cols-2 gap-3">
                       <div className="flex flex-col gap-1.5">
                         <label
                           htmlFor="place-schedule"
-                          className="text-xs font-medium text-green-700"
+                          className="text-xs font-medium text-green-500"
                         >
                           Horário
                         </label>
@@ -393,11 +484,13 @@ export function AddPlaceModal({ isOpen, coords, onClose }: AddPlaceModalProps) {
                           value={schedule}
                           onChange={(e) => setSchedule(e.target.value)}
                           placeholder="Seg-Sáb: 11h-22h"
-                          className="w-full rounded-xl border border-green-200 bg-white px-3 py-2.5 text-sm text-green-800 placeholder:text-green-300 focus:border-green-500 focus:outline-none focus:ring-2 focus:ring-green-500/20"
+                          className="w-full rounded-xl border border-green-200 bg-white px-3 py-2.5 text-sm text-green-800 placeholder:text-green-300 focus:border-green-500 focus:ring-2 focus:ring-green-500/20 focus:outline-none"
                         />
                       </div>
                       <div className="flex flex-col gap-1.5">
-                        <span className="text-xs font-medium text-green-700">Faixa de preço</span>
+                        <span className="text-xs font-medium text-green-500">
+                          Faixa de preço
+                        </span>
                         <div
                           className="flex items-center gap-1.5"
                           role="radiogroup"
@@ -414,24 +507,28 @@ export function AddPlaceModal({ isOpen, coords, onClose }: AddPlaceModalProps) {
                                 aria-label={option.label}
                                 title={option.label}
                                 onClick={() =>
-                                  setPriceRange(isActive ? undefined : option.value)
+                                  setPriceRange(
+                                    isActive ? undefined : option.value,
+                                  )
                                 }
-                                className={[
+                                className={clsx(
                                   "flex flex-1 flex-col items-center rounded-xl border px-2 py-1.5 transition-all duration-200",
-                                  "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green-500",
+                                  "focus-visible:ring-2 focus-visible:ring-green-500 focus-visible:outline-none",
                                   isActive
                                     ? "border-green-500 bg-green-500 text-white shadow-sm"
                                     : "border-green-200 bg-white text-green-500 hover:bg-green-50",
-                                ].join(" ")}
+                                )}
                               >
-                                <span className="text-sm font-semibold leading-tight">
+                                <span className="text-sm leading-tight font-semibold">
                                   {option.symbol}
                                 </span>
                                 <span
-                                  className={[
+                                  className={clsx(
                                     "text-[10px] leading-tight",
-                                    isActive ? "text-white/80" : "text-green-400",
-                                  ].join(" ")}
+                                    isActive
+                                      ? "text-white/80"
+                                      : "text-green-200",
+                                  )}
                                 >
                                   {option.label}
                                 </span>
@@ -441,6 +538,10 @@ export function AddPlaceModal({ isOpen, coords, onClose }: AddPlaceModalProps) {
                         </div>
                       </div>
                     </div>
+                    <p className="text-xs leading-relaxed text-green-200">
+                      Horário e faixa de preço ajudam a planejar a visita;
+                      preencha se souber.
+                    </p>
                   </div>
                 </div>
 
@@ -448,20 +549,20 @@ export function AddPlaceModal({ isOpen, coords, onClose }: AddPlaceModalProps) {
                   <button
                     type="button"
                     onClick={handleClose}
-                    className="rounded-xl px-4 py-2 text-sm font-medium text-green-600 transition-colors hover:bg-green-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green-500"
+                    className="rounded-xl px-4 py-2 text-sm font-medium text-green-600 transition-colors hover:bg-green-50 focus-visible:ring-2 focus-visible:ring-green-500 focus-visible:outline-none"
                   >
                     Cancelar
                   </button>
                   <button
                     type="submit"
                     disabled={!isFormValid || isSubmitting}
-                    className={[
+                    className={clsx(
                       "inline-flex items-center gap-2 rounded-xl px-5 py-2 text-sm font-semibold transition-all duration-200",
-                      "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green-500 focus-visible:ring-offset-2",
+                      "focus-visible:ring-2 focus-visible:ring-green-500 focus-visible:ring-offset-2 focus-visible:outline-none",
                       !isFormValid || isSubmitting
                         ? "cursor-not-allowed border border-green-200 bg-green-100 text-green-200"
-                        : "bg-green-500 text-white hover:bg-green-200 active:bg-black-100",
-                    ].join(" ")}
+                        : "active:bg-black-100 bg-green-500 text-white hover:bg-green-200",
+                    )}
                   >
                     {isSubmitting ? (
                       <>
@@ -481,7 +582,12 @@ export function AddPlaceModal({ isOpen, coords, onClose }: AddPlaceModalProps) {
             onClose={() => setIsLoginOpen(false)}
             onAuthenticated={() => {
               setIsLoginOpen(false);
-              toast({ variant: "success", title: "Login realizado!", description: "Seu formulário foi mantido. Agora você pode publicar o local." });
+              toast({
+                variant: "success",
+                title: "Login realizado!",
+                description:
+                  "Seu formulário foi mantido. Agora você pode publicar o local.",
+              });
             }}
           />
         </>

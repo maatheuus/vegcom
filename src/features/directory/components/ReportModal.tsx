@@ -1,14 +1,20 @@
 "use client";
 
-import { useState, useCallback } from "react";
-import { AnimatePresence, motion } from "framer-motion";
-import { X, CheckCircle, AlertTriangle } from "lucide-react";
-import type { ReportType } from "../types";
 import { toast } from "@/shared/hooks/use-toast";
-import { useReportPlace } from "../api/queries/getDirectoryApiClient";
 import { isAxiosError } from "axios";
+import clsx from "clsx";
+import { AnimatePresence, motion } from "framer-motion";
+import { AlertTriangle, CheckCircle, X } from "lucide-react";
+import { useCallback, useState } from "react";
+import { useReportPlace } from "../api/queries/getDirectoryApiClient";
+import type { ReportType } from "../types";
+import { QuickLoginModal } from "./QuickLoginModal";
 
-const REPORT_OPTIONS: { value: ReportType; label: string; description: string }[] = [
+const REPORT_OPTIONS: {
+  value: ReportType;
+  label: string;
+  description: string;
+}[] = [
   {
     value: "closed",
     label: "Local fechou",
@@ -43,10 +49,16 @@ interface ReportModalProps {
   onClose: () => void;
 }
 
-export function ReportModal({ isOpen, placeId, placeName, onClose }: ReportModalProps) {
+export function ReportModal({
+  isOpen,
+  placeId,
+  placeName,
+  onClose,
+}: ReportModalProps) {
   const [selectedType, setSelectedType] = useState<ReportType | null>(null);
   const [description, setDescription] = useState("");
   const [isSuccess, setIsSuccess] = useState(false);
+  const [isLoginOpen, setIsLoginOpen] = useState(false);
   const { mutateAsync: reportPlace, isPending: isSubmitting } =
     useReportPlace();
 
@@ -66,16 +78,21 @@ export function ReportModal({ isOpen, placeId, placeName, onClose }: ReportModal
         description: description || undefined,
       });
     } catch (error) {
-      const isUnauthorized =
-        isAxiosError(error) && error.response?.status === 401;
+      const status = isAxiosError(error)
+        ? error.response?.status
+        : typeof error === "object" && error !== null && "status" in error
+          ? (error as { status?: number }).status
+          : undefined;
+
+      if (status === 401) {
+        setIsLoginOpen(true);
+        return;
+      }
+
       toast({
         variant: "destructive",
-        title: isUnauthorized
-          ? "Faça login para enviar um relato"
-          : "Não foi possível enviar o relato",
-        description: isUnauthorized
-          ? "Você precisa estar logado para contribuir com o mapa."
-          : "Tente novamente em instantes.",
+        title: "Não foi possível enviar o relato",
+        description: "Tente novamente em instantes.",
       });
       return;
     }
@@ -85,7 +102,8 @@ export function ReportModal({ isOpen, placeId, placeName, onClose }: ReportModal
     toast({
       variant: "success",
       title: "Relato enviado!",
-      description: "Obrigado por contribuir com a comunidade. Sua sugestão será analisada.",
+      description:
+        "Obrigado por contribuir com a comunidade. Sua sugestão será analisada.",
     });
 
     setTimeout(() => {
@@ -131,7 +149,7 @@ export function ReportModal({ isOpen, placeId, placeName, onClose }: ReportModal
               <button
                 type="button"
                 onClick={handleClose}
-                className="rounded-full p-1 text-green-400 transition-colors hover:bg-green-100 hover:text-green-600 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green-500"
+                className="rounded-full p-1 text-green-500 transition-colors hover:bg-green-100 hover:text-green-600 focus-visible:ring-2 focus-visible:ring-green-500 focus-visible:outline-none"
                 aria-label="Fechar"
               >
                 <X className="h-5 w-5" />
@@ -146,7 +164,10 @@ export function ReportModal({ isOpen, placeId, placeName, onClose }: ReportModal
                   animate={{ scale: 1 }}
                   transition={{ type: "spring", damping: 15, stiffness: 200 }}
                 >
-                  <CheckCircle className="h-16 w-16 text-green-500" aria-hidden />
+                  <CheckCircle
+                    className="h-16 w-16 text-green-500"
+                    aria-hidden
+                  />
                 </motion.div>
                 <p className="text-center text-lg font-semibold text-green-800">
                   Relato enviado com sucesso!
@@ -158,17 +179,23 @@ export function ReportModal({ isOpen, placeId, placeName, onClose }: ReportModal
             ) : (
               <>
                 {/* Body */}
-                <div className="flex-1 overflow-y-auto px-5 py-4">
+                <div className="flex-1 overflow-y-auto px-3 py-4">
                   <p className="mb-1 text-sm text-green-600">
-                    Relatar problema sobre <strong className="text-green-800">{placeName}</strong>
+                    Relatar problema sobre:{" "}
+                    <strong className="text-green-800">{placeName}</strong>
                   </p>
-                  <p className="mb-4 text-xs text-green-400">
+                  <p className="mb-4 text-xs text-green-200">
                     Selecione o tipo de alteração que deseja sugerir:
                   </p>
 
-                  <div className="flex flex-col gap-2" role="radiogroup" aria-label="Tipo de problema">
+                  <div
+                    className="flex flex-col gap-2"
+                    role="radiogroup"
+                    aria-label="Tipo de problema"
+                  >
                     {REPORT_OPTIONS.map((option) => {
                       const isSelected = selectedType === option.value;
+
                       return (
                         <button
                           key={option.value}
@@ -176,23 +203,23 @@ export function ReportModal({ isOpen, placeId, placeName, onClose }: ReportModal
                           role="radio"
                           aria-checked={isSelected}
                           onClick={() => setSelectedType(option.value)}
-                          className={[
+                          className={clsx(
                             "flex flex-col items-start gap-0.5 rounded-xl border px-4 py-3 text-left transition-all duration-150",
-                            "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green-500 focus-visible:ring-offset-2",
+                            "focus-visible:ring-2 focus-visible:ring-green-500 focus-visible:ring-offset-2 focus-visible:outline-none",
                             isSelected
                               ? "border-green-500 bg-green-50 shadow-sm"
                               : "border-green-100 bg-white hover:border-green-200 hover:bg-green-50/50",
-                          ].join(" ")}
+                          )}
                         >
                           <span
-                            className={[
+                            className={clsx(
                               "text-sm font-medium",
-                              isSelected ? "text-green-800" : "text-green-700",
-                            ].join(" ")}
+                              isSelected ? "text-green-800" : "text-green-500",
+                            )}
                           >
                             {option.label}
                           </span>
-                          <span className="text-xs text-green-400">
+                          <span className="text-xs font-medium text-green-200">
                             {option.description}
                           </span>
                         </button>
@@ -211,9 +238,9 @@ export function ReportModal({ isOpen, placeId, placeName, onClose }: ReportModal
                       >
                         <label
                           htmlFor="report-description"
-                          className="mb-1.5 mt-4 block text-xs font-medium text-green-600"
+                          className="mt-4 mb-1.5 block text-xs font-medium text-green-600"
                         >
-                          Observações <span className="text-green-300">(opcional)</span>
+                          Observações <span className="italic">(opcional)</span>
                         </label>
                         <textarea
                           id="report-description"
@@ -221,7 +248,7 @@ export function ReportModal({ isOpen, placeId, placeName, onClose }: ReportModal
                           onChange={(e) => setDescription(e.target.value)}
                           placeholder="Conte mais detalhes sobre o problema..."
                           rows={3}
-                          className="w-full resize-none rounded-xl border border-green-200 bg-white px-3 py-2.5 text-sm text-green-800 placeholder:text-green-300 focus:border-green-500 focus:outline-none focus:ring-2 focus:ring-green-500/20"
+                          className="w-full resize-none rounded-xl border border-green-200 bg-white px-3 py-2.5 text-sm text-green-800 placeholder:text-green-800 placeholder:opacity-80 focus:ring-0! focus:outline-none!"
                         />
                       </motion.div>
                     )}
@@ -233,7 +260,7 @@ export function ReportModal({ isOpen, placeId, placeName, onClose }: ReportModal
                   <button
                     type="button"
                     onClick={handleClose}
-                    className="rounded-xl px-4 py-2 text-sm font-medium text-green-600 transition-colors hover:bg-green-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green-500"
+                    className="rounded-xl px-4 py-2 text-sm font-medium text-green-600 transition-colors hover:bg-green-50 focus-visible:ring-2 focus-visible:ring-green-500 focus-visible:outline-none"
                   >
                     Cancelar
                   </button>
@@ -241,13 +268,13 @@ export function ReportModal({ isOpen, placeId, placeName, onClose }: ReportModal
                     type="button"
                     onClick={handleSubmit}
                     disabled={!selectedType || isSubmitting}
-                    className={[
+                    className={clsx(
                       "inline-flex items-center gap-2 rounded-xl px-5 py-2 text-sm font-semibold transition-all duration-200",
-                      "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green-500 focus-visible:ring-offset-2",
+                      "focus-visible:ring-2 focus-visible:ring-green-500 focus-visible:ring-offset-2 focus-visible:outline-none",
                       !selectedType || isSubmitting
                         ? "cursor-not-allowed bg-green-200 text-white"
                         : "bg-green-600 text-white hover:bg-green-700 active:bg-green-800",
-                    ].join(" ")}
+                    )}
                   >
                     {isSubmitting ? (
                       <>
@@ -262,6 +289,19 @@ export function ReportModal({ isOpen, placeId, placeName, onClose }: ReportModal
               </>
             )}
           </motion.div>
+          <QuickLoginModal
+            isOpen={isLoginOpen}
+            onClose={() => setIsLoginOpen(false)}
+            onAuthenticated={() => {
+              setIsLoginOpen(false);
+              toast({
+                variant: "success",
+                title: "Login realizado!",
+                description:
+                  "Seu relato foi mantido. Agora você pode enviá-lo.",
+              });
+            }}
+          />
         </>
       )}
     </AnimatePresence>
