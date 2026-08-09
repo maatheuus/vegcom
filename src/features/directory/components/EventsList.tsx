@@ -1,11 +1,36 @@
 "use client";
 
-import { useCallback, useMemo, useState } from "react";
+import { useGetUser } from "@/features/auth/api/queries/getAuthApiClient";
+import { toast } from "@/shared/hooks/use-toast";
+import Button from "@/shared/ui/Button";
+import {
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/shared/ui/Dialog";
+import {
+  Pagination,
+  PaginationContent,
+  PaginationItem,
+  PaginationLink,
+  PaginationNext,
+  PaginationPrevious,
+} from "@/shared/ui/Pagination";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/shared/ui/Select";
 import { motion } from "framer-motion";
 import {
   Calendar,
   CalendarPlus,
-  ChevronDown,
   ExternalLink,
   MapPin,
   Pencil,
@@ -14,14 +39,14 @@ import {
   SlidersHorizontal,
   Trash2,
 } from "lucide-react";
+import { useEffect, useState } from "react";
 import {
   useDeleteEvent,
   useEvents,
 } from "../api/queries/getDirectoryApiClient";
-import { AddEventModal } from "./AddEventModal";
+import { addToCalendar, shareEvent } from "../hooks/eventActions";
 import type { DirectoryEvent } from "../types";
-import { useGetUser } from "@/features/auth/api/queries/getAuthApiClient";
-import { toast } from "@/shared/hooks/use-toast";
+import { AddEventModal } from "./AddEventModal";
 
 const MONTHS = [
   "Todos",
@@ -38,69 +63,108 @@ const MONTHS = [
   "Novembro",
   "Dezembro",
 ];
+const EVENTS_PER_PAGE = 6;
+const SHORT_MONTH = new Intl.DateTimeFormat("pt-BR", { month: "short" });
 
 const getMonth = (date: string) => MONTHS[new Date(date).getMonth() + 1];
 const getCity = (location: string) =>
   location.split(",").at(-1)?.trim() || location;
 
-export function EventsList() {
-  const { data: events = [], isLoading } = useEvents();
+interface EventsListProps {
+  openAddModal?: boolean;
+  onAddModalRequestHandled?: () => void;
+}
+
+export function EventsList({
+  openAddModal = false,
+  onAddModalRequestHandled,
+}: EventsListProps) {
+  const [upcomingPage, setUpcomingPage] = useState(1);
+  const [pastPage, setPastPage] = useState(1);
+  const {
+    data: upcomingEventsPage,
+    isLoading: isLoadingUpcoming,
+    isFetching: isFetchingUpcoming,
+  } = useEvents({
+    page: upcomingPage,
+    limit: EVENTS_PER_PAGE,
+    period: "upcoming",
+  });
+  const {
+    data: pastEventsPage,
+    isLoading: isLoadingPast,
+    isFetching: isFetchingPast,
+  } = useEvents({
+    page: pastPage,
+    limit: EVENTS_PER_PAGE,
+    period: "past",
+  });
+  const upcomingEvents = upcomingEventsPage?.data ?? [];
+  const pastEvents = pastEventsPage?.data ?? [];
   const { data: user } = useGetUser();
-  const { mutateAsync: deleteEvent } = useDeleteEvent();
+  const { mutateAsync: deleteEvent, isPending: isDeletingEvent } =
+    useDeleteEvent();
   const [month, setMonth] = useState("Todos");
   const [city, setCity] = useState("Todas");
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [editingEvent, setEditingEvent] = useState<DirectoryEvent | null>(null);
-  const cities = useMemo(
-    () =>
-      [
-        "Todas",
-        ...new Set(events.map((event) => getCity(event.location))),
-      ].sort(),
-    [events],
+  const [eventToDelete, setEventToDelete] = useState<DirectoryEvent | null>(
+    null,
   );
-  const filtered = useMemo(
-    () =>
-      events
-        .filter(
-          (event) =>
-            (month === "Todos" || getMonth(event.date) === month) &&
-            (city === "Todas" || getCity(event.location) === city),
-        )
-        .sort((a, b) => +new Date(a.date) - +new Date(b.date)),
-    [city, events, month],
-  );
-  const now = new Date();
-  const upcoming = filtered.filter((event) => new Date(event.date) >= now);
-  const past = filtered.filter((event) => new Date(event.date) < now);
-  const handleDelete = useCallback(
-    async (event: DirectoryEvent) => {
-      if (
-        !window.confirm(
-          `Excluir “${event.title}”? Esta ação não pode ser desfeita.`,
-        )
-      )
-        return;
-      try {
-        await deleteEvent(event.id);
-        toast({
-          variant: "success",
-          title: "Evento excluído",
-          description: "Ele foi removido da agenda.",
-        });
-      } catch {
-        toast({
-          variant: "destructive",
-          title: "Não foi possível excluir",
-          description: "Tente novamente em instantes.",
-        });
-      }
-    },
-    [deleteEvent],
-  );
+  const upcomingTotalPages = upcomingEventsPage?.pagination.totalPages ?? 0;
+  const pastTotalPages = pastEventsPage?.pagination.totalPages ?? 0;
+  const upcomingTotal = upcomingEventsPage?.pagination.total ?? 0;
+  const pastTotal = pastEventsPage?.pagination.total ?? 0;
+  const isLoading = isLoadingUpcoming || isLoadingPast;
+
+  useEffect(() => {
+    if (!openAddModal) return;
+    setIsAddModalOpen(true);
+    onAddModalRequestHandled?.();
+  }, [onAddModalRequestHandled, openAddModal]);
+
+  useEffect(() => {
+    if (upcomingTotalPages > 0 && upcomingPage > upcomingTotalPages) {
+      setUpcomingPage(upcomingTotalPages);
+    }
+  }, [upcomingPage, upcomingTotalPages]);
+  useEffect(() => {
+    if (pastTotalPages > 0 && pastPage > pastTotalPages) {
+      setPastPage(pastTotalPages);
+    }
+  }, [pastPage, pastTotalPages]);
+  const allEvents = [...upcomingEvents, ...pastEvents];
+  const cities = [
+    "Todas",
+    ...[...new Set(allEvents.map((event) => getCity(event.location)))].sort(),
+  ];
+  const matchesFilters = (event: DirectoryEvent) =>
+    (month === "Todos" || getMonth(event.date) === month) &&
+    (city === "Todas" || getCity(event.location) === city);
+  const upcoming = upcomingEvents.filter(matchesFilters);
+  const past = pastEvents.filter(matchesFilters);
+
+  const handleDelete = async () => {
+    if (!eventToDelete) return;
+    try {
+      await deleteEvent(eventToDelete.id);
+      setEventToDelete(null);
+      toast({
+        variant: "success",
+        title: "Evento excluído",
+        description: "Ele foi removido da agenda.",
+      });
+    } catch {
+      toast({
+        variant: "destructive",
+        title: "Não foi possível excluir",
+        description: "Tente novamente em instantes.",
+      });
+    }
+  };
 
   return (
-    <div className="h-full overflow-y-auto bg-green-50 px-4 py-5 sm:px-8 sm:py-8">
+    <div className="hidden-scrollbar h-full overflow-y-auto bg-green-50 px-4 py-5 sm:px-8 sm:py-8">
       <div className="mx-auto max-w-5xl">
         <section className="relative overflow-hidden rounded-[2rem] bg-green-500 px-6 py-7 text-white shadow-[0_18px_40px_rgba(27,78,48,0.22)] sm:px-9 sm:py-9">
           <div className="absolute -top-16 -right-10 size-52 rounded-full border-[28px] border-green-200/40" />
@@ -137,47 +201,78 @@ export function EventsList() {
               Encontre algo perto de você
             </p>
           </div>
-          <div className="flex flex-wrap gap-2">
+          <div className="flex gap-2">
             <SelectFilter
               value={month}
-              onChange={setMonth}
+              onChange={(value) => {
+                setMonth(value);
+                setUpcomingPage(1);
+                setPastPage(1);
+              }}
               label="Filtrar por mês"
               options={MONTHS}
             />
             <SelectFilter
               value={city}
-              onChange={setCity}
+              onChange={(value) => {
+                setCity(value);
+                setUpcomingPage(1);
+                setPastPage(1);
+              }}
               label="Filtrar por cidade"
               options={cities}
-              className="max-w-44"
             />
           </div>
         </section>
 
         {isLoading ? (
           <Loading />
-        ) : filtered.length === 0 ? (
+        ) : upcoming.length === 0 && past.length === 0 ? (
           <EmptyState onAdd={() => setIsAddModalOpen(true)} />
         ) : (
           <div className="mt-8 space-y-9">
             {upcoming.length > 0 && (
-              <EventSection
-                title="Para colocar na agenda"
-                events={upcoming}
-                currentUserId={user?.id}
-                onEdit={setEditingEvent}
-                onDelete={handleDelete}
-              />
+              <div className="space-y-5">
+                <EventSection
+                  title="Para colocar na agenda"
+                  events={upcoming}
+                  total={upcomingTotal}
+                  currentUserId={user?.id}
+                  onEdit={setEditingEvent}
+                  onDelete={setEventToDelete}
+                />
+                {upcomingTotalPages > 1 && (
+                  <EventsPagination
+                    page={upcomingPage}
+                    totalPages={upcomingTotalPages}
+                    isLoading={isFetchingUpcoming}
+                    onChange={setUpcomingPage}
+                    label="Paginação dos próximos eventos"
+                  />
+                )}
+              </div>
             )}
             {past.length > 0 && (
-              <EventSection
-                title="O que já aconteceu"
-                events={past}
-                currentUserId={user?.id}
-                onEdit={setEditingEvent}
-                onDelete={handleDelete}
-                past
-              />
+              <div className="space-y-5">
+                <EventSection
+                  title="O que já aconteceu"
+                  events={past}
+                  total={pastTotal}
+                  currentUserId={user?.id}
+                  onEdit={setEditingEvent}
+                  onDelete={setEventToDelete}
+                  past
+                />
+                {pastTotalPages > 1 && (
+                  <EventsPagination
+                    page={pastPage}
+                    totalPages={pastTotalPages}
+                    isLoading={isFetchingPast}
+                    onChange={setPastPage}
+                    label="Paginação dos eventos passados"
+                  />
+                )}
+              </div>
             )}
           </div>
         )}
@@ -190,7 +285,94 @@ export function EventsList() {
           setEditingEvent(null);
         }}
       />
+      <Dialog
+        open={Boolean(eventToDelete)}
+        onOpenChange={(open) => {
+          if (!open && !isDeletingEvent) setEventToDelete(null);
+        }}
+      >
+        <DialogContent className="max-w-sm rounded-2xl border-green-200 bg-white">
+          <DialogHeader>
+            <DialogTitle className="font-lora text-black-100 text-xl italic">
+              Excluir evento?
+            </DialogTitle>
+            <DialogDescription className="font-maitree mt-2 leading-relaxed text-green-500">
+              O evento “{eventToDelete?.title}” será removido da agenda. Esta
+              ação não pode ser desfeita.
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter className="mt-2 gap-2 sm:gap-2">
+            <DialogClose asChild>
+              <Button
+                variant="text"
+                type="button"
+                disabled={isDeletingEvent}
+                className="rounded-full border border-green-200 font-bold text-green-500 hover:bg-green-100"
+              >
+                Cancelar
+              </Button>
+            </DialogClose>
+            <Button
+              type="button"
+              onClick={handleDelete}
+              disabled={isDeletingEvent}
+              className="rounded-full bg-red-600 font-bold text-white hover:bg-red-700"
+            >
+              {isDeletingEvent && (
+                <span className="size-3.5 animate-spin rounded-full border-2 border-white border-t-transparent" />
+              )}
+              {isDeletingEvent ? "Excluindo..." : "Excluir evento"}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
+  );
+}
+
+function EventsPagination({
+  page,
+  totalPages,
+  isLoading,
+  onChange,
+  label,
+}: {
+  page: number;
+  totalPages: number;
+  isLoading: boolean;
+  onChange: (page: number) => void;
+  label: string;
+}) {
+  const pages = Array.from({ length: totalPages }, (_, index) => index + 1);
+
+  return (
+    <Pagination className="border-t border-green-100 pt-7" aria-label={label}>
+      <PaginationContent>
+        <PaginationItem>
+          <PaginationPrevious
+            onClick={() => onChange(page - 1)}
+            disabled={page === 1 || isLoading}
+          />
+        </PaginationItem>
+        {pages.map((item) => (
+          <PaginationItem key={item}>
+            <PaginationLink
+              onClick={() => onChange(item)}
+              isActive={item === page}
+              disabled={isLoading}
+            >
+              {item}
+            </PaginationLink>
+          </PaginationItem>
+        ))}
+        <PaginationItem>
+          <PaginationNext
+            onClick={() => onChange(page + 1)}
+            disabled={page === totalPages || isLoading}
+          />
+        </PaginationItem>
+      </PaginationContent>
+    </Pagination>
   );
 }
 
@@ -199,30 +381,33 @@ function SelectFilter({
   onChange,
   label,
   options,
-  className = "",
 }: {
   value: string;
   onChange: (value: string) => void;
   label: string;
   options: string[];
-  className?: string;
 }) {
   return (
-    <div className={`relative ${className}`}>
-      <select
-        value={value}
-        onChange={(event) => onChange(event.target.value)}
-        aria-label={label}
-        className="w-full appearance-none rounded-full border border-green-200 bg-green-50 py-2 pr-10 pl-4 text-sm font-semibold text-green-500 transition outline-none hover:border-green-500 hover:bg-white focus:border-green-500 focus:bg-white focus:ring-2 focus:ring-green-100"
-      >
-        {options.map((item) => (
-          <option key={item}>{item}</option>
-        ))}
-      </select>
-      <ChevronDown
-        className="pointer-events-none absolute top-1/2 right-3 size-4 -translate-y-1/2 text-green-500"
-        aria-hidden
-      />
+    <div className="w-full md:max-w-fit">
+      <Select value={value} onValueChange={onChange}>
+        <SelectTrigger
+          aria-label={label}
+          className="h-auto rounded-full border-green-200 bg-green-50 px-4 py-2 text-sm font-semibold text-green-500 hover:border-green-500 hover:bg-white focus-visible:border-green-500 focus-visible:ring-2 focus-visible:ring-green-100"
+        >
+          <SelectValue />
+        </SelectTrigger>
+        <SelectContent className="rounded-xl border-green-100 bg-white p-1 shadow-[0_8px_24px_rgba(27,78,48,0.12)]">
+          {options.map((item) => (
+            <SelectItem
+              key={item}
+              value={item}
+              className="rounded-lg px-3 py-2 text-sm font-semibold text-green-500 focus:bg-green-100 focus:text-green-500 data-[state=checked]:bg-green-100 data-[state=checked]:text-green-500"
+            >
+              {item}
+            </SelectItem>
+          ))}
+        </SelectContent>
+      </Select>
     </div>
   );
 }
@@ -230,6 +415,7 @@ function SelectFilter({
 function EventSection({
   title,
   events,
+  total,
   currentUserId,
   onEdit,
   onDelete,
@@ -237,6 +423,7 @@ function EventSection({
 }: {
   title: string;
   events: DirectoryEvent[];
+  total: number;
   currentUserId?: number;
   onEdit: (event: DirectoryEvent) => void;
   onDelete: (event: DirectoryEvent) => void;
@@ -245,7 +432,7 @@ function EventSection({
   return (
     <section className={past ? "opacity-60" : ""}>
       <p className="mb-3 text-xs font-bold tracking-[0.18em] text-green-200 uppercase">
-        {title} · {events.length}
+        {title} · {total}
       </p>
       <div className="grid gap-3 md:grid-cols-2">
         {events.map((event, index) => (
@@ -284,31 +471,32 @@ function EventCard({
       initial={{ opacity: 0, y: 12 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: index * 0.04 }}
-      className="group flex gap-4 rounded-[1.5rem] border border-green-100 bg-white p-4 transition hover:-translate-y-0.5 hover:border-green-200 hover:shadow-[0_12px_25px_rgba(27,78,48,0.12)]"
+      className="group flex min-w-0 gap-4 rounded-[1.5rem] border border-green-100 bg-white p-4 transition hover:-translate-y-0.5 hover:border-green-200 hover:shadow-[0_12px_25px_rgba(27,78,48,0.12)]"
     >
       <div className="flex h-16 w-16 shrink-0 flex-col items-center justify-center rounded-2xl bg-green-100 text-green-500">
         <strong className="font-lora text-2xl leading-none">
           {date.getDate()}
         </strong>
         <span className="mt-1 text-[10px] font-bold tracking-wider uppercase">
-          {date
-            .toLocaleDateString("pt-BR", { month: "short" })
-            .replace(".", "")}
+          {SHORT_MONTH.format(date).replace(".", "")}
+        </span>
+        <span className="text-[9px] leading-none font-semibold text-green-200">
+          {date.getFullYear()}
         </span>
       </div>
       <div className="min-w-0 flex-1">
-        <h3 className="font-maitree text-black-100 truncate text-base font-bold">
+        <h3 className="font-maitree text-black-100 line-clamp-2 text-base font-bold break-words">
           {event.title}
         </h3>
         <p className="mt-1 flex items-center gap-1.5 text-xs font-medium text-green-200">
           <MapPin className="size-3.5 shrink-0" />
           {event.location}
         </p>
-        {event.description && (
-          <p className="mt-3 line-clamp-2 text-sm leading-relaxed text-green-500">
-            {event.description}
-          </p>
-        )}
+        <p
+          className={`mt-3 line-clamp-2 text-sm leading-relaxed break-words ${event.description ? "text-green-500" : "text-green-200 italic"}`}
+        >
+          {event.description || "Nenhuma descrição compartilhada."}
+        </p>
         {event.link && (
           <a
             href={event.link}
@@ -368,55 +556,12 @@ function ActionButton({
     <button
       type="button"
       onClick={onClick}
-      className="hover:text-black-100 inline-flex items-center gap-1.5 rounded-full bg-green-50 px-3 py-1.5 text-xs font-bold text-green-500 transition hover:bg-green-100"
+      className="inline-flex items-center gap-1.5 rounded-full border border-green-200 bg-green-100 px-3 py-1.5 text-xs font-bold text-green-500 transition hover:border-green-500 hover:bg-green-200 hover:text-green-50 focus-visible:ring-2 focus-visible:ring-green-200 focus-visible:ring-offset-2 focus-visible:outline-none"
     >
       {icon}
       {children}
     </button>
   );
-}
-
-function addToCalendar(event: DirectoryEvent) {
-  const start = new Date(event.date);
-  const end = new Date(start);
-  end.setDate(end.getDate() + 1);
-  const format = (date: Date) =>
-    date
-      .toISOString()
-      .replace(/[-:]/g, "")
-      .replace(/\.\d{3}/, "");
-  const escape = (value: string) =>
-    value.replace(/[\\,;]/g, "\\$&").replace(/\n/g, "\\n");
-  const ics = `BEGIN:VCALENDAR\nVERSION:2.0\nBEGIN:VEVENT\nUID:vegcom-event-${event.id}\nDTSTAMP:${format(new Date())}\nDTSTART:${format(start)}\nDTEND:${format(end)}\nSUMMARY:${escape(event.title)}\nLOCATION:${escape(event.location)}\nDESCRIPTION:${escape(event.description ?? "")}\nURL:${event.link ?? ""}\nEND:VEVENT\nEND:VCALENDAR`;
-  const url = URL.createObjectURL(new Blob([ics], { type: "text/calendar" }));
-  const link = document.createElement("a");
-  link.href = url;
-  link.download = `${event.title.toLowerCase().replace(/[^a-z0-9]+/gi, "-")}.ics`;
-  link.click();
-  URL.revokeObjectURL(url);
-  toast({
-    variant: "success",
-    title: "Evento salvo",
-    description: "O arquivo para sua agenda foi baixado.",
-  });
-}
-
-async function shareEvent(event: DirectoryEvent) {
-  const text = `${event.title}\n${event.location}\n${new Date(event.date).toLocaleDateString("pt-BR")}${event.link ? `\n${event.link}` : ""}`;
-  try {
-    if (navigator.share) {
-      await navigator.share({ title: event.title, text, url: event.link });
-      return;
-    }
-    await navigator.clipboard.writeText(text);
-    toast({
-      variant: "success",
-      title: "Link copiado",
-      description: "Agora é só enviar para quem vai gostar.",
-    });
-  } catch {
-    /* Cancelar o share nativo não exige feedback. */
-  }
 }
 
 function Loading() {

@@ -4,6 +4,7 @@ import type {
   CreatePlacePayload,
   CreatePlaceReportPayload,
   DirectoryEvent,
+  DirectoryEventsPage,
   Place,
   PlaceCategory,
   PlaceStatus,
@@ -13,6 +14,12 @@ import type {
 export interface GetPlacesParams {
   category?: PlaceCategory;
   status?: PlaceStatus;
+}
+
+export interface GetEventsParams {
+  page?: number;
+  limit?: number;
+  period?: "upcoming" | "past";
 }
 
 export const directoryApi = {
@@ -37,9 +44,43 @@ export const directoryApi = {
     return data;
   },
 
-  getEvents: async (): Promise<DirectoryEvent[]> => {
-    const { data } = await api.get<DirectoryEvent[]>("/directory/events");
-    return data ?? [];
+  getEvents: async (params: GetEventsParams): Promise<DirectoryEventsPage> => {
+    const { data } = await api.get<DirectoryEventsPage | DirectoryEvent[]>(
+      "/directory/events",
+      { params },
+    );
+
+    if (!Array.isArray(data)) return data;
+
+    const page = params.page ?? 1;
+    const limit = params.limit ?? data.length;
+    const now = Date.now();
+    const periodEvents = data.filter((event) => {
+      const eventDate = new Date(event.date).getTime();
+
+      if (params.period === "upcoming") return eventDate >= now;
+      if (params.period === "past") return eventDate < now;
+      return true;
+    });
+    const orderedEvents = [...periodEvents].sort((first, second) => {
+      const firstDate = new Date(first.date).getTime();
+      const secondDate = new Date(second.date).getTime();
+
+      return params.period === "past"
+        ? secondDate - firstDate
+        : firstDate - secondDate;
+    });
+    const total = orderedEvents.length;
+
+    return {
+      data: orderedEvents.slice((page - 1) * limit, page * limit),
+      pagination: {
+        page,
+        limit,
+        total,
+        totalPages: Math.ceil(total / limit),
+      },
+    };
   },
 
   createEvent: async (

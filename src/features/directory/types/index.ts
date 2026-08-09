@@ -42,10 +42,24 @@ export interface DirectoryEvent {
   title: string;
   date: string;
   location: string;
+  street?: string;
+  city?: string;
+  lat?: number;
+  lng?: number;
   description?: string;
   link?: string;
   userId: number | null;
   createdAt: number;
+}
+
+export interface DirectoryEventsPage {
+  data: DirectoryEvent[];
+  pagination: {
+    page: number;
+    limit: number;
+    total: number;
+    totalPages: number;
+  };
 }
 
 export interface Product {
@@ -85,6 +99,10 @@ export interface CreateDirectoryEventPayload {
   title: string;
   date: string;
   location: string;
+  street: string;
+  city: string;
+  lat: number;
+  lng: number;
   description?: string;
   link?: string;
 }

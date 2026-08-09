@@ -1,12 +1,11 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { directoryApi } from "../directoryApi";
 import type {
   CreateDirectoryEventPayload,
   CreatePlacePayload,
   CreatePlaceReportPayload,
-  DirectoryEvent,
   UpdateDirectoryEventPayload,
 } from "../../types";
+import { directoryApi, type GetEventsParams } from "../directoryApi";
 
 export const directoryKeys = {
   all: ["directory"] as const,
@@ -46,11 +45,15 @@ export const useReportPlace = () => {
   });
 };
 
-export const useEvents = () => {
+export const useEvents = (
+  params: Required<GetEventsParams>,
+  options?: { enabled?: boolean },
+) => {
   return useQuery({
-    queryKey: directoryKeys.events,
-    queryFn: directoryApi.getEvents,
+    queryKey: [...directoryKeys.events, params],
+    queryFn: () => directoryApi.getEvents(params),
     staleTime: 60_000,
+    enabled: options?.enabled ?? true,
   });
 };
 
@@ -60,14 +63,8 @@ export const useCreateEvent = () => {
   return useMutation({
     mutationFn: (payload: CreateDirectoryEventPayload) =>
       directoryApi.createEvent(payload),
-    onSuccess: (event) => {
-      queryClient.setQueryData<DirectoryEvent[]>(
-        directoryKeys.events,
-        (current = []) => [
-          event,
-          ...current.filter((item) => item.id !== event.id),
-        ],
-      );
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({ queryKey: directoryKeys.events });
     },
   });
 };
@@ -82,12 +79,8 @@ export const useUpdateEvent = () => {
       eventId: number;
       payload: UpdateDirectoryEventPayload;
     }) => directoryApi.updateEvent(eventId, payload),
-    onSuccess: (event) => {
-      queryClient.setQueryData<DirectoryEvent[]>(
-        directoryKeys.events,
-        (current = []) =>
-          current.map((item) => (item.id === event.id ? event : item)),
-      );
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({ queryKey: directoryKeys.events });
     },
   });
 };
@@ -96,11 +89,8 @@ export const useDeleteEvent = () => {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: directoryApi.deleteEvent,
-    onSuccess: ({ id }) => {
-      queryClient.setQueryData<DirectoryEvent[]>(
-        directoryKeys.events,
-        (current = []) => current.filter((item) => item.id !== id),
-      );
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({ queryKey: directoryKeys.events });
     },
   });
 };

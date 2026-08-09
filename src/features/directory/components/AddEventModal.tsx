@@ -1,17 +1,20 @@
 "use client";
 
-import { useState, useCallback, useEffect } from "react";
-import { AnimatePresence, motion } from "framer-motion";
-import { X, CalendarDays, CheckCircle } from "lucide-react";
+import { getAccessToken } from "@/shared/api/axios/axiosInstance";
 import { toast } from "@/shared/hooks/use-toast";
+import { SearchCityLocation } from "@/shared/ui/SearchCityLocation";
+import { isAxiosError } from "axios";
+import clsx from "clsx";
+import { AnimatePresence, motion } from "framer-motion";
+import { CalendarDays, CheckCircle, X } from "lucide-react";
+import { useCallback, useEffect, useState } from "react";
 import {
   useCreateEvent,
   useUpdateEvent,
 } from "../api/queries/getDirectoryApiClient";
-import { getAccessToken } from "@/shared/api/axios/axiosInstance";
-import { isAxiosError } from "axios";
-import { QuickLoginModal } from "./QuickLoginModal";
+import { geocode } from "../hooks/geocode";
 import type { DirectoryEvent } from "../types";
+import { QuickLoginModal } from "./QuickLoginModal";
 
 interface AddEventModalProps {
   isOpen: boolean;
@@ -19,14 +22,24 @@ interface AddEventModalProps {
   event?: DirectoryEvent | null;
 }
 
+async function geocodeEventLocation(street: string, city: string) {
+  const exactLocation = await geocode(`${street}, ${city}`);
+  if (exactLocation) return { ...exactLocation, isApproximate: false };
+
+  const cityLocation = await geocode(city);
+  return cityLocation ? { ...cityLocation, isApproximate: true } : null;
+}
+
 export function AddEventModal({ isOpen, onClose, event }: AddEventModalProps) {
   const [title, setTitle] = useState("");
   const [date, setDate] = useState("");
-  const [location, setLocation] = useState("");
+  const [street, setStreet] = useState("");
+  const [city, setCity] = useState("");
   const [description, setDescription] = useState("");
   const [link, setLink] = useState("");
   const [isSuccess, setIsSuccess] = useState(false);
   const [isLoginOpen, setIsLoginOpen] = useState(false);
+  const [isGeocoding, setIsGeocoding] = useState(false);
   const { mutateAsync: createEvent, isPending: isSubmitting } =
     useCreateEvent();
   const { mutateAsync: updateEvent, isPending: isUpdating } = useUpdateEvent();
@@ -36,7 +49,8 @@ export function AddEventModal({ isOpen, onClose, event }: AddEventModalProps) {
     if (!isOpen) return;
     setTitle(event?.title ?? "");
     setDate(event?.date.slice(0, 10) ?? "");
-    setLocation(event?.location ?? "");
+    setStreet(event?.street ?? event?.location ?? "");
+    setCity(event?.city ?? "");
     setDescription(event?.description ?? "");
     setLink(event?.link ?? "");
     setIsSuccess(false);
@@ -45,7 +59,8 @@ export function AddEventModal({ isOpen, onClose, event }: AddEventModalProps) {
   const reset = useCallback(() => {
     setTitle("");
     setDate("");
-    setLocation("");
+    setStreet("");
+    setCity("");
     setDescription("");
     setLink("");
     setIsSuccess(false);
@@ -54,17 +69,45 @@ export function AddEventModal({ isOpen, onClose, event }: AddEventModalProps) {
   const handleSubmit = useCallback(
     async (e: React.FormEvent) => {
       e.preventDefault();
-      if (!title.trim() || !date || !location.trim()) return;
+      if (!title.trim() || !date || !street.trim() || !city.trim()) return;
       if (!getAccessToken()) {
         setIsLoginOpen(true);
         return;
       }
 
+      let isApproximateLocation = false;
+
       try {
+        setIsGeocoding(true);
+        const hasCurrentCoordinates =
+          event?.street === street.trim() &&
+          event.city === city.trim() &&
+          event.lat !== undefined &&
+          event.lng !== undefined;
+
+        const coordinates = hasCurrentCoordinates
+          ? { lat: event.lat!, lng: event.lng!, isApproximate: false }
+          : await geocodeEventLocation(street.trim(), city.trim());
+
+        if (!coordinates) {
+          toast({
+            variant: "destructive",
+            title: "Não foi possível localizar o endereço",
+            description: "Não encontramos nem a cidade informada.",
+          });
+          return;
+        }
+        isApproximateLocation = coordinates.isApproximate;
+        const { lat, lng } = coordinates;
+
         const payload = {
           title: title.trim(),
           date: new Date(date).toISOString(),
-          location: location.trim(),
+          location: `${street.trim()}, ${city.trim()}`,
+          street: street.trim(),
+          city: city.trim(),
+          lat,
+          lng,
           description: description.trim() || undefined,
           link: link.trim() || undefined,
         };
@@ -86,6 +129,8 @@ export function AddEventModal({ isOpen, onClose, event }: AddEventModalProps) {
           });
         }
         return;
+      } finally {
+        setIsGeocoding(false);
       }
 
       setIsSuccess(true);
@@ -95,7 +140,9 @@ export function AddEventModal({ isOpen, onClose, event }: AddEventModalProps) {
         title: isEditing ? "Evento atualizado!" : "Evento adicionado!",
         description: isEditing
           ? "As alterações já aparecem na lista."
-          : "Seu evento já aparece na lista.",
+          : isApproximateLocation
+            ? "Não encontramos a rua; o pin aparece no centro da cidade."
+            : "Seu evento já aparece na lista.",
       });
 
       setTimeout(() => {
@@ -106,7 +153,8 @@ export function AddEventModal({ isOpen, onClose, event }: AddEventModalProps) {
     [
       title,
       date,
-      location,
+      street,
+      city,
       description,
       link,
       event,
@@ -118,7 +166,7 @@ export function AddEventModal({ isOpen, onClose, event }: AddEventModalProps) {
     ],
   );
 
-  const isFormValid = title.trim() && date && location.trim();
+  const isFormValid = title.trim() && date && street.trim() && city.trim();
 
   return (
     <AnimatePresence>
@@ -154,7 +202,7 @@ export function AddEventModal({ isOpen, onClose, event }: AddEventModalProps) {
               <button
                 type="button"
                 onClick={onClose}
-                className="rounded-full p-1 text-green-400 transition-colors hover:bg-green-100 hover:text-green-600 focus-visible:ring-2 focus-visible:ring-green-500 focus-visible:outline-none"
+                className="rounded-full p-1 text-green-200 transition-colors hover:bg-green-100 hover:text-green-600 focus-visible:ring-2 focus-visible:ring-green-500 focus-visible:outline-none"
                 aria-label="Fechar"
               >
                 <X className="h-5 w-5" />
@@ -179,14 +227,14 @@ export function AddEventModal({ isOpen, onClose, event }: AddEventModalProps) {
               </div>
             ) : (
               <form onSubmit={handleSubmit} className="flex flex-1 flex-col">
-                <div className="flex-1 overflow-y-auto px-5 py-4">
+                <div className="flex-1 overflow-y-auto px-3 py-4">
                   <div className="flex flex-col gap-4">
                     <div className="flex flex-col gap-1.5">
                       <label
                         htmlFor="event-title"
                         className="text-xs font-medium text-green-700"
                       >
-                        Título <span className="ml-0.5 text-green-400">*</span>
+                        Título <span className="ml-0.5 text-green-200">*</span>
                       </label>
                       <input
                         id="event-title"
@@ -195,6 +243,9 @@ export function AddEventModal({ isOpen, onClose, event }: AddEventModalProps) {
                         placeholder="Ex: Feira Vegana de São Paulo"
                         className="w-full rounded-xl border border-green-200 bg-white px-3 py-2.5 text-sm text-green-800 placeholder:text-green-300 focus:border-green-500 focus:ring-2 focus:ring-green-500/20 focus:outline-none"
                       />
+                      <p className="text-xs leading-relaxed text-green-200">
+                        Use um nome que ajude a identificar o encontro no mapa.
+                      </p>
                     </div>
 
                     <div className="flex flex-col gap-1.5">
@@ -202,7 +253,7 @@ export function AddEventModal({ isOpen, onClose, event }: AddEventModalProps) {
                         htmlFor="event-date"
                         className="text-xs font-medium text-green-700"
                       >
-                        Data <span className="ml-0.5 text-green-400">*</span>
+                        Data <span className="ml-0.5 text-green-200">*</span>
                       </label>
                       <input
                         id="event-date"
@@ -211,22 +262,49 @@ export function AddEventModal({ isOpen, onClose, event }: AddEventModalProps) {
                         onChange={(e) => setDate(e.target.value)}
                         className="w-full rounded-xl border border-green-200 bg-white px-3 py-2.5 text-sm text-green-800 focus:border-green-500 focus:ring-2 focus:ring-green-500/20 focus:outline-none"
                       />
+                      <p className="text-xs leading-relaxed text-green-200">
+                        Eventos passados permanecem na agenda como histórico.
+                      </p>
                     </div>
 
                     <div className="flex flex-col gap-1.5">
                       <label
-                        htmlFor="event-location"
+                        htmlFor="event-street"
                         className="text-xs font-medium text-green-700"
                       >
-                        Local <span className="ml-0.5 text-green-400">*</span>
+                        Rua / endereço{" "}
+                        <span className="ml-0.5 text-green-200">*</span>
                       </label>
                       <input
-                        id="event-location"
-                        value={location}
-                        onChange={(e) => setLocation(e.target.value)}
-                        placeholder="Ex: Parque Ibirapuera, São Paulo - SP"
+                        id="event-street"
+                        value={street}
+                        onChange={(e) => setStreet(e.target.value)}
+                        placeholder="Ex: Av. Paulista, 1000"
                         className="w-full rounded-xl border border-green-200 bg-white px-3 py-2.5 text-sm text-green-800 placeholder:text-green-300 focus:border-green-500 focus:ring-2 focus:ring-green-500/20 focus:outline-none"
                       />
+                      <p className="text-xs leading-relaxed text-green-200">
+                        Informe o endereço mais completo que tiver para melhorar
+                        a posição do pin.
+                      </p>
+                    </div>
+
+                    <div className="flex flex-col gap-1.5">
+                      <label className="text-xs font-medium text-green-700">
+                        Cidade <span className="ml-0.5 text-green-200">*</span>
+                      </label>
+                      <SearchCityLocation
+                        value={city}
+                        onChange={setCity}
+                        onSelect={(selectedCity) =>
+                          setCity(selectedCity.displayName)
+                        }
+                        placeholder="Busque a cidade"
+                        className="rounded-xl border-green-200 px-3 py-2.5 text-sm text-green-800 focus:border-green-500 focus:ring-2 focus:ring-green-500/20"
+                      />
+                      <p className="text-xs leading-relaxed text-green-200">
+                        Se a rua não estiver no mapa, o evento será marcado no
+                        centro da cidade.
+                      </p>
                     </div>
 
                     <div className="flex flex-col gap-1.5">
@@ -244,6 +322,10 @@ export function AddEventModal({ isOpen, onClose, event }: AddEventModalProps) {
                         rows={3}
                         className="w-full resize-none rounded-xl border border-green-200 bg-white px-3 py-2.5 text-sm text-green-800 placeholder:text-green-300 focus:border-green-500 focus:ring-2 focus:ring-green-500/20 focus:outline-none"
                       />
+                      <p className="text-xs leading-relaxed text-green-200">
+                        Conte o essencial: proposta, público e o que esperar do
+                        evento.
+                      </p>
                     </div>
 
                     <div className="flex flex-col gap-1.5">
@@ -261,6 +343,10 @@ export function AddEventModal({ isOpen, onClose, event }: AddEventModalProps) {
                         placeholder="https://..."
                         className="w-full rounded-xl border border-green-200 bg-white px-3 py-2.5 text-sm text-green-800 placeholder:text-green-300 focus:border-green-500 focus:ring-2 focus:ring-green-500/20 focus:outline-none"
                       />
+                      <p className="text-xs leading-relaxed text-green-200">
+                        Use o link oficial para inscrições, programação ou mais
+                        detalhes.
+                      </p>
                     </div>
                   </div>
                 </div>
@@ -275,19 +361,21 @@ export function AddEventModal({ isOpen, onClose, event }: AddEventModalProps) {
                   </button>
                   <button
                     type="submit"
-                    disabled={!isFormValid || isSubmitting || isUpdating}
-                    className={[
+                    disabled={
+                      !isFormValid || isSubmitting || isUpdating || isGeocoding
+                    }
+                    className={clsx(
                       "inline-flex items-center gap-2 rounded-xl px-5 py-2 text-sm font-semibold transition-all duration-200",
                       "focus-visible:ring-2 focus-visible:ring-green-500 focus-visible:ring-offset-2 focus-visible:outline-none",
-                      !isFormValid || isSubmitting || isUpdating
+                      !isFormValid || isSubmitting || isUpdating || isGeocoding
                         ? "cursor-not-allowed border border-green-200 bg-green-100 text-green-200"
                         : "active:bg-black-100 bg-green-500 text-white hover:bg-green-200",
-                    ].join(" ")}
+                    )}
                   >
-                    {isSubmitting || isUpdating ? (
+                    {isSubmitting || isUpdating || isGeocoding ? (
                       <>
                         <span className="h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent" />
-                        Salvando...
+                        {isGeocoding ? "Localizando..." : "Salvando..."}
                       </>
                     ) : isEditing ? (
                       "Salvar alterações"
