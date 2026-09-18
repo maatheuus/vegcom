@@ -73,6 +73,22 @@ const PRICE_OPTIONS: { value: 1 | 2 | 3; symbol: string; label: string }[] = [
   { value: 3, symbol: "$$$", label: "Caro" },
 ];
 
+function formatPhone(value: string) {
+  const digits = value.replace(/\D/g, "").slice(0, 11);
+
+  if (digits.length <= 2) return digits ? `(${digits}` : "";
+  if (digits.length <= 6) return `(${digits.slice(0, 2)}) ${digits.slice(2)}`;
+  if (digits.length <= 10) {
+    return `(${digits.slice(0, 2)}) ${digits.slice(2, 6)}-${digits.slice(6)}`;
+  }
+
+  return `(${digits.slice(0, 2)}) ${digits.slice(2, 7)}-${digits.slice(7)}`;
+}
+
+function getInstagramHandle(value: string) {
+  return value.trim().replace(/^@+/, "");
+}
+
 export function AddPlaceModal({
   isOpen,
   coords,
@@ -182,7 +198,9 @@ export function AddPlaceModal({
           lng: coords[1],
           address: `${address.trim()}, ${city.trim()}`,
           phone: phone.trim() || undefined,
-          instagram: instagram.trim() || undefined,
+          instagram: instagram.trim()
+            ? `@${getInstagramHandle(instagram)}`
+            : undefined,
           description: description.trim() || undefined,
           schedule: schedule.trim() || undefined,
           priceRange,
@@ -287,7 +305,7 @@ export function AddPlaceModal({
                   />
                 </motion.div>
                 <p className="text-center text-lg font-semibold text-green-800">
-                  Local adicionado!
+                  Local publicado!
                 </p>
               </div>
             ) : (
@@ -424,8 +442,12 @@ export function AddPlaceModal({
                         <input
                           id="place-phone"
                           type="tel"
+                          inputMode="tel"
+                          maxLength={15}
                           value={phone}
-                          onChange={(e) => setPhone(e.target.value)}
+                          onChange={(e) =>
+                            setPhone(formatPhone(e.target.value))
+                          }
                           placeholder="(11) 99999-0000"
                           className="w-full rounded-xl border border-green-200 bg-white px-3 py-2.5 text-sm text-green-800 placeholder:text-green-300 focus:border-green-500 focus:ring-2 focus:ring-green-500/20 focus:outline-none"
                         />
@@ -437,13 +459,22 @@ export function AddPlaceModal({
                         >
                           Instagram
                         </label>
-                        <input
-                          id="place-instagram"
-                          value={instagram}
-                          onChange={(e) => setInstagram(e.target.value)}
-                          placeholder="@perfil"
-                          className="w-full rounded-xl border border-green-200 bg-white px-3 py-2.5 text-sm text-green-800 placeholder:text-green-300 focus:border-green-500 focus:ring-2 focus:ring-green-500/20 focus:outline-none"
-                        />
+                        <div className="flex items-center rounded-xl border border-green-200 bg-white text-sm text-green-800 focus-within:border-green-500 focus-within:ring-2 focus-within:ring-green-500/20">
+                          <span className="pl-3 text-green-500" aria-hidden>
+                            @
+                          </span>
+                          <input
+                            id="place-instagram"
+                            value={instagram}
+                            onChange={(e) =>
+                              setInstagram(getInstagramHandle(e.target.value))
+                            }
+                            placeholder="perfil"
+                            autoCapitalize="none"
+                            autoCorrect="off"
+                            className="min-w-0 flex-1 rounded-xl bg-transparent px-1 py-2.5 pr-3 placeholder:text-green-300 focus:border-0! focus:!ring-0 focus:outline-none!"
+                          />
+                        </div>
                       </div>
                     </div>
                     <p className="order-10 -mt-2 text-xs leading-relaxed text-green-200">

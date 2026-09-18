@@ -1,9 +1,13 @@
 "use client";
 
+import { toast } from "@/shared/hooks/use-toast";
 import clsx from "clsx";
 import { AnimatePresence, motion } from "framer-motion";
 import {
   Clock,
+  Copy,
+  DollarSign,
+  ExternalLink,
   Globe,
   Image,
   MapPin,
@@ -38,6 +42,27 @@ const STATUS_CONFIG = {
   },
 } as const;
 
+const PRICE_RANGE_LABELS: Record<1 | 2 | 3, string> = {
+  1: "Econômico",
+  2: "Médio",
+  3: "Caro",
+};
+
+function getInstagramProfile(value: string) {
+  const handle = value
+    .trim()
+    .replace(/^https?:\/\/(?:www\.)?instagram\.com\//i, "")
+    .replace(/^@+/, "")
+    .replace(/[/?#].*$/, "");
+
+  if (!handle) return null;
+
+  return {
+    label: `@${handle}`,
+    url: `https://www.instagram.com/${encodeURIComponent(handle)}`,
+  };
+}
+
 interface PlaceDetailPanelProps {
   place: Place | null;
   isOpen: boolean;
@@ -63,6 +88,26 @@ export function PlaceDetailPanel({
     lng: place.lng,
     fallbackDestination: place.details.address ?? place.name,
   });
+  const instagramProfile = place.details.instagram
+    ? getInstagramProfile(place.details.instagram)
+    : null;
+
+  const handleCopyPhone = async () => {
+    try {
+      await navigator.clipboard.writeText(place.details.phone ?? "");
+      toast({
+        variant: "success",
+        title: "Telefone copiado",
+        description: "O número está pronto para colar.",
+      });
+    } catch {
+      toast({
+        variant: "destructive",
+        title: "Não foi possível copiar o telefone",
+        description: "Selecione o número e tente novamente.",
+      });
+    }
+  };
 
   const slideIn = isMobile
     ? { y: "100%", opacity: 0 }
@@ -190,14 +235,44 @@ export function PlaceDetailPanel({
                     <InfoRow
                       icon={<Phone className="h-4 w-4" aria-hidden />}
                       label="Telefone"
-                      value={place.details.phone}
+                      value={
+                        <span className="inline-flex items-center gap-1.5">
+                          <span>{place.details.phone}</span>
+                          <button
+                            type="button"
+                            onClick={handleCopyPhone}
+                            className="rounded p-1 text-green-500 transition-colors hover:bg-green-100 hover:text-green-700 focus-visible:ring-2 focus-visible:ring-green-500 focus-visible:outline-none"
+                            aria-label="Copiar telefone"
+                            title="Copiar telefone"
+                          >
+                            <Copy className="h-3.5 w-3.5" aria-hidden />
+                          </button>
+                        </span>
+                      }
                     />
                   )}
-                  {place.details.instagram && (
+                  {instagramProfile && (
                     <InfoRow
                       icon={<Image className="h-4 w-4" aria-hidden />}
                       label="Instagram"
-                      value={place.details.instagram}
+                      value={
+                        <a
+                          href={instagramProfile.url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="inline-flex items-center gap-1 text-green-700 underline decoration-green-300 underline-offset-2 transition-colors hover:text-green-500"
+                        >
+                          {instagramProfile.label}
+                          <ExternalLink className="h-3.5 w-3.5" aria-hidden />
+                        </a>
+                      }
+                    />
+                  )}
+                  {place.details.priceRange && (
+                    <InfoRow
+                      icon={<DollarSign className="h-4 w-4" aria-hidden />}
+                      label="Faixa de preço"
+                      value={`${"$".repeat(place.details.priceRange)} · ${PRICE_RANGE_LABELS[place.details.priceRange]}`}
                     />
                   )}
                   {place.details.website && (
@@ -262,7 +337,7 @@ function InfoRow({
 }: {
   icon: React.ReactNode;
   label: string;
-  value: string;
+  value: React.ReactNode;
 }) {
   return (
     <div className="flex items-start gap-3">
@@ -271,9 +346,9 @@ function InfoRow({
         <p className="text-xs font-medium tracking-wide text-green-500 uppercase">
           {label}
         </p>
-        <p className="text-sm leading-relaxed font-bold break-words text-green-800">
+        <div className="text-sm leading-relaxed font-bold break-words text-green-800">
           {value}
-        </p>
+        </div>
       </div>
     </div>
   );
