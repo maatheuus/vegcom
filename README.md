@@ -77,6 +77,7 @@ See [app/README.md](app/README.md) for the full route map and [src/features/READ
 | Variable | Description |
 |----------|-------------|
 | `NEXT_PUBLIC_API_URL` | URL of the NestJS backend API |
+| `NEXT_PUBLIC_CARTO_BASEMAPS_API_KEY` | CARTO Basemaps key used by the public directory map |
 
 ## Further Documentation
 

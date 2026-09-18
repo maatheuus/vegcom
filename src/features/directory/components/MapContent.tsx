@@ -19,6 +19,12 @@ import type { DirectoryEvent, Place } from "../types";
 const BRAZIL_BOUNDS = L.latLngBounds([-33.87, -73.99], [5.27, -34.72]);
 // Zoom aproximado de cidade quando o usuário compartilha a localização
 const USER_ZOOM = 11;
+const CARTO_BASEMAPS_API_KEY = process.env.NEXT_PUBLIC_CARTO_BASEMAPS_API_KEY;
+const CARTO_VOYAGER_TILE_URL = `https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png${
+  CARTO_BASEMAPS_API_KEY
+    ? `?key=${encodeURIComponent(CARTO_BASEMAPS_API_KEY)}`
+    : ""
+}`;
 
 interface MapContentProps {
   places: Place[];
@@ -55,7 +61,7 @@ export function MapContent({
       <ZoomControl position="bottomright" />
       <TileLayer
         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="https://carto.com/">CARTO</a>'
-        url="https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png"
+        url={CARTO_VOYAGER_TILE_URL}
       />
       <PlaceMarkersCluster
         places={places}
