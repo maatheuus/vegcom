@@ -83,31 +83,33 @@ function BottomNav({
 }) {
   return (
     <nav
-      className="relative flex shrink-0 items-center justify-around border-t border-green-200 bg-white px-3 pt-1.5 pb-[max(0.45rem,env(safe-area-inset-bottom))] shadow-[0_-10px_30px_rgba(27,78,48,0.10)]"
+      className="relative flex shrink-0 justify-center border-t border-green-200 bg-white px-5 pt-1.5 pb-[max(0.45rem,env(safe-area-inset-bottom))] shadow-[0_-10px_30px_rgba(27,78,48,0.10)]"
       role="tablist"
       aria-label="Navegação principal"
     >
-      {TABS.map((tab) => {
-        const isActive = activeTab === tab.key;
-        return (
-          <button
-            key={tab.key}
-            role="tab"
-            aria-selected={isActive}
-            onClick={() => onTabChange(tab.key)}
-            className={clsx(
-              "relative flex min-w-24 flex-col items-center gap-1 rounded-xl px-4 py-2 text-xs font-semibold transition-all duration-200",
-              "focus-visible:ring-2 focus-visible:ring-green-200 focus-visible:ring-offset-2 focus-visible:outline-none",
-              isActive
-                ? "bg-green-500 text-white shadow-[0_5px_14px_rgba(27,78,48,0.22)]"
-                : "text-green-200 hover:bg-green-100 hover:text-green-500",
-            )}
-          >
-            {tab.icon}
-            <span>{tab.label}</span>
-          </button>
-        );
-      })}
+      <div className="grid w-full max-w-lg grid-cols-2 gap-3">
+        {TABS.map((tab) => {
+          const isActive = activeTab === tab.key;
+          return (
+            <button
+              key={tab.key}
+              role="tab"
+              aria-selected={isActive}
+              onClick={() => onTabChange(tab.key)}
+              className={clsx(
+                "relative flex w-full flex-col items-center gap-1 rounded-xl px-4 py-2 text-xs font-semibold transition-all duration-200",
+                "focus-visible:ring-2 focus-visible:ring-green-200 focus-visible:ring-offset-2 focus-visible:outline-none",
+                isActive
+                  ? "bg-green-500 text-white shadow-[0_5px_14px_rgba(27,78,48,0.22)]"
+                  : "text-green-200 hover:bg-green-100 hover:text-green-500",
+              )}
+            >
+              {tab.icon}
+              <span>{tab.label}</span>
+            </button>
+          );
+        })}
+      </div>
     </nav>
   );
 }

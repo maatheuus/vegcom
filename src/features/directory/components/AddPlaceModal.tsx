@@ -515,7 +515,7 @@ export function AddPlaceModal({
                           value={schedule}
                           onChange={(e) => setSchedule(e.target.value)}
                           placeholder="Seg-Sáb: 11h-22h"
-                          className="w-full rounded-xl border border-green-200 bg-white px-3 py-2.5 text-sm text-green-800 placeholder:text-green-300 focus:border-green-500 focus:ring-2 focus:ring-green-500/20 focus:outline-none"
+                          className="w-full flex-1 rounded-xl border border-green-200 bg-white px-3 py-2.5 text-sm text-green-800 placeholder:text-green-300 focus:border-green-500 focus:ring-2 focus:ring-green-500/20 focus:outline-none"
                         />
                       </div>
                       <div className="flex flex-col gap-1.5">

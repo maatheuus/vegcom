@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 
 export type GeolocationState =
   | "checking"
@@ -21,8 +21,11 @@ interface UseGeolocationReturn {
 export function useGeolocation(): UseGeolocationReturn {
   const [position, setPosition] = useState<[number, number] | null>(null);
   const [state, setState] = useState<GeolocationState>("checking");
+  const hasUserResponded = useRef(false);
 
   const request = useCallback(() => {
+    hasUserResponded.current = true;
+
     if (!navigator.geolocation) {
       setState("denied");
       return;
@@ -57,7 +60,7 @@ export function useGeolocation(): UseGeolocationReturn {
     navigator.permissions
       .query({ name: "geolocation" })
       .then((permission) => {
-        if (!isActive) return;
+        if (!isActive || hasUserResponded.current) return;
         if (permission.state === "granted") {
           request();
         } else {
@@ -65,7 +68,7 @@ export function useGeolocation(): UseGeolocationReturn {
         }
       })
       .catch(() => {
-        if (isActive) setState("idle");
+        if (isActive && !hasUserResponded.current) setState("idle");
       });
 
     return () => {
@@ -73,7 +76,10 @@ export function useGeolocation(): UseGeolocationReturn {
     };
   }, [request]);
 
-  const skip = useCallback(() => setState("skipped"), []);
+  const skip = useCallback(() => {
+    hasUserResponded.current = true;
+    setState("skipped");
+  }, []);
 
   return { position, state, request, skip };
 }

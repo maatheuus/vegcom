@@ -459,6 +459,7 @@ function EventSection({
             key={event.id}
             event={event}
             index={index}
+            past={past}
             isOwner={event.userId === currentUserId}
             onEdit={() => onEdit(event)}
             onDelete={() => onDelete(event)}
@@ -472,12 +473,14 @@ function EventSection({
 function EventCard({
   event,
   index,
+  past,
   isOwner,
   onEdit,
   onDelete,
 }: {
   event: DirectoryEvent;
   index: number;
+  past: boolean;
   isOwner: boolean;
   onEdit: () => void;
   onDelete: () => void;
@@ -495,9 +498,9 @@ function EventCard({
       initial={{ opacity: 0, y: 12 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: index * 0.04 }}
-      className="group flex min-w-0 gap-4 rounded-[1.5rem] border border-green-100 bg-white p-4 transition hover:-translate-y-0.5 hover:border-green-200 hover:shadow-[0_12px_25px_rgba(27,78,48,0.12)]"
+      className="group grid min-w-0 grid-cols-[3.5rem_minmax(0,1fr)] gap-x-3 rounded-[1.5rem] border border-green-100 bg-white p-4 transition hover:-translate-y-0.5 hover:border-green-200 hover:shadow-[0_12px_25px_rgba(27,78,48,0.12)] sm:grid-cols-[4rem_minmax(0,1fr)] sm:gap-x-4"
     >
-      <div className="flex h-16 w-16 shrink-0 flex-col items-center justify-center rounded-2xl bg-green-100 text-green-500">
+      <div className="flex size-14 shrink-0 flex-col items-center justify-center rounded-2xl bg-green-100 text-green-500 sm:size-16">
         <strong className="font-lora text-2xl leading-none">
           {date.getDate()}
         </strong>
@@ -532,28 +535,34 @@ function EventCard({
             Saiba mais
           </a>
         )}
-        <div className="mt-4 flex flex-wrap gap-2 border-t border-green-100 pt-3">
-          <a
-            href={directionsUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex items-center gap-1.5 rounded-full border border-green-200 bg-green-100 px-3 py-1.5 text-xs font-bold text-green-500 transition hover:border-green-500 hover:bg-green-200 hover:text-green-50 focus-visible:ring-2 focus-visible:ring-green-200 focus-visible:ring-offset-2 focus-visible:outline-none"
-          >
-            <Navigation className="size-3.5" />
-            Como chegar
-          </a>
-          <ActionButton
-            onClick={handleCalendar}
-            icon={<CalendarPlus className="size-3.5" />}
-          >
-            Google Agenda
-          </ActionButton>
-          <ActionButton
-            onClick={handleShare}
-            icon={<Share2 className="size-3.5" />}
-          >
-            Compartilhar
-          </ActionButton>
+      </div>
+      {(!past || isOwner) && (
+        <div className="col-span-2 mt-4 grid grid-cols-2 gap-2 border-t border-green-100 pt-3 sm:col-span-1 sm:col-start-2 sm:flex sm:flex-wrap">
+          {!past && (
+            <>
+              <a
+                href={directionsUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center justify-center gap-1.5 rounded-full border border-green-200 bg-green-100 px-3 py-1.5 text-xs font-bold text-green-500 transition hover:border-green-500 hover:bg-green-200 hover:text-green-50 focus-visible:ring-2 focus-visible:ring-green-200 focus-visible:ring-offset-2 focus-visible:outline-none"
+              >
+                <Navigation className="size-3.5" />
+                Como chegar
+              </a>
+              <ActionButton
+                onClick={handleCalendar}
+                icon={<CalendarPlus className="size-3.5" />}
+              >
+                Google Agenda
+              </ActionButton>
+              <ActionButton
+                onClick={handleShare}
+                icon={<Share2 className="size-3.5" />}
+              >
+                Compartilhar
+              </ActionButton>
+            </>
+          )}
           {isOwner && (
             <>
               <ActionButton
@@ -571,7 +580,7 @@ function EventCard({
             </>
           )}
         </div>
-      </div>
+      )}
     </motion.article>
   );
 }
@@ -589,7 +598,7 @@ function ActionButton({
     <button
       type="button"
       onClick={onClick}
-      className="inline-flex items-center gap-1.5 rounded-full border border-green-200 bg-green-100 px-3 py-1.5 text-xs font-bold text-green-500 transition hover:border-green-500 hover:bg-green-200 hover:text-green-50 focus-visible:ring-2 focus-visible:ring-green-200 focus-visible:ring-offset-2 focus-visible:outline-none"
+      className="inline-flex items-center justify-center gap-1.5 rounded-full border border-green-200 bg-green-100 px-3 py-1.5 text-xs font-bold text-green-500 transition hover:border-green-500 hover:bg-green-200 hover:text-green-50 focus-visible:ring-2 focus-visible:ring-green-200 focus-visible:ring-offset-2 focus-visible:outline-none"
     >
       {icon}
       {children}

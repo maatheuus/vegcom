@@ -15,9 +15,12 @@ export function LocationPrompt({
   onAllow,
   onSkip,
 }: LocationPromptProps) {
-  if (state !== "idle" && state !== "loading") return null;
+  if (state === "checking" || state === "success" || state === "skipped") {
+    return null;
+  }
 
   const isLoading = state === "loading";
+  const hasLocationError = state === "denied" || state === "error";
 
   return (
     <motion.aside
@@ -41,10 +44,16 @@ export function LocationPrompt({
         </span>
         <div>
           <p className="font-lora text-black-100 text-xl font-semibold italic">
-            Encontre o vegano perto de você
+            {hasLocationError
+              ? "Não conseguimos usar sua localização"
+              : "Encontre o vegano perto de você"}
           </p>
           <p className="font-maitree mt-1 text-sm leading-relaxed text-green-500">
-            Com sua localização, abrimos o mapa direto na sua região.
+            {state === "denied"
+              ? "A permissão está bloqueada no navegador. Você pode liberá-la ou continuar no mapa do Brasil."
+              : state === "error"
+                ? "O dispositivo não retornou sua posição. Tente novamente ou continue sem localização."
+                : "Com sua localização, abrimos o mapa direto na sua região."}
           </p>
         </div>
       </div>
@@ -66,7 +75,11 @@ export function LocationPrompt({
           <LocateFixed
             className={isLoading ? "size-4 animate-pulse" : "size-4"}
           />
-          {isLoading ? "Localizando..." : "Usar minha localização"}
+          {isLoading
+            ? "Localizando..."
+            : hasLocationError
+              ? "Tentar novamente"
+              : "Usar minha localização"}
         </button>
       </div>
     </motion.aside>

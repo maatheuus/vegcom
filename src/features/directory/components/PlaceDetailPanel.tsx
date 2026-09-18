@@ -1,6 +1,7 @@
 "use client";
 
 import { toast } from "@/shared/hooks/use-toast";
+import { InstagramLogoIcon } from "@phosphor-icons/react";
 import clsx from "clsx";
 import { AnimatePresence, motion } from "framer-motion";
 import {
@@ -9,7 +10,6 @@ import {
   DollarSign,
   ExternalLink,
   Globe,
-  Image,
   MapPin,
   MessageSquare,
   Navigation,
@@ -91,23 +91,6 @@ export function PlaceDetailPanel({
   const instagramProfile = place.details.instagram
     ? getInstagramProfile(place.details.instagram)
     : null;
-
-  const handleCopyPhone = async () => {
-    try {
-      await navigator.clipboard.writeText(place.details.phone ?? "");
-      toast({
-        variant: "success",
-        title: "Telefone copiado",
-        description: "O número está pronto para colar.",
-      });
-    } catch {
-      toast({
-        variant: "destructive",
-        title: "Não foi possível copiar o telefone",
-        description: "Selecione o número e tente novamente.",
-      });
-    }
-  };
 
   const slideIn = isMobile
     ? { y: "100%", opacity: 0 }
@@ -221,7 +204,15 @@ export function PlaceDetailPanel({
                     <InfoRow
                       icon={<MapPin className="h-4 w-4" aria-hidden />}
                       label="Endereço"
-                      value={place.details.address}
+                      value={
+                        <span className="inline-flex max-w-full items-start gap-1.5">
+                          <span>{place.details.address}</span>
+                          <CopyButton
+                            value={place.details.address}
+                            label="endereço"
+                          />
+                        </span>
+                      }
                     />
                   )}
                   {place.details.schedule && (
@@ -238,22 +229,19 @@ export function PlaceDetailPanel({
                       value={
                         <span className="inline-flex items-center gap-1.5">
                           <span>{place.details.phone}</span>
-                          <button
-                            type="button"
-                            onClick={handleCopyPhone}
-                            className="rounded p-1 text-green-500 transition-colors hover:bg-green-100 hover:text-green-700 focus-visible:ring-2 focus-visible:ring-green-500 focus-visible:outline-none"
-                            aria-label="Copiar telefone"
-                            title="Copiar telefone"
-                          >
-                            <Copy className="h-3.5 w-3.5" aria-hidden />
-                          </button>
+                          <CopyButton
+                            value={place.details.phone}
+                            label="telefone"
+                          />
                         </span>
                       }
                     />
                   )}
                   {instagramProfile && (
                     <InfoRow
-                      icon={<Image className="h-4 w-4" aria-hidden />}
+                      icon={
+                        <InstagramLogoIcon className="h-4 w-4" aria-hidden />
+                      }
                       label="Instagram"
                       value={
                         <a
@@ -302,31 +290,63 @@ export function PlaceDetailPanel({
                   </div>
                 )}
 
-                <a
-                  href={directionsUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center justify-center gap-2 rounded-xl bg-green-500 px-4 py-3 text-sm font-medium text-white transition-colors hover:bg-green-700 focus-visible:ring-2 focus-visible:ring-green-500 focus-visible:ring-offset-2 focus-visible:outline-none"
-                >
-                  <Navigation className="h-4 w-4" aria-hidden />
-                  Como chegar
-                </a>
+                <div className="flex flex-col gap-3">
+                  <a
+                    href={directionsUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center justify-center gap-2 rounded-xl bg-green-500 px-4 py-3 text-sm font-medium text-white transition-colors hover:bg-green-700 focus-visible:ring-2 focus-visible:ring-green-500 focus-visible:ring-offset-2 focus-visible:outline-none"
+                  >
+                    <Navigation className="h-4 w-4" aria-hidden />
+                    Como chegar
+                  </a>
 
-                {/* Report button */}
-                <button
-                  type="button"
-                  onClick={onReport}
-                  className="mt-2 inline-flex items-center justify-center gap-2 rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm font-medium text-amber-700 transition-all duration-200 hover:border-amber-300 hover:bg-amber-100 focus-visible:ring-2 focus-visible:ring-amber-500 focus-visible:ring-offset-2 focus-visible:outline-none active:border-amber-400 active:bg-amber-200"
-                >
-                  <MessageSquare className="h-4 w-4" aria-hidden />
-                  Sugerir Alteração / Informar Problema
-                </button>
+                  <button
+                    type="button"
+                    onClick={onReport}
+                    className="inline-flex items-center justify-center gap-2 rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm font-medium text-amber-700 transition-all duration-200 hover:border-amber-300 hover:bg-amber-100 focus-visible:ring-2 focus-visible:ring-amber-500 focus-visible:ring-offset-2 focus-visible:outline-none active:border-amber-400 active:bg-amber-200"
+                  >
+                    <MessageSquare className="h-4 w-4" aria-hidden />
+                    Sugerir Alteração / Informar Problema
+                  </button>
+                </div>
               </div>
             </div>
           </motion.div>
         </>
       )}
     </AnimatePresence>
+  );
+}
+
+function CopyButton({ value, label }: { value: string; label: string }) {
+  const handleCopy = async () => {
+    try {
+      await navigator.clipboard.writeText(value);
+      toast({
+        variant: "success",
+        title: `${label[0].toUpperCase()}${label.slice(1)} copiado`,
+        description: `O ${label} está pronto para colar.`,
+      });
+    } catch {
+      toast({
+        variant: "destructive",
+        title: `Não foi possível copiar o ${label}`,
+        description: "Selecione o texto e tente novamente.",
+      });
+    }
+  };
+
+  return (
+    <button
+      type="button"
+      onClick={handleCopy}
+      className="shrink-0 rounded p-1 text-green-500 transition-colors hover:bg-green-100 hover:text-green-700 focus-visible:ring-2 focus-visible:ring-green-500 focus-visible:outline-none"
+      aria-label={`Copiar ${label}`}
+      title={`Copiar ${label}`}
+    >
+      <Copy className="h-3.5 w-3.5" aria-hidden />
+    </button>
   );
 }
 

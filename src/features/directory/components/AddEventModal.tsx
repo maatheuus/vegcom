@@ -204,7 +204,7 @@ export function AddEventModal({ isOpen, onClose, event }: AddEventModalProps) {
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.95, y: 10 }}
             transition={{ type: "spring", damping: 25, stiffness: 350 }}
-            className="fixed inset-4 z-[1400] m-auto flex max-h-[90vh] w-full max-w-md flex-col overflow-hidden rounded-2xl border border-green-200 bg-white shadow-2xl"
+            className="fixed inset-4 z-[1400] m-auto flex max-h-[calc(100dvh-2rem)] w-[calc(100%-2rem)] max-w-md flex-col overflow-hidden rounded-2xl border border-green-200 bg-white shadow-2xl sm:max-h-[90vh]"
             role="dialog"
             aria-modal
             aria-label="Adicionar evento"
@@ -244,8 +244,11 @@ export function AddEventModal({ isOpen, onClose, event }: AddEventModalProps) {
                 </p>
               </div>
             ) : (
-              <form onSubmit={handleSubmit} className="flex flex-1 flex-col">
-                <div className="flex-1 overflow-y-auto px-3 py-4">
+              <form
+                onSubmit={handleSubmit}
+                className="flex min-h-0 flex-1 flex-col overflow-hidden"
+              >
+                <div className="min-h-0 flex-1 touch-pan-y overflow-y-auto overscroll-contain px-3 py-4">
                   <div className="flex flex-col gap-4">
                     <div className="flex flex-col gap-1.5">
                       <label
@@ -407,7 +410,7 @@ export function AddEventModal({ isOpen, onClose, event }: AddEventModalProps) {
                   </div>
                 </div>
 
-                <div className="flex items-center justify-end gap-2 border-t border-green-100 px-5 py-4">
+                <div className="flex shrink-0 items-center justify-end gap-2 border-t border-green-100 px-5 py-4">
                   <button
                     type="button"
                     onClick={onClose}

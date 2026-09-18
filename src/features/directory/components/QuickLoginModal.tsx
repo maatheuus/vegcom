@@ -93,21 +93,23 @@ export function QuickLoginModal({
         aria-labelledby="quick-login-title"
       >
         <div className="flex items-start justify-between gap-4">
-          <div>
-            <span className="mb-4 flex size-11 items-center justify-center rounded-full bg-green-100 text-green-500">
-              {isSignup ? (
-                <UserPlus className="size-5" />
-              ) : (
-                <KeyRound className="size-5" />
-              )}
-            </span>
-            <h2
-              id="quick-login-title"
-              className="font-lora text-black-100 text-2xl font-bold italic"
-            >
-              {isSignup ? "Crie sua conta" : "Entre para contribuir"}
-            </h2>
-            <p className="font-maitree mt-2 text-sm leading-relaxed text-green-500">
+          <div className="min-w-0 flex-1">
+            <div className="flex items-center gap-3">
+              <span className="flex size-11 shrink-0 items-center justify-center rounded-full bg-green-100 text-green-500">
+                {isSignup ? (
+                  <UserPlus className="size-5" />
+                ) : (
+                  <KeyRound className="size-5" />
+                )}
+              </span>
+              <h2
+                id="quick-login-title"
+                className="font-lora text-black-100 text-2xl font-bold italic"
+              >
+                {isSignup ? "Crie sua conta" : "Entre para contribuir"}
+              </h2>
+            </div>
+            <p className="font-maitree mt-3 text-sm leading-relaxed text-green-500">
               {isSignup
                 ? "Leva só alguns segundos. Você completa seu perfil depois."
                 : description}

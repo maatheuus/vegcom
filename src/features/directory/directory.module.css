@@ -26,6 +26,23 @@
 .atlas :global(.leaflet-control-attribution a) {
   color: var(--atlas-forest);
 }
+.atlas :global(.event-popup .leaflet-popup-content-wrapper) {
+  border-radius: 1.5rem;
+  box-shadow: 0 14px 36px rgba(27, 78, 48, 0.2);
+}
+.atlas :global(.event-popup .leaflet-popup-content) {
+  width: min(17rem, calc(100vw - 4rem)) !important;
+  margin: 1.5rem;
+}
+.atlas :global(.event-popup .leaflet-popup-tip) {
+  box-shadow: 3px 3px 7px rgba(27, 78, 48, 0.12);
+}
+.atlas :global(.event-popup .leaflet-popup-close-button) {
+  top: 0.5rem;
+  right: 0.5rem;
+  color: var(--atlas-leaf);
+  font-size: 1.5rem;
+}
 .atlas :global(.place-marker-tooltip) {
   max-width: 14rem;
   border: 1px solid var(--atlas-leaf);
