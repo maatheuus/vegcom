@@ -30,6 +30,7 @@ interface MapViewProps {
   pickMode?: boolean;
   pendingCoords?: [number, number] | null;
   onLocationPick?: (lat: number, lng: number) => void;
+  focusEventsRequest?: number;
 }
 
 export function MapView({
@@ -43,6 +44,7 @@ export function MapView({
   pickMode,
   pendingCoords,
   onLocationPick,
+  focusEventsRequest = 0,
 }: MapViewProps) {
   return (
     <div className="h-full w-full">
@@ -57,6 +59,7 @@ export function MapView({
         pickMode={pickMode}
         pendingCoords={pendingCoords}
         onLocationPick={onLocationPick}
+        focusEventsRequest={focusEventsRequest}
       />
     </div>
   );

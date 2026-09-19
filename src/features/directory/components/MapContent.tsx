@@ -37,6 +37,7 @@ interface MapContentProps {
   onLocationPick?: (lat: number, lng: number) => void;
   userPosition?: [number, number] | null;
   geoState?: GeolocationState;
+  focusEventsRequest?: number;
 }
 
 export function MapContent({
@@ -50,6 +51,7 @@ export function MapContent({
   onLocationPick,
   userPosition = null,
   geoState = "idle",
+  focusEventsRequest = 0,
 }: MapContentProps) {
   return (
     <MapContainer
@@ -86,9 +88,46 @@ export function MapContent({
       />
       <PickModeCursor pickMode={pickMode} />
       <InitialViewController userPosition={userPosition} geoState={geoState} />
+      <EventsViewController events={events} request={focusEventsRequest} />
       <MapResizeObserver />
     </MapContainer>
   );
+}
+
+function EventsViewController({
+  events,
+  request,
+}: {
+  events: DirectoryEvent[];
+  request: number;
+}) {
+  const map = useMap();
+
+  useEffect(() => {
+    if (request === 0) return;
+
+    const positions = events.flatMap((event) =>
+      event.lat === undefined || event.lng === undefined
+        ? []
+        : [[event.lat, event.lng] as [number, number]],
+    );
+
+    if (positions.length === 0) return;
+
+    if (positions.length === 1) {
+      map.flyTo(positions[0], 8, { duration: 0.8 });
+      return;
+    }
+
+    map.fitBounds(L.latLngBounds(positions), {
+      animate: true,
+      duration: 0.8,
+      maxZoom: 8,
+      padding: [48, 48],
+    });
+  }, [events, map, request]);
+
+  return null;
 }
 
 function MapResizeObserver() {
