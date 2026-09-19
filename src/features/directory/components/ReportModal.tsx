@@ -170,7 +170,7 @@ export function ReportModal({
             aria-hidden
           />
           <div
-            className={`${styles.modalEnter} fixed inset-4 z-[1400] m-auto flex max-h-[90vh] w-full max-w-md flex-col overflow-hidden rounded-2xl border border-green-200 bg-white shadow-2xl`}
+            className={`${styles.modalEnter} fixed inset-4 z-[1400] m-auto flex max-h-[90vh] w-full max-w-md flex-col overflow-hidden rounded-2xl border border-green-200 bg-white shadow-2xl md:inset-auto md:top-1/2 md:left-1/2 md:m-0 md:w-[calc(100%-2rem)] md:[translate:-50%_-50%]`}
             role="dialog"
             aria-modal
             aria-label="Informar problema"
