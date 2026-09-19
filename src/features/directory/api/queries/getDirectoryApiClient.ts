@@ -1,4 +1,9 @@
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import {
+  keepPreviousData,
+  useMutation,
+  useQuery,
+  useQueryClient,
+} from "@tanstack/react-query";
 import type {
   CreateDirectoryEventPayload,
   CreatePlacePayload,
@@ -55,6 +60,7 @@ export const useEvents = (
   return useQuery({
     queryKey: [...directoryKeys.events, params],
     queryFn: () => directoryApi.getEvents(params),
+    placeholderData: keepPreviousData,
     staleTime: 60_000,
     enabled: options?.enabled ?? true,
   });
