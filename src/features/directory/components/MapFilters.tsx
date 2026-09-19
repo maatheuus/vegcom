@@ -8,10 +8,11 @@ import {
   SelectValue,
 } from "@/shared/ui/Select";
 import { CalendarDays, MapPin, Store } from "lucide-react";
-import { CATEGORY_LABELS } from "../constants";
+import { CATEGORY_LABELS, NEARBY_PLACES_RADIUS_KM } from "../constants";
 import type { PlaceCategory } from "../types";
 
 export type MapContentFilter = "all" | "events" | "places";
+export type PlaceDistanceFilter = "all" | "nearby";
 
 interface MonthOption {
   value: string;
@@ -29,6 +30,8 @@ interface MapFiltersProps {
   categories: PlaceCategory[];
   selectedCategory: PlaceCategory | "all";
   onCategoryChange: (category: PlaceCategory | "all") => void;
+  selectedDistance: PlaceDistanceFilter;
+  onDistanceChange: (distance: PlaceDistanceFilter) => void;
 }
 
 export function MapFilters({
@@ -42,6 +45,8 @@ export function MapFilters({
   categories,
   selectedCategory,
   onCategoryChange,
+  selectedDistance,
+  onDistanceChange,
 }: MapFiltersProps) {
   return (
     <div className="pointer-events-none absolute inset-x-0 top-3 z-[1001] flex justify-center px-3 sm:top-4 sm:px-4">
@@ -89,7 +94,7 @@ export function MapFilters({
               <SelectValue />
             </SelectTrigger>
             <SelectContent className="!z-[2000] rounded-xl border-green-100 bg-white p-1 shadow-[0_8px_24px_rgba(27,78,48,0.16)]">
-              <SelectItem value="all">Todas as datas</SelectItem>
+              <SelectItem value="all">Data</SelectItem>
               {months.map((month) => (
                 <SelectItem key={month.value} value={month.value}>
                   {month.label}
@@ -99,24 +104,47 @@ export function MapFilters({
           </Select>
         )}
 
-        {content === "places" && categories.length > 1 && (
-          <div className="hidden-scrollbar flex w-full max-w-full gap-1.5 overflow-x-auto rounded-full border border-green-200 bg-white p-1 shadow-[0_8px_24px_rgba(27,78,48,0.16)]">
-            <CategoryButton
-              active={selectedCategory === "all"}
-              onClick={() => onCategoryChange("all")}
-            >
-              Todos
-            </CategoryButton>
-            {categories.map((category) => (
-              <CategoryButton
-                key={category}
-                active={selectedCategory === category}
-                onClick={() => onCategoryChange(category)}
+        {content === "places" && (
+          <>
+            <Select value={selectedDistance} onValueChange={onDistanceChange}>
+              <SelectTrigger
+                aria-label="Filtrar locais por distância"
+                className="h-auto w-48 rounded-full border-green-200 bg-white px-4 py-2 text-sm font-semibold text-green-500 shadow-[0_8px_24px_rgba(27,78,48,0.16)]"
               >
-                {CATEGORY_LABELS[category]}
-              </CategoryButton>
-            ))}
-          </div>
+                <SelectValue>
+                  {selectedDistance === "all"
+                    ? "Distância"
+                    : `Distância: até ${NEARBY_PLACES_RADIUS_KM} km`}
+                </SelectValue>
+              </SelectTrigger>
+              <SelectContent className="!z-[2000] rounded-xl border-green-100 bg-white p-1 shadow-[0_8px_24px_rgba(27,78,48,0.16)]">
+                <SelectItem value="all">Distância</SelectItem>
+                <SelectItem value="nearby">
+                  Próximos a mim (até {NEARBY_PLACES_RADIUS_KM} km)
+                </SelectItem>
+              </SelectContent>
+            </Select>
+
+            {categories.length > 1 && (
+              <div className="hidden-scrollbar flex w-full max-w-full gap-1.5 overflow-x-auto rounded-full border border-green-200 bg-white p-1 shadow-[0_8px_24px_rgba(27,78,48,0.16)]">
+                <CategoryButton
+                  active={selectedCategory === "all"}
+                  onClick={() => onCategoryChange("all")}
+                >
+                  Todos
+                </CategoryButton>
+                {categories.map((category) => (
+                  <CategoryButton
+                    key={category}
+                    active={selectedCategory === category}
+                    onClick={() => onCategoryChange(category)}
+                  >
+                    {CATEGORY_LABELS[category]}
+                  </CategoryButton>
+                ))}
+              </div>
+            )}
+          </>
         )}
       </div>
     </div>

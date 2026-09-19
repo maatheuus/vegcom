@@ -1,5 +1,7 @@
 import type { PlaceCategory, PriceRange } from "./types";
 
+export const NEARBY_PLACES_RADIUS_KM = 500;
+
 /** Rótulos (plural) das categorias de locais, usados nos filtros do mapa. */
 export const CATEGORY_LABELS: Record<PlaceCategory, string> = {
   restaurant: "Restaurantes",

@@ -64,7 +64,12 @@ export function MapTab({
   });
   const upcomingEvents = upcomingEventsPage?.data ?? [];
   const { filterProps, visibleEvents, visiblePlaces, showAllEvents } =
-    useMapContentFilters(places, upcomingEvents);
+    useMapContentFilters(
+      places,
+      upcomingEvents,
+      userPosition,
+      geolocation.request,
+    );
 
   const mappedEvents = upcomingEvents.filter(hasCoordinates);
   const hasOnlyDistantEvents =
@@ -73,8 +78,12 @@ export function MapTab({
     mappedEvents.length > 0 &&
     mappedEvents.every(
       (event) =>
-        haversineDistance(userPosition[0], userPosition[1], event.lat, event.lng) >
-        NEARBY_EVENTS_RADIUS_KM,
+        haversineDistance(
+          userPosition[0],
+          userPosition[1],
+          event.lat,
+          event.lng,
+        ) > NEARBY_EVENTS_RADIUS_KM,
     );
   const isGuideVisible =
     isMapGuideOpen && geoState !== "idle" && geoState !== "loading";
