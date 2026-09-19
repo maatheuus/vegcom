@@ -56,6 +56,8 @@ export function MapContent({
   return (
     <MapContainer
       bounds={BRAZIL_BOUNDS}
+      maxBounds={BRAZIL_BOUNDS}
+      maxBoundsViscosity={1}
       zoomControl={false}
       className="h-full w-full"
       scrollWheelZoom

@@ -9,7 +9,10 @@ import {
   useUpdateEvent,
 } from "../../api/queries/getDirectoryApiClient";
 import type { DirectoryEvent } from "../../types";
-import { isUnauthorizedError } from "../../utils/errors";
+import {
+  isLocationOutsideBrazilError,
+  isUnauthorizedError,
+} from "../../utils/errors";
 import { FormActions } from "../FormModal/FormActions";
 import { FormModal } from "../FormModal/FormModal";
 import { FormSuccess } from "../FormModal/FormSuccess";
@@ -111,6 +114,15 @@ export function AddEventModal({ isOpen, onClose, event }: AddEventModalProps) {
     } catch (error) {
       if (isUnauthorizedError(error)) {
         openLogin();
+        return;
+      }
+      if (isLocationOutsideBrazilError(error)) {
+        toast({
+          variant: "destructive",
+          title: "Evento fora do Brasil",
+          description:
+            "Por enquanto, locais e eventos só podem ser adicionados no Brasil.",
+        });
         return;
       }
       toast({

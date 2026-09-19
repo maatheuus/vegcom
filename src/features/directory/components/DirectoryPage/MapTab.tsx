@@ -1,12 +1,14 @@
 "use client";
 
 import clsx from "clsx";
-import { useCallback, useState } from "react";
+import { useCallback, useRef, useState } from "react";
 import { useEvents, usePlaces } from "../../api/queries/getDirectoryApiClient";
+import { checkLocationInBrazil } from "../../hooks/geocode";
 import { haversineDistance } from "../../hooks/haversineDistance";
 import type { useGeolocation } from "../../hooks/useGeolocation";
 import { useMapContentFilters } from "../../hooks/useMapContentFilters";
 import type { DirectoryEvent, Place } from "../../types";
+import { toast } from "@/shared/hooks/use-toast";
 import { AddPlaceModal } from "../AddPlaceModal/AddPlaceModal";
 import { LocationPrompt } from "../LocationPrompt";
 import { MapFilters } from "../MapFilters";
@@ -43,9 +45,12 @@ export function MapTab({
   const [selectedPlace, setSelectedPlace] = useState<Place | null>(null);
   const [isReportModalOpen, setIsReportModalOpen] = useState(false);
   const [isPickingLocation, setIsPickingLocation] = useState(false);
+  const [isCheckingPickedLocation, setIsCheckingPickedLocation] =
+    useState(false);
   const [pendingCoords, setPendingCoords] = useState<[number, number] | null>(
     null,
   );
+  const locationCheckRequestId = useRef(0);
   const [isAddPlaceOpen, setIsAddPlaceOpen] = useState(false);
   const [isMapGuideOpen, setIsMapGuideOpen] = useState(false);
   const [focusEventsRequest, setFocusEventsRequest] = useState(0);
@@ -77,21 +82,48 @@ export function MapTab({
   // Callbacks estáveis: o MapView os usa em handlers de eventos do Leaflet.
   const clearSelection = useCallback(() => setSelectedPlace(null), []);
 
-  const handleLocationPick = useCallback((lat: number, lng: number) => {
+  const handleLocationPick = useCallback(async (lat: number, lng: number) => {
+    const requestId = ++locationCheckRequestId.current;
+    setIsCheckingPickedLocation(true);
+
+    const locationCheck = await checkLocationInBrazil(lat, lng);
+    if (locationCheckRequestId.current !== requestId) return;
+
+    setIsCheckingPickedLocation(false);
+
+    if (locationCheck !== "inside") {
+      toast({
+        variant: "destructive",
+        title:
+          locationCheck === "outside"
+            ? "Escolha uma posição no Brasil"
+            : "Não foi possível confirmar a localização",
+        description:
+          locationCheck === "outside"
+            ? "Por enquanto, locais e eventos só podem ser adicionados no Brasil."
+            : "Tente selecionar outra posição em instantes.",
+      });
+      return;
+    }
+
     setPendingCoords([lat, lng]);
     setIsPickingLocation(false);
     setIsAddPlaceOpen(true);
   }, []);
 
   const startPicking = () => {
+    locationCheckRequestId.current += 1;
     setSelectedPlace(null);
     setIsMapGuideOpen(false);
     setPendingCoords(null);
+    setIsCheckingPickedLocation(false);
     setIsPickingLocation(true);
   };
 
   const cancelPicking = () => {
+    locationCheckRequestId.current += 1;
     setIsPickingLocation(false);
+    setIsCheckingPickedLocation(false);
     setPendingCoords(null);
   };
 
@@ -154,6 +186,7 @@ export function MapTab({
       />
       <PickLocationBanner
         isVisible={isPickingLocation}
+        isChecking={isCheckingPickedLocation}
         onCancel={cancelPicking}
       />
 

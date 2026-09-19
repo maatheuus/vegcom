@@ -6,7 +6,10 @@ import { useEffect, useRef, useState } from "react";
 import { useCreatePlace } from "../../api/queries/getDirectoryApiClient";
 import { geocode } from "../../hooks/geocode";
 import { useReverseGeocode } from "../../hooks/useReverseGeocode";
-import { isUnauthorizedError } from "../../utils/errors";
+import {
+  isLocationOutsideBrazilError,
+  isUnauthorizedError,
+} from "../../utils/errors";
 import { FormActions } from "../FormModal/FormActions";
 import { FormModal } from "../FormModal/FormModal";
 import { FormSuccess } from "../FormModal/FormSuccess";
@@ -101,6 +104,15 @@ export function AddPlaceModal({
         openLogin();
         return;
       }
+      if (isLocationOutsideBrazilError(error)) {
+        toast({
+          variant: "destructive",
+          title: "Local fora do Brasil",
+          description:
+            "Por enquanto, locais e eventos só podem ser adicionados no Brasil.",
+        });
+        return;
+      }
       toast({
         variant: "destructive",
         title: "Não foi possível adicionar o local",
@@ -156,7 +168,10 @@ export function AddPlaceModal({
           </form>
         )}
       </FormModal>
-      <QuickLoginModal {...loginModalProps} isOpen={isOpen && loginModalProps.isOpen} />
+      <QuickLoginModal
+        {...loginModalProps}
+        isOpen={isOpen && loginModalProps.isOpen}
+      />
     </>
   );
 }

@@ -3,10 +3,15 @@ import { X } from "lucide-react";
 
 interface PickLocationBannerProps {
   isVisible: boolean;
+  isChecking: boolean;
   onCancel: () => void;
 }
 
-export function PickLocationBanner({ isVisible, onCancel }: PickLocationBannerProps) {
+export function PickLocationBanner({
+  isVisible,
+  isChecking,
+  onCancel,
+}: PickLocationBannerProps) {
   return (
     <AnimatePresence>
       {isVisible && (
@@ -23,7 +28,9 @@ export function PickLocationBanner({ isVisible, onCancel }: PickLocationBannerPr
               <span className="relative inline-flex h-2.5 w-2.5 rounded-full bg-green-500" />
             </span>
             <p className="font-maitree text-sm font-medium text-green-500">
-              Toque no mapa para escolher a posição do local
+              {isChecking
+                ? "Confirmando se a posição fica no Brasil..."
+                : "Toque no mapa para escolher a posição do local"}
             </p>
             <button
               type="button"

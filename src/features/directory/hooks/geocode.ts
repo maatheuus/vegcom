@@ -29,3 +29,42 @@ export async function geocode(
     return null;
   }
 }
+
+export type BrazilLocationCheck = "inside" | "outside" | "unavailable";
+
+/**
+ * Confirma o país de uma coordenada antes de abrir o formulário de novo local.
+ * A validação no backend continua sendo a fonte de verdade.
+ */
+export async function checkLocationInBrazil(
+  lat: number,
+  lng: number,
+): Promise<BrazilLocationCheck> {
+  if (!Number.isFinite(lat) || !Number.isFinite(lng)) return "outside";
+
+  const params = new URLSearchParams({
+    format: "jsonv2",
+    lat: String(lat),
+    lon: String(lng),
+    zoom: "3",
+  });
+
+  try {
+    const response = await fetch(
+      `https://nominatim.openstreetmap.org/reverse?${params.toString()}`,
+    );
+    if (!response.ok) return "unavailable";
+
+    const data = (await response.json()) as {
+      address?: { country_code?: string };
+    };
+
+    if (!data.address?.country_code) return "unavailable";
+
+    return data.address.country_code.toLowerCase() === "br"
+      ? "inside"
+      : "outside";
+  } catch {
+    return "unavailable";
+  }
+}
