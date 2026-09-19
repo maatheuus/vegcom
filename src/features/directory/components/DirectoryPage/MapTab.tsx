@@ -43,7 +43,7 @@ export function MapTab({
 }: MapTabProps) {
   const { position: userPosition, state: geoState } = geolocation;
   const [selectedPlace, setSelectedPlace] = useState<Place | null>(null);
-  const [isReportModalOpen, setIsReportModalOpen] = useState(false);
+  const [reportingPlace, setReportingPlace] = useState<Place | null>(null);
   const [isPickingLocation, setIsPickingLocation] = useState(false);
   const [isCheckingPickedLocation, setIsCheckingPickedLocation] =
     useState(false);
@@ -147,6 +147,13 @@ export function MapTab({
     setIsDistantNoticeDismissed(true);
   };
 
+  const openReport = () => {
+    if (!selectedPlace) return;
+
+    setReportingPlace(selectedPlace);
+    setSelectedPlace(null);
+  };
+
   return (
     <div
       className={clsx(
@@ -202,16 +209,16 @@ export function MapTab({
       <PlaceDetailPanel
         place={selectedPlace}
         onClose={clearSelection}
-        onReport={() => setIsReportModalOpen(true)}
+        onReport={openReport}
         userPosition={userPosition}
       />
-      {selectedPlace && (
+      {reportingPlace && (
         <ReportModal
-          isOpen={isReportModalOpen}
-          placeId={selectedPlace.id}
-          placeName={selectedPlace.name}
+          isOpen
+          placeId={reportingPlace.id}
+          placeName={reportingPlace.name}
           userPosition={userPosition}
-          onClose={() => setIsReportModalOpen(false)}
+          onClose={() => setReportingPlace(null)}
         />
       )}
       <AddPlaceModal
