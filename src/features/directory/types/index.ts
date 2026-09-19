@@ -14,6 +14,10 @@ export type PlaceCategory =
   | "entrepreneur"
   | "other";
 
+export type PriceRange = 1 | 2 | 3;
+
+export type Tab = "map" | "events";
+
 export type ReportType = "closed" | "moved" | "no_longer_vegan" | "wrong_info";
 
 export interface PlaceDetails {
@@ -23,7 +27,7 @@ export interface PlaceDetails {
   website?: string;
   description?: string;
   schedule?: string;
-  priceRange?: 1 | 2 | 3;
+  priceRange?: PriceRange;
   tags?: string[];
 }
 
@@ -89,7 +93,7 @@ export interface CreatePlacePayload {
   website?: string;
   description?: string;
   schedule?: string;
-  priceRange?: 1 | 2 | 3;
+  priceRange?: PriceRange;
   tags?: string[];
 }
 

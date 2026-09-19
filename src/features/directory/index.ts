@@ -1,3 +1,3 @@
-export { DirectoryPage } from "./components/DirectoryPage";
+export { DirectoryPage } from "./components/DirectoryPage/DirectoryPage";
 export type { FilterCategory } from "./types";
-export type { Tab } from "./components/DirectoryLayout";
+export type { Tab } from "./types";
