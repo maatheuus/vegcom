@@ -40,8 +40,14 @@
 .atlas :global(.event-popup .leaflet-popup-close-button) {
   top: 0.5rem;
   right: 0.5rem;
+  display: flex;
+  width: 2.5rem;
+  height: 2.5rem;
+  align-items: center;
+  justify-content: center;
   color: var(--atlas-leaf);
   font-size: 1.5rem;
+  line-height: 1;
 }
 .atlas :global(.place-marker-tooltip) {
   max-width: 14rem;
@@ -125,5 +131,37 @@
   }
   .atlas :global([role="dialog"] > form > div:last-child) {
     padding-bottom: max(1rem, env(safe-area-inset-bottom));
+  }
+  .atlas :global(.place-detail-sheet[role="dialog"]) {
+    position: fixed !important;
+    inset: auto 0 0 !important;
+    max-height: calc(100dvh - 2rem) !important;
+    border-radius: 2rem 2rem 0 0 !important;
+  }
+}
+
+/* Entrada leve dos modais, só CSS. Sem animação de saída: a versão com
+   framer-motion (entrada + saída) fazia os modais piscarem. */
+@keyframes modal-fade-in {
+  from {
+    opacity: 0;
+  }
+}
+@keyframes modal-rise-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+}
+.overlayEnter {
+  animation: modal-fade-in 150ms ease-out;
+}
+.modalEnter {
+  animation: modal-rise-in 150ms ease-out;
+}
+@media (prefers-reduced-motion: reduce) {
+  .overlayEnter,
+  .modalEnter {
+    animation: none;
   }
 }

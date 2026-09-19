@@ -3,7 +3,6 @@
 import { useGetUser } from "@/features/auth/api/queries/getAuthApiClient";
 import { toast } from "@/shared/hooks/use-toast";
 import clsx from "clsx";
-import { AnimatePresence, motion } from "framer-motion";
 import { AlertTriangle, CheckCircle, X } from "lucide-react";
 import Link from "next/link";
 import { useCallback, useEffect, useState } from "react";
@@ -11,6 +10,7 @@ import {
   usePlaceReportFollowUp,
   useReportPlace,
 } from "../api/queries/getDirectoryApiClient";
+import styles from "../directory.module.css";
 import type { ReportType } from "../types";
 import { TurnstileField } from "./TurnstileField";
 
@@ -161,24 +161,16 @@ export function ReportModal({
   }, [onClose, reset]);
 
   return (
-    <AnimatePresence>
+    <>
       {isOpen && (
         <>
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.15 }}
-            className="fixed inset-0 z-[1300] bg-black/30 backdrop-blur-sm"
+          <div
+            className={`${styles.overlayEnter} fixed inset-0 z-[1300] bg-black/30`}
             onClick={handleClose}
             aria-hidden
           />
-          <motion.div
-            initial={{ opacity: 0, scale: 0.95, y: 10 }}
-            animate={{ opacity: 1, scale: 1, y: 0 }}
-            exit={{ opacity: 0, scale: 0.95, y: 10 }}
-            transition={{ type: "spring", damping: 25, stiffness: 350 }}
-            className="fixed inset-4 z-[1400] m-auto flex max-h-[90vh] w-full max-w-md flex-col overflow-hidden rounded-2xl border border-green-200 bg-white shadow-2xl"
+          <div
+            className={`${styles.modalEnter} fixed inset-4 z-[1400] m-auto flex max-h-[90vh] w-full max-w-md flex-col overflow-hidden rounded-2xl border border-green-200 bg-white shadow-2xl`}
             role="dialog"
             aria-modal
             aria-label="Informar problema"
@@ -406,10 +398,10 @@ export function ReportModal({
                 </div>
               </div>
             )}
-          </motion.div>
+          </div>
         </>
       )}
-    </AnimatePresence>
+    </>
   );
 }
 
