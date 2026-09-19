@@ -2,7 +2,7 @@
 
 import { CalendarPlus, MapPin, Share2 } from "lucide-react";
 import { Marker, Popup } from "react-leaflet";
-import { addToGoogleCalendar, shareEvent } from "../hooks/eventActions";
+import { addToCalendar, shareEvent } from "../hooks/eventActions";
 import type { DirectoryEvent } from "../types";
 import { createEventMarkerIcon } from "./markerIcons";
 
@@ -41,11 +41,11 @@ export function EventMarkers({ events }: EventMarkersProps) {
                 <div className="mt-4 grid grid-cols-2 gap-2 border-t border-green-100 pt-3">
                   <button
                     type="button"
-                    onClick={() => addToGoogleCalendar(event)}
+                    onClick={() => addToCalendar(event)}
                     className="inline-flex min-w-0 items-center justify-center gap-1.5 rounded-full bg-green-100 px-2.5 py-2 text-xs font-bold whitespace-nowrap text-green-500 transition-[background-color,color,scale] duration-150 hover:bg-green-200 hover:text-white focus-visible:ring-2 focus-visible:ring-green-200 focus-visible:outline-none active:scale-[0.96]"
                   >
                     <CalendarPlus className="size-3.5" />
-                    Google Agenda
+                    Adicionar na agenda
                   </button>
                   <button
                     type="button"

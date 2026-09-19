@@ -5,12 +5,38 @@ function formatCalendarDate(date: Date) {
   return date.toISOString().slice(0, 10).replaceAll("-", "");
 }
 
-/** Abre o Google Agenda com um evento de dia inteiro já preenchido. */
-export function addToGoogleCalendar(event: DirectoryEvent) {
+/**
+ * Adiciona o evento (de dia inteiro) à agenda do usuário.
+ *
+ * No mobile o app do Google Agenda intercepta o link de template e ignora os
+ * parâmetros, abrindo a agenda vazia — por isso servimos um .ics. No desktop o
+ * link do Google abre o formulário já preenchido, que é o fluxo mais direto.
+ */
+export function addToCalendar(event: DirectoryEvent) {
   const start = new Date(`${event.date.slice(0, 10)}T00:00:00Z`);
   const end = new Date(start);
   end.setUTCDate(end.getUTCDate() + 1);
   const details = [event.description, event.link].filter(Boolean).join("\n\n");
+  const isMobile = window.matchMedia("(max-width: 767px)").matches;
+
+  if (isMobile) {
+    const icsUrl = new URL("/api/events/ics", window.location.origin);
+
+    icsUrl.searchParams.set("title", event.title);
+    icsUrl.searchParams.set("date", event.date.slice(0, 10));
+    icsUrl.searchParams.set("location", event.location);
+    if (details) icsUrl.searchParams.set("details", details);
+
+    window.location.href = icsUrl.toString();
+
+    toast({
+      variant: "success",
+      title: "Arquivo do evento gerado",
+      description: "Abra o download para salvar o evento na sua agenda.",
+    });
+    return;
+  }
+
   const url = new URL("https://calendar.google.com/calendar/r/eventedit");
 
   url.searchParams.set("action", "TEMPLATE");

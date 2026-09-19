@@ -71,6 +71,9 @@ export function MapTab({
       geolocation.request,
     );
 
+  // Sem nada no mapa (carregando ou vazio) os filtros não têm o que filtrar.
+  const hasMapContent = places.length > 0 || upcomingEvents.length > 0;
+
   const mappedEvents = upcomingEvents.filter(hasCoordinates);
   const hasOnlyDistantEvents =
     geoState === "success" &&
@@ -182,7 +185,7 @@ export function MapTab({
         onAllow={geolocation.request}
         onSkip={geolocation.skip}
       />
-      <MapFilters {...filterProps} />
+      {hasMapContent && <MapFilters {...filterProps} />}
       {isGuideVisible && (
         <MapGuideCard
           onAddPlace={startPicking}

@@ -7,7 +7,7 @@ import {
   Navigation,
   Share2,
 } from "lucide-react";
-import { addToGoogleCalendar, shareEvent } from "../../hooks/eventActions";
+import { addToCalendar, shareEvent } from "../../hooks/eventActions";
 import type { DirectoryEvent } from "../../types";
 import { getGoogleMapsDirectionsUrl } from "../../utils/googleMaps";
 import { ActionButton, actionButtonClassName } from "./ActionButton";
@@ -90,9 +90,11 @@ export function EventCard({
           </a>
         )}
       </div>
-      {isOwner && <EventOwnerMenu onEdit={onEdit} onDelete={onDelete} />}
+      {isOwner && !past && (
+        <EventOwnerMenu onEdit={onEdit} onDelete={onDelete} />
+      )}
       {!past && (
-        <div className="col-span-2 mt-4 grid grid-cols-2 gap-2 border-t border-green-100 pt-3 sm:flex">
+        <div className="col-span-2 mt-4 grid grid-cols-2 gap-2 border-t border-green-100 pt-3 sm:grid-cols-3 md:grid-cols-2 lg:grid-cols-3">
           <a
             href={directionsUrl}
             target="_blank"
@@ -103,15 +105,15 @@ export function EventCard({
             Como chegar
           </a>
           <ActionButton
-            onClick={() => addToGoogleCalendar(event)}
+            onClick={() => addToCalendar(event)}
             className="w-full"
             icon={<CalendarPlus className="size-3.5" />}
           >
-            Google Agenda
+            Adicionar na agenda
           </ActionButton>
           <ActionButton
             onClick={() => shareEvent(event)}
-            className="w-full max-sm:col-span-full"
+            className="col-span-full w-full sm:col-span-1 md:col-span-full lg:col-span-1"
             icon={<Share2 className="size-3.5" />}
           >
             Compartilhar

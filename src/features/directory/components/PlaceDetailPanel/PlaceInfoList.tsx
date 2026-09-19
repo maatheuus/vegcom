@@ -60,7 +60,7 @@ export function PlaceInfoList({ details }: { details: PlaceDetails }) {
               href={instagramProfile.url}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-1 text-green-800 underline decoration-green-300 underline-offset-2 transition-colors hover:text-green-500"
+              className="inline-flex items-center gap-1 text-green-800 transition-colors hover:text-green-500"
             >
               {instagramProfile.label}
               <ExternalLink className="h-3.5 w-3.5" aria-hidden />

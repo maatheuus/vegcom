@@ -1,5 +1,6 @@
 "use client";
 
+import L from "leaflet";
 import { useEffect, useRef } from "react";
 import {
   MapContainer,
@@ -8,15 +9,31 @@ import {
   useMap,
   ZoomControl,
 } from "react-leaflet";
-import L from "leaflet";
-import { PlaceMarkersCluster } from "./PlaceMarkersCluster";
-import { EventMarkers } from "./EventMarkers";
-import { createPendingMarkerIcon } from "./markerIcons";
 import type { GeolocationState } from "../hooks/useGeolocation";
 import type { DirectoryEvent, Place } from "../types";
+import { EventMarkers } from "./EventMarkers";
+import { createPendingMarkerIcon } from "./markerIcons";
+import { PlaceMarkersCluster } from "./PlaceMarkersCluster";
 
 // Enquadra o Brasil inteiro (sem mostrar o continente todo)
-const BRAZIL_BOUNDS = L.latLngBounds([-33.87, -73.99], [5.27, -34.72]);
+const BRAZIL_BOUNDS = L.latLngBounds([-55.0, -85.0], [25.0, -10.0]);
+const BRAZIL_MAX_BOUNDS = BRAZIL_BOUNDS.pad(0.8);
+
+/**
+ * Enquadra o Brasil preenchendo a tela (`inside`), em vez de caber inteiro nela:
+ * em telas estreitas o "caber inteiro" sobrava muito continente em volta.
+ */
+function fitBrazil(map: L.Map): boolean {
+  const size = map.getSize();
+  if (size.x < 2 || size.y < 2) return false;
+
+  const zoom = Math.max(0, map.getBoundsZoom(BRAZIL_BOUNDS, true) - 1);
+
+  map.setView(BRAZIL_BOUNDS.getCenter(), zoom, { animate: false });
+  map.setMinZoom(zoom);
+  return true;
+}
+
 // Zoom aproximado de cidade quando o usuário compartilha a localização
 const USER_ZOOM = 11;
 const CARTO_BASEMAPS_API_KEY = process.env.NEXT_PUBLIC_CARTO_BASEMAPS_API_KEY;
@@ -56,7 +73,7 @@ export function MapContent({
   return (
     <MapContainer
       bounds={BRAZIL_BOUNDS}
-      maxBounds={BRAZIL_BOUNDS}
+      maxBounds={BRAZIL_MAX_BOUNDS}
       maxBoundsViscosity={1}
       zoomControl={false}
       className="h-full w-full"
@@ -91,7 +108,6 @@ export function MapContent({
       <PickModeCursor pickMode={pickMode} />
       <InitialViewController userPosition={userPosition} geoState={geoState} />
       <EventsViewController events={events} request={focusEventsRequest} />
-      <MapResizeObserver />
     </MapContainer>
   );
 }
@@ -132,20 +148,6 @@ function EventsViewController({
   return null;
 }
 
-function MapResizeObserver() {
-  const map = useMap();
-
-  useEffect(() => {
-    const observer = new ResizeObserver(() =>
-      map.invalidateSize({ animate: false }),
-    );
-    observer.observe(map.getContainer());
-    return () => observer.disconnect();
-  }, [map]);
-
-  return null;
-}
-
 /**
  * Define a vista inicial uma única vez:
  * - localização concedida → voa para a cidade do usuário
@@ -163,6 +165,17 @@ function InitialViewController({
   const hasFittedBrazil = useRef(false);
 
   useEffect(() => {
+    const observer = new ResizeObserver(() => {
+      map.invalidateSize({ animate: false });
+      if (!hasCenteredOnUser.current) {
+        hasFittedBrazil.current = fitBrazil(map) || hasFittedBrazil.current;
+      }
+    });
+    observer.observe(map.getContainer());
+    return () => observer.disconnect();
+  }, [map]);
+
+  useEffect(() => {
     if (geoState === "success" && userPosition && !hasCenteredOnUser.current) {
       hasCenteredOnUser.current = true;
       map.flyTo(userPosition, USER_ZOOM, { duration: 1.4 });
@@ -170,13 +183,12 @@ function InitialViewController({
     }
 
     if (geoState === "skipped") {
-      map.fitBounds(BRAZIL_BOUNDS, { padding: [8, 8] });
+      fitBrazil(map);
       return;
     }
 
     if (geoState !== "loading" && !hasFittedBrazil.current) {
-      hasFittedBrazil.current = true;
-      map.fitBounds(BRAZIL_BOUNDS, { padding: [8, 8] });
+      hasFittedBrazil.current = fitBrazil(map);
     }
   }, [map, geoState, userPosition]);
 

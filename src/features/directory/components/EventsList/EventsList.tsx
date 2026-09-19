@@ -87,7 +87,7 @@ export function EventsList({
 
   return (
     <div className="hidden-scrollbar h-full overflow-y-auto bg-green-50 px-4 py-5 sm:px-8 sm:py-8">
-      <div className="mx-auto max-w-5xl">
+      <div className="mx-auto max-w-6xl">
         <EventsHero onAdd={openAddEvent} />
         <EventsFilters
           month={month}
