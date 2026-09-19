@@ -17,11 +17,11 @@ export function FormActions({
   const isBlocked = isDisabled || Boolean(pendingLabel);
 
   return (
-    <div className="flex shrink-0 items-center justify-end gap-2 border-t border-green-100 px-5 py-4">
+    <div className="flex shrink-0 flex-col-reverse gap-2 border-t border-green-100 px-5 py-4 sm:flex-row sm:items-center sm:justify-end">
       <button
         type="button"
         onClick={onCancel}
-        className="rounded-xl px-4 py-2 text-sm font-medium text-green-600 transition-colors hover:bg-green-50 focus-visible:ring-2 focus-visible:ring-green-500 focus-visible:outline-none"
+        className="w-full rounded-xl px-4 py-3 text-sm font-medium text-green-600 transition-colors hover:bg-green-50 focus-visible:ring-2 focus-visible:ring-green-500 focus-visible:outline-none sm:w-auto sm:py-2"
       >
         Cancelar
       </button>
@@ -29,10 +29,10 @@ export function FormActions({
         type="submit"
         disabled={isBlocked}
         className={clsx(
-          "inline-flex items-center gap-2 rounded-xl px-5 py-2 text-sm font-semibold transition-all duration-200",
+          "inline-flex w-full items-center justify-center gap-2 rounded-xl px-5 py-3 text-sm font-semibold transition-all duration-200 sm:w-auto sm:py-2",
           "focus-visible:ring-2 focus-visible:ring-green-500 focus-visible:ring-offset-2 focus-visible:outline-none",
           isBlocked
-            ? "cursor-not-allowed border border-green-200 bg-green-100 text-green-200"
+            ? "cursor-not-allowed border border-green-200 bg-green-100 text-green-500"
             : "active:bg-black-100 bg-green-500 text-white hover:bg-green-200",
         )}
       >
