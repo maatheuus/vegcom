@@ -20,6 +20,7 @@ interface PlaceFormFieldsProps {
   ) => void;
   coords: [number, number] | null;
   onCitySelect: (city: { displayName: string }) => void;
+  onReposition: () => void;
   isDetectingCity: boolean;
   isUpdatingPosition: boolean;
 }
@@ -29,6 +30,7 @@ export function PlaceFormFields({
   onFieldChange,
   coords,
   onCitySelect,
+  onReposition,
   isDetectingCity,
   isUpdatingPosition,
 }: PlaceFormFieldsProps) {
@@ -43,6 +45,13 @@ export function PlaceFormFields({
               {coords[0].toFixed(5)}, {coords[1].toFixed(5)}
             </strong>
           </span>
+          <button
+            type="button"
+            onClick={onReposition}
+            className="ml-auto shrink-0 rounded-lg px-2 py-1 font-semibold text-green-600 underline underline-offset-2 transition-colors hover:bg-green-100 hover:text-green-800 focus-visible:ring-2 focus-visible:ring-green-500 focus-visible:outline-none"
+          >
+            Ajustar no mapa
+          </button>
         </div>
       )}
 
