@@ -18,16 +18,16 @@ export function EventsFilters({
   onCityChange,
 }: EventsFiltersProps) {
   return (
-    <section className="mt-5 rounded-[1.5rem] border border-green-100 bg-white p-4 shadow-[0_8px_24px_rgba(27,78,48,0.08)] sm:flex sm:items-center sm:justify-between sm:p-5">
-      <div className="mb-3 flex items-center gap-2 text-green-500 sm:mb-0">
+    <section className="mt-3 flex items-center gap-2 rounded-[1.5rem] border border-green-100 bg-white p-2.5 shadow-[0_8px_24px_rgba(27,78,48,0.08)] sm:mt-5 sm:justify-between sm:p-5">
+      <div className="flex shrink-0 items-center gap-2 text-green-500">
         <span className="flex size-9 items-center justify-center rounded-full bg-green-100">
           <SlidersHorizontal className="size-4" />
         </span>
-        <p className="font-maitree text-sm font-semibold">
+        <p className="font-maitree hidden text-sm font-semibold sm:block">
           Encontre algo perto de você
         </p>
       </div>
-      <div className="flex gap-2">
+      <div className="flex min-w-0 flex-1 gap-2 sm:max-w-fit sm:flex-none">
         <SelectFilter
           value={month}
           onChange={onMonthChange}

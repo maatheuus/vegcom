@@ -106,7 +106,7 @@ export function EventCard({
           </a>
           <ActionButton
             onClick={() => addToCalendar(event)}
-            className="w-full"
+            className="w-full text-nowrap"
             icon={<CalendarPlus className="size-3.5" />}
           >
             Adicionar na agenda

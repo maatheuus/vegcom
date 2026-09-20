@@ -34,26 +34,27 @@ export function EventMarkers({ events }: EventMarkersProps) {
                 <h3 className="font-maitree text-black-100 mt-2 line-clamp-2 text-xl leading-tight font-bold break-words">
                   {event.title}
                 </h3>
-                <p className="mt-2.5 flex items-start gap-2 text-sm leading-snug font-medium text-green-500">
+                <p className="mt-2! mb-0! flex items-start gap-2 text-sm leading-snug font-medium text-green-500">
                   <MapPin className="mt-0.5 size-4 shrink-0" />
                   <span className="line-clamp-2">{event.location}</span>
                 </p>
-                <div className="mt-4 grid grid-cols-2 gap-2 border-t border-green-100 pt-3">
+                <div className="mt-4 flex items-center gap-2 border-t border-green-100 pt-3">
                   <button
                     type="button"
                     onClick={() => addToCalendar(event)}
-                    className="inline-flex min-w-0 items-center justify-center gap-1.5 rounded-full bg-green-100 px-2.5 py-2 text-xs font-bold whitespace-nowrap text-green-500 transition-[background-color,color,scale] duration-150 hover:bg-green-200 hover:text-white focus-visible:ring-2 focus-visible:ring-green-200 focus-visible:outline-none active:scale-[0.96]"
+                    className="inline-flex h-11 flex-1 items-center justify-center gap-2 rounded-full bg-green-500 px-3.5 text-sm font-semibold whitespace-nowrap text-white transition-[background-color,scale] duration-150 hover:bg-green-700 focus-visible:ring-2 focus-visible:ring-green-500 focus-visible:ring-offset-2 focus-visible:outline-none active:scale-[0.96]"
                   >
-                    <CalendarPlus className="size-3.5" />
+                    <CalendarPlus className="size-4 shrink-0" />
                     Adicionar na agenda
                   </button>
                   <button
                     type="button"
                     onClick={() => shareEvent(event)}
-                    className="inline-flex min-w-0 items-center justify-center gap-1.5 rounded-full bg-green-100 px-2.5 py-2 text-xs font-bold whitespace-nowrap text-green-500 transition-[background-color,color,scale] duration-150 hover:bg-green-200 hover:text-white focus-visible:ring-2 focus-visible:ring-green-200 focus-visible:outline-none active:scale-[0.96]"
+                    aria-label="Compartilhar evento"
+                    title="Compartilhar evento"
+                    className="inline-flex size-11 shrink-0 items-center justify-center rounded-full border border-green-200 bg-white text-green-500 transition-[background-color,border-color,scale] duration-150 hover:border-green-500 hover:bg-green-100 focus-visible:ring-2 focus-visible:ring-green-200 focus-visible:ring-offset-2 focus-visible:outline-none active:scale-[0.94]"
                   >
-                    <Share2 className="size-3.5" />
-                    Compartilhar
+                    <Share2 className="size-5" />
                   </button>
                 </div>
               </div>
