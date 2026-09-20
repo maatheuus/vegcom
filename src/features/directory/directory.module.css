@@ -23,8 +23,11 @@
 }
 
 .atlas :global(.leaflet-control-attribution) {
-  background: color-mix(in srgb, var(--atlas-cream) 88%, transparent);
+  padding: 0 4px;
+  background: color-mix(in srgb, var(--atlas-cream) 60%, transparent);
   color: var(--atlas-leaf);
+  font-size: 10px;
+  opacity: 0.75;
 }
 
 .atlas :global(.leaflet-control-attribution a) {

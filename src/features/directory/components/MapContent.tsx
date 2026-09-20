@@ -3,6 +3,7 @@
 import L from "leaflet";
 import { useEffect, useRef } from "react";
 import {
+  AttributionControl,
   MapContainer,
   Marker,
   TileLayer,
@@ -76,12 +77,14 @@ export function MapContent({
       maxBounds={BRAZIL_MAX_BOUNDS}
       maxBoundsViscosity={1}
       zoomControl={false}
+      attributionControl={false}
       className="h-full w-full"
       scrollWheelZoom
     >
       <ZoomControl position="bottomright" />
+      <AttributionControl position="bottomleft" prefix={false} />
       <TileLayer
-        attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="https://carto.com/">CARTO</a>'
+        attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OSM</a> &copy; <a href="https://carto.com/attributions">CARTO</a>'
         url={CARTO_VOYAGER_TILE_URL}
       />
       <PlaceMarkersCluster
