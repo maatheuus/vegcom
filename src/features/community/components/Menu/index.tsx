@@ -1,6 +1,7 @@
 "use client";
 
 import { useGetUser } from "@/features/auth/api/queries/getAuthApiClient";
+import { getIncompleteProfileFields } from "@/features/auth/utils";
 import Row from "@/shared/ui/Layout/Helpers/Row";
 import clsx from "clsx";
 import { motion } from "framer-motion";
@@ -19,6 +20,8 @@ export default function Menu() {
 
   const isLoggedIn = Boolean(user);
   const isPremium = Boolean(user?.subscription);
+  const isProfileIncomplete =
+    getIncompleteProfileFields(user?.informations).length > 0;
 
   useEffect(() => {
     const handleScroll = () => setHasScrolled(window.scrollY > 10);
@@ -58,6 +61,7 @@ export default function Menu() {
               <DesktopMenu
                 isLoggedIn={isLoggedIn}
                 isPremium={isPremium}
+                isProfileIncomplete={isProfileIncomplete}
                 userName={userName}
               />
 

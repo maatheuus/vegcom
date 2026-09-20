@@ -1,6 +1,8 @@
 import { NextResponse, type NextRequest } from "next/server";
+import { ensureReporterKey } from "./src/shared/lib/middleware";
 
 const AUTH_REDIRECT_ROUTES = ["/login", "/signup"];
+const REPORTER_KEY_ROUTES = ["/explore"];
 
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
@@ -23,7 +25,15 @@ export async function middleware(request: NextRequest) {
     return NextResponse.next();
   }
 
-  return NextResponse.next();
+  const response = NextResponse.next();
+  const needsReporterKey = REPORTER_KEY_ROUTES.some(
+    (route) => pathname === route || pathname.startsWith(`${route}/`),
+  );
+  if (needsReporterKey) {
+    return ensureReporterKey(request, response);
+  }
+
+  return response;
 }
 
 export const config = {

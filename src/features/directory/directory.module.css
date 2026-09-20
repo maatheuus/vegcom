@@ -1,0 +1,192 @@
+.atlas {
+  --atlas-cream: #fffdf4;
+  --atlas-mint: #ecf9dd;
+  --atlas-leaf: #276b37;
+  --atlas-forest: #1b4e30;
+  --atlas-ink: #110b11;
+}
+
+.atlas :global(.leaflet-container) {
+  background: var(--atlas-mint);
+  font-family: var(--font-maitree), serif;
+}
+
+.atlas :global(.leaflet-control-zoom a) {
+  border-color: var(--atlas-leaf);
+  background: var(--atlas-cream);
+  color: var(--atlas-forest);
+}
+
+.atlas :global(.leaflet-control-zoom a:hover) {
+  background: var(--atlas-leaf);
+  color: white;
+}
+
+.atlas :global(.leaflet-control-attribution) {
+  background: color-mix(in srgb, var(--atlas-cream) 88%, transparent);
+  color: var(--atlas-leaf);
+}
+
+.atlas :global(.leaflet-control-attribution a) {
+  color: var(--atlas-forest);
+}
+
+.atlas :global(.event-popup .leaflet-popup-content-wrapper) {
+  border-radius: 1.5rem;
+  box-shadow: 0 14px 36px rgba(27, 78, 48, 0.2);
+}
+
+.atlas :global(.event-popup .leaflet-popup-content) {
+  width: min(17rem, calc(100vw - 4rem)) !important;
+  margin: 1.25rem;
+}
+
+.atlas :global(.event-popup .leaflet-popup-tip) {
+  box-shadow: 3px 3px 7px rgba(27, 78, 48, 0.12);
+}
+
+.atlas :global(.event-popup .leaflet-popup-close-button) {
+  top: 0.5rem;
+  right: 0.5rem;
+  display: flex;
+  width: 2.5rem;
+  height: 2.5rem;
+  align-items: center;
+  justify-content: center;
+  color: var(--atlas-leaf);
+  font-size: 1.5rem;
+  line-height: 1;
+}
+
+.atlas :global(.place-marker-tooltip) {
+  max-width: 14rem;
+  border: 1px solid var(--atlas-leaf);
+  border-radius: 0.5rem;
+  background: var(--atlas-cream);
+  box-shadow: 0 6px 16px rgba(27, 78, 48, 0.2);
+  color: var(--atlas-forest);
+  font-family: var(--font-maitree), serif;
+  font-size: 0.8125rem;
+  font-weight: 700;
+  overflow: hidden;
+  padding: 0.375rem 0.625rem;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.atlas :global(.leaflet-tooltip-top.place-marker-tooltip::before) {
+  border-top-color: var(--atlas-leaf);
+}
+
+/* All dialogs share the same calm, paper-like surface. */
+.atlas :global([role="dialog"]) {
+  border-color: var(--atlas-leaf) !important;
+  border-radius: 1.75rem !important;
+  box-shadow: 0 24px 70px rgba(27, 78, 48, 0.28) !important;
+}
+
+.atlas :global([role="dialog"] input),
+.atlas :global([role="dialog"] textarea) {
+  border-color: var(--atlas-leaf) !important;
+  border-radius: 1rem !important;
+  color: var(--atlas-ink) !important;
+  background: white !important;
+}
+
+.atlas :global([role="dialog"] input::placeholder),
+.atlas :global([role="dialog"] textarea::placeholder) {
+  color: color-mix(in srgb, var(--atlas-leaf) 52%, white) !important;
+}
+
+.atlas :global([role="dialog"] input:focus),
+.atlas :global([role="dialog"] textarea:focus) {
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--atlas-mint) 90%, transparent) !important;
+}
+
+.atlas :global([role="dialog"] label),
+.atlas :global([role="dialog"] h2) {
+  color: var(--atlas-forest) !important;
+  font-family: var(--font-maitree), serif;
+  font-weight: 700;
+}
+
+.atlas :global([role="dialog"] button[type="submit"]),
+.atlas :global([role="dialog"] button:not([type])) {
+  border-radius: 999px;
+}
+
+.atlas :global([role="dialog"] input),
+.atlas :global([role="dialog"] textarea) {
+  font-family: var(--font-maitree), serif;
+  font-weight: 600;
+}
+
+.atlas :global([role="dialog"] input::placeholder),
+.atlas :global([role="dialog"] textarea::placeholder) {
+  opacity: 1;
+}
+
+.atlas :global([role="dialog"] button:disabled) {
+  background: var(--atlas-mint) !important;
+  border-color: var(--atlas-leaf) !important;
+  color: var(--atlas-leaf) !important;
+  opacity: 0.55;
+  box-shadow: none !important;
+}
+
+.atlas :global([role="dialog"] button[role="radio"]:not([aria-checked="true"])) {
+  border-color: var(--atlas-mint);
+  color: var(--atlas-forest);
+}
+
+@media (max-width: 767px) {
+  .atlas :global([role="dialog"]) {
+    inset: auto 0 0 !important;
+    width: 100% !important;
+    max-width: none !important;
+    max-height: 88dvh !important;
+    border-radius: 1.75rem 1.75rem 0 0 !important;
+  }
+
+  .atlas :global([role="dialog"] > form > div:last-child) {
+    padding-bottom: max(1rem, env(safe-area-inset-bottom));
+  }
+
+  .atlas :global(.place-detail-sheet[role="dialog"]) {
+    position: fixed !important;
+    inset: auto 0 0 !important;
+    max-height: calc(100dvh - 2rem) !important;
+    border-radius: 2rem 2rem 0 0 !important;
+  }
+}
+
+/* Entrada leve dos modais, só CSS. Sem animação de saída: a versão com
+   framer-motion (entrada + saída) fazia os modais piscarem. */
+@keyframes modal-fade-in {
+  from {
+    opacity: 0;
+  }
+}
+
+@keyframes modal-rise-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+}
+
+.overlayEnter {
+  animation: modal-fade-in 150ms ease-out;
+}
+
+.modalEnter {
+  animation: modal-rise-in 150ms ease-out;
+}
+
+@media (prefers-reduced-motion: reduce) {
+
+  .overlayEnter,
+  .modalEnter {
+    animation: none;
+  }
+}

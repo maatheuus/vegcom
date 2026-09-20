@@ -4,6 +4,7 @@ import clsx from "clsx";
 import Link from "next/link";
 import { type ElementType, type JSX } from "react";
 import type { CommunityPostType } from "../../types";
+import ExploreMapTab from "./ExploreMapTab";
 
 export interface Tab {
   key: CommunityPostType;
@@ -99,6 +100,7 @@ export default function Tabs({
             </span>
           </Button>
         ))}
+        {!isChatLayout && <ExploreMapTab />}
       </Row>
 
       {hasLink && (
