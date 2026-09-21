@@ -60,7 +60,7 @@ export function PlaceOwnerNotice({ place, onDeleted }: PlaceOwnerNoticeProps) {
               <strong className="font-semibold">Motivo:</strong>{" "}
               {place.rejectionReason}
             </>
-          )}{" "}
+          )}
           <br />
           {formatDeletionNotice(place.rejectedAt)}
         </span>
