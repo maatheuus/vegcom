@@ -105,7 +105,7 @@ export function MapFilters({
         )}
 
         {content === "places" && (
-          <>
+          <div className="flex flex-wrap justify-center gap-2">
             <Select value={selectedDistance} onValueChange={onDistanceChange}>
               <SelectTrigger
                 aria-label="Filtrar locais por distância"
@@ -126,25 +126,29 @@ export function MapFilters({
             </Select>
 
             {categories.length > 1 && (
-              <div className="hidden-scrollbar flex w-full max-w-full gap-1.5 overflow-x-auto rounded-full border border-green-200 bg-white p-1 shadow-[0_8px_24px_rgba(27,78,48,0.16)]">
-                <CategoryButton
-                  active={selectedCategory === "all"}
-                  onClick={() => onCategoryChange("all")}
+              <Select
+                value={selectedCategory}
+                onValueChange={(value) =>
+                  onCategoryChange(value as PlaceCategory | "all")
+                }
+              >
+                <SelectTrigger
+                  aria-label="Filtrar locais por categoria"
+                  className="h-auto w-48 rounded-full border-green-200 bg-white px-4 py-2 text-sm font-semibold text-green-500 shadow-[0_8px_24px_rgba(27,78,48,0.16)]"
                 >
-                  Todos
-                </CategoryButton>
-                {categories.map((category) => (
-                  <CategoryButton
-                    key={category}
-                    active={selectedCategory === category}
-                    onClick={() => onCategoryChange(category)}
-                  >
-                    {CATEGORY_LABELS[category]}
-                  </CategoryButton>
-                ))}
-              </div>
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent className="!z-[2000] rounded-xl border-green-100 bg-white p-1 shadow-[0_8px_24px_rgba(27,78,48,0.16)]">
+                  <SelectItem value="all">Categoria</SelectItem>
+                  {categories.map((category) => (
+                    <SelectItem key={category} value={category}>
+                      {CATEGORY_LABELS[category]}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
             )}
-          </>
+          </div>
         )}
       </div>
     </div>
@@ -179,26 +183,6 @@ function FilterButton({
       >
         {count}
       </span>
-    </button>
-  );
-}
-
-function CategoryButton({
-  active,
-  onClick,
-  children,
-}: {
-  active: boolean;
-  onClick: () => void;
-  children: React.ReactNode;
-}) {
-  return (
-    <button
-      type="button"
-      onClick={onClick}
-      className={`min-h-10 shrink-0 rounded-full px-3 py-1.5 text-xs font-bold transition-[background-color,color,scale] duration-150 active:scale-[0.96] ${active ? "bg-green-500 text-white" : "text-green-500 hover:bg-green-100"}`}
-    >
-      {children}
     </button>
   );
 }
