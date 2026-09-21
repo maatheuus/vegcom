@@ -117,11 +117,16 @@ export function PlaceDetailPanel({
                 )}
 
                 <PlaceDetailActions
-                  directionsUrl={getGoogleMapsDirectionsUrl({
-                    lat: place.lat,
-                    lng: place.lng,
-                    fallbackDestination: place.details.address ?? place.name,
-                  })}
+                  directionsUrl={
+                    place.status === "rejected"
+                      ? undefined
+                      : getGoogleMapsDirectionsUrl({
+                          lat: place.lat,
+                          lng: place.lng,
+                          fallbackDestination:
+                            place.details.address ?? place.name,
+                        })
+                  }
                   onReport={isOwnDraft ? undefined : onReport}
                 />
               </div>
