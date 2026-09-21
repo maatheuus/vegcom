@@ -1,9 +1,12 @@
 export type PlaceStatus =
   | "pending"
+  | "rejected"
   | "active"
   | "closed"
   | "moved"
   | "no_longer_vegan";
+
+export type DirectoryEventStatus = "pending" | "active" | "rejected";
 
 export type PlaceVerification = "verified" | "needs_review" | "unverified";
 export type PlaceCategory =
@@ -41,6 +44,8 @@ export interface Place {
   verification: PlaceVerification;
   movedToPlaceId?: number;
   details: PlaceDetails;
+  rejectionReason?: string;
+  rejectedAt?: number;
   createdAt: number;
   updatedAt: number;
 }
@@ -56,6 +61,9 @@ export interface DirectoryEvent {
   lng?: number;
   description?: string;
   link?: string;
+  status: DirectoryEventStatus;
+  rejectionReason?: string;
+  rejectedAt?: number;
   userId: number | null;
   createdAt: number;
 }

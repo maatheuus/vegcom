@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 
 export async function GET() {
-  const apiBase = "https://www.vegcombe.life/api/v1";
+  const apiBase = "https://api.vegcom.life/api/v1";
 
   const config = {
     issuer: apiBase,

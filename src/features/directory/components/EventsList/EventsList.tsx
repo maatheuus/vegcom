@@ -7,6 +7,7 @@ import { useUrlParams } from "../../hooks/useUrlParams";
 import type { DirectoryEvent } from "../../types";
 import { AddEventModal } from "../AddEventModal/AddEventModal";
 import { DeleteEventDialog } from "./DeleteEventDialog";
+import { EventDetailsDialog } from "./EventDetailsDialog";
 import { EventSection } from "./EventSection";
 import { EventsEmptyState, EventsLoading } from "./EventsEmptyState";
 import { EventsFilters } from "./EventsFilters";
@@ -38,6 +39,7 @@ export function EventsList({
   const [eventToDelete, setEventToDelete] = useState<DirectoryEvent | null>(
     null,
   );
+  const [viewingEvent, setViewingEvent] = useState<DirectoryEvent | null>(null);
 
   useEffect(() => {
     if (!openAddModal) return;
@@ -49,9 +51,21 @@ export function EventsList({
   // O filtro roda no cliente, apenas sobre a página já carregada.
   const isVisible = (event: DirectoryEvent) =>
     matchesEventFilters(event, month, city);
-  const upcomingEvents = upcoming.events.filter(isVisible);
-  const pastEvents = past.events.filter(isVisible);
-  const hasEvents = upcomingEvents.length > 0 || pastEvents.length > 0;
+  const isPending = (event: DirectoryEvent) => event.status === "pending";
+  // A API só devolve eventos pendentes para quem os criou.
+  const pendingEvents = [...upcoming.events, ...past.events].filter(
+    (event) => isPending(event) && isVisible(event),
+  );
+  const upcomingEvents = upcoming.events.filter(
+    (event) => !isPending(event) && isVisible(event),
+  );
+  const pastEvents = past.events.filter(
+    (event) => !isPending(event) && isVisible(event),
+  );
+  const hasEvents =
+    pendingEvents.length > 0 ||
+    upcomingEvents.length > 0 ||
+    pastEvents.length > 0;
 
   const changeFilter = (
     urlKey: "month" | "city",
@@ -83,6 +97,7 @@ export function EventsList({
     currentUserId: user?.id,
     onEdit: setEditingEvent,
     onDelete: setEventToDelete,
+    onOpen: setViewingEvent,
   };
 
   return (
@@ -105,10 +120,21 @@ export function EventsList({
           <div className="mt-8 space-y-9">
             <EventSection
               {...sectionProps}
+              title="Aguardando aprovação"
+              paginationLabel="Paginação dos eventos aguardando aprovação"
+              events={pendingEvents}
+              total={pendingEvents.length}
+              page={1}
+              totalPages={1}
+              onPageChange={() => {}}
+              isRefreshing={upcoming.isFetching || past.isFetching}
+            />
+            <EventSection
+              {...sectionProps}
               title="Para colocar na agenda"
               paginationLabel="Paginação dos próximos eventos"
               events={upcomingEvents}
-              total={upcoming.total}
+              total={upcoming.total - upcoming.events.filter(isPending).length}
               page={upcoming.page}
               totalPages={upcoming.totalPages}
               onPageChange={upcoming.setPage}
@@ -119,7 +145,7 @@ export function EventsList({
               title="O que já aconteceu"
               paginationLabel="Paginação dos eventos passados"
               events={pastEvents}
-              total={past.total}
+              total={past.total - past.events.filter(isPending).length}
               page={past.page}
               totalPages={past.totalPages}
               onPageChange={past.setPage}
@@ -136,6 +162,10 @@ export function EventsList({
           setIsAddModalOpen(false);
           setEditingEvent(null);
         }}
+      />
+      <EventDetailsDialog
+        event={viewingEvent}
+        onClose={() => setViewingEvent(null)}
       />
       <DeleteEventDialog
         event={eventToDelete}

@@ -11,6 +11,13 @@
   font-family: var(--font-maitree), serif;
 }
 
+/* Em pick mode o clique é do mapa: marcadores, tooltips e popups saem do caminho. */
+.atlas :global(.leaflet-container.pick-mode .leaflet-marker-pane),
+.atlas :global(.leaflet-container.pick-mode .leaflet-tooltip-pane),
+.atlas :global(.leaflet-container.pick-mode .leaflet-popup-pane) {
+  pointer-events: none;
+}
+
 .atlas :global(.leaflet-control-zoom a) {
   border-color: var(--atlas-leaf);
   background: var(--atlas-cream);
@@ -23,8 +30,11 @@
 }
 
 .atlas :global(.leaflet-control-attribution) {
-  background: color-mix(in srgb, var(--atlas-cream) 88%, transparent);
+  padding: 0 4px;
+  background: color-mix(in srgb, var(--atlas-cream) 60%, transparent);
   color: var(--atlas-leaf);
+  font-size: 10px;
+  opacity: 0.75;
 }
 
 .atlas :global(.leaflet-control-attribution a) {

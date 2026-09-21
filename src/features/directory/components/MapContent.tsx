@@ -3,6 +3,7 @@
 import L from "leaflet";
 import { useEffect, useRef } from "react";
 import {
+  AttributionControl,
   MapContainer,
   Marker,
   TileLayer,
@@ -36,6 +37,8 @@ function fitBrazil(map: L.Map): boolean {
 
 // Zoom aproximado de cidade quando o usuário compartilha a localização
 const USER_ZOOM = 11;
+// Casada com a regra em directory.module.css que desliga o clique nos marcadores.
+const PICK_MODE_CLASS = "pick-mode";
 const CARTO_BASEMAPS_API_KEY = process.env.NEXT_PUBLIC_CARTO_BASEMAPS_API_KEY;
 const CARTO_VOYAGER_TILE_URL = `https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png${
   CARTO_BASEMAPS_API_KEY
@@ -76,12 +79,14 @@ export function MapContent({
       maxBounds={BRAZIL_MAX_BOUNDS}
       maxBoundsViscosity={1}
       zoomControl={false}
+      attributionControl={false}
       className="h-full w-full"
       scrollWheelZoom
     >
       <ZoomControl position="bottomright" />
+      <AttributionControl position="bottomleft" prefix={false} />
       <TileLayer
-        attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="https://carto.com/">CARTO</a>'
+        attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OSM</a> &copy; <a href="https://carto.com/attributions">CARTO</a>'
         url={CARTO_VOYAGER_TILE_URL}
       />
       <PlaceMarkersCluster
@@ -105,7 +110,7 @@ export function MapContent({
         onClick={onMapClick}
         onLocationPick={onLocationPick}
       />
-      <PickModeCursor pickMode={pickMode} />
+      <PickModeInteraction pickMode={pickMode} />
       <InitialViewController userPosition={userPosition} geoState={geoState} />
       <EventsViewController events={events} request={focusEventsRequest} />
     </MapContainer>
@@ -208,14 +213,22 @@ function createUserLocationIcon(): L.DivIcon {
   });
 }
 
-function PickModeCursor({ pickMode }: { pickMode: boolean }) {
+/**
+ * Enquanto escolhe a posição, o mapa vira uma superfície de clique:
+ * cursor de mira e marcadores/popups sem interação, para não roubar o clique.
+ */
+function PickModeInteraction({ pickMode }: { pickMode: boolean }) {
   const map = useMap();
 
   useEffect(() => {
     const container = map.getContainer();
     container.style.cursor = pickMode ? "crosshair" : "";
+    container.classList.toggle(PICK_MODE_CLASS, pickMode);
+    if (pickMode) map.closePopup();
+
     return () => {
       container.style.cursor = "";
+      container.classList.remove(PICK_MODE_CLASS);
     };
   }, [map, pickMode]);
 

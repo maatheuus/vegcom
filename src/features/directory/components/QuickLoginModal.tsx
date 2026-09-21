@@ -127,7 +127,7 @@ export function QuickLoginModal({
 
         <div className="mt-6 space-y-4">
           {isSignup && (
-            <label className="block text-sm font-bold text-green-500">
+            <label className="block text-sm font-bold text-green-700">
               Nome
               <input
                 required
@@ -141,7 +141,7 @@ export function QuickLoginModal({
               />
             </label>
           )}
-          <label className="block text-sm font-bold text-green-500">
+          <label className="block text-sm font-bold text-green-700">
             E-mail
             <input
               required
@@ -153,7 +153,7 @@ export function QuickLoginModal({
               className="text-black-100 mt-1.5 w-full rounded-xl border border-green-200 bg-green-50 px-4 py-3 transition outline-none placeholder:text-green-200 focus:border-green-500 focus:bg-white focus:ring-2 focus:ring-green-100"
             />
           </label>
-          <label className="block text-sm font-bold text-green-500">
+          <label className="block text-sm font-bold text-green-700">
             Senha
             <div className="relative mt-1.5">
               <input

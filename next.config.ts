@@ -34,6 +34,11 @@ const nextConfig: NextConfig = {
       "https://api.dicebear.com",
       // Reverse geocoding: resolve address/city from map pin coordinates
       "https://nominatim.openstreetmap.org",
+      // Google Ads conversion tracking (loaded via GTM)
+      "https://www.google.com",
+      "https://googleads.g.doubleclick.net",
+      "https://ad.doubleclick.net",
+      "https://stats.g.doubleclick.net",
     ]
       .filter(Boolean)
       .join(" ");
@@ -43,7 +48,7 @@ const nextConfig: NextConfig = {
       // 'unsafe-inline' required: Google Analytics inline gtag script + Next.js hydration chunks
       // 'unsafe-eval' required in dev only: Next.js webpack uses eval-based source maps
       // vercel.live required: Vercel toolbar/feedback widget injected at runtime
-      `script-src 'self' 'unsafe-inline'${isDev ? " 'unsafe-eval'" : ""} https://www.googletagmanager.com https://va.vercel-scripts.com https://vercel.live https://cdn.jsdelivr.net https://challenges.cloudflare.com`,
+      `script-src 'self' 'unsafe-inline'${isDev ? " 'unsafe-eval'" : ""} https://www.googletagmanager.com https://va.vercel-scripts.com https://vercel.live https://cdn.jsdelivr.net https://challenges.cloudflare.com https://googleads.g.doubleclick.net https://www.google.com`,
       "style-src 'self' 'unsafe-inline'",
       [
         "img-src 'self' data: blob:",
@@ -57,6 +62,9 @@ const nextConfig: NextConfig = {
         "https://api.dicebear.com",
         "https://*.tile.openstreetmap.org",
         "https://*.basemaps.cartocdn.com",
+        "https://www.google.com",
+        "https://googleads.g.doubleclick.net",
+        "https://ad.doubleclick.net",
       ].join(" "),
       // next/font/google self-hosts fonts at build time → 'self' is sufficient
       "font-src 'self'",

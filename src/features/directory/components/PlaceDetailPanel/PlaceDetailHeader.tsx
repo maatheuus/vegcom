@@ -5,7 +5,11 @@ import type { Place, PlaceStatus } from "../../types";
 
 const STATUS_CONFIG: Record<PlaceStatus, { label: string; className: string }> =
   {
-    pending: { label: "Em análise", className: "bg-amber-100 text-amber-700" },
+    pending: {
+      label: "Aguardando aprovação",
+      className: "bg-amber-100 text-amber-700",
+    },
+    rejected: { label: "Não aprovado", className: "bg-red-100 text-red-700" },
     active: { label: "Ativo", className: "bg-green-100 text-green-700" },
     closed: { label: "Fechado", className: "bg-red-100 text-red-700" },
     moved: {

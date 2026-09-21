@@ -10,6 +10,7 @@ import {
 } from "../../api/queries/getDirectoryApiClient";
 import type { DirectoryEvent } from "../../types";
 import {
+  getEventValidationMessages,
   isLocationOutsideBrazilError,
   isUnauthorizedError,
 } from "../../utils/errors";
@@ -28,7 +29,7 @@ import {
 import { EventFormFields } from "./EventFormFields";
 
 const REVIEW_MESSAGE =
-  "Nossa equipe revisará o evento antes de publicá-lo no mapa.";
+  "Ele já aparece para você e ficará público após a aprovação da nossa equipe.";
 
 interface AddEventModalProps {
   isOpen: boolean;
@@ -122,6 +123,15 @@ export function AddEventModal({ isOpen, onClose, event }: AddEventModalProps) {
           title: "Evento fora do Brasil",
           description:
             "Por enquanto, locais e eventos só podem ser adicionados no Brasil.",
+        });
+        return;
+      }
+      const validationMessages = getEventValidationMessages(error);
+      if (validationMessages.length > 0) {
+        toast({
+          variant: "destructive",
+          title: "Revise os campos do evento",
+          description: validationMessages.join(" "),
         });
         return;
       }

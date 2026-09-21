@@ -33,6 +33,13 @@ export const directoryApi = {
     return data;
   },
 
+  deletePlace: async (placeId: number): Promise<{ id: number }> => {
+    const { data } = await api.delete<{ id: number }>(
+      `/directory/places/${placeId}`,
+    );
+    return data;
+  },
+
   reportPlace: async ({
     placeId,
     ...payload

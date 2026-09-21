@@ -243,7 +243,7 @@ export function ReportModal({
                     <>
                       <label
                         htmlFor="report-description"
-                        className="mt-4 mb-1.5 block text-xs font-medium text-green-600"
+                        className="mt-4 mb-1.5 block text-xs font-medium text-green-700"
                       >
                         Observações <span className="italic">(opcional)</span>
                       </label>

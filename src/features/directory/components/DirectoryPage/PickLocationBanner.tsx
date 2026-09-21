@@ -4,12 +4,14 @@ import { X } from "lucide-react";
 interface PickLocationBannerProps {
   isVisible: boolean;
   isChecking: boolean;
+  isRepositioning: boolean;
   onCancel: () => void;
 }
 
 export function PickLocationBanner({
   isVisible,
   isChecking,
+  isRepositioning,
   onCancel,
 }: PickLocationBannerProps) {
   return (
@@ -30,13 +32,17 @@ export function PickLocationBanner({
             <p className="font-maitree text-sm font-medium text-green-500">
               {isChecking
                 ? "Confirmando se a posição fica no Brasil..."
-                : "Toque no mapa para escolher a posição do local"}
+                : isRepositioning
+                  ? "Toque no mapa para mover o pin do local"
+                  : "Toque no mapa para escolher a posição do local"}
             </p>
             <button
               type="button"
               onClick={onCancel}
               className="flex size-10 shrink-0 items-center justify-center rounded-full text-green-200 transition-[background-color,color,scale] duration-150 hover:bg-green-100 hover:text-green-500 focus-visible:ring-2 focus-visible:ring-green-200 focus-visible:outline-none active:scale-[0.96]"
-              aria-label="Cancelar"
+              aria-label={
+                isRepositioning ? "Voltar ao formulário" : "Cancelar"
+              }
             >
               <X className="h-4 w-4" />
             </button>

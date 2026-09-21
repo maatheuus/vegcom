@@ -20,6 +20,7 @@ interface PlaceFormFieldsProps {
   ) => void;
   coords: [number, number] | null;
   onCitySelect: (city: { displayName: string }) => void;
+  onReposition: () => void;
   isDetectingCity: boolean;
   isUpdatingPosition: boolean;
 }
@@ -29,6 +30,7 @@ export function PlaceFormFields({
   onFieldChange,
   coords,
   onCitySelect,
+  onReposition,
   isDetectingCity,
   isUpdatingPosition,
 }: PlaceFormFieldsProps) {
@@ -43,6 +45,13 @@ export function PlaceFormFields({
               {coords[0].toFixed(5)}, {coords[1].toFixed(5)}
             </strong>
           </span>
+          <button
+            type="button"
+            onClick={onReposition}
+            className="ml-auto shrink-0 rounded-lg px-2 py-1 font-semibold text-green-600 underline underline-offset-2 transition-colors hover:bg-green-100 hover:text-green-800 focus-visible:ring-2 focus-visible:ring-green-500 focus-visible:outline-none"
+          >
+            Ajustar no mapa
+          </button>
         </div>
       )}
 
@@ -120,7 +129,7 @@ export function PlaceFormFields({
       </FormField>
 
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 sm:gap-3">
-        <FormField label="Horário" htmlFor="place-schedule">
+        <FormField label="Horário" htmlFor="place-schedule" required>
           <input
             id="place-schedule"
             value={form.schedule}
@@ -129,16 +138,14 @@ export function PlaceFormFields({
             className={`${inputClassName} flex-1`}
           />
         </FormField>
-        <FormField label="Faixa de preço">
+        <FormField label="Faixa de preço" required>
           <PriceRangePicker
             value={form.priceRange}
             onChange={(priceRange) => onFieldChange("priceRange", priceRange)}
           />
         </FormField>
       </div>
-      <FormHint>
-        Horário e faixa de preço ajudam a planejar a visita; preencha se souber.
-      </FormHint>
+      <FormHint>Horário e faixa de preço ajudam a planejar a visita.</FormHint>
 
       <div className="grid grid-cols-2 gap-3">
         <FormField label="Telefone" htmlFor="place-phone">

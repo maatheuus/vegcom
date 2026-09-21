@@ -13,8 +13,14 @@ export async function ensureReporterKey(
 ) {
   const secret = process.env.REPORTER_KEY_SECRET;
   const value = request.cookies.get(REPORTER_COOKIE_NAME)?.value;
+  // Shared with api.vegcom.life so the API receives the reporter key.
+  const domain = request.nextUrl.hostname.endsWith("vegcom.life")
+    ? ".vegcom.life"
+    : undefined;
 
   if (secret && value && (await isValidReporterKey(value, secret))) {
+    // Re-set so keys issued before the domain change become visible to the API.
+    if (domain) setReporterCookie(response, value, domain);
     return response;
   }
 
@@ -23,18 +29,23 @@ export async function ensureReporterKey(
   const uuid = crypto.randomUUID();
   const issuedAt = Math.floor(Date.now() / 1000);
   const signature = await signReporterKey(`${uuid}.${issuedAt}`, secret);
-  response.cookies.set(
-    REPORTER_COOKIE_NAME,
-    `${uuid}.${issuedAt}.${signature}`,
-    {
-      httpOnly: true,
-      secure: true,
-      sameSite: "lax",
-      path: "/",
-      maxAge: REPORTER_COOKIE_MAX_AGE,
-    },
-  );
+  setReporterCookie(response, `${uuid}.${issuedAt}.${signature}`, domain);
   return response;
+}
+
+function setReporterCookie(
+  response: NextResponse,
+  value: string,
+  domain: string | undefined,
+) {
+  response.cookies.set(REPORTER_COOKIE_NAME, value, {
+    httpOnly: true,
+    secure: true,
+    sameSite: "lax",
+    path: "/",
+    maxAge: REPORTER_COOKIE_MAX_AGE,
+    domain,
+  });
 }
 
 async function isValidReporterKey(value: string, secret: string) {

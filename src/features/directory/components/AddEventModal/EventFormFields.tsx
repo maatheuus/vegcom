@@ -31,6 +31,7 @@ export function EventFormFields({
       >
         <input
           id="event-title"
+          maxLength={150}
           value={form.title}
           onChange={(e) => onFieldChange("title", e.target.value)}
           placeholder="Ex: Feira Vegana de São Paulo"
@@ -96,6 +97,7 @@ export function EventFormFields({
       >
         <textarea
           id="event-description"
+          maxLength={1000}
           value={form.description}
           onChange={(e) => onFieldChange("description", e.target.value)}
           placeholder="Descreva o evento..."

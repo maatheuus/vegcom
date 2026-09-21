@@ -8,7 +8,7 @@ export async function GET() {
     },
     transport: {
       type: "http",
-      endpoint: "https://www.vegcombe.life/api/v1",
+      endpoint: "https://api.vegcom.life/api/v1",
     },
     capabilities: {
       resources: {

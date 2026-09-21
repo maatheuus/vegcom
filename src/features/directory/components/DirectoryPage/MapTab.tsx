@@ -1,5 +1,6 @@
 "use client";
 
+import { toast } from "@/shared/hooks/use-toast";
 import clsx from "clsx";
 import { useCallback, useRef, useState } from "react";
 import { useEvents, usePlaces } from "../../api/queries/getDirectoryApiClient";
@@ -8,7 +9,6 @@ import { haversineDistance } from "../../hooks/haversineDistance";
 import type { useGeolocation } from "../../hooks/useGeolocation";
 import { useMapContentFilters } from "../../hooks/useMapContentFilters";
 import type { DirectoryEvent, Place } from "../../types";
-import { toast } from "@/shared/hooks/use-toast";
 import { AddPlaceModal } from "../AddPlaceModal/AddPlaceModal";
 import { LocationPrompt } from "../LocationPrompt";
 import { MapFilters } from "../MapFilters";
@@ -52,6 +52,7 @@ export function MapTab({
   );
   const locationCheckRequestId = useRef(0);
   const [isAddPlaceOpen, setIsAddPlaceOpen] = useState(false);
+  const [isRepositioning, setIsRepositioning] = useState(false);
   const [isMapGuideOpen, setIsMapGuideOpen] = useState(false);
   const [focusEventsRequest, setFocusEventsRequest] = useState(0);
   const [isDistantNoticeDismissed, setIsDistantNoticeDismissed] =
@@ -120,6 +121,7 @@ export function MapTab({
 
     setPendingCoords([lat, lng]);
     setIsPickingLocation(false);
+    setIsRepositioning(false);
     setIsAddPlaceOpen(true);
   }, []);
 
@@ -129,6 +131,16 @@ export function MapTab({
     setIsMapGuideOpen(false);
     setPendingCoords(null);
     setIsCheckingPickedLocation(false);
+    setIsRepositioning(false);
+    setIsPickingLocation(true);
+  };
+
+  // Volta ao mapa mantendo o que já foi preenchido no formulário.
+  const startRepositioning = () => {
+    locationCheckRequestId.current += 1;
+    setIsCheckingPickedLocation(false);
+    setIsAddPlaceOpen(false);
+    setIsRepositioning(true);
     setIsPickingLocation(true);
   };
 
@@ -136,11 +148,19 @@ export function MapTab({
     locationCheckRequestId.current += 1;
     setIsPickingLocation(false);
     setIsCheckingPickedLocation(false);
+
+    if (isRepositioning) {
+      setIsRepositioning(false);
+      setIsAddPlaceOpen(true);
+      return;
+    }
+
     setPendingCoords(null);
   };
 
   const closeAddPlace = () => {
     setIsAddPlaceOpen(false);
+    setIsRepositioning(false);
     setPendingCoords(null);
   };
 
@@ -206,6 +226,7 @@ export function MapTab({
       <PickLocationBanner
         isVisible={isPickingLocation}
         isChecking={isCheckingPickedLocation}
+        isRepositioning={isRepositioning}
         onCancel={cancelPicking}
       />
 
@@ -228,6 +249,7 @@ export function MapTab({
         isOpen={isAddPlaceOpen}
         coords={pendingCoords}
         onCoordsChange={setPendingCoords}
+        onReposition={startRepositioning}
         onClose={closeAddPlace}
       />
     </div>

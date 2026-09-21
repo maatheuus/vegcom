@@ -15,6 +15,7 @@ interface EventSectionProps {
   currentUserId?: number;
   onEdit: (event: DirectoryEvent) => void;
   onDelete: (event: DirectoryEvent) => void;
+  onOpen: (event: DirectoryEvent) => void;
   past?: boolean;
 }
 
@@ -30,6 +31,7 @@ export function EventSection({
   currentUserId,
   onEdit,
   onDelete,
+  onOpen,
   past = false,
 }: EventSectionProps) {
   if (events.length === 0) return null;
@@ -63,6 +65,7 @@ export function EventSection({
               isOwner={event.userId === currentUserId}
               onEdit={() => onEdit(event)}
               onDelete={() => onDelete(event)}
+              onOpen={() => onOpen(event)}
             />
           ))}
         </div>

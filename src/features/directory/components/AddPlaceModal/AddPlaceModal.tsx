@@ -26,6 +26,7 @@ interface AddPlaceModalProps {
   isOpen: boolean;
   coords: [number, number] | null;
   onCoordsChange: (coords: [number, number]) => void;
+  onReposition: () => void;
   onClose: () => void;
 }
 
@@ -33,6 +34,7 @@ export function AddPlaceModal({
   isOpen,
   coords,
   onCoordsChange,
+  onReposition,
   onClose,
 }: AddPlaceModalProps) {
   const [form, setForm] = useState(EMPTY_PLACE_FORM);
@@ -69,6 +71,13 @@ export function AddPlaceModal({
     setIsSuccess(false);
     setIsUpdatingPosition(false);
     onClose();
+  };
+
+  // Fecha o modal sem limpar o formulário: o usuário volta depois de mover o pin.
+  const handleReposition = () => {
+    positionRequestId.current += 1;
+    setIsUpdatingPosition(false);
+    onReposition();
   };
 
   const handleCitySelect = async ({ displayName }: { displayName: string }) => {
@@ -126,7 +135,7 @@ export function AddPlaceModal({
       variant: "success",
       title: "Local enviado para revisão!",
       description:
-        "Nossa equipe revisará as informações. Ele aparecerá no mapa após a aprovação.",
+        "Ele já aparece no mapa só para você e ficará público após a aprovação da nossa equipe.",
     });
   };
 
@@ -155,6 +164,7 @@ export function AddPlaceModal({
                 onFieldChange={updateField}
                 coords={coords}
                 onCitySelect={handleCitySelect}
+                onReposition={handleReposition}
                 isDetectingCity={isDetectingCity}
                 isUpdatingPosition={isUpdatingPosition}
               />
