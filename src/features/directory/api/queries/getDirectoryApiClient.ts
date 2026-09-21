@@ -39,6 +39,17 @@ export const useCreatePlace = () => {
   });
 };
 
+export const useDeletePlace = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: directoryApi.deletePlace,
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({ queryKey: directoryKeys.places });
+    },
+  });
+};
+
 export const useReportPlace = () => {
   return useMutation({
     mutationFn: (payload: CreatePlaceReportPayload) =>

@@ -135,7 +135,7 @@ export function AddPlaceModal({
       variant: "success",
       title: "Local enviado para revisão!",
       description:
-        "Nossa equipe revisará as informações. Ele aparecerá no mapa após a aprovação.",
+        "Ele já aparece no mapa só para você e ficará público após a aprovação da nossa equipe.",
     });
   };
 

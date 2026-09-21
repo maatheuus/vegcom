@@ -5,7 +5,7 @@ import { Marker, Tooltip } from "react-leaflet";
 import MarkerClusterGroup from "react-leaflet-cluster";
 import L from "leaflet";
 import { createMarkerIcon, createSelectedMarkerIcon } from "./markerIcons";
-import type { Place, PlaceCategory } from "../types";
+import type { Place } from "../types";
 
 const CLUSTER_BASE_SIZE = 44;
 
@@ -58,8 +58,8 @@ export function PlaceMarkersCluster({
       {places.map((place) => {
         const isSelected = place.id === selectedPlaceId;
         const icon = isSelected
-          ? createSelectedMarkerIcon(place.category as PlaceCategory)
-          : createMarkerIcon(place.category as PlaceCategory);
+          ? createSelectedMarkerIcon(place)
+          : createMarkerIcon(place);
 
         return (
           <Marker

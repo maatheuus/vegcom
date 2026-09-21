@@ -10,6 +10,7 @@ import { getGoogleMapsDirectionsUrl } from "../../utils/googleMaps";
 import { PlaceDetailActions } from "./PlaceDetailActions";
 import { PlaceDetailHeader } from "./PlaceDetailHeader";
 import { PlaceInfoList } from "./PlaceInfoList";
+import { PlaceOwnerNotice } from "./PlaceOwnerNotice";
 
 interface PlaceDetailPanelProps {
   place: Place | null;
@@ -25,6 +26,9 @@ export function PlaceDetailPanel({
   userPosition,
 }: PlaceDetailPanelProps) {
   const isMobile = useIsMobile();
+  // A API só devolve locais pendentes/recusados para quem os criou.
+  const isOwnDraft =
+    place?.status === "pending" || place?.status === "rejected";
 
   return (
     <>
@@ -57,6 +61,13 @@ export function PlaceDetailPanel({
               />
 
               <div className="hidden-scrollbar flex min-h-0 flex-1 touch-pan-y flex-col gap-4 overflow-y-auto overscroll-contain px-5 pt-4 pb-[max(1.5rem,env(safe-area-inset-bottom))]">
+                {isOwnDraft && (
+                  <PlaceOwnerNotice
+                    key={place.id}
+                    place={place}
+                    onDeleted={onClose}
+                  />
+                )}
                 {place.verification === "needs_review" && (
                   <p
                     className="rounded-xl border border-amber-200 bg-amber-50 px-3 py-2.5 text-sm leading-relaxed text-amber-800"
@@ -111,7 +122,7 @@ export function PlaceDetailPanel({
                     lng: place.lng,
                     fallbackDestination: place.details.address ?? place.name,
                   })}
-                  onReport={onReport}
+                  onReport={isOwnDraft ? undefined : onReport}
                 />
               </div>
             </div>

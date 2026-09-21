@@ -1,4 +1,4 @@
-import type { PlaceCategory } from "../types";
+import type { Place, PlaceCategory } from "../types";
 import L from "leaflet";
 
 interface CategoryStyle {
@@ -49,10 +49,15 @@ const CATEGORY_STYLES: Record<PlaceCategory, Omit<CategoryStyle, "icon">> = {
   other: { color: "#276b37", bg: "#fffdf4" },
 };
 
+// Pendentes e recusados só aparecem para quem os criou; o traço os diferencia.
+const isDraft = (place: Place) =>
+  place.status === "pending" || place.status === "rejected";
+
 function markerHtml(
   category: PlaceCategory,
   size: number,
   isSelected = false,
+  draft = false,
 ): string {
   const style = CATEGORY_STYLES[category] ?? CATEGORY_STYLES.other;
   const paths = LUCIDE_PATHS[category] ?? LUCIDE_PATHS.other;
@@ -63,9 +68,9 @@ function markerHtml(
 
   return `<div style="
       width:${size}px;height:${size}px;border-radius:9999px;
-      background:${style.bg};border:3px solid ${style.color};
+      background:${style.bg};border:3px ${draft ? "dashed" : "solid"} ${style.color};
       display:flex;align-items:center;justify-content:center;
-      box-shadow:${shadow};
+      box-shadow:${shadow};${draft ? "opacity:0.7;" : ""}
     ">
     <svg xmlns="http://www.w3.org/2000/svg" width="${iconSize}" height="${iconSize}" viewBox="0 0 24 24"
       fill="none" stroke="${style.color}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -77,28 +82,31 @@ function markerHtml(
 const ICON_SIZE: [number, number] = [40, 40];
 const ICON_ANCHOR: [number, number] = [20, 40];
 
-// Ícones não-selecionados só variam por categoria (6 possibilidades); cache-os
+// Ícones não-selecionados só variam por categoria e rascunho; cache-os
 // para não reconstruir HTML + DivIcon por marcador a cada render.
-const markerIconCache = new Map<PlaceCategory, L.DivIcon>();
+const markerIconCache = new Map<string, L.DivIcon>();
 
-export function createMarkerIcon(category: PlaceCategory): L.DivIcon {
-  const cached = markerIconCache.get(category);
+export function createMarkerIcon(place: Place): L.DivIcon {
+  const category = place.category;
+  const draft = isDraft(place);
+  const cacheKey = `${category}:${draft}`;
+  const cached = markerIconCache.get(cacheKey);
   if (cached) return cached;
 
   const icon = L.divIcon({
-    html: markerHtml(category, 40),
+    html: markerHtml(category, 40, false, draft),
     className: "",
     iconSize: ICON_SIZE,
     iconAnchor: ICON_ANCHOR,
     popupAnchor: [0, -40],
   });
-  markerIconCache.set(category, icon);
+  markerIconCache.set(cacheKey, icon);
   return icon;
 }
 
-export function createSelectedMarkerIcon(category: PlaceCategory): L.DivIcon {
+export function createSelectedMarkerIcon(place: Place): L.DivIcon {
   return L.divIcon({
-    html: markerHtml(category, 40, true),
+    html: markerHtml(place.category, 40, true, isDraft(place)),
     className: "selected-marker",
     iconSize: ICON_SIZE,
     iconAnchor: ICON_ANCHOR,
