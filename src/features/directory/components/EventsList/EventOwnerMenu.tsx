@@ -10,7 +10,7 @@ const itemClassName =
   "cursor-pointer gap-x-3 py-2.5 hover:!bg-green-200/80 focus:!bg-green-200/80 focus:!text-green-50";
 
 interface EventOwnerMenuProps {
-  onEdit: () => void;
+  onEdit?: () => void;
   onDelete: () => void;
 }
 
@@ -27,11 +27,16 @@ export function EventOwnerMenu({ onEdit, onDelete }: EventOwnerMenuProps) {
           <MoreHorizontal className="size-5" />
         </button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent align="end" className="w-44 bg-green-500 text-green-50">
-        <DropdownMenuItem onSelect={onEdit} className={itemClassName}>
-          <Pencil className="size-4" />
-          Editar
-        </DropdownMenuItem>
+      <DropdownMenuContent
+        align="end"
+        className="w-44 bg-green-500 text-green-50"
+      >
+        {onEdit && (
+          <DropdownMenuItem onSelect={onEdit} className={itemClassName}>
+            <Pencil className="size-4" />
+            Editar
+          </DropdownMenuItem>
+        )}
         <DropdownMenuItem onSelect={onDelete} className={itemClassName}>
           <Trash2 className="size-4" />
           Excluir

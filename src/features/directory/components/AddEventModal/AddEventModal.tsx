@@ -28,7 +28,7 @@ import {
 import { EventFormFields } from "./EventFormFields";
 
 const REVIEW_MESSAGE =
-  "Nossa equipe revisará o evento antes de publicá-lo no mapa.";
+  "Ele já aparece para você e ficará público após a aprovação da nossa equipe.";
 
 interface AddEventModalProps {
   isOpen: boolean;
