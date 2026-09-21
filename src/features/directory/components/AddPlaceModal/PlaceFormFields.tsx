@@ -129,7 +129,7 @@ export function PlaceFormFields({
       </FormField>
 
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 sm:gap-3">
-        <FormField label="Horário" htmlFor="place-schedule">
+        <FormField label="Horário" htmlFor="place-schedule" required>
           <input
             id="place-schedule"
             value={form.schedule}
@@ -138,16 +138,14 @@ export function PlaceFormFields({
             className={`${inputClassName} flex-1`}
           />
         </FormField>
-        <FormField label="Faixa de preço">
+        <FormField label="Faixa de preço" required>
           <PriceRangePicker
             value={form.priceRange}
             onChange={(priceRange) => onFieldChange("priceRange", priceRange)}
           />
         </FormField>
       </div>
-      <FormHint>
-        Horário e faixa de preço ajudam a planejar a visita; preencha se souber.
-      </FormHint>
+      <FormHint>Horário e faixa de preço ajudam a planejar a visita.</FormHint>
 
       <div className="grid grid-cols-2 gap-3">
         <FormField label="Telefone" htmlFor="place-phone">

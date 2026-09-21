@@ -33,8 +33,18 @@ export function buildPlacePayload(
   const name = form.name.trim();
   const address = form.address.trim();
   const city = form.city.trim();
+  const schedule = form.schedule.trim();
 
-  if (!name || !form.category || !address || !city || !coords) return null;
+  if (
+    !name ||
+    !form.category ||
+    !address ||
+    !city ||
+    !schedule ||
+    !form.priceRange ||
+    !coords
+  )
+    return null;
 
   const instagram = getInstagramHandle(form.instagram);
 
@@ -47,7 +57,7 @@ export function buildPlacePayload(
     phone: form.phone.trim() || undefined,
     instagram: instagram ? `@${instagram}` : undefined,
     description: form.description.trim() || undefined,
-    schedule: form.schedule.trim() || undefined,
+    schedule,
     priceRange: form.priceRange,
   };
 }
