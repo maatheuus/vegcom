@@ -15,8 +15,12 @@ const FULL_DATE = new Intl.DateTimeFormat("pt-BR", {
   year: "numeric",
 });
 
-function formatFullDate(date: string) {
-  const formatted = FULL_DATE.format(new Date(date));
+function formatEventDate(event: DirectoryEvent) {
+  if (event.monthly) {
+    return `Todo dia ${new Date(event.date).getDate()} de cada mês`;
+  }
+
+  const formatted = FULL_DATE.format(new Date(event.date));
   return formatted.charAt(0).toUpperCase() + formatted.slice(1);
 }
 
@@ -45,7 +49,7 @@ export function EventDetailsDialog({
             <div className="mt-2 space-y-1.5 text-xs font-medium text-green-500">
               <p className="flex items-center gap-1.5">
                 <CalendarDays className="size-3.5 shrink-0 md:size-4" />
-                {event && formatFullDate(event.date)}
+                {event && formatEventDate(event)}
               </p>
               <p className="flex items-start gap-1.5 text-left break-words">
                 <MapPin className="mt-0.5 size-3.5 shrink-0 md:size-4" />
@@ -54,6 +58,7 @@ export function EventDetailsDialog({
             </div>
           </DialogDescription>
         </DialogHeader>
+
         <p className="text-sm leading-relaxed hyphens-auto whitespace-pre-line text-green-500">
           {event?.description || "Nenhuma descrição compartilhada."}
         </p>

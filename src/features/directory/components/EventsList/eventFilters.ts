@@ -2,6 +2,7 @@ import type { DirectoryEvent } from "../../types";
 
 export const ALL_MONTHS = "Todos";
 export const ALL_CITIES = "Todas";
+export const MONTHLY_EVENTS = "Eventos mensais";
 
 export const MONTHS = [
   ALL_MONTHS,
@@ -28,13 +29,23 @@ export function getCityOptions(events: DirectoryEvent[]) {
   return [ALL_CITIES, ...[...cities].sort()];
 }
 
+export function getMonthOptions(events: DirectoryEvent[]) {
+  return events.some((event) => event.monthly)
+    ? [ALL_MONTHS, MONTHLY_EVENTS, ...MONTHS.slice(1)]
+    : MONTHS;
+}
+
 export function matchesEventFilters(
   event: DirectoryEvent,
   month: string,
   city: string,
 ) {
+  const matchesMonth =
+    month === MONTHLY_EVENTS
+      ? event.monthly
+      : month === ALL_MONTHS || event.monthly || getMonth(event.date) === month;
+
   return (
-    (month === ALL_MONTHS || getMonth(event.date) === month) &&
-    (city === ALL_CITIES || getCity(event.location) === city)
+    matchesMonth && (city === ALL_CITIES || getCity(event.location) === city)
   );
 }

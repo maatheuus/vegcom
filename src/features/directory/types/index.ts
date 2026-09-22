@@ -54,6 +54,7 @@ export interface DirectoryEvent {
   id: number;
   title: string;
   date: string;
+  monthly: boolean;
   location: string;
   street?: string;
   city?: string;
@@ -127,6 +128,7 @@ export interface CreatePlaceReportFollowUpPayload {
 export interface CreateDirectoryEventPayload {
   title: string;
   date: string;
+  monthly: boolean;
   location: string;
   street: string;
   city: string;

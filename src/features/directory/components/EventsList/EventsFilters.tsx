@@ -1,11 +1,12 @@
 import { SlidersHorizontal } from "lucide-react";
-import { ALL_CITIES, ALL_MONTHS, MONTHS } from "./eventFilters";
+import { ALL_CITIES, ALL_MONTHS } from "./eventFilters";
 import { SelectFilter } from "./SelectFilter";
 
 interface EventsFiltersProps {
   month: string;
   city: string;
   cityOptions: string[];
+  monthOptions: string[];
   onMonthChange: (month: string) => void;
   onCityChange: (city: string) => void;
 }
@@ -14,6 +15,7 @@ export function EventsFilters({
   month,
   city,
   cityOptions,
+  monthOptions,
   onMonthChange,
   onCityChange,
 }: EventsFiltersProps) {
@@ -34,7 +36,7 @@ export function EventsFilters({
           label="Filtrar por mês"
           visibleLabel="Mês"
           allValue={ALL_MONTHS}
-          options={MONTHS}
+          options={monthOptions}
         />
         <SelectFilter
           value={city}

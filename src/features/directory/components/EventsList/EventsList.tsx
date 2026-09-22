@@ -16,6 +16,7 @@ import {
   ALL_CITIES,
   ALL_MONTHS,
   getCityOptions,
+  getMonthOptions,
   matchesEventFilters,
 } from "./eventFilters";
 
@@ -47,7 +48,9 @@ export function EventsList({
     onAddModalRequestHandled?.();
   }, [onAddModalRequestHandled, openAddModal]);
 
-  const cityOptions = getCityOptions([...upcoming.events, ...past.events]);
+  const events = [...upcoming.events, ...past.events];
+  const cityOptions = getCityOptions(events);
+  const monthOptions = getMonthOptions(events);
   // O filtro roda no cliente, apenas sobre a página já carregada.
   const isVisible = (event: DirectoryEvent) =>
     matchesEventFilters(event, month, city);
@@ -108,6 +111,7 @@ export function EventsList({
           month={month}
           city={city}
           cityOptions={cityOptions}
+          monthOptions={monthOptions}
           onMonthChange={handleMonthChange}
           onCityChange={handleCityChange}
         />

@@ -5,6 +5,7 @@ import {
   ExternalLink,
   MapPin,
   Navigation,
+  Repeat2,
   Share2,
 } from "lucide-react";
 import { addToCalendar, shareEvent } from "../../hooks/eventActions";
@@ -39,6 +40,9 @@ export function EventCard({
   // A API só devolve eventos pendentes/recusados para quem os criou.
   const isPending = event.status === "pending";
   const isRejected = event.status === "rejected";
+  const hasOccurred = date < new Date();
+  const canManage =
+    isOwner && (isRejected || (!past && (!event.monthly || !hasOccurred)));
   const directionsUrl = getGoogleMapsDirectionsUrl({
     lat: event.lat,
     lng: event.lng,
@@ -51,7 +55,6 @@ export function EventCard({
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: index * 0.04 }}
       onClick={(e) => {
-        // Botões, links e itens do menu têm ação própria.
         const target = e.target as HTMLElement;
         if (target.closest("a, button, [role='menuitem']")) return;
         onOpen();
@@ -78,7 +81,7 @@ export function EventCard({
         <h3
           className={clsx(
             "font-maitree text-black-100 text-base font-bold",
-            isOwner && (!past || isRejected) && "pr-8",
+            canManage && "pr-8",
           )}
         >
           <button
@@ -110,19 +113,31 @@ export function EventCard({
         >
           {event.description || "Nenhuma descrição compartilhada."}
         </p>
-        {event.link && (
-          <a
-            href={event.link}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="hover:text-black-100 mt-3 inline-flex items-center gap-1 text-xs font-bold text-green-500 underline decoration-green-200 underline-offset-4"
-          >
-            <ExternalLink className="size-3" />
-            Saiba mais
-          </a>
-        )}
+        <div className="mt-3 flex w-full items-center justify-between gap-2 max-sm:flex-wrap">
+          {event.monthly && (
+            <span
+              className={clsx(
+                "inline-flex items-center gap-1 rounded-full bg-green-500 px-2.5 py-1 text-[10px] font-bold tracking-wide text-white uppercase",
+              )}
+            >
+              <Repeat2 className="size-3" aria-hidden />
+              Evento mensal
+            </span>
+          )}
+          {event.link && (
+            <a
+              href={event.link}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="hover:text-black-100 inline-flex items-center gap-1 text-xs font-bold text-green-500 underline decoration-green-200 underline-offset-4"
+            >
+              <ExternalLink className="size-3" />
+              Saiba mais
+            </a>
+          )}
+        </div>
       </div>
-      {isOwner && (!past || isRejected) && (
+      {canManage && (
         <EventOwnerMenu
           onEdit={isRejected ? undefined : onEdit}
           onDelete={onDelete}

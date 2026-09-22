@@ -1,4 +1,5 @@
 import { SearchCityLocation } from "@/shared/ui/SearchCityLocation";
+import { Switch } from "@/shared/ui/Switch";
 import {
   cityInputClassName,
   FormField,
@@ -9,7 +10,11 @@ import type { EventFormValues } from "./eventForm";
 
 interface EventFormFieldsProps {
   form: EventFormValues;
-  onFieldChange: (field: keyof EventFormValues, value: string) => void;
+  onFieldChange: (
+    field: Exclude<keyof EventFormValues, "monthly">,
+    value: string,
+  ) => void;
+  onMonthlyChange: (monthly: boolean) => void;
   onCitySelect: (city: string) => void;
   /** Cidade digitada mas não escolhida na lista de sugestões. */
   hasCityError: boolean;
@@ -18,6 +23,7 @@ interface EventFormFieldsProps {
 export function EventFormFields({
   form,
   onFieldChange,
+  onMonthlyChange,
   onCitySelect,
   hasCityError,
 }: EventFormFieldsProps) {
@@ -38,6 +44,33 @@ export function EventFormFields({
           className={inputClassName}
         />
       </FormField>
+
+      <div className="rounded-2xl border border-green-100 bg-green-50 px-4 py-3">
+        <div className="flex items-center justify-between gap-4">
+          <div>
+            <label
+              htmlFor="event-monthly"
+              className="text-black-100 text-sm font-semibold"
+            >
+              Evento mensal
+            </label>
+            <p className="mt-0.5 text-xs leading-relaxed text-green-500">
+              Repete todo mês na data escolhida.
+            </p>
+          </div>
+          <Switch
+            id="event-monthly"
+            checked={form.monthly}
+            onCheckedChange={onMonthlyChange}
+            aria-label="Evento mensal"
+          />
+        </div>
+        {form.monthly && (
+          <p className="mt-3 border-t border-green-100 pt-3 text-xs leading-relaxed text-green-500">
+            Este evento será identificado como mensal na lista e no mapa.
+          </p>
+        )}
+      </div>
 
       <FormField
         label="Data"

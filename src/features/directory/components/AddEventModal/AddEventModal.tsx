@@ -62,7 +62,10 @@ export function AddEventModal({ isOpen, onClose, event }: AddEventModalProps) {
     setIsSuccess(false);
   }, [event, isOpen]);
 
-  const updateField = (field: keyof EventFormValues, value: string) => {
+  const updateField = (
+    field: Exclude<keyof EventFormValues, "monthly">,
+    value: string,
+  ) => {
     if (field === "city") setIsCitySelected(false);
     setForm((current) => ({ ...current, [field]: value }));
   };
@@ -70,6 +73,10 @@ export function AddEventModal({ isOpen, onClose, event }: AddEventModalProps) {
   const handleCitySelect = (city: string) => {
     setForm((current) => ({ ...current, city }));
     setIsCitySelected(true);
+  };
+
+  const updateMonthly = (monthly: boolean) => {
+    setForm((current) => ({ ...current, monthly }));
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -184,6 +191,7 @@ export function AddEventModal({ isOpen, onClose, event }: AddEventModalProps) {
               <EventFormFields
                 form={form}
                 onFieldChange={updateField}
+                onMonthlyChange={updateMonthly}
                 onCitySelect={handleCitySelect}
                 hasCityError={Boolean(form.city.trim()) && !isCitySelected}
               />

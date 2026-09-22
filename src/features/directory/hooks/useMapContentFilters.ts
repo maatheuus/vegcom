@@ -45,7 +45,9 @@ export function useMapContentFilters(
         ? []
         : events.filter(
             (event) =>
-              eventMonth === "all" || event.date.startsWith(eventMonth),
+              eventMonth === "all" ||
+              event.monthly ||
+              event.date.startsWith(eventMonth),
           ),
     [content, eventMonth, events],
   );

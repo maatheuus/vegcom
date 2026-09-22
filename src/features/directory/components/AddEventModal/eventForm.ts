@@ -5,6 +5,7 @@ export interface EventFormValues {
   title: string;
   /** Formato yyyy-MM-dd. */
   date: string;
+  monthly: boolean;
   street: string;
   city: string;
   description: string;
@@ -18,10 +19,13 @@ interface EventCoordinates {
   isApproximate: boolean;
 }
 
-export function getInitialEventForm(event?: DirectoryEvent | null): EventFormValues {
+export function getInitialEventForm(
+  event?: DirectoryEvent | null,
+): EventFormValues {
   return {
     title: event?.title ?? "",
     date: event?.date.slice(0, 10) ?? "",
+    monthly: event?.monthly ?? false,
     street: event?.street ?? event?.location ?? "",
     city: event?.city ?? "",
     description: event?.description ?? "",
@@ -68,6 +72,7 @@ export function buildEventPayload(
   return {
     title: form.title.trim(),
     date: new Date(form.date).toISOString(),
+    monthly: form.monthly,
     location: `${street}, ${city}`,
     street,
     city,

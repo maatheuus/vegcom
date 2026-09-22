@@ -25,11 +25,13 @@ export function EventMarkers({ events }: EventMarkersProps) {
             <Popup className="event-popup" minWidth={280} maxWidth={400}>
               <div className="min-w-0 text-green-500">
                 <p className="text-xs font-bold tracking-wide text-green-200 uppercase">
-                  {new Date(event.date).toLocaleDateString("pt-BR", {
-                    day: "2-digit",
-                    month: "short",
-                    year: "numeric",
-                  })}
+                  {event.monthly
+                    ? `Todo dia ${new Date(event.date).getDate()} de cada mês`
+                    : new Date(event.date).toLocaleDateString("pt-BR", {
+                        day: "2-digit",
+                        month: "short",
+                        year: "numeric",
+                      })}
                 </p>
                 <h3 className="font-maitree text-black-100 mt-2 line-clamp-2 text-xl leading-tight font-bold break-words">
                   {event.title}
