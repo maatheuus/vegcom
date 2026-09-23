@@ -1,6 +1,7 @@
 "use client";
 
 import { Marker, Tooltip } from "react-leaflet";
+import { DietTag } from "./DietTag";
 import { createMarkerIcon, createSelectedMarkerIcon } from "./markerIcons";
 import type { Place } from "../types";
 
@@ -41,7 +42,10 @@ export function PlaceMarkers({
               opacity={1}
               permanent={isSelected}
             >
-              {place.name}
+              <span className="flex flex-col items-center gap-1">
+                <span>{place.name}</span>
+                <DietTag diet={place.diet} />
+              </span>
             </Tooltip>
           </Marker>
         );

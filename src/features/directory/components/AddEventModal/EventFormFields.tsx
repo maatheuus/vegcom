@@ -1,5 +1,7 @@
 import { SearchCityLocation } from "@/shared/ui/SearchCityLocation";
 import { Switch } from "@/shared/ui/Switch";
+import type { AddressSuggestion } from "../../hooks/geocode";
+import { AddressSearchField } from "../AddPlaceModal/AddressSearchField";
 import {
   cityInputClassName,
   FormField,
@@ -16,6 +18,7 @@ interface EventFormFieldsProps {
   ) => void;
   onMonthlyChange: (monthly: boolean) => void;
   onCitySelect: (city: string) => void;
+  onAddressSelect: (suggestion: AddressSuggestion) => void;
   /** Cidade digitada mas não escolhida na lista de sugestões. */
   hasCityError: boolean;
 }
@@ -25,6 +28,7 @@ export function EventFormFields({
   onFieldChange,
   onMonthlyChange,
   onCitySelect,
+  onAddressSelect,
   hasCityError,
 }: EventFormFieldsProps) {
   return (
@@ -86,6 +90,14 @@ export function EventFormFields({
       </FormField>
 
       <FormField
+        htmlFor="event-address-search"
+        label="Buscar endereço"
+        hint="Escolha o endereço na lista para posicionar o evento com precisão. Rua e cidade são preenchidas automaticamente."
+      >
+        <AddressSearchField onSelect={onAddressSelect} />
+      </FormField>
+
+      <FormField
         label="Rua / endereço"
         htmlFor="event-street"
         required
@@ -102,6 +114,7 @@ export function EventFormFields({
 
       <FormField
         label="Cidade"
+        htmlFor="event-city"
         required
         hint={
           hasCityError ? (

@@ -58,7 +58,10 @@ interface MapContentProps {
   userPosition?: [number, number] | null;
   geoState?: GeolocationState;
   focusEventsRequest?: number;
+  focusPendingRequest?: number;
 }
+
+const STREET_ZOOM = 16;
 
 export function MapContent({
   places,
@@ -72,6 +75,7 @@ export function MapContent({
   userPosition = null,
   geoState = "idle",
   focusEventsRequest = 0,
+  focusPendingRequest = 0,
 }: MapContentProps) {
   return (
     <MapContainer
@@ -113,8 +117,35 @@ export function MapContent({
       <PickModeInteraction pickMode={pickMode} />
       <InitialViewController userPosition={userPosition} geoState={geoState} />
       <EventsViewController events={events} request={focusEventsRequest} />
+      <PendingCoordsController
+        coords={pendingCoords}
+        request={focusPendingRequest}
+      />
     </MapContainer>
   );
+}
+
+/**
+ * Centraliza o mapa no pin quando o endereço vem da busca (não do clique):
+ * o disparo é o contador `request`, para o clique no mapa não forçar zoom.
+ */
+function PendingCoordsController({
+  coords,
+  request,
+}: {
+  coords: [number, number] | null;
+  request: number;
+}) {
+  const map = useMap();
+  const coordsRef = useRef(coords);
+  coordsRef.current = coords;
+
+  useEffect(() => {
+    if (request === 0 || !coordsRef.current) return;
+    map.flyTo(coordsRef.current, STREET_ZOOM, { duration: 0.8 });
+  }, [request, map]);
+
+  return null;
 }
 
 function EventsViewController({

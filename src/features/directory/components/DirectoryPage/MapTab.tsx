@@ -55,6 +55,8 @@ export function MapTab({
   const [isRepositioning, setIsRepositioning] = useState(false);
   const [isMapGuideOpen, setIsMapGuideOpen] = useState(false);
   const [focusEventsRequest, setFocusEventsRequest] = useState(0);
+  // Disparo separado do clique: só a busca de endereço centraliza/dá zoom no pin.
+  const [focusCoordsRequest, setFocusCoordsRequest] = useState(0);
   const [isDistantNoticeDismissed, setIsDistantNoticeDismissed] =
     useState(false);
   const { data: places = [] } = usePlaces();
@@ -125,14 +127,16 @@ export function MapTab({
     setIsAddPlaceOpen(true);
   }, []);
 
-  const startPicking = () => {
+  // Abre o formulário direto: o usuário busca o endereço ou marca no mapa por lá.
+  const startAddingPlace = () => {
     locationCheckRequestId.current += 1;
     setSelectedPlace(null);
     setIsMapGuideOpen(false);
     setPendingCoords(null);
     setIsCheckingPickedLocation(false);
     setIsRepositioning(false);
-    setIsPickingLocation(true);
+    setIsPickingLocation(false);
+    setIsAddPlaceOpen(true);
   };
 
   // Volta ao mapa mantendo o que já foi preenchido no formulário.
@@ -156,6 +160,12 @@ export function MapTab({
     }
 
     setPendingCoords(null);
+  };
+
+  // Endereço buscado no modal: reposiciona o pin e centraliza o mapa nele.
+  const handleModalCoordsChange = (coords: [number, number]) => {
+    setPendingCoords(coords);
+    setFocusCoordsRequest((current) => current + 1);
   };
 
   const closeAddPlace = () => {
@@ -199,6 +209,7 @@ export function MapTab({
         pendingCoords={pendingCoords}
         onLocationPick={handleLocationPick}
         focusEventsRequest={focusEventsRequest}
+        focusPendingRequest={focusCoordsRequest}
       />
       <LocationPrompt
         state={geoState}
@@ -208,7 +219,7 @@ export function MapTab({
       {hasMapContent && <MapFilters {...filterProps} />}
       {isGuideVisible && (
         <MapGuideCard
-          onAddPlace={startPicking}
+          onAddPlace={startAddingPlace}
           onViewEvents={onViewEvents}
           onClose={() => setIsMapGuideOpen(false)}
         />
@@ -248,7 +259,7 @@ export function MapTab({
       <AddPlaceModal
         isOpen={isAddPlaceOpen}
         coords={pendingCoords}
-        onCoordsChange={setPendingCoords}
+        onCoordsChange={handleModalCoordsChange}
         onReposition={startRepositioning}
         onClose={closeAddPlace}
       />

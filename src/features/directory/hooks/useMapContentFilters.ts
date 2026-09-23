@@ -6,7 +6,7 @@ import type {
   PlaceDistanceFilter,
 } from "../components/MapFilters";
 import { NEARBY_PLACES_RADIUS_KM } from "../constants";
-import type { DirectoryEvent, Place, PlaceCategory } from "../types";
+import type { DirectoryEvent, FilterDiet, Place, PlaceCategory } from "../types";
 import { haversineDistance } from "./haversineDistance";
 
 const MONTH_FORMATTER = new Intl.DateTimeFormat("pt-BR", {
@@ -25,6 +25,7 @@ export function useMapContentFilters(
   const [placeCategory, setPlaceCategory] = useState<PlaceCategory | "all">(
     "all",
   );
+  const [placeDiet, setPlaceDiet] = useState<FilterDiet>("all");
   const [placeDistance, setPlaceDistance] =
     useState<PlaceDistanceFilter>("all");
 
@@ -58,6 +59,8 @@ export function useMapContentFilters(
         : places.filter((place) => {
             const matchesCategory =
               placeCategory === "all" || place.category === placeCategory;
+            const matchesDiet =
+              placeDiet === "all" || place.diet === placeDiet;
             const matchesDistance =
               placeDistance === "all" ||
               (userPosition !== null &&
@@ -68,9 +71,9 @@ export function useMapContentFilters(
                   place.lng,
                 ) <= NEARBY_PLACES_RADIUS_KM);
 
-            return matchesCategory && matchesDistance;
+            return matchesCategory && matchesDiet && matchesDistance;
           }),
-    [content, placeCategory, placeDistance, places, userPosition],
+    [content, placeCategory, placeDiet, placeDistance, places, userPosition],
   );
 
   const changeContent = (nextContent: MapContentFilter) => {
@@ -78,6 +81,7 @@ export function useMapContentFilters(
     if (nextContent !== "events") setEventMonth("all");
     if (nextContent !== "places") {
       setPlaceCategory("all");
+      setPlaceDiet("all");
       setPlaceDistance("all");
     }
   };
@@ -104,6 +108,8 @@ export function useMapContentFilters(
       categories: placeCategories,
       selectedCategory: placeCategory,
       onCategoryChange: setPlaceCategory,
+      selectedDiet: placeDiet,
+      onDietChange: setPlaceDiet,
       selectedDistance: placeDistance,
       onDistanceChange: changePlaceDistance,
     },

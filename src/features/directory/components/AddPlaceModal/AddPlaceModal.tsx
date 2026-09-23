@@ -4,7 +4,12 @@ import { toast } from "@/shared/hooks/use-toast";
 import { MapPin } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { useCreatePlace } from "../../api/queries/getDirectoryApiClient";
-import { geocode } from "../../hooks/geocode";
+import {
+  CATEGORY_SINGULAR_LABELS,
+  DIET_LABELS,
+  PRICE_RANGE_LABELS,
+} from "../../constants";
+import { type AddressSuggestion, geocode } from "../../hooks/geocode";
 import { useReverseGeocode } from "../../hooks/useReverseGeocode";
 import {
   isLocationOutsideBrazilError,
@@ -12,6 +17,7 @@ import {
 } from "../../utils/errors";
 import { FormActions } from "../FormModal/FormActions";
 import { FormModal } from "../FormModal/FormModal";
+import { FormReview, type ReviewItem } from "../FormModal/FormReview";
 import { FormSuccess } from "../FormModal/FormSuccess";
 import { useLoginGate } from "../FormModal/useLoginGate";
 import { QuickLoginModal } from "../QuickLoginModal";
@@ -19,6 +25,7 @@ import {
   buildPlacePayload,
   EMPTY_PLACE_FORM,
   type PlaceFormValues,
+  suggestionToAddressFields,
 } from "./placeForm";
 import { PlaceFormFields } from "./PlaceFormFields";
 
@@ -38,6 +45,7 @@ export function AddPlaceModal({
   onClose,
 }: AddPlaceModalProps) {
   const [form, setForm] = useState(EMPTY_PLACE_FORM);
+  const [isReviewing, setIsReviewing] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
   const [isUpdatingPosition, setIsUpdatingPosition] = useState(false);
   // Incrementado a cada busca/fechamento para descartar respostas antigas do geocode.
@@ -68,6 +76,7 @@ export function AddPlaceModal({
   const handleClose = () => {
     positionRequestId.current += 1;
     setForm(EMPTY_PLACE_FORM);
+    setIsReviewing(false);
     setIsSuccess(false);
     setIsUpdatingPosition(false);
     onClose();
@@ -76,8 +85,15 @@ export function AddPlaceModal({
   // Fecha o modal sem limpar o formulário: o usuário volta depois de mover o pin.
   const handleReposition = () => {
     positionRequestId.current += 1;
+    setIsReviewing(false);
     setIsUpdatingPosition(false);
     onReposition();
+  };
+
+  const handleAddressSelect = (suggestion: AddressSuggestion) => {
+    const { address, city } = suggestionToAddressFields(suggestion);
+    setForm((current) => ({ ...current, address, city }));
+    onCoordsChange([suggestion.lat, suggestion.lng]);
   };
 
   const handleCitySelect = async ({ displayName }: { displayName: string }) => {
@@ -102,9 +118,14 @@ export function AddPlaceModal({
     onCoordsChange([cityCoords.lat, cityCoords.lng]);
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!payload || isSubmitting || requireLogin()) return;
+    setIsReviewing(true);
+  };
+
+  const handleConfirm = async () => {
+    if (!payload || isSubmitting) return;
 
     try {
       await createPlace(payload);
@@ -139,6 +160,32 @@ export function AddPlaceModal({
     });
   };
 
+  const reviewItems: ReviewItem[] = payload
+    ? [
+        { label: "Nome", value: payload.name },
+        {
+          label: "Categoria",
+          value: CATEGORY_SINGULAR_LABELS[payload.category] ?? payload.category,
+        },
+        { label: "Dieta", value: DIET_LABELS[payload.diet] },
+        { label: "Endereço", value: payload.address },
+        { label: "Horário", value: payload.schedule },
+        {
+          label: "Faixa de preço",
+          value: payload.priceRange
+            ? (PRICE_RANGE_LABELS[payload.priceRange] ?? "")
+            : "",
+        },
+        { label: "Telefone", value: payload.phone },
+        { label: "Instagram", value: payload.instagram },
+        { label: "Descrição", value: payload.description },
+        {
+          label: "Posição no mapa",
+          value: `${payload.lat.toFixed(5)}, ${payload.lng.toFixed(5)}`,
+        },
+      ].filter((item): item is ReviewItem => Boolean(item.value))
+    : [];
+
   return (
     <>
       <FormModal
@@ -153,24 +200,34 @@ export function AddPlaceModal({
             description="Nossa equipe revisará as informações antes de publicar o local no mapa."
             onDone={handleClose}
           />
+        ) : isReviewing ? (
+          <FormReview
+            items={reviewItems}
+            confirmLabel="Enviar para revisão"
+            pendingLabel={isSubmitting ? "Salvando..." : undefined}
+            onConfirm={handleConfirm}
+            onBack={() => setIsReviewing(false)}
+            onAdjustLocation={handleReposition}
+          />
         ) : (
           <form
             onSubmit={handleSubmit}
             className="flex min-h-0 flex-1 flex-col overflow-hidden"
           >
-            <div className="min-h-0 flex-1 touch-pan-y overflow-y-auto overscroll-contain px-3 py-4">
+            <div className="hidden-scrollbar min-h-0 flex-1 touch-pan-y overflow-y-auto overscroll-contain px-3 py-4">
               <PlaceFormFields
                 form={form}
                 onFieldChange={updateField}
                 coords={coords}
                 onCitySelect={handleCitySelect}
+                onAddressSelect={handleAddressSelect}
                 onReposition={handleReposition}
                 isDetectingCity={isDetectingCity}
                 isUpdatingPosition={isUpdatingPosition}
               />
             </div>
             <FormActions
-              submitLabel="Adicionar Local"
+              submitLabel="Revisar e enviar"
               pendingLabel={isSubmitting ? "Salvando..." : undefined}
               isDisabled={!payload}
               onCancel={handleClose}

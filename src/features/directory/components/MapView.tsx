@@ -31,6 +31,7 @@ interface MapViewProps {
   pendingCoords?: [number, number] | null;
   onLocationPick?: (lat: number, lng: number) => void;
   focusEventsRequest?: number;
+  focusPendingRequest?: number;
 }
 
 export function MapView({
@@ -45,6 +46,7 @@ export function MapView({
   pendingCoords,
   onLocationPick,
   focusEventsRequest = 0,
+  focusPendingRequest = 0,
 }: MapViewProps) {
   return (
     <div className="h-full w-full">
@@ -60,6 +62,7 @@ export function MapView({
         pendingCoords={pendingCoords}
         onLocationPick={onLocationPick}
         focusEventsRequest={focusEventsRequest}
+        focusPendingRequest={focusPendingRequest}
       />
     </div>
   );
