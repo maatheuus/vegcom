@@ -1,37 +1,34 @@
 import { toast } from "@/shared/hooks/use-toast";
-import { Clock, Trash2, XCircle } from "lucide-react";
+import { Trash2, XCircle } from "lucide-react";
 import { useState } from "react";
-import { useDeletePlace } from "../../api/queries/getDirectoryApiClient";
-import type { Place } from "../../types";
-import { isForbiddenError } from "../../utils/errors";
-import { formatDeletionNotice } from "../../utils/rejection";
+import { useDeleteEvent } from "../api/queries/getDirectoryApiClient";
+import type { DirectoryEvent } from "../types";
+import { isForbiddenError } from "../utils/errors";
+import { formatDeletionNotice } from "../utils/rejection";
 
-interface PlaceOwnerNoticeProps {
-  place: Place;
-  onDeleted: () => void;
+interface EventOwnerNoticeProps {
+  event: DirectoryEvent;
 }
 
-export function PlaceOwnerNotice({ place, onDeleted }: PlaceOwnerNoticeProps) {
+export function EventOwnerNotice({ event }: EventOwnerNoticeProps) {
   const [isConfirming, setIsConfirming] = useState(false);
-  const { mutateAsync: deletePlace, isPending } = useDeletePlace();
+  const { mutateAsync: deleteEvent, isPending } = useDeleteEvent();
 
   const handleDelete = async () => {
     try {
-      await deletePlace(place.id);
-      onDeleted();
+      await deleteEvent(event.id);
       toast({
         variant: "success",
-        title: "Local excluído",
+        title: "Evento excluído",
         description: "Ele foi removido do mapa.",
       });
     } catch (error) {
-      // 403 aqui = local com denúncias; dono/status já garantidos pelo backend.
+      // 403 aqui = evento com denúncias; dono/status já garantidos pelo backend.
       if (isForbiddenError(error)) {
         toast({
           variant: "destructive",
           title: "Não foi possível excluir",
-          description:
-            "Este local tem denúncias em análise e não pode ser excluído.",
+          description: "Este evento não pode ser excluído no momento.",
         });
         return;
       }
@@ -43,7 +40,7 @@ export function PlaceOwnerNotice({ place, onDeleted }: PlaceOwnerNoticeProps) {
     }
   };
 
-  const isPendingStatus = place.status === "pending";
+  const isPendingStatus = event.status === "pending";
 
   return (
     <div
@@ -55,25 +52,24 @@ export function PlaceOwnerNotice({ place, onDeleted }: PlaceOwnerNoticeProps) {
       role="status"
     >
       {isPendingStatus ? (
-        <p className="flex gap-2">
-          <Clock className="mt-0.5 size-4 shrink-0" aria-hidden />
-          Só você vê este local. Ele ficará público para todos assim que nossa
+        <p className="my-0.5! flex gap-2">
+          Só você vê este evento. Ele ficará público para todos assim que nossa
           equipe aprovar.
         </p>
       ) : (
-        <p className="flex gap-2">
-          <XCircle className="mt-0.5 size-4 shrink-0" aria-hidden />
+        <p className="my-0.5! flex gap-2">
+          <XCircle className="size-4 shrink-0" aria-hidden />
           <span>
-            Este local não foi aprovado e só você o vê.
-            {place.rejectionReason && (
+            Este evento não foi aprovado e só você o vê.
+            {event.rejectionReason && (
               <>
                 {" "}
                 <strong className="font-semibold">Motivo:</strong>{" "}
-                {place.rejectionReason}
+                {event.rejectionReason}
               </>
             )}
             <br />
-            {formatDeletionNotice(place.rejectedAt)}
+            {formatDeletionNotice(event.rejectedAt)}
           </span>
         </p>
       )}
@@ -98,7 +94,7 @@ export function PlaceOwnerNotice({ place, onDeleted }: PlaceOwnerNoticeProps) {
             disabled={isPending}
             className="min-h-10 flex-1 rounded-full bg-red-600 px-3 text-sm font-medium text-white transition-colors hover:bg-red-700 focus-visible:ring-2 focus-visible:ring-red-500 focus-visible:ring-offset-2 focus-visible:outline-none disabled:opacity-60"
           >
-            {isPending ? "Excluindo..." : "Confirmar exclusão"}
+            {isPending ? "Excluindo..." : "Confirmar"}
           </button>
         </div>
       ) : (
@@ -112,7 +108,7 @@ export function PlaceOwnerNotice({ place, onDeleted }: PlaceOwnerNoticeProps) {
           }`}
         >
           <Trash2 className="size-4" aria-hidden />
-          Excluir local
+          Excluir evento
         </button>
       )}
     </div>
