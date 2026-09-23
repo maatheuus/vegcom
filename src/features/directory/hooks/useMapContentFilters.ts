@@ -6,7 +6,12 @@ import type {
   PlaceDistanceFilter,
 } from "../components/MapFilters";
 import { NEARBY_PLACES_RADIUS_KM } from "../constants";
-import type { DirectoryEvent, FilterDiet, Place, PlaceCategory } from "../types";
+import type {
+  DirectoryEvent,
+  FilterDiet,
+  Place,
+  PlaceCategory,
+} from "../types";
 import { haversineDistance } from "./haversineDistance";
 
 const MONTH_FORMATTER = new Intl.DateTimeFormat("pt-BR", {
@@ -39,42 +44,40 @@ export function useMapContentFilters(
     }));
   const placeCategories = [...new Set(places.map((place) => place.category))];
 
-  // Memorizados: o mapa refaz o enquadramento quando a referência de `events` muda.
-  const visibleEvents = useMemo(
+  const filteredEvents = useMemo(
     () =>
-      content === "places"
-        ? []
-        : events.filter(
-            (event) =>
-              eventMonth === "all" ||
-              event.monthly ||
-              event.date.startsWith(eventMonth),
-          ),
-    [content, eventMonth, events],
+      events.filter(
+        (event) =>
+          eventMonth === "all" ||
+          event.monthly ||
+          event.date.startsWith(eventMonth),
+      ),
+    [eventMonth, events],
   );
-  const visiblePlaces = useMemo(
+  const filteredPlaces = useMemo(
     () =>
-      content === "events"
-        ? []
-        : places.filter((place) => {
-            const matchesCategory =
-              placeCategory === "all" || place.category === placeCategory;
-            const matchesDiet =
-              placeDiet === "all" || place.diet === placeDiet;
-            const matchesDistance =
-              placeDistance === "all" ||
-              (userPosition !== null &&
-                haversineDistance(
-                  userPosition[0],
-                  userPosition[1],
-                  place.lat,
-                  place.lng,
-                ) <= NEARBY_PLACES_RADIUS_KM);
+      places.filter((place) => {
+        const matchesCategory =
+          placeCategory === "all" || place.category === placeCategory;
+        const matchesDiet = placeDiet === "all" || place.diet === placeDiet;
+        const matchesDistance =
+          placeDistance === "all" ||
+          (userPosition !== null &&
+            haversineDistance(
+              userPosition[0],
+              userPosition[1],
+              place.lat,
+              place.lng,
+            ) <= NEARBY_PLACES_RADIUS_KM);
 
-            return matchesCategory && matchesDiet && matchesDistance;
-          }),
-    [content, placeCategory, placeDiet, placeDistance, places, userPosition],
+        return matchesCategory && matchesDiet && matchesDistance;
+      }),
+    [placeCategory, placeDiet, placeDistance, places, userPosition],
   );
+
+  // Memorizados: o mapa refaz o enquadramento quando a referência de `events` muda.
+  const visibleEvents = content === "places" ? [] : filteredEvents;
+  const visiblePlaces = content === "events" ? [] : filteredPlaces;
 
   const changeContent = (nextContent: MapContentFilter) => {
     setContent(nextContent);
@@ -100,8 +103,8 @@ export function useMapContentFilters(
     filterProps: {
       content,
       onContentChange: changeContent,
-      eventCount: events.length,
-      placeCount: places.length,
+      eventCount: filteredEvents.length,
+      placeCount: filteredPlaces.length,
       months: eventMonths,
       selectedMonth: eventMonth,
       onMonthChange: setEventMonth,
