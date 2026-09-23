@@ -1,10 +1,10 @@
 "use client";
 
-import { useCallback } from "react";
+import { memo, useCallback } from "react";
 import { Marker, Tooltip } from "react-leaflet";
 import MarkerClusterGroup from "react-leaflet-cluster";
 import L from "leaflet";
-import { createMarkerIcon, createSelectedMarkerIcon } from "./markerIcons";
+import { createMarkerIcon } from "./markerIcons";
 import type { Place } from "../types";
 
 const CLUSTER_BASE_SIZE = 44;
@@ -31,13 +31,16 @@ function createClusterIcon(count: number): L.DivIcon {
 
 interface PlaceMarkersClusterProps {
   places: Place[];
-  selectedPlaceId: number | null;
   onPlaceSelect: (place: Place) => void;
 }
 
-export function PlaceMarkersCluster({
+/**
+ * Não depende da seleção: o marcador selecionado é desenhado por cima, fora do
+ * cluster (ver SelectedPlaceMarker). Assim, clicar num local não reconstrói o
+ * cluster group inteiro — a maior fonte de travada ao selecionar.
+ */
+function PlaceMarkersClusterComponent({
   places,
-  selectedPlaceId,
   onPlaceSelect,
 }: PlaceMarkersClusterProps) {
   const iconCreateFunction = useCallback(
@@ -54,34 +57,30 @@ export function PlaceMarkersCluster({
       spiderfyOnMaxZoom
       showCoverageOnHover={false}
       zoomToBoundsOnClick
+      chunkedLoading
+      removeOutsideVisibleBounds
     >
-      {places.map((place) => {
-        const isSelected = place.id === selectedPlaceId;
-        const icon = isSelected
-          ? createSelectedMarkerIcon(place)
-          : createMarkerIcon(place);
-
-        return (
-          <Marker
-            key={place.id}
-            position={[place.lat, place.lng]}
-            icon={icon}
-            eventHandlers={{
-              click: () => onPlaceSelect(place),
-            }}
+      {places.map((place) => (
+        <Marker
+          key={place.id}
+          position={[place.lat, place.lng]}
+          icon={createMarkerIcon(place)}
+          eventHandlers={{
+            click: () => onPlaceSelect(place),
+          }}
+        >
+          <Tooltip
+            className="place-marker-tooltip"
+            direction="top"
+            offset={[0, -24]}
+            opacity={1}
           >
-            <Tooltip
-              className="place-marker-tooltip"
-              direction="top"
-              offset={[0, -24]}
-              opacity={1}
-              permanent={isSelected}
-            >
-              {place.name}
-            </Tooltip>
-          </Marker>
-        );
-      })}
+            {place.name}
+          </Tooltip>
+        </Marker>
+      ))}
     </MarkerClusterGroup>
   );
 }
+
+export const PlaceMarkersCluster = memo(PlaceMarkersClusterComponent);

@@ -1,6 +1,7 @@
 "use client";
 
 import { CalendarPlus, MapPin, Share2 } from "lucide-react";
+import { memo } from "react";
 import { Marker, Popup } from "react-leaflet";
 import { addToCalendar, shareEvent } from "../hooks/eventActions";
 import type { DirectoryEvent } from "../types";
@@ -11,7 +12,7 @@ interface EventMarkersProps {
   events: DirectoryEvent[];
 }
 
-export function EventMarkers({ events }: EventMarkersProps) {
+function EventMarkersComponent({ events }: EventMarkersProps) {
   return (
     <>
       {events.map((event) => {
@@ -82,3 +83,5 @@ export function EventMarkers({ events }: EventMarkersProps) {
     </>
   );
 }
+
+export const EventMarkers = memo(EventMarkersComponent);
