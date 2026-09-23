@@ -2,6 +2,7 @@ import clsx from "clsx";
 import { UtensilsCrossed, X } from "lucide-react";
 import { CATEGORY_SINGULAR_LABELS } from "../../constants";
 import type { Place, PlaceStatus } from "../../types";
+import { DietTag } from "../DietTag";
 
 const STATUS_CONFIG: Record<PlaceStatus, { label: string; className: string }> =
   {
@@ -49,6 +50,7 @@ export function PlaceDetailHeader({
             <UtensilsCrossed className="h-3 w-3" aria-hidden />
             {CATEGORY_SINGULAR_LABELS[place.category] ?? place.category}
           </span>
+          <DietTag diet={place.diet} />
           {status && (
             <span
               className={clsx(

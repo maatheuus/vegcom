@@ -1,5 +1,5 @@
-import type { Place, PlaceCategory } from "../types";
 import L from "leaflet";
+import type { DirectoryEventStatus, Place, PlaceCategory } from "../types";
 
 interface CategoryStyle {
   color: string;
@@ -126,16 +126,24 @@ export function createSelectedMarkerIcon(place: Place): L.DivIcon {
   });
 }
 
-let eventMarkerIcon: L.DivIcon | null = null;
+const eventMarkerIconCache = new Map<DirectoryEventStatus, L.DivIcon>();
 
-export function createEventMarkerIcon(): L.DivIcon {
-  if (eventMarkerIcon) return eventMarkerIcon;
+export function createEventMarkerIcon(
+  status: DirectoryEventStatus = "active",
+): L.DivIcon {
+  const cached = eventMarkerIconCache.get(status);
+  if (cached) return cached;
+
+  const draft = status === "pending" || status === "rejected";
+  const rejected = status === "rejected";
+  const bg = rejected ? "#dc2626" : "#276b37";
+  const border = rejected ? "#fef2f2" : "#fffdf4";
 
   const html = `<div style="
       width:40px;height:40px;border-radius:9999px;
-      background:#276b37;border:3px solid #fffdf4;
+      background:${bg};border:3px ${draft ? "dashed" : "solid"} ${border};
       display:flex;align-items:center;justify-content:center;
-      box-shadow:0 3px 10px rgba(27,78,48,0.35);
+      box-shadow:0 3px 10px rgba(27,78,48,0.35);${draft && !rejected ? "opacity:0.7;" : ""}
     ">
     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
       fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -144,14 +152,15 @@ export function createEventMarkerIcon(): L.DivIcon {
       <path d="M8 14h.01M12 14h.01M16 14h.01M8 18h.01M12 18h.01"/>
     </svg>
   </div>`;
-  eventMarkerIcon = L.divIcon({
+  const icon = L.divIcon({
     html,
     className: "event-marker",
     iconSize: ICON_SIZE,
     iconAnchor: ICON_ANCHOR,
     popupAnchor: [0, -40],
   });
-  return eventMarkerIcon;
+  eventMarkerIconCache.set(status, icon);
+  return icon;
 }
 
 export function createPendingMarkerIcon(): L.DivIcon {

@@ -1,9 +1,16 @@
-import type { CreatePlacePayload, PlaceCategory, PriceRange } from "../../types";
+import type { AddressSuggestion } from "../../hooks/geocode";
+import type {
+  CreatePlacePayload,
+  PlaceCategory,
+  PlaceDiet,
+  PriceRange,
+} from "../../types";
 import { getInstagramHandle } from "../../utils/instagram";
 
 export interface PlaceFormValues {
   name: string;
   category: PlaceCategory | null;
+  diet: PlaceDiet | null;
   address: string;
   city: string;
   phone: string;
@@ -16,6 +23,7 @@ export interface PlaceFormValues {
 export const EMPTY_PLACE_FORM: PlaceFormValues = {
   name: "",
   category: null,
+  diet: null,
   address: "",
   city: "",
   phone: "",
@@ -24,6 +32,24 @@ export const EMPTY_PLACE_FORM: PlaceFormValues = {
   schedule: "",
   priceRange: undefined,
 };
+
+/** Extrai rua/cidade de uma sugestão de endereço para preencher o formulário. */
+export function suggestionToAddressFields(suggestion: AddressSuggestion): {
+  address: string;
+  city: string;
+} {
+  const { road, houseNumber, suburb, city, state } = suggestion.address;
+
+  const address = [[road, houseNumber].filter(Boolean).join(", "), suburb]
+    .filter(Boolean)
+    .join(", ");
+  const cityLabel = [city, state].filter(Boolean).join(", ");
+
+  return {
+    address: address || suggestion.displayName,
+    city: cityLabel,
+  };
+}
 
 /** Monta o payload da API; retorna null enquanto faltar algum campo obrigatório. */
 export function buildPlacePayload(
@@ -38,6 +64,7 @@ export function buildPlacePayload(
   if (
     !name ||
     !form.category ||
+    !form.diet ||
     !address ||
     !city ||
     !schedule ||
@@ -51,6 +78,7 @@ export function buildPlacePayload(
   return {
     name,
     category: form.category,
+    diet: form.diet,
     lat: coords[0],
     lng: coords[1],
     address: `${address}, ${city}`,

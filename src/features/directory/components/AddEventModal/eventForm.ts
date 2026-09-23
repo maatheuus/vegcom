@@ -1,4 +1,4 @@
-import { geocode } from "../../hooks/geocode";
+import { type AddressSuggestion, geocode } from "../../hooks/geocode";
 import type { CreateDirectoryEventPayload, DirectoryEvent } from "../../types";
 
 export interface EventFormValues {
@@ -12,7 +12,7 @@ export interface EventFormValues {
   link: string;
 }
 
-interface EventCoordinates {
+export interface EventCoordinates {
   lat: number;
   lng: number;
   /** true quando a rua não foi encontrada e o pin caiu no centro da cidade. */
@@ -31,6 +31,20 @@ export function getInitialEventForm(
     description: event?.description ?? "",
     link: event?.link ?? "",
   };
+}
+
+/** Converte um endereço da busca nos campos rua/cidade do formulário. */
+export function suggestionToEventFields(suggestion: AddressSuggestion): {
+  street: string;
+  city: string;
+} {
+  const { road, houseNumber, suburb, city, state } = suggestion.address;
+  const street =
+    [[road, houseNumber].filter(Boolean).join(", "), suburb]
+      .filter(Boolean)
+      .join(", ") || suggestion.displayName;
+  const cityLabel = [city, state].filter(Boolean).join(", ");
+  return { street, city: cityLabel };
 }
 
 export function isEventFormComplete(form: EventFormValues) {

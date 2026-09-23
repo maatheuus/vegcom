@@ -1,3 +1,40 @@
+export interface AddressSuggestion {
+  id: string;
+  displayName: string;
+  lat: number;
+  lng: number;
+  address: {
+    road?: string;
+    houseNumber?: string;
+    suburb?: string;
+    city?: string;
+    state?: string;
+    postcode?: string;
+  };
+}
+
+// Cache por query para não repetir a busca ao reabrir/renavegar as sugestões.
+const addressSearchCache = new Map<string, AddressSuggestion[]>();
+
+/**
+ * Busca endereços por texto via route handler (`/api/geocode`), restrito ao Brasil.
+ * Lança em erro de rede para a UI oferecer "tentar de novo"; devolve [] quando não há resultado.
+ */
+export async function searchAddress(
+  query: string,
+): Promise<AddressSuggestion[]> {
+  const key = query.trim().toLowerCase();
+  const cached = addressSearchCache.get(key);
+  if (cached) return cached;
+
+  const response = await fetch(`/api/geocode?q=${encodeURIComponent(query)}`);
+  if (!response.ok) throw new Error("geocode_request_failed");
+
+  const results = (await response.json()) as AddressSuggestion[];
+  addressSearchCache.set(key, results);
+  return results;
+}
+
 /**
  * Geocodifica um endereço/cidade brasileiro para coordenadas (Nominatim/OSM).
  * Retorna null se a busca falhar ou não encontrar resultado.

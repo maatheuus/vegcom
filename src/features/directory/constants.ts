@@ -1,4 +1,4 @@
-import type { PlaceCategory, PriceRange } from "./types";
+import type { PlaceCategory, PlaceDiet, PriceRange } from "./types";
 
 export const NEARBY_PLACES_RADIUS_KM = 500;
 
@@ -20,6 +20,12 @@ export const CATEGORY_SINGULAR_LABELS: Record<PlaceCategory, string> = {
   cafe: "Café",
   entrepreneur: "Empreendedor",
   other: "Outro",
+};
+
+/** Rótulos das dietas do local, usados no cadastro, filtros e nas tags. */
+export const DIET_LABELS: Record<PlaceDiet, string> = {
+  fully_vegan: "100% vegano",
+  vegan_options: "Opções veganas",
 };
 
 export const PRICE_RANGE_LABELS: Record<PriceRange, string> = {

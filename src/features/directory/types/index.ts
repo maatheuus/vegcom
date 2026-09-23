@@ -19,6 +19,8 @@ export type PlaceCategory =
 
 export type PriceRange = 1 | 2 | 3;
 
+export type PlaceDiet = "fully_vegan" | "vegan_options";
+
 export type Tab = "map" | "events";
 
 export type ReportType = "closed" | "moved" | "no_longer_vegan" | "wrong_info";
@@ -38,6 +40,7 @@ export interface Place {
   id: number;
   name: string;
   category: PlaceCategory;
+  diet: PlaceDiet;
   lat: number;
   lng: number;
   status: PlaceStatus;
@@ -89,11 +92,14 @@ export interface Product {
 
 export type FilterCategory = PlaceCategory | "all";
 
+export type FilterDiet = PlaceDiet | "all";
+
 // ---------- API payloads ----------
 
 export interface CreatePlacePayload {
   name: string;
   category: PlaceCategory;
+  diet: PlaceDiet;
   lat: number;
   lng: number;
   address: string;

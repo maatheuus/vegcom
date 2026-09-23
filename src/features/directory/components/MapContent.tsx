@@ -7,13 +7,17 @@ import {
   MapContainer,
   Marker,
   TileLayer,
+  Tooltip,
   useMap,
   ZoomControl,
 } from "react-leaflet";
 import type { GeolocationState } from "../hooks/useGeolocation";
 import type { DirectoryEvent, Place } from "../types";
 import { EventMarkers } from "./EventMarkers";
-import { createPendingMarkerIcon } from "./markerIcons";
+import {
+  createPendingMarkerIcon,
+  createSelectedMarkerIcon,
+} from "./markerIcons";
 import { PlaceMarkersCluster } from "./PlaceMarkersCluster";
 
 // Enquadra o Brasil inteiro (sem mostrar o continente todo)
@@ -58,7 +62,10 @@ interface MapContentProps {
   userPosition?: [number, number] | null;
   geoState?: GeolocationState;
   focusEventsRequest?: number;
+  focusPendingRequest?: number;
 }
+
+const STREET_ZOOM = 16;
 
 export function MapContent({
   places,
@@ -72,6 +79,7 @@ export function MapContent({
   userPosition = null,
   geoState = "idle",
   focusEventsRequest = 0,
+  focusPendingRequest = 0,
 }: MapContentProps) {
   return (
     <MapContainer
@@ -82,17 +90,20 @@ export function MapContent({
       attributionControl={false}
       className="h-full w-full"
       scrollWheelZoom
+      wheelPxPerZoomLevel={120}
     >
       <ZoomControl position="bottomright" />
       <AttributionControl position="bottomleft" prefix={false} />
       <TileLayer
         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OSM</a> &copy; <a href="https://carto.com/attributions">CARTO</a>'
         url={CARTO_VOYAGER_TILE_URL}
+        updateWhenZooming={false}
+        keepBuffer={4}
       />
-      <PlaceMarkersCluster
-        places={places}
-        selectedPlaceId={selectedPlaceId}
-        onPlaceSelect={onPlaceSelect}
+      <PlaceMarkersCluster places={places} onPlaceSelect={onPlaceSelect} />
+      <SelectedPlaceMarker
+        place={places.find((place) => place.id === selectedPlaceId) ?? null}
+        onSelect={onPlaceSelect}
       />
       <EventMarkers events={events} />
       {userPosition && (
@@ -113,8 +124,68 @@ export function MapContent({
       <PickModeInteraction pickMode={pickMode} />
       <InitialViewController userPosition={userPosition} geoState={geoState} />
       <EventsViewController events={events} request={focusEventsRequest} />
+      <PendingCoordsController
+        coords={pendingCoords}
+        request={focusPendingRequest}
+      />
     </MapContainer>
   );
+}
+
+/**
+ * Marcador selecionado desenhado por cima do cluster (fora dele), com tooltip
+ * fixo. Isolá-lo aqui evita remapear os marcadores do cluster a cada seleção.
+ */
+function SelectedPlaceMarker({
+  place,
+  onSelect,
+}: {
+  place: Place | null;
+  onSelect: (place: Place) => void;
+}) {
+  if (!place) return null;
+
+  return (
+    <Marker
+      position={[place.lat, place.lng]}
+      icon={createSelectedMarkerIcon(place)}
+      zIndexOffset={1000}
+      eventHandlers={{ click: () => onSelect(place) }}
+    >
+      <Tooltip
+        className="place-marker-tooltip"
+        direction="top"
+        offset={[0, -24]}
+        opacity={1}
+        permanent
+      >
+        {place.name}
+      </Tooltip>
+    </Marker>
+  );
+}
+
+/**
+ * Centraliza o mapa no pin quando o endereço vem da busca (não do clique):
+ * o disparo é o contador `request`, para o clique no mapa não forçar zoom.
+ */
+function PendingCoordsController({
+  coords,
+  request,
+}: {
+  coords: [number, number] | null;
+  request: number;
+}) {
+  const map = useMap();
+  const coordsRef = useRef(coords);
+  coordsRef.current = coords;
+
+  useEffect(() => {
+    if (request === 0 || !coordsRef.current) return;
+    map.flyTo(coordsRef.current, STREET_ZOOM, { duration: 0.8 });
+  }, [request, map]);
+
+  return null;
 }
 
 function EventsViewController({

@@ -1,5 +1,6 @@
 import { SearchCityLocation } from "@/shared/ui/SearchCityLocation";
 import { MapPin } from "lucide-react";
+import type { AddressSuggestion } from "../../hooks/geocode";
 import { getInstagramHandle } from "../../utils/instagram";
 import { formatPhone } from "../../utils/phone";
 import {
@@ -8,7 +9,9 @@ import {
   FormHint,
   inputClassName,
 } from "../FormModal/FormField";
+import { AddressSearchField } from "./AddressSearchField";
 import { CategoryPicker } from "./CategoryPicker";
+import { DietPicker } from "./DietPicker";
 import type { PlaceFormValues } from "./placeForm";
 import { PriceRangePicker } from "./PriceRangePicker";
 
@@ -20,6 +23,7 @@ interface PlaceFormFieldsProps {
   ) => void;
   coords: [number, number] | null;
   onCitySelect: (city: { displayName: string }) => void;
+  onAddressSelect: (suggestion: AddressSuggestion) => void;
   onReposition: () => void;
   isDetectingCity: boolean;
   isUpdatingPosition: boolean;
@@ -30,13 +34,22 @@ export function PlaceFormFields({
   onFieldChange,
   coords,
   onCitySelect,
+  onAddressSelect,
   onReposition,
   isDetectingCity,
   isUpdatingPosition,
 }: PlaceFormFieldsProps) {
   return (
     <div className="flex flex-col gap-4">
-      {coords && (
+      <FormField
+        htmlFor="place-address-search"
+        label="Buscar endereço"
+        hint="Digite o endereço para posicionar o pin automaticamente, ou marque o ponto direto no mapa."
+      >
+        <AddressSearchField onSelect={onAddressSelect} />
+      </FormField>
+
+      {coords ? (
         <div className="flex items-center gap-2 rounded-xl bg-green-50 px-3 py-2.5 text-xs text-green-700">
           <MapPin className="h-4 w-4 shrink-0 text-green-500" aria-hidden />
           <span>
@@ -51,6 +64,18 @@ export function PlaceFormFields({
             className="ml-auto shrink-0 rounded-lg px-2 py-1 font-semibold text-green-600 underline underline-offset-2 transition-colors hover:bg-green-100 hover:text-green-800 focus-visible:ring-2 focus-visible:ring-green-500 focus-visible:outline-none"
           >
             Ajustar no mapa
+          </button>
+        </div>
+      ) : (
+        <div className="flex items-center gap-2 rounded-xl border border-dashed border-green-200 bg-green-50/50 px-3 py-2.5 text-xs text-green-700">
+          <MapPin className="h-4 w-4 shrink-0 text-green-500" aria-hidden />
+          <span>Nenhuma posição ainda. Busque o endereço acima</span>
+          <button
+            type="button"
+            onClick={onReposition}
+            className="ml-auto shrink-0 rounded-lg px-2 py-1 font-semibold text-green-600 underline underline-offset-2 transition-colors hover:bg-green-100 hover:text-green-800 focus-visible:ring-2 focus-visible:ring-green-500 focus-visible:outline-none"
+          >
+            Marcar no mapa
           </button>
         </div>
       )}
@@ -72,12 +97,25 @@ export function PlaceFormFields({
 
       <FormField
         label="Categoria"
+        htmlFor="place-category"
         required
         hint="A categoria define o ícone e ajuda visitantes a filtrar o mapa."
       >
         <CategoryPicker
           value={form.category}
           onChange={(category) => onFieldChange("category", category)}
+        />
+      </FormField>
+
+      <FormField
+        label="Dieta"
+        htmlFor="place-diet"
+        required
+        hint="Diga se o local é 100% vegano ou apenas oferece opções veganas."
+      >
+        <DietPicker
+          value={form.diet}
+          onChange={(diet) => onFieldChange("diet", diet)}
         />
       </FormField>
 
@@ -98,6 +136,7 @@ export function PlaceFormFields({
 
       <FormField
         label="Cidade"
+        htmlFor="place-city"
         required
         hint={`Ao escolher uma cidade, o ponto vai para o centro dela.${isUpdatingPosition ? " Atualizando posição..." : ""}`}
       >
@@ -138,7 +177,7 @@ export function PlaceFormFields({
             className={`${inputClassName} flex-1`}
           />
         </FormField>
-        <FormField label="Faixa de preço" required>
+        <FormField label="Faixa de preço" required htmlFor="place-price-range">
           <PriceRangePicker
             value={form.priceRange}
             onChange={(priceRange) => onFieldChange("priceRange", priceRange)}
@@ -155,7 +194,9 @@ export function PlaceFormFields({
             inputMode="tel"
             maxLength={15}
             value={form.phone}
-            onChange={(e) => onFieldChange("phone", formatPhone(e.target.value))}
+            onChange={(e) =>
+              onFieldChange("phone", formatPhone(e.target.value))
+            }
             placeholder="(11) 99999-0000"
             className={inputClassName}
           />

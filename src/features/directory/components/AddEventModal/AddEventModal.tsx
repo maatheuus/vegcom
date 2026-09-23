@@ -1,13 +1,14 @@
 "use client";
 
 import { toast } from "@/shared/hooks/use-toast";
-import { isBefore, parseISO, startOfTomorrow } from "date-fns";
+import { format, isBefore, parseISO, startOfTomorrow } from "date-fns";
 import { CalendarDays } from "lucide-react";
 import { useEffect, useState } from "react";
 import {
   useCreateEvent,
   useUpdateEvent,
 } from "../../api/queries/getDirectoryApiClient";
+import type { AddressSuggestion } from "../../hooks/geocode";
 import type { DirectoryEvent } from "../../types";
 import {
   getEventValidationMessages,
@@ -16,6 +17,7 @@ import {
 } from "../../utils/errors";
 import { FormActions } from "../FormModal/FormActions";
 import { FormModal } from "../FormModal/FormModal";
+import { FormReview, type ReviewItem } from "../FormModal/FormReview";
 import { FormSuccess } from "../FormModal/FormSuccess";
 import { useLoginGate } from "../FormModal/useLoginGate";
 import { QuickLoginModal } from "../QuickLoginModal";
@@ -24,12 +26,19 @@ import {
   getInitialEventForm,
   isEventFormComplete,
   resolveEventCoordinates,
+  suggestionToEventFields,
+  type EventCoordinates,
   type EventFormValues,
 } from "./eventForm";
 import { EventFormFields } from "./EventFormFields";
 
 const REVIEW_MESSAGE =
   "Ele já aparece para você e ficará público após a aprovação da nossa equipe.";
+
+/** yyyy-MM-dd → dd/MM/yyyy para o preview. */
+function formatEventDate(date: string): string {
+  return format(parseISO(date), "dd/MM/yyyy");
+}
 
 interface AddEventModalProps {
   isOpen: boolean;
@@ -39,6 +48,15 @@ interface AddEventModalProps {
 
 export function AddEventModal({ isOpen, onClose, event }: AddEventModalProps) {
   const [form, setForm] = useState(() => getInitialEventForm(event));
+  const [isReviewing, setIsReviewing] = useState(false);
+  const [reviewCoords, setReviewCoords] = useState<EventCoordinates | null>(
+    null,
+  );
+
+  const [pickedCoords, setPickedCoords] = useState<{
+    lat: number;
+    lng: number;
+  } | null>(null);
   const [isSuccess, setIsSuccess] = useState(false);
   const [isLocating, setIsLocating] = useState(false);
   // Só aceitamos cidades escolhidas na lista (IBGE); texto livre pode não existir.
@@ -59,6 +77,9 @@ export function AddEventModal({ isOpen, onClose, event }: AddEventModalProps) {
     if (!isOpen) return;
     setForm(getInitialEventForm(event));
     setIsCitySelected(Boolean(event?.city));
+    setIsReviewing(false);
+    setReviewCoords(null);
+    setPickedCoords(null);
     setIsSuccess(false);
   }, [event, isOpen]);
 
@@ -67,12 +88,22 @@ export function AddEventModal({ isOpen, onClose, event }: AddEventModalProps) {
     value: string,
   ) => {
     if (field === "city") setIsCitySelected(false);
+    // Editar rua/cidade à mão invalida o ponto exato vindo da busca.
+    if (field === "street" || field === "city") setPickedCoords(null);
     setForm((current) => ({ ...current, [field]: value }));
   };
 
   const handleCitySelect = (city: string) => {
     setForm((current) => ({ ...current, city }));
     setIsCitySelected(true);
+    setPickedCoords(null);
+  };
+
+  const handleAddressSelect = (suggestion: AddressSuggestion) => {
+    const { street, city } = suggestionToEventFields(suggestion);
+    setForm((current) => ({ ...current, street, city }));
+    setIsCitySelected(true);
+    setPickedCoords({ lat: suggestion.lat, lng: suggestion.lng });
   };
 
   const updateMonthly = (monthly: boolean) => {
@@ -94,13 +125,18 @@ export function AddEventModal({ isOpen, onClose, event }: AddEventModalProps) {
     }
     if (requireLogin()) return;
 
-    setIsLocating(true);
-    const coordinates = await resolveEventCoordinates(
-      form.street.trim(),
-      form.city.trim(),
-      event,
-    );
-    setIsLocating(false);
+    let coordinates: EventCoordinates | null;
+    if (pickedCoords) {
+      coordinates = { ...pickedCoords, isApproximate: false };
+    } else {
+      setIsLocating(true);
+      coordinates = await resolveEventCoordinates(
+        form.street.trim(),
+        form.city.trim(),
+        event,
+      );
+      setIsLocating(false);
+    }
 
     if (!coordinates) {
       toast({
@@ -111,6 +147,14 @@ export function AddEventModal({ isOpen, onClose, event }: AddEventModalProps) {
       return;
     }
 
+    setReviewCoords(coordinates);
+    setIsReviewing(true);
+  };
+
+  const handleConfirm = async () => {
+    if (!reviewCoords || isSaving) return;
+
+    const coordinates = reviewCoords;
     const payload = buildEventPayload(form, coordinates);
 
     try {
@@ -162,6 +206,21 @@ export function AddEventModal({ isOpen, onClose, event }: AddEventModalProps) {
     });
   };
 
+  const reviewItems: ReviewItem[] = [
+    { label: "Título", value: form.title.trim() },
+    {
+      label: "Data",
+      value: form.date ? formatEventDate(form.date) : "",
+    },
+    { label: "Evento mensal", value: form.monthly ? "Sim" : "Não" },
+    { label: "Rua / endereço", value: form.street.trim() },
+    { label: "Cidade", value: form.city.trim() },
+    ...(form.description.trim()
+      ? [{ label: "Descrição", value: form.description.trim() }]
+      : []),
+    ...(form.link.trim() ? [{ label: "Link", value: form.link.trim() }] : []),
+  ];
+
   return (
     <>
       <FormModal
@@ -182,6 +241,21 @@ export function AddEventModal({ isOpen, onClose, event }: AddEventModalProps) {
             }
             onDone={onClose}
           />
+        ) : isReviewing ? (
+          <FormReview
+            items={reviewItems}
+            note={
+              reviewCoords?.isApproximate
+                ? "Não encontramos a rua exata; o pin será posicionado no centro da cidade."
+                : undefined
+            }
+            confirmLabel={
+              isEditing ? "Salvar alterações" : "Enviar para revisão"
+            }
+            pendingLabel={isSaving ? "Salvando..." : undefined}
+            onConfirm={handleConfirm}
+            onBack={() => setIsReviewing(false)}
+          />
         ) : (
           <form
             onSubmit={handleSubmit}
@@ -193,11 +267,12 @@ export function AddEventModal({ isOpen, onClose, event }: AddEventModalProps) {
                 onFieldChange={updateField}
                 onMonthlyChange={updateMonthly}
                 onCitySelect={handleCitySelect}
+                onAddressSelect={handleAddressSelect}
                 hasCityError={Boolean(form.city.trim()) && !isCitySelected}
               />
             </div>
             <FormActions
-              submitLabel={isEditing ? "Salvar alterações" : "Adicionar Evento"}
+              submitLabel={isEditing ? "Salvar alterações" : "Revisar e enviar"}
               pendingLabel={pendingLabel}
               isDisabled={!isFormValid}
               onCancel={onClose}

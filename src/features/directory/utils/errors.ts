@@ -11,6 +11,10 @@ export function isUnauthorizedError(error: unknown) {
   return isAxiosError(error) && error.response?.status === 401;
 }
 
+export function isForbiddenError(error: unknown) {
+  return isAxiosError(error) && error.response?.status === 403;
+}
+
 export function isLocationOutsideBrazilError(error: unknown) {
   if (!isAxiosError(error)) return false;
 
